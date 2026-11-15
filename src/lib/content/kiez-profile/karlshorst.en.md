@@ -3,7 +3,7 @@ slug: karlshorst
 name: Karlshorst
 pageType: kiez
 locale: en
-sourceInputHash: '9e7eea6b80827617'
+sourceInputHash: '9bbb876ff47dec9d'
 sourceTextHash: '8b7881da79ac92c4'
 model: 'claude (subagent translation)'
 translatedAt: '2026-09-30T12:00:00.000Z'

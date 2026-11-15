@@ -3,7 +3,7 @@ slug: hakenfelde
 name: Hakenfelde
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: d2f753b2ab6b75e3
+inputHash: 4a39faa196fd7170
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

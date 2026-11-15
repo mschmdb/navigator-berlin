@@ -3,7 +3,7 @@ slug: tempelhof-nord
 name: Tempelhof Nord
 pageType: kiez
 locale: en
-sourceInputHash: '037e8509fcdc041d'
+sourceInputHash: '110c2ba29f113ca2'
 sourceTextHash: 'de9806a3be460567'
 model: 'claude (subagent translation)'
 translatedAt: '2026-09-30T12:00:00.000Z'

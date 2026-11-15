@@ -3,7 +3,7 @@ slug: koellnische-vorstadt-spindlersfeld
 name: Köllnische Vorstadt/Spindlersfeld
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: 2da0594e8dcca393
+inputHash: e84acae938765930
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

@@ -3,7 +3,7 @@ slug: niederschoeneweide
 name: Niederschöneweide
 pageType: kiez
 locale: en
-sourceInputHash: '3f09587b1d26b650'
+sourceInputHash: '1363eb61012720f5'
 sourceTextHash: '04acf46e2c20dfb3'
 model: 'claude (subagent translation)'
 translatedAt: '2026-09-30T12:00:00.000Z'

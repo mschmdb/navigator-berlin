@@ -3,7 +3,7 @@ slug: schmoeckwitz
 name: Schmöckwitz
 pageType: kiez
 locale: en
-sourceInputHash: 'd17ddef5135dc633'
+sourceInputHash: 'f84c0a6674374026'
 sourceTextHash: '599a99a5c33251c6'
 model: 'claude (subagent translation)'
 translatedAt: '2026-09-30T12:00:00.000Z'

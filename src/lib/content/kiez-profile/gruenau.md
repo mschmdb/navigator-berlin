@@ -3,7 +3,7 @@ slug: gruenau
 name: Grünau
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: b3b49652ec00e955
+inputHash: 014f1ecb486e7603
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

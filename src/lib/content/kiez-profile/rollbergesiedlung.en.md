@@ -3,7 +3,7 @@ slug: rollbergesiedlung
 name: Rollbergesiedlung
 pageType: kiez
 locale: en
-sourceInputHash: 'dcccf7f4c0e23144'
+sourceInputHash: 'd62cca0d85a546fa'
 sourceTextHash: '2bb4fff2779f7cd0'
 model: 'claude (subagent translation)'
 translatedAt: '2026-09-30T12:00:00.000Z'

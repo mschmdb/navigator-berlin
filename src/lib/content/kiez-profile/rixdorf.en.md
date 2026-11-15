@@ -3,7 +3,7 @@ slug: rixdorf
 name: Rixdorf
 pageType: kiez
 locale: en
-sourceInputHash: 'd0c55c3a7386afe1'
+sourceInputHash: '20e23a820792b9b7'
 sourceTextHash: '4b489ac775086dba'
 model: 'claude (subagent translation)'
 translatedAt: '2026-09-30T12:00:00.000Z'

@@ -3,7 +3,7 @@ slug: tempelhof-schoeneberg
 name: Tempelhof-Schöneberg
 pageType: bezirk
 locale: en
-sourceInputHash: '81b74bd8ba24fb72'
+sourceInputHash: '14538c391c4b1b74'
 sourceTextHash: '6b993f690955a2ef'
 model: 'claude (subagent translation)'
 translatedAt: '2026-09-30T12:00:00.000Z'

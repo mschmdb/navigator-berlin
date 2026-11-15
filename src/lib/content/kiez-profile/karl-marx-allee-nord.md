@@ -3,7 +3,7 @@ slug: karl-marx-allee-nord
 name: Karl-Marx-Allee Nord
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: 89862c04eaeda1b0
+inputHash: d68dea553926f5f3
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

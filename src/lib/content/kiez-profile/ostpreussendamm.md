@@ -3,7 +3,7 @@ slug: ostpreussendamm
 name: Ostpreußendamm
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: 16d3304cd5b9632d
+inputHash: b7dbe7cc9cda109f
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

@@ -3,7 +3,7 @@ slug: hellersdorf-sued
 name: Hellersdorf Süd
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: d1e558936eee28a9
+inputHash: eb6498e0788086e9
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

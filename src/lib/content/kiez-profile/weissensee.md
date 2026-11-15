@@ -3,7 +3,7 @@ slug: weissensee
 name: Weißensee
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: 99d02487388e6559
+inputHash: 1e0c67cd1a043afa
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

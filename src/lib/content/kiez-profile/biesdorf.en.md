@@ -3,7 +3,7 @@ slug: biesdorf
 name: Biesdorf
 pageType: kiez
 locale: en
-sourceInputHash: '4ac67f646d435ee0'
+sourceInputHash: 'c89b72f9bd69ff90'
 sourceTextHash: 'e5fa8f913dc67f1c'
 model: 'claude (subagent translation)'
 translatedAt: '2026-09-30T12:00:00.000Z'

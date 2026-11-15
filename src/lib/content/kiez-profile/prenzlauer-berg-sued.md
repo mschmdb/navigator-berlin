@@ -3,7 +3,7 @@ slug: prenzlauer-berg-sued
 name: Prenzlauer Berg Süd
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: 6d13b3bd260bf995
+inputHash: 5f469bc8d675a5a1
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

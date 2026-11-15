@@ -3,7 +3,7 @@ slug: schoeneberg-suedwest
 name: Schöneberg Südwest
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: e3ec8c90d0f46049
+inputHash: f4445a051ef661c8
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

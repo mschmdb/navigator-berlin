@@ -3,7 +3,7 @@ slug: karl-marx-allee-sued
 name: Karl-Marx-Allee Süd
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: 96bc6e65d41c51e4
+inputHash: 362498725940c843
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

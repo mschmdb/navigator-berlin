@@ -3,7 +3,7 @@ slug: schoeneberg-suedost
 name: Schöneberg Südost
 pageType: kiez
 locale: en
-sourceInputHash: 'abd47e8dfbc692c6'
+sourceInputHash: '64e5ebd21c71ca88'
 sourceTextHash: 'b5e00cfcaeaaa190'
 model: 'claude (subagent translation)'
 translatedAt: '2026-09-30T12:00:00.000Z'

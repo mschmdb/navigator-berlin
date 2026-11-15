@@ -3,7 +3,7 @@ slug: baumschulenweg
 name: Baumschulenweg
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: da7994cd44e2ad33
+inputHash: 23998a3ba18298d5
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

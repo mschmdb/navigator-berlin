@@ -3,7 +3,7 @@ slug: friedrichshain-kreuzberg
 name: Friedrichshain-Kreuzberg
 pageType: bezirk
 locale: en
-sourceInputHash: 'e653608ec21d828a'
+sourceInputHash: '7b84c6fa5a8fe4dc'
 sourceTextHash: 'ca59b710c7512464'
 model: 'claude (subagent translation)'
 translatedAt: '2026-09-30T12:00:00.000Z'

@@ -3,7 +3,7 @@ slug: altstadt-koepenick
 name: Altstadt Köpenick
 pageType: kiez
 locale: en
-sourceInputHash: 'e4fa6d2fd3094641'
+sourceInputHash: 'dd5f544344b8cbe6'
 sourceTextHash: '922c807aca325783'
 model: 'claude (subagent translation)'
 translatedAt: '2026-09-30T12:00:00.000Z'

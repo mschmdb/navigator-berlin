@@ -3,7 +3,7 @@ slug: kaulsdorf
 name: Kaulsdorf
 pageType: kiez
 locale: en
-sourceInputHash: '734bd5fb0dec4965'
+sourceInputHash: '819c054974c65d51'
 sourceTextHash: '82631211b09ca3b5'
 model: 'claude (subagent translation)'
 translatedAt: '2026-09-30T12:00:00.000Z'

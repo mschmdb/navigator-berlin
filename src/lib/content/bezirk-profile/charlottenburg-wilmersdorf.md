@@ -3,7 +3,7 @@ slug: charlottenburg-wilmersdorf
 name: Charlottenburg-Wilmersdorf
 pageType: bezirk
 model: claude-opus-4-8 (subagent)
-inputHash: 53af2578e6b760c7
+inputHash: d5b738dad4a35fa9
 generatedAt: '2026-06-07T16:56:20.188Z'
 ---
 

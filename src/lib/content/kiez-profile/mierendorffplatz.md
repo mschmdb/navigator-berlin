@@ -3,7 +3,7 @@ slug: mierendorffplatz
 name: Mierendorffplatz
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: bc029dd164ab66d0
+inputHash: 2fd2d15e14e791e7
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

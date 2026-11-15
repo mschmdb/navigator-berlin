@@ -3,7 +3,7 @@ slug: lichtenrade-nord
 name: Lichtenrade Nord
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: e00dab39c59de518
+inputHash: 5531b70e18be3f4e
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

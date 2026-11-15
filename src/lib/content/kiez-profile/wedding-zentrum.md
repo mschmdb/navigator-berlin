@@ -3,7 +3,7 @@ slug: wedding-zentrum
 name: Wedding Zentrum
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: 8a3a44c93b8109e1
+inputHash: 6db78ee9d6b12c7e
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

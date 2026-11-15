@@ -3,7 +3,7 @@ slug: nord-2-waidmannslust-wittenau-luebars
 name: Nord 2 - Waidmannslust/Wittenau/Lübars
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: 1260a40e8a2feec7
+inputHash: cc92c2018d8fc5d8
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

@@ -3,7 +3,7 @@ slug: marzahn-mitte
 name: Marzahn Mitte
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: 58dbb04ec0e7ffc2
+inputHash: d012763fe0c9545a
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

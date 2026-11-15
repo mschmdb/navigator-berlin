@@ -3,7 +3,7 @@ slug: alt-hohenschoenhausen-nord
 name: Alt-Hohenschönhausen Nord
 pageType: kiez
 locale: en
-sourceInputHash: '65e08dc0b0658f31'
+sourceInputHash: '2cf3245b8096ed62'
 sourceTextHash: 'f97c3aa92b6e6771'
 model: 'claude (subagent translation)'
 translatedAt: '2026-09-30T12:00:00.000Z'

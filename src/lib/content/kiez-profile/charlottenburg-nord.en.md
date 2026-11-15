@@ -3,7 +3,7 @@ slug: charlottenburg-nord
 name: Charlottenburg Nord
 pageType: kiez
 locale: en
-sourceInputHash: '48513d74c38fae1d'
+sourceInputHash: '5820079e6b9d11ff'
 sourceTextHash: 'fbb56ef70b3eb405'
 model: 'claude (subagent translation)'
 translatedAt: '2026-09-30T12:00:00.000Z'

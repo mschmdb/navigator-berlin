@@ -3,7 +3,7 @@ slug: west-2-heiligensee-konradshoehe
 name: West 2 - Heiligensee/Konradshöhe
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: 73518ac457bd924c
+inputHash: 2119858b185dd988
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

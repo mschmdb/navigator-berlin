@@ -3,7 +3,7 @@ slug: buckow
 name: Buckow
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: 482892ad79dca58b
+inputHash: 03d1ecdaa3728093
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

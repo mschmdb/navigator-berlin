@@ -3,7 +3,7 @@ slug: rudow
 name: Rudow
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: a78dddd8bf206672
+inputHash: ce49e2b7d12a4e62
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

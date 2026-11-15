@@ -3,7 +3,7 @@ slug: johannisthal
 name: Johannisthal
 pageType: kiez
 locale: en
-sourceInputHash: '2102cb8267e968ad'
+sourceInputHash: '99bdc79a7fb31d4d'
 sourceTextHash: 'd74ec8ec5453b54c'
 model: 'claude (subagent translation)'
 translatedAt: '2026-09-30T12:00:00.000Z'

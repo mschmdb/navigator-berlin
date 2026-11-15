@@ -3,7 +3,7 @@ slug: treptow-koepenick
 name: Treptow-Köpenick
 pageType: bezirk
 model: claude-opus-4-8 (subagent)
-inputHash: fe669a97ff6cd8d9
+inputHash: 23292208ae8480b4
 generatedAt: '2026-06-07T16:56:20.188Z'
 ---
 

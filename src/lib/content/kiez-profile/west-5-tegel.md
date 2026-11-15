@@ -3,7 +3,7 @@ slug: west-5-tegel
 name: West 5 - Tegel
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: a240cd52d09bddec
+inputHash: a7f4f556344aed51
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

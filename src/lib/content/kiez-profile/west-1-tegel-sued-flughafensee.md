@@ -3,7 +3,7 @@ slug: west-1-tegel-sued-flughafensee
 name: West 1 - Tegel-Süd/Flughafensee
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: a17a46122eac01d7
+inputHash: a2da14b89fae0e0e
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

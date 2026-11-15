@@ -3,7 +3,7 @@ slug: tempelhof-nord
 name: Tempelhof Nord
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: 037e8509fcdc041d
+inputHash: 110c2ba29f113ca2
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

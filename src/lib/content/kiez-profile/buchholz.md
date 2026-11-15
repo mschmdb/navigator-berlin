@@ -3,7 +3,7 @@ slug: buchholz
 name: Buchholz
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: caa3d8c379bb09ab
+inputHash: 53e8950dc669fd63
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

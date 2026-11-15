@@ -3,7 +3,7 @@ slug: moabit-west
 name: Moabit West
 pageType: kiez
 locale: en
-sourceInputHash: '9c2eaa2568bb881a'
+sourceInputHash: 'd9a745603f76278d'
 sourceTextHash: 'f740a8378d8a004b'
 model: 'claude (subagent translation)'
 translatedAt: '2026-09-30T12:00:00.000Z'

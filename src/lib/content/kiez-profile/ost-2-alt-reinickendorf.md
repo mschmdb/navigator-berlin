@@ -3,7 +3,7 @@ slug: ost-2-alt-reinickendorf
 name: Ost 2 - Alt-Reinickendorf
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: 69eaeaa08690d1ed
+inputHash: 28b439640e031a44
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

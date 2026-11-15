@@ -3,7 +3,7 @@ slug: west-5-tegel
 name: West 5 - Tegel
 pageType: kiez
 locale: en
-sourceInputHash: 'a240cd52d09bddec'
+sourceInputHash: 'a7f4f556344aed51'
 sourceTextHash: '062d5ae2a5e606da'
 model: 'claude (subagent translation)'
 translatedAt: '2026-09-30T12:00:00.000Z'

@@ -3,7 +3,7 @@ slug: schoeneberg-suedwest
 name: Schöneberg Südwest
 pageType: kiez
 locale: en
-sourceInputHash: 'e3ec8c90d0f46049'
+sourceInputHash: 'f4445a051ef661c8'
 sourceTextHash: '9a496de6f5bbfe75'
 model: 'claude (subagent translation)'
 translatedAt: '2026-09-30T12:00:00.000Z'

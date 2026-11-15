@@ -3,7 +3,7 @@ slug: tempelhof-suedwest
 name: Tempelhof Südwest
 pageType: kiez
 locale: en
-sourceInputHash: '3890f3529d988698'
+sourceInputHash: 'e71ce4de9bc67e06'
 sourceTextHash: '0d04369dab6856f0'
 model: 'claude (subagent translation)'
 translatedAt: '2026-09-30T12:00:00.000Z'

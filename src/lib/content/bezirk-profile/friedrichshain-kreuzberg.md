@@ -3,7 +3,7 @@ slug: friedrichshain-kreuzberg
 name: Friedrichshain-Kreuzberg
 pageType: bezirk
 model: claude-opus-4-8 (subagent)
-inputHash: e653608ec21d828a
+inputHash: 7b84c6fa5a8fe4dc
 generatedAt: '2026-06-07T16:56:20.188Z'
 ---
 

@@ -3,7 +3,7 @@ slug: fennpfuhl
 name: Fennpfuhl
 pageType: kiez
 locale: en
-sourceInputHash: 'fcf39adf5d499001'
+sourceInputHash: '7625447e26d445a7'
 sourceTextHash: '2bd4e050898e684e'
 model: 'claude (subagent translation)'
 translatedAt: '2026-09-30T12:00:00.000Z'

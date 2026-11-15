@@ -3,7 +3,7 @@ slug: grunewald
 name: Grunewald
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: 0438febe03d724c8
+inputHash: cfda9942c8e65196
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

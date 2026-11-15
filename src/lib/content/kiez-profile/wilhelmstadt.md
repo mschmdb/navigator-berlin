@@ -3,7 +3,7 @@ slug: wilhelmstadt
 name: Wilhelmstadt
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: 7a709e77f82a18a3
+inputHash: 7ddf2d1f4574e652
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

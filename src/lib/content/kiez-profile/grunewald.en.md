@@ -3,7 +3,7 @@ slug: grunewald
 name: Grunewald
 pageType: kiez
 locale: en
-sourceInputHash: '0438febe03d724c8'
+sourceInputHash: 'cfda9942c8e65196'
 sourceTextHash: '48434dec4d2d2251'
 model: 'claude (subagent translation)'
 translatedAt: '2026-09-30T12:00:00.000Z'

@@ -3,7 +3,7 @@ slug: friedrichsfelde-nord
 name: Friedrichsfelde Nord
 pageType: kiez
 locale: en
-sourceInputHash: '097fd4cc1c70ea28'
+sourceInputHash: 'c0939a2b16a367bf'
 sourceTextHash: '5384a4e223546deb'
 model: 'claude (subagent translation)'
 translatedAt: '2026-09-30T12:00:00.000Z'

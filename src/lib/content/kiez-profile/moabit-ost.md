@@ -3,7 +3,7 @@ slug: moabit-ost
 name: Moabit Ost
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: 091beb76b50a28fc
+inputHash: c2e20bb2e8443816
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

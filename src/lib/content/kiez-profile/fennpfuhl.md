@@ -3,7 +3,7 @@ slug: fennpfuhl
 name: Fennpfuhl
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: fcf39adf5d499001
+inputHash: 7625447e26d445a7
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

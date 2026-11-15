@@ -3,7 +3,7 @@ slug: schoenholz-wilhelmsruh-rosenthal
 name: Schönholz/Wilhelmsruh/Rosenthal
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: 600cf26a9e7db5b3
+inputHash: 4432535cf3f433ea
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

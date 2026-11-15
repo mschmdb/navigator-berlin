@@ -3,7 +3,7 @@ slug: dammvorstadt
 name: Dammvorstadt
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: bbdc2b31cad0e762
+inputHash: 76256db7e9efc0cc
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

@@ -3,7 +3,7 @@ slug: spandau
 name: Spandau
 pageType: bezirk
 model: claude-opus-4-8 (subagent)
-inputHash: e6968b50ada5e713
+inputHash: 42d2361629cedcd3
 generatedAt: '2026-06-07T16:56:20.188Z'
 ---
 

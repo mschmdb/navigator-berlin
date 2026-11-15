@@ -3,7 +3,7 @@ slug: lichtenrade-sued
 name: Lichtenrade Süd
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: 3eb78510c7cdee3d
+inputHash: b5e5d4569b8d0865
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

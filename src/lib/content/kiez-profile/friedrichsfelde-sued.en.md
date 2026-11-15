@@ -3,7 +3,7 @@ slug: friedrichsfelde-sued
 name: Friedrichsfelde Süd
 pageType: kiez
 locale: en
-sourceInputHash: '6136c2999286ac89'
+sourceInputHash: 'f7532abb635d3bb9'
 sourceTextHash: 'c835ad66d1686a21'
 model: 'claude (subagent translation)'
 translatedAt: '2026-09-30T12:00:00.000Z'

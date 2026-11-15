@@ -3,7 +3,7 @@ slug: biesdorf
 name: Biesdorf
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: 4ac67f646d435ee0
+inputHash: c89b72f9bd69ff90
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

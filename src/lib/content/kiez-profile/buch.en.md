@@ -3,7 +3,7 @@ slug: buch
 name: Buch
 pageType: kiez
 locale: en
-sourceInputHash: '1a50a99aeeb83309'
+sourceInputHash: 'e37a6c9b5ea556b8'
 sourceTextHash: '7a69211700f25e05'
 model: 'claude (subagent translation)'
 translatedAt: '2026-09-30T12:00:00.000Z'

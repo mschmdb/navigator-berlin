@@ -3,7 +3,7 @@ slug: halensee
 name: Halensee
 pageType: kiez
 locale: en
-sourceInputHash: '819dc0f592364eb4'
+sourceInputHash: 'b617ebfe2ecdf9ac'
 sourceTextHash: '305a8717e854cab7'
 model: 'claude (subagent translation)'
 translatedAt: '2026-09-30T12:00:00.000Z'

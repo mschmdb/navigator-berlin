@@ -3,7 +3,7 @@ slug: hakenfelde
 name: Hakenfelde
 pageType: kiez
 locale: en
-sourceInputHash: 'd2f753b2ab6b75e3'
+sourceInputHash: '4a39faa196fd7170'
 sourceTextHash: '3a8dacb271cb35e6'
 model: 'claude (subagent translation)'
 translatedAt: '2026-09-30T12:00:00.000Z'

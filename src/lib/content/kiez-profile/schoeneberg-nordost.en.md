@@ -3,7 +3,7 @@ slug: schoeneberg-nordost
 name: Schöneberg Nordost
 pageType: kiez
 locale: en
-sourceInputHash: 'b77fb483531aa130'
+sourceInputHash: '28068e9366ef7983'
 sourceTextHash: '445d1f05d517b166'
 model: 'claude (subagent translation)'
 translatedAt: '2026-09-30T12:00:00.000Z'

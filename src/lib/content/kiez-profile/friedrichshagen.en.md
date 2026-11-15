@@ -3,7 +3,7 @@ slug: friedrichshagen
 name: Friedrichshagen
 pageType: kiez
 locale: en
-sourceInputHash: '8e65ac5975ffa568'
+sourceInputHash: '9c0b83c5359b6f42'
 sourceTextHash: '16825b41bcf3fc7e'
 model: 'claude (subagent translation)'
 translatedAt: '2026-09-30T12:00:00.000Z'

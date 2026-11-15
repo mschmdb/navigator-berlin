@@ -3,7 +3,7 @@ slug: regierungsviertel
 name: Regierungsviertel
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: 434c1b70b534a80e
+inputHash: 89b755998ede2b50
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

@@ -3,7 +3,7 @@ slug: falkenhagener-feld
 name: Falkenhagener Feld
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: 5d65b584b4121daf
+inputHash: 647a2a3b800dd654
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

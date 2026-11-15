@@ -3,7 +3,7 @@ slug: helmholtzplatz
 name: Helmholtzplatz
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: a4369fb31911d246
+inputHash: a1245d986b570c77
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

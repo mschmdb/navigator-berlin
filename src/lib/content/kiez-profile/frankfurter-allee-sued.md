@@ -3,7 +3,7 @@ slug: frankfurter-allee-sued
 name: Frankfurter Allee Süd
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: 45ac6e153b57ec67
+inputHash: d1825eee4fc0ee8c
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

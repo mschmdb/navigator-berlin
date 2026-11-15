@@ -3,7 +3,7 @@ slug: karow
 name: Karow
 pageType: kiez
 locale: en
-sourceInputHash: 'd96825c5185817f1'
+sourceInputHash: 'b5b2e74468be12b2'
 sourceTextHash: 'ba7c064df307e52d'
 model: 'claude (subagent translation)'
 translatedAt: '2026-09-30T12:00:00.000Z'

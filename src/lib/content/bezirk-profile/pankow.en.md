@@ -3,7 +3,7 @@ slug: pankow
 name: Pankow
 pageType: bezirk
 locale: en
-sourceInputHash: '069b058b251d15cb'
+sourceInputHash: '0e890c8ccee231e3'
 sourceTextHash: 'ab85c00d9221a973'
 model: 'claude (subagent translation)'
 translatedAt: '2026-09-30T12:00:00.000Z'

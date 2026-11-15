@@ -3,7 +3,7 @@ slug: brunnenstrasse-sued
 name: Brunnenstraße Süd
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: 3b94fedf7eab2666
+inputHash: cf611cb41dbb6440
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

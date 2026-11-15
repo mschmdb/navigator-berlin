@@ -3,7 +3,7 @@ slug: mv-sued
 name: MV Süd
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: b5e3d2933037fa4f
+inputHash: afdb32f262f775b2
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

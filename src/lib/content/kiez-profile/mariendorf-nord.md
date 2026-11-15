@@ -3,7 +3,7 @@ slug: mariendorf-nord
 name: Mariendorf Nord
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: f7b839fe7ca00005
+inputHash: c90d8fc6795914d7
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

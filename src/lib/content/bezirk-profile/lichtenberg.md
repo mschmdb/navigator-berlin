@@ -3,7 +3,7 @@ slug: lichtenberg
 name: Lichtenberg
 pageType: bezirk
 model: claude-opus-4-8 (subagent)
-inputHash: 8767f4dc8fe350dd
+inputHash: 01e0091e3853dc08
 generatedAt: '2026-06-07T16:56:20.188Z'
 ---
 

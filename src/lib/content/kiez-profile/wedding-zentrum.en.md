@@ -3,7 +3,7 @@ slug: wedding-zentrum
 name: Wedding Zentrum
 pageType: kiez
 locale: en
-sourceInputHash: '8a3a44c93b8109e1'
+sourceInputHash: '6db78ee9d6b12c7e'
 sourceTextHash: '3f7b8d6e5edc4e51'
 model: 'claude (subagent translation)'
 translatedAt: '2026-09-30T12:00:00.000Z'

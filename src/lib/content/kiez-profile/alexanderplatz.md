@@ -3,7 +3,7 @@ slug: alexanderplatz
 name: Alexanderplatz
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: d9c047ce3f29e99a
+inputHash: 4a25d7036f276d26
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

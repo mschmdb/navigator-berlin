@@ -3,7 +3,7 @@ slug: prenzlauer-berg-nord
 name: Prenzlauer Berg Nord
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: ce015bbf91132e7e
+inputHash: b71fab78d88adb2c
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

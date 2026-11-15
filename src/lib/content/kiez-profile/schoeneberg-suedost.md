@@ -3,7 +3,7 @@ slug: schoeneberg-suedost
 name: Schöneberg Südost
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: abd47e8dfbc692c6
+inputHash: 64e5ebd21c71ca88
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

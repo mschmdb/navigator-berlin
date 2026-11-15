@@ -3,7 +3,7 @@ slug: koellnische-vorstadt-spindlersfeld
 name: Köllnische Vorstadt/Spindlersfeld
 pageType: kiez
 locale: en
-sourceInputHash: '2da0594e8dcca393'
+sourceInputHash: 'e84acae938765930'
 sourceTextHash: 'f4a7e1b1d061d795'
 model: 'claude (subagent translation)'
 translatedAt: '2026-09-30T12:00:00.000Z'

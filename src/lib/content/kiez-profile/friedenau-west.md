@@ -3,7 +3,7 @@ slug: friedenau-west
 name: Friedenau West
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: ab094fac48c8aef3
+inputHash: 63430fc3a6fc42e4
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

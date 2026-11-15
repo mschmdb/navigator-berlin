@@ -3,7 +3,7 @@ slug: alt-treptow
 name: Alt-Treptow
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: 7033d039422bad74
+inputHash: 00bb4de514b41b0a
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

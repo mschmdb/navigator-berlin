@@ -3,7 +3,7 @@ slug: bohnsdorf
 name: Bohnsdorf
 pageType: kiez
 locale: en
-sourceInputHash: '4ce7dc0c68ef71c2'
+sourceInputHash: '0a7697358326a04d'
 sourceTextHash: '4e0398fe09c19d82'
 model: 'claude (subagent translation)'
 translatedAt: '2026-09-30T12:00:00.000Z'

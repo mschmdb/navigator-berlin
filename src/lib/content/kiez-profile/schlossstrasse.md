@@ -3,7 +3,7 @@ slug: schlossstrasse
 name: Schloßstraße
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: b886229dc0f04f8f
+inputHash: c2c665762add040d
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

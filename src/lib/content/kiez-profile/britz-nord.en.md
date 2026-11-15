@@ -3,7 +3,7 @@ slug: britz-nord
 name: Britz Nord
 pageType: kiez
 locale: en
-sourceInputHash: '00f3aa1d4eb5ddd0'
+sourceInputHash: '4d20a321bedb0a97'
 sourceTextHash: 'a6f3404777e0182e'
 model: 'claude (subagent translation)'
 translatedAt: '2026-09-30T12:00:00.000Z'

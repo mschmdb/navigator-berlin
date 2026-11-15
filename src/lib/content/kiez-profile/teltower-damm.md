@@ -3,7 +3,7 @@ slug: teltower-damm
 name: Teltower Damm
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: df130cdd99654dde
+inputHash: 423ad002f921a246
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

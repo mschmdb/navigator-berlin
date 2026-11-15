@@ -3,7 +3,7 @@ slug: friedenau-west
 name: Friedenau West
 pageType: kiez
 locale: en
-sourceInputHash: 'ab094fac48c8aef3'
+sourceInputHash: '63430fc3a6fc42e4'
 sourceTextHash: 'fcdbfd93d5e507ae'
 model: 'claude (subagent translation)'
 translatedAt: '2026-09-30T12:00:00.000Z'

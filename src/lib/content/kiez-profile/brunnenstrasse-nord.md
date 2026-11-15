@@ -3,7 +3,7 @@ slug: brunnenstrasse-nord
 name: Brunnenstraße Nord
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: ea9ffe59fe361e74
+inputHash: 2c2115dd160d148c
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

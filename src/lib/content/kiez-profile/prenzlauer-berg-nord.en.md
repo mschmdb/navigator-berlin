@@ -3,7 +3,7 @@ slug: prenzlauer-berg-nord
 name: Prenzlauer Berg Nord
 pageType: kiez
 locale: en
-sourceInputHash: 'ce015bbf91132e7e'
+sourceInputHash: 'b71fab78d88adb2c'
 sourceTextHash: '53a0f22985f6380d'
 model: 'claude (subagent translation)'
 translatedAt: '2026-09-30T12:00:00.000Z'

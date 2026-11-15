@@ -3,7 +3,7 @@ slug: rixdorf
 name: Rixdorf
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: d0c55c3a7386afe1
+inputHash: 20e23a820792b9b7
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

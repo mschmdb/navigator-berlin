@@ -3,7 +3,7 @@ slug: spandau-mitte
 name: Spandau Mitte
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: 1a103d9d102f6616
+inputHash: ae5cdb4b40754261
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

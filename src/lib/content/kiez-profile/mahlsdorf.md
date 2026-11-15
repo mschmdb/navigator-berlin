@@ -3,7 +3,7 @@ slug: mahlsdorf
 name: Mahlsdorf
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: 7e07fe1e0508d124
+inputHash: 6042fc0a277152b6
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

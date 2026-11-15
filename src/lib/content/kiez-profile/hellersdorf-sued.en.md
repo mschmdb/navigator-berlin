@@ -3,7 +3,7 @@ slug: hellersdorf-sued
 name: Hellersdorf Süd
 pageType: kiez
 locale: en
-sourceInputHash: 'd1e558936eee28a9'
+sourceInputHash: 'eb6498e0788086e9'
 sourceTextHash: 'ddda7f0da86a15e9'
 model: 'claude (subagent translation)'
 translatedAt: '2026-09-30T12:00:00.000Z'

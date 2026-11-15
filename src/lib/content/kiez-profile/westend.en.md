@@ -3,7 +3,7 @@ slug: westend
 name: Westend
 pageType: kiez
 locale: en
-sourceInputHash: 'fc949687b6b4a7b7'
+sourceInputHash: '2d90852aec40a48b'
 sourceTextHash: '14b2e84844ddc952'
 model: 'claude (subagent translation)'
 translatedAt: '2026-09-30T12:00:00.000Z'

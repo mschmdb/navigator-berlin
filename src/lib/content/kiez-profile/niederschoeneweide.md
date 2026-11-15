@@ -3,7 +3,7 @@ slug: niederschoeneweide
 name: Niederschöneweide
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: 3f09587b1d26b650
+inputHash: 1363eb61012720f5
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

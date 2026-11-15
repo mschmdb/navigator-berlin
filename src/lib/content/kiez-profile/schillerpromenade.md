@@ -3,7 +3,7 @@ slug: schillerpromenade
 name: Schillerpromenade
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: b9c48126b889a4bc
+inputHash: 9ae99af9274c08b5
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

@@ -3,7 +3,7 @@ slug: ost-1-reginhardstrasse
 name: Ost 1 - Reginhardstraße
 pageType: kiez
 locale: en
-sourceInputHash: 'a6ae4524fb417074'
+sourceInputHash: 'e5a0f2a5d6c32d8d'
 sourceTextHash: 'e9d1c15cc6d5effc'
 model: 'claude (subagent translation)'
 translatedAt: '2026-09-30T12:00:00.000Z'

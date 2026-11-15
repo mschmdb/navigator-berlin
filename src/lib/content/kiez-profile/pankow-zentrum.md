@@ -3,7 +3,7 @@ slug: pankow-zentrum
 name: Pankow Zentrum
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: 3d861e4ed93cfde9
+inputHash: b0f916350d1e3ff9
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

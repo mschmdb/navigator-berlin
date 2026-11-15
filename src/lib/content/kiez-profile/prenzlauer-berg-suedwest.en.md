@@ -3,7 +3,7 @@ slug: prenzlauer-berg-suedwest
 name: Prenzlauer Berg Südwest
 pageType: kiez
 locale: en
-sourceInputHash: '6ce12dac74149664'
+sourceInputHash: '5bdc7512e143474b'
 sourceTextHash: '66ddfc05535ac245'
 model: 'claude (subagent translation)'
 translatedAt: '2026-09-30T12:00:00.000Z'

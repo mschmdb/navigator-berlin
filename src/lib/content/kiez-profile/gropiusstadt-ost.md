@@ -3,7 +3,7 @@ slug: gropiusstadt-ost
 name: Gropiusstadt Ost
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: 33f00b122979c0b3
+inputHash: 07aa801f52d09864
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

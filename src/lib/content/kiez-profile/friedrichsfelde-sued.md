@@ -3,7 +3,7 @@ slug: friedrichsfelde-sued
 name: Friedrichsfelde Süd
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: 6136c2999286ac89
+inputHash: f7532abb635d3bb9
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

@@ -3,7 +3,7 @@ slug: pankow
 name: Pankow
 pageType: bezirk
 model: claude-opus-4-8 (subagent)
-inputHash: 069b058b251d15cb
+inputHash: 0e890c8ccee231e3
 generatedAt: '2026-06-07T16:56:20.188Z'
 ---
 

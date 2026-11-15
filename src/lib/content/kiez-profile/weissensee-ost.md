@@ -3,7 +3,7 @@ slug: weissensee-ost
 name: Weißensee Ost
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: 1defdc9b9fd12c2d
+inputHash: 1d4df3089f041005
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

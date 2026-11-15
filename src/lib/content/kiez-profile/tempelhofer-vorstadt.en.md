@@ -3,7 +3,7 @@ slug: tempelhofer-vorstadt
 name: Tempelhofer Vorstadt
 pageType: kiez
 locale: en
-sourceInputHash: '474f0757a72c3f42'
+sourceInputHash: '4282ff601b3a1f74'
 sourceTextHash: '20841af3093fba4c'
 model: 'claude (subagent translation)'
 translatedAt: '2026-09-30T12:00:00.000Z'

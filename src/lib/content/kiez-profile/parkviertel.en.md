@@ -3,7 +3,7 @@ slug: parkviertel
 name: Parkviertel
 pageType: kiez
 locale: en
-sourceInputHash: '162602c0709670ae'
+sourceInputHash: '0c018379431c4bac'
 sourceTextHash: '01e02f232a4ab490'
 model: 'claude (subagent translation)'
 translatedAt: '2026-09-30T12:00:00.000Z'

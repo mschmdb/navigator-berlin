@@ -3,7 +3,7 @@ slug: reinickendorf
 name: Reinickendorf
 pageType: bezirk
 model: claude-opus-4-8 (subagent)
-inputHash: 7dd9f9853ed9d0cf
+inputHash: 2e30cffc5e721070
 generatedAt: '2026-06-07T16:56:20.188Z'
 ---
 

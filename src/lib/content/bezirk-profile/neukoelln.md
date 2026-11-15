@@ -3,7 +3,7 @@ slug: neukoelln
 name: Neukölln
 pageType: bezirk
 model: claude-opus-4-8 (subagent)
-inputHash: 27ddf6fbb500793b
+inputHash: ddbc773d659c283c
 generatedAt: '2026-06-07T16:56:20.188Z'
 ---
 

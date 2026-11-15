@@ -3,7 +3,7 @@ slug: neu-hohenschoenhausen-nord
 name: Neu-Hohenschönhausen Nord
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: a7b22b909b0868d6
+inputHash: 3bc7403665bb9597
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

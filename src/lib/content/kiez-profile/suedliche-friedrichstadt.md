@@ -3,7 +3,7 @@ slug: suedliche-friedrichstadt
 name: Südliche Friedrichstadt
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: 172d9f6546a29beb
+inputHash: 94b2e9dd1a1208dc
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

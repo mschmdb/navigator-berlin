@@ -3,7 +3,7 @@ slug: schmoeckwitz
 name: Schmöckwitz
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: d17ddef5135dc633
+inputHash: f84c0a6674374026
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

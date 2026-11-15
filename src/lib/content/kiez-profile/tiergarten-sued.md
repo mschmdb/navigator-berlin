@@ -3,7 +3,7 @@ slug: tiergarten-sued
 name: Tiergarten Süd
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: 79e5d4880a2d604f
+inputHash: db129375f62de512
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

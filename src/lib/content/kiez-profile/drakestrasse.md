@@ -3,7 +3,7 @@ slug: drakestrasse
 name: Drakestraße
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: 9a4eb4e6105e4b03
+inputHash: 76817fe8b94df95f
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

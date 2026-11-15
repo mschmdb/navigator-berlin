@@ -3,7 +3,7 @@ slug: rollbergesiedlung
 name: Rollbergesiedlung
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: dcccf7f4c0e23144
+inputHash: d62cca0d85a546fa
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

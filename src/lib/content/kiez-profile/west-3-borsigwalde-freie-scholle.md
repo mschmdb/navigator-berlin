@@ -3,7 +3,7 @@ slug: west-3-borsigwalde-freie-scholle
 name: West 3 - Borsigwalde/Freie Scholle
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: 7321f1de5bda6aff
+inputHash: 7886d0de9a21b972
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

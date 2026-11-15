@@ -3,7 +3,7 @@ slug: oberschoeneweide
 name: Oberschöneweide
 pageType: kiez
 locale: en
-sourceInputHash: '0a65b1d7e1d8cbe3'
+sourceInputHash: '03c37c83eab3d7e8'
 sourceTextHash: '02e222cc67958616'
 model: 'claude (subagent translation)'
 translatedAt: '2026-09-30T12:00:00.000Z'

@@ -3,7 +3,7 @@ slug: siemensstadt
 name: Siemensstadt
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: 50334ba1673acc69
+inputHash: fc07ccf2abb842c3
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

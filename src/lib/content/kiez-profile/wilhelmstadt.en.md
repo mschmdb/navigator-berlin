@@ -3,7 +3,7 @@ slug: wilhelmstadt
 name: Wilhelmstadt
 pageType: kiez
 locale: en
-sourceInputHash: '7a709e77f82a18a3'
+sourceInputHash: '7ddf2d1f4574e652'
 sourceTextHash: '75ce03d7484394ff'
 model: 'claude (subagent translation)'
 translatedAt: '2026-09-30T12:00:00.000Z'

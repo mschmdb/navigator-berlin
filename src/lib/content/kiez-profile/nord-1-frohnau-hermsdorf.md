@@ -3,7 +3,7 @@ slug: nord-1-frohnau-hermsdorf
 name: Nord 1 - Frohnau/Hermsdorf
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: 05f6d3cd04c4ad85
+inputHash: 1344b449b8296fd8
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

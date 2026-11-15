@@ -3,7 +3,7 @@ slug: treptow-koepenick
 name: Treptow-Köpenick
 pageType: bezirk
 locale: en
-sourceInputHash: 'fe669a97ff6cd8d9'
+sourceInputHash: '23292208ae8480b4'
 sourceTextHash: 'da55c1756fd8f330'
 model: 'claude (subagent translation)'
 translatedAt: '2026-09-30T12:00:00.000Z'

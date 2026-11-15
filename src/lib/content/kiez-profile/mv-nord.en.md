@@ -3,7 +3,7 @@ slug: mv-nord
 name: MV Nord
 pageType: kiez
 locale: en
-sourceInputHash: '1015922883ab21d5'
+sourceInputHash: 'c62ef0d07f803dea'
 sourceTextHash: '160f906c8e675aed'
 model: 'claude (subagent translation)'
 translatedAt: '2026-09-30T12:00:00.000Z'

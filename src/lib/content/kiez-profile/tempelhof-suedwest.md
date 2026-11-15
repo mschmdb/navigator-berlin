@@ -3,7 +3,7 @@ slug: tempelhof-suedwest
 name: Tempelhof Südwest
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: 3890f3529d988698
+inputHash: e71ce4de9bc67e06
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

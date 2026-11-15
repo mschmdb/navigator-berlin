@@ -3,7 +3,7 @@ slug: albrechtstrasse
 name: Albrechtstraße
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: d39a0b111e44bc6f
+inputHash: 2bafd112214ba4b4
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

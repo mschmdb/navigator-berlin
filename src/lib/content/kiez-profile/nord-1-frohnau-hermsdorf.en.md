@@ -3,7 +3,7 @@ slug: nord-1-frohnau-hermsdorf
 name: Nord 1 - Frohnau/Hermsdorf
 pageType: kiez
 locale: en
-sourceInputHash: '05f6d3cd04c4ad85'
+sourceInputHash: '1344b449b8296fd8'
 sourceTextHash: 'c7fa6689c80f1ca4'
 model: 'claude (subagent translation)'
 translatedAt: '2026-09-30T12:00:00.000Z'

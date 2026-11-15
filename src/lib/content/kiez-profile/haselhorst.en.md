@@ -3,7 +3,7 @@ slug: haselhorst
 name: Haselhorst
 pageType: kiez
 locale: en
-sourceInputHash: '2da25b4ac30ef32f'
+sourceInputHash: 'c3bdf7fc5fa78aaa'
 sourceTextHash: '8d1dd6d468789167'
 model: 'claude (subagent translation)'
 translatedAt: '2026-09-30T12:00:00.000Z'

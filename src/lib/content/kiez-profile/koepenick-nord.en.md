@@ -3,7 +3,7 @@ slug: koepenick-nord
 name: Köpenick Nord
 pageType: kiez
 locale: en
-sourceInputHash: 'dea9df90d8c39f66'
+sourceInputHash: 'd7a251c06944835f'
 sourceTextHash: '3db597e6245c87b0'
 model: 'claude (subagent translation)'
 translatedAt: '2026-09-30T12:00:00.000Z'

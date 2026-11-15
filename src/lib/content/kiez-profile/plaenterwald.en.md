@@ -3,7 +3,7 @@ slug: plaenterwald
 name: Plänterwald
 pageType: kiez
 locale: en
-sourceInputHash: '4cba390a4aac15dd'
+sourceInputHash: '799c1677d1951e3e'
 sourceTextHash: '5e1d0eb15e1cf6ce'
 model: 'claude (subagent translation)'
 translatedAt: '2026-09-30T12:00:00.000Z'

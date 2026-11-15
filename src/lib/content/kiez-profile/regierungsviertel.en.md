@@ -3,7 +3,7 @@ slug: regierungsviertel
 name: Regierungsviertel
 pageType: kiez
 locale: en
-sourceInputHash: '434c1b70b534a80e'
+sourceInputHash: '89b755998ede2b50'
 sourceTextHash: 'd10b4e681b8929b5'
 model: 'claude (subagent translation)'
 translatedAt: '2026-09-30T12:00:00.000Z'

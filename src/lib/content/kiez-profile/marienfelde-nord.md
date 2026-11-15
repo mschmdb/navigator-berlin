@@ -3,7 +3,7 @@ slug: marienfelde-nord
 name: Marienfelde Nord
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: 6f8e9ac9e5d17664
+inputHash: 0633bb5e800ad987
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

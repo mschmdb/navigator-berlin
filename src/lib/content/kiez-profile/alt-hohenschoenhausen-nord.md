@@ -3,7 +3,7 @@ slug: alt-hohenschoenhausen-nord
 name: Alt-Hohenschönhausen Nord
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: 65e08dc0b0658f31
+inputHash: 2cf3245b8096ed62
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

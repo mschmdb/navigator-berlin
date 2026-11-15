@@ -3,7 +3,7 @@ slug: moabit-ost
 name: Moabit Ost
 pageType: kiez
 locale: en
-sourceInputHash: '091beb76b50a28fc'
+sourceInputHash: 'c2e20bb2e8443816'
 sourceTextHash: '8e4fced170006fae'
 model: 'claude (subagent translation)'
 translatedAt: '2026-09-30T12:00:00.000Z'

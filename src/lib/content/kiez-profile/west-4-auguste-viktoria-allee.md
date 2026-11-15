@@ -3,7 +3,7 @@ slug: west-4-auguste-viktoria-allee
 name: West 4 - Auguste-Viktoria-Allee
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: 005501b976716329
+inputHash: 16ebffe5ca3845e2
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

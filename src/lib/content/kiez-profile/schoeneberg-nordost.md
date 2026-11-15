@@ -3,7 +3,7 @@ slug: schoeneberg-nordost
 name: Schöneberg Nordost
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: b77fb483531aa130
+inputHash: 28068e9366ef7983
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

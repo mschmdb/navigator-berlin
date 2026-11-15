@@ -3,7 +3,7 @@ slug: schoeneberg-nordwest
 name: Schöneberg Nordwest
 pageType: kiez
 locale: en
-sourceInputHash: '3161c6b13178d3bd'
+sourceInputHash: '8e6a09a59ca843d3'
 sourceTextHash: '86e13b32ad0e7ba0'
 model: 'claude (subagent translation)'
 translatedAt: '2026-09-30T12:00:00.000Z'

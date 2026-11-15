@@ -3,7 +3,7 @@ slug: helmholtzplatz
 name: Helmholtzplatz
 pageType: kiez
 locale: en
-sourceInputHash: 'a4369fb31911d246'
+sourceInputHash: 'a1245d986b570c77'
 sourceTextHash: '348b9ed6cbb8141a'
 model: 'claude (subagent translation)'
 translatedAt: '2026-09-30T12:00:00.000Z'

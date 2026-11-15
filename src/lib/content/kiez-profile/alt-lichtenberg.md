@@ -3,7 +3,7 @@ slug: alt-lichtenberg
 name: Alt-Lichtenberg
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: 3b6c3d23c4fe7a86
+inputHash: 2b743dda88479f15
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

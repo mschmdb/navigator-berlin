@@ -3,7 +3,7 @@ slug: karlshorst
 name: Karlshorst
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: 9e7eea6b80827617
+inputHash: 9bbb876ff47dec9d
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

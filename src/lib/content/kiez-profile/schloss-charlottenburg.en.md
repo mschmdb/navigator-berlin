@@ -3,7 +3,7 @@ slug: schloss-charlottenburg
 name: Schloss Charlottenburg
 pageType: kiez
 locale: en
-sourceInputHash: '04210ffce3874079'
+sourceInputHash: 'dad564746f376866'
 sourceTextHash: 'f181ee0e02b973cc'
 model: 'claude (subagent translation)'
 translatedAt: '2026-09-30T12:00:00.000Z'

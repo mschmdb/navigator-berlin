@@ -3,7 +3,7 @@ slug: reuterstrasse
 name: Reuterstraße
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: b75269f485b77255
+inputHash: 7a17ddaee0bd8d05
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

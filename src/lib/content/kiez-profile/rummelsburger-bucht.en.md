@@ -3,7 +3,7 @@ slug: rummelsburger-bucht
 name: Rummelsburger Bucht
 pageType: kiez
 locale: en
-sourceInputHash: '8465bc1373d94502'
+sourceInputHash: '3ed9955944db663b'
 sourceTextHash: 'a6cb5a960a4bd27c'
 model: 'claude (subagent translation)'
 translatedAt: '2026-09-30T12:00:00.000Z'

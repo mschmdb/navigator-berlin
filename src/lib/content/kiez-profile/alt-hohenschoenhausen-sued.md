@@ -3,7 +3,7 @@ slug: alt-hohenschoenhausen-sued
 name: Alt-Hohenschönhausen Süd
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: 0153d7c0cc572bc5
+inputHash: 343d370a84de6d62
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

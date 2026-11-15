@@ -3,7 +3,7 @@ slug: suedliche-luisenstadt
 name: Südliche Luisenstadt
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: 68f2733c2a8f7782
+inputHash: 2439c2c19c2c957c
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

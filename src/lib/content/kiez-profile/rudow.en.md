@@ -3,7 +3,7 @@ slug: rudow
 name: Rudow
 pageType: kiez
 locale: en
-sourceInputHash: 'a78dddd8bf206672'
+sourceInputHash: 'ce49e2b7d12a4e62'
 sourceTextHash: 'eb60dcb24304af2d'
 model: 'claude (subagent translation)'
 translatedAt: '2026-09-30T12:00:00.000Z'

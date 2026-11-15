@@ -3,7 +3,7 @@ slug: charlottenburg-wilmersdorf
 name: Charlottenburg-Wilmersdorf
 pageType: bezirk
 locale: en
-sourceInputHash: '53af2578e6b760c7'
+sourceInputHash: 'd5b738dad4a35fa9'
 sourceTextHash: '82e4860e528a6d93'
 model: 'claude (subagent translation)'
 translatedAt: '2026-09-30T12:00:00.000Z'

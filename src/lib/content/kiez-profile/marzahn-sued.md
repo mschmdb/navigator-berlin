@@ -3,7 +3,7 @@ slug: marzahn-sued
 name: Marzahn Süd
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: 8140c38ad42ffc58
+inputHash: 6c749545b126f04b
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

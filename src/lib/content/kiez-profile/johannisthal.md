@@ -3,7 +3,7 @@ slug: johannisthal
 name: Johannisthal
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: 2102cb8267e968ad
+inputHash: 99bdc79a7fb31d4d
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

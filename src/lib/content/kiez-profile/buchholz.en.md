@@ -3,7 +3,7 @@ slug: buchholz
 name: Buchholz
 pageType: kiez
 locale: en
-sourceInputHash: 'caa3d8c379bb09ab'
+sourceInputHash: '53e8950dc669fd63'
 sourceTextHash: 'd036deacbe46906a'
 model: 'claude (subagent translation)'
 translatedAt: '2026-09-30T12:00:00.000Z'

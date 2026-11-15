@@ -3,7 +3,7 @@ slug: schloss-charlottenburg
 name: Schloss Charlottenburg
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: 04210ffce3874079
+inputHash: dad564746f376866
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

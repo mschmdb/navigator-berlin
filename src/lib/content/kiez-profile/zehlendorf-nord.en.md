@@ -3,7 +3,7 @@ slug: zehlendorf-nord
 name: Zehlendorf Nord
 pageType: kiez
 locale: en
-sourceInputHash: 'ae1e1697639b6b64'
+sourceInputHash: 'f1add92218215e03'
 sourceTextHash: 'c6774fb618da085f'
 model: 'claude (subagent translation)'
 translatedAt: '2026-09-30T12:00:00.000Z'

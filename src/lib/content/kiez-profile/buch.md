@@ -3,7 +3,7 @@ slug: buch
 name: Buch
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: 1a50a99aeeb83309
+inputHash: e37a6c9b5ea556b8
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

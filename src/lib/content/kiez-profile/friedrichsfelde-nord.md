@@ -3,7 +3,7 @@ slug: friedrichsfelde-nord
 name: Friedrichsfelde Nord
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: 097fd4cc1c70ea28
+inputHash: c0939a2b16a367bf
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

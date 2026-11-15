@@ -3,8 +3,8 @@ slug: prenzlauer-berg-sued
 name: Prenzlauer Berg Süd
 pageType: kiez
 locale: en
-sourceInputHash: '6d13b3bd260bf995'
-sourceTextHash: '405917a4548d96e4'
+sourceInputHash: '5f469bc8d675a5a1'
+sourceTextHash: '502c279416410811'
 model: 'claude (subagent translation)'
 translatedAt: '2026-09-30T12:00:00.000Z'
 ---

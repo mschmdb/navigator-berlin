@@ -3,7 +3,7 @@ slug: plaenterwald
 name: Plänterwald
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: 4cba390a4aac15dd
+inputHash: 799c1677d1951e3e
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

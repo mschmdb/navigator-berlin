@@ -3,7 +3,7 @@ slug: koepenick-sued
 name: Köpenick Süd
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: 00f395acbde3fb5d
+inputHash: 3fff4fff73293676
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

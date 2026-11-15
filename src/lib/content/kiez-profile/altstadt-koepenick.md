@@ -3,7 +3,7 @@ slug: altstadt-koepenick
 name: Altstadt Köpenick
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: e4fa6d2fd3094641
+inputHash: dd5f544344b8cbe6
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

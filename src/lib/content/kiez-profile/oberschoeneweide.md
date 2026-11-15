@@ -3,7 +3,7 @@ slug: oberschoeneweide
 name: Oberschöneweide
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: 0a65b1d7e1d8cbe3
+inputHash: 03c37c83eab3d7e8
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

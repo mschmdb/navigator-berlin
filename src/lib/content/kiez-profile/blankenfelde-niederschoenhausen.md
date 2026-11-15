@@ -3,7 +3,7 @@ slug: blankenfelde-niederschoenhausen
 name: Blankenfelde/Niederschönhausen
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: 6886db6b75d7ccc2
+inputHash: 4de2b7375723be08
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

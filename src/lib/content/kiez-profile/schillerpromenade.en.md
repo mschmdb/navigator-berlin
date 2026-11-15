@@ -3,7 +3,7 @@ slug: schillerpromenade
 name: Schillerpromenade
 pageType: kiez
 locale: en
-sourceInputHash: 'b9c48126b889a4bc'
+sourceInputHash: '9ae99af9274c08b5'
 sourceTextHash: 'f8011cdfd0324371'
 model: 'claude (subagent translation)'
 translatedAt: '2026-09-30T12:00:00.000Z'

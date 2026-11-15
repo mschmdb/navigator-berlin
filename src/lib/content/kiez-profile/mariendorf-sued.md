@@ -3,7 +3,7 @@ slug: mariendorf-sued
 name: Mariendorf Süd
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: 3daa9bb9302427c0
+inputHash: bfdea1eb0cf36f8b
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

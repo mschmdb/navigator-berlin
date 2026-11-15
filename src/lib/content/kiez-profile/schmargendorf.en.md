@@ -3,7 +3,7 @@ slug: schmargendorf
 name: Schmargendorf
 pageType: kiez
 locale: en
-sourceInputHash: '311571c0e9378d10'
+sourceInputHash: '171a71e1feadfe33'
 sourceTextHash: 'b9d91628ef972294'
 model: 'claude (subagent translation)'
 translatedAt: '2026-09-30T12:00:00.000Z'

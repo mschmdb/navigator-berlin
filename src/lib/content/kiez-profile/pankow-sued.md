@@ -3,7 +3,7 @@ slug: pankow-sued
 name: Pankow Süd
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: 058afcb54f17828b
+inputHash: d2f7da3da301fa6c
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

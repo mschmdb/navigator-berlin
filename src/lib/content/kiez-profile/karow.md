@@ -3,7 +3,7 @@ slug: karow
 name: Karow
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: d96825c5185817f1
+inputHash: b5b2e74468be12b2
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

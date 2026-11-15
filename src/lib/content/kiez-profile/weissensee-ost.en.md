@@ -3,7 +3,7 @@ slug: weissensee-ost
 name: Weißensee Ost
 pageType: kiez
 locale: en
-sourceInputHash: '1defdc9b9fd12c2d'
+sourceInputHash: '1d4df3089f041005'
 sourceTextHash: '6fd8fd0a8251aaa5'
 model: 'claude (subagent translation)'
 translatedAt: '2026-09-30T12:00:00.000Z'

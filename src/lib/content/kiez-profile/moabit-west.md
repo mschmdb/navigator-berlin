@@ -3,7 +3,7 @@ slug: moabit-west
 name: Moabit West
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: 9c2eaa2568bb881a
+inputHash: d9a745603f76278d
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

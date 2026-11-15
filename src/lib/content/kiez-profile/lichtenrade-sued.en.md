@@ -3,7 +3,7 @@ slug: lichtenrade-sued
 name: Lichtenrade Süd
 pageType: kiez
 locale: en
-sourceInputHash: '3eb78510c7cdee3d'
+sourceInputHash: 'b5e5d4569b8d0865'
 sourceTextHash: '98747f02ebf655a0'
 model: 'claude (subagent translation)'
 translatedAt: '2026-09-30T12:00:00.000Z'

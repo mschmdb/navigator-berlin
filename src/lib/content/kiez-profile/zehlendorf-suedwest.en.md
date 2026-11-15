@@ -3,7 +3,7 @@ slug: zehlendorf-suedwest
 name: Zehlendorf Südwest
 pageType: kiez
 locale: en
-sourceInputHash: '7db0d1276f1ada16'
+sourceInputHash: '5e91466bad6c032c'
 sourceTextHash: '02b04ff2125c944f'
 model: 'claude (subagent translation)'
 translatedAt: '2026-09-30T12:00:00.000Z'

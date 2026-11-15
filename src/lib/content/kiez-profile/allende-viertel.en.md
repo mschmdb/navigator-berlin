@@ -3,7 +3,7 @@ slug: allende-viertel
 name: Allende-Viertel
 pageType: kiez
 locale: en
-sourceInputHash: 'a02c98a73ddfc244'
+sourceInputHash: 'a0cce5cadacdc2ef'
 sourceTextHash: '912395ec07b65df4'
 model: 'claude (subagent translation)'
 translatedAt: '2026-09-30T12:00:00.000Z'

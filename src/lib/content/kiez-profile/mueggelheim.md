@@ -3,7 +3,7 @@ slug: mueggelheim
 name: Müggelheim
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: 71c0750f015184a3
+inputHash: 32fce1d6312103d1
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

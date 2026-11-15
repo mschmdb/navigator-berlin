@@ -3,7 +3,7 @@ slug: tempelhof-schoeneberg
 name: Tempelhof-Schöneberg
 pageType: bezirk
 model: claude-opus-4-8 (subagent)
-inputHash: 81b74bd8ba24fb72
+inputHash: 14538c391c4b1b74
 generatedAt: '2026-06-07T16:56:20.188Z'
 ---
 

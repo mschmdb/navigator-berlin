@@ -3,7 +3,7 @@ slug: prenzlauer-berg-nordwest
 name: Prenzlauer Berg Nordwest
 pageType: kiez
 locale: en
-sourceInputHash: '0bbce1c8dff1d291'
+sourceInputHash: '20fc6566df73d21e'
 sourceTextHash: '28b60fd9819d72f1'
 model: 'claude (subagent translation)'
 translatedAt: '2026-09-30T12:00:00.000Z'

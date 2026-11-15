@@ -3,7 +3,7 @@ slug: koepenick-nord
 name: Köpenick Nord
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: dea9df90d8c39f66
+inputHash: d7a251c06944835f
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

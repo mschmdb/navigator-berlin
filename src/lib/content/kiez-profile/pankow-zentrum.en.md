@@ -3,7 +3,7 @@ slug: pankow-zentrum
 name: Pankow Zentrum
 pageType: kiez
 locale: en
-sourceInputHash: '3d861e4ed93cfde9'
+sourceInputHash: 'b0f916350d1e3ff9'
 sourceTextHash: '482435395fe164ba'
 model: 'claude (subagent translation)'
 translatedAt: '2026-09-30T12:00:00.000Z'

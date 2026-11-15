@@ -3,7 +3,7 @@ slug: alt-lichtenberg
 name: Alt-Lichtenberg
 pageType: kiez
 locale: en
-sourceInputHash: '3b6c3d23c4fe7a86'
+sourceInputHash: '2b743dda88479f15'
 sourceTextHash: '6e5a21dc0abae22c'
 model: 'claude (subagent translation)'
 translatedAt: '2026-09-30T12:00:00.000Z'

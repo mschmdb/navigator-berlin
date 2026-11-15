@@ -3,7 +3,7 @@ slug: ost-1-reginhardstrasse
 name: Ost 1 - Reginhardstraße
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: a6ae4524fb417074
+inputHash: e5a0f2a5d6c32d8d
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

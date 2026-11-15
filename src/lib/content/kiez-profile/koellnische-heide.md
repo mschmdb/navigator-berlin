@@ -3,7 +3,7 @@ slug: koellnische-heide
 name: Köllnische Heide
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: 7a557416821504da
+inputHash: 5b01449d3f370139
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

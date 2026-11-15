@@ -3,7 +3,7 @@ slug: neu-lichtenberg
 name: Neu-Lichtenberg
 pageType: kiez
 locale: en
-sourceInputHash: '5938d1f021a79677'
+sourceInputHash: 'aa75d8447ffca570'
 sourceTextHash: '0ce6d49d32395949'
 model: 'claude (subagent translation)'
 translatedAt: '2026-09-30T12:00:00.000Z'

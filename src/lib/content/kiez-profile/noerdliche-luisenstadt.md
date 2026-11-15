@@ -3,7 +3,7 @@ slug: noerdliche-luisenstadt
 name: Nördliche Luisenstadt
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: 99c6eac0088d50ad
+inputHash: a9b3c991e33bd47b
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

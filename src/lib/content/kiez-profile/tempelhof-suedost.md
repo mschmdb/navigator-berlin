@@ -3,7 +3,7 @@ slug: tempelhof-suedost
 name: Tempelhof Südost
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: 8da3f8e2afa39724
+inputHash: 4d8efc77d651e017
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

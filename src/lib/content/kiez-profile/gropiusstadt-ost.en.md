@@ -3,7 +3,7 @@ slug: gropiusstadt-ost
 name: Gropiusstadt Ost
 pageType: kiez
 locale: en
-sourceInputHash: '33f00b122979c0b3'
+sourceInputHash: '07aa801f52d09864'
 sourceTextHash: 'b30db3e2a64d3fa3'
 model: 'claude (subagent translation)'
 translatedAt: '2026-09-30T12:00:00.000Z'

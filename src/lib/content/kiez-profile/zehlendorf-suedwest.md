@@ -3,7 +3,7 @@ slug: zehlendorf-suedwest
 name: Zehlendorf Südwest
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: 7db0d1276f1ada16
+inputHash: 5e91466bad6c032c
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

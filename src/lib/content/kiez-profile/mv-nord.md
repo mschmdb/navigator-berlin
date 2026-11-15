@@ -3,7 +3,7 @@ slug: mv-nord
 name: MV Nord
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: 1015922883ab21d5
+inputHash: c62ef0d07f803dea
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

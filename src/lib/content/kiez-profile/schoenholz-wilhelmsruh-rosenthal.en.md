@@ -3,7 +3,7 @@ slug: schoenholz-wilhelmsruh-rosenthal
 name: Schönholz/Wilhelmsruh/Rosenthal
 pageType: kiez
 locale: en
-sourceInputHash: '600cf26a9e7db5b3'
+sourceInputHash: '4432535cf3f433ea'
 sourceTextHash: '7340052fa69b0b3f'
 model: 'claude (subagent translation)'
 translatedAt: '2026-09-30T12:00:00.000Z'

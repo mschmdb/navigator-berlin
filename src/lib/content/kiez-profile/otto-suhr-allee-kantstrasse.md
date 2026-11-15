@@ -3,7 +3,7 @@ slug: otto-suhr-allee-kantstrasse
 name: Otto-Suhr-Allee/Kantstraße
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: 91a3303d0821cbb8
+inputHash: 69aaadf83a90c658
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

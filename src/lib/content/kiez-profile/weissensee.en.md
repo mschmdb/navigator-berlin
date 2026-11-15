@@ -3,7 +3,7 @@ slug: weissensee
 name: Weißensee
 pageType: kiez
 locale: en
-sourceInputHash: '99d02487388e6559'
+sourceInputHash: '1e0c67cd1a043afa'
 sourceTextHash: 'a831f4355d740291'
 model: 'claude (subagent translation)'
 translatedAt: '2026-09-30T12:00:00.000Z'

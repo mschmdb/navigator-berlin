@@ -3,7 +3,7 @@ slug: tiergarten-sued
 name: Tiergarten Süd
 pageType: kiez
 locale: en
-sourceInputHash: '79e5d4880a2d604f'
+sourceInputHash: 'db129375f62de512'
 sourceTextHash: '04ec755a79201bb8'
 model: 'claude (subagent translation)'
 translatedAt: '2026-09-30T12:00:00.000Z'

@@ -3,7 +3,7 @@ slug: haselhorst
 name: Haselhorst
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: 2da25b4ac30ef32f
+inputHash: c3bdf7fc5fa78aaa
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

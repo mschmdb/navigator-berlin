@@ -3,7 +3,7 @@ slug: volkspark-wilmersdorf
 name: Volkspark Wilmersdorf
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: 2c3e54a226d374d2
+inputHash: 347d03582093982a
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

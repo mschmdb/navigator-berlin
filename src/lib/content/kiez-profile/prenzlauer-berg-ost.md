@@ -3,7 +3,7 @@ slug: prenzlauer-berg-ost
 name: Prenzlauer Berg Ost
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: 0e0ed6b7209f72df
+inputHash: 71cd5d083401232e
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

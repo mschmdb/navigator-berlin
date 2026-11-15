@@ -3,7 +3,7 @@ slug: prenzlauer-berg-nordwest
 name: Prenzlauer Berg Nordwest
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: 0bbce1c8dff1d291
+inputHash: 20fc6566df73d21e
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

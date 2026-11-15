@@ -3,7 +3,7 @@ slug: prenzlauer-berg-ost
 name: Prenzlauer Berg Ost
 pageType: kiez
 locale: en
-sourceInputHash: '0e0ed6b7209f72df'
+sourceInputHash: '71cd5d083401232e'
 sourceTextHash: 'd8f720bdec753484'
 model: 'claude (subagent translation)'
 translatedAt: '2026-09-30T12:00:00.000Z'

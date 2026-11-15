@@ -3,7 +3,7 @@ slug: allende-viertel
 name: Allende-Viertel
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: a02c98a73ddfc244
+inputHash: a0cce5cadacdc2ef
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

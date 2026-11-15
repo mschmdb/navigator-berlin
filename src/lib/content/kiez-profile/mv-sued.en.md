@@ -3,7 +3,7 @@ slug: mv-sued
 name: MV Süd
 pageType: kiez
 locale: en
-sourceInputHash: 'b5e3d2933037fa4f'
+sourceInputHash: 'afdb32f262f775b2'
 sourceTextHash: 'cb08d42b70f50a04'
 model: 'claude (subagent translation)'
 translatedAt: '2026-09-30T12:00:00.000Z'

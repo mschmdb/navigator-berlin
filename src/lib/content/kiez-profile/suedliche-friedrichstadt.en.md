@@ -3,7 +3,7 @@ slug: suedliche-friedrichstadt
 name: Südliche Friedrichstadt
 pageType: kiez
 locale: en
-sourceInputHash: '172d9f6546a29beb'
+sourceInputHash: '94b2e9dd1a1208dc'
 sourceTextHash: '1650f9ea2bf7ac94'
 model: 'claude (subagent translation)'
 translatedAt: '2026-09-30T12:00:00.000Z'

@@ -3,7 +3,7 @@ slug: neu-hohenschoenhausen-sued
 name: Neu-Hohenschönhausen Süd
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: fdae7bd07a3de52d
+inputHash: 20a422792b1eced0
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

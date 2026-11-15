@@ -3,7 +3,7 @@ slug: rummelsburger-bucht
 name: Rummelsburger Bucht
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: 8465bc1373d94502
+inputHash: 3ed9955944db663b
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

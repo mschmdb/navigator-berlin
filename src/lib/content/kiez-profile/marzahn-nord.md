@@ -3,7 +3,7 @@ slug: marzahn-nord
 name: Marzahn Nord
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: e0613c69b72ef428
+inputHash: 09a851fd8608dd3b
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

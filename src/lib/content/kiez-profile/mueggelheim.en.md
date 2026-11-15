@@ -3,7 +3,7 @@ slug: mueggelheim
 name: Müggelheim
 pageType: kiez
 locale: en
-sourceInputHash: '71c0750f015184a3'
+sourceInputHash: '32fce1d6312103d1'
 sourceTextHash: '8c2fdfea49c627eb'
 model: 'claude (subagent translation)'
 translatedAt: '2026-09-30T12:00:00.000Z'

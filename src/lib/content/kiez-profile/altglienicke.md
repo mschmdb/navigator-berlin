@@ -3,7 +3,7 @@ slug: altglienicke
 name: Altglienicke
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: da0f6e103f6dc38f
+inputHash: c3048be01d06d632
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

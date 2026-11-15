@@ -3,7 +3,7 @@ slug: gruenau
 name: Grünau
 pageType: kiez
 locale: en
-sourceInputHash: 'b3b49652ec00e955'
+sourceInputHash: '014f1ecb486e7603'
 sourceTextHash: 'b8a1d14ee3294ea3'
 model: 'claude (subagent translation)'
 translatedAt: '2026-09-30T12:00:00.000Z'

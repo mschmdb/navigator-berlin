@@ -3,7 +3,7 @@ slug: neukoellner-mitte-zentrum
 name: Neuköllner Mitte/Zentrum
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: d4131d6fd299750a
+inputHash: 95225d1816285a47
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

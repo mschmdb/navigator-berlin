@@ -3,7 +3,7 @@ slug: schoeneberg-nordwest
 name: Schöneberg Nordwest
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: 3161c6b13178d3bd
+inputHash: 8e6a09a59ca843d3
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

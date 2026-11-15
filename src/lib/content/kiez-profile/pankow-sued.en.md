@@ -3,7 +3,7 @@ slug: pankow-sued
 name: Pankow Süd
 pageType: kiez
 locale: en
-sourceInputHash: '058afcb54f17828b'
+sourceInputHash: 'd2f7da3da301fa6c'
 sourceTextHash: '790dc66bbbb427ee'
 model: 'claude (subagent translation)'
 translatedAt: '2026-09-30T12:00:00.000Z'

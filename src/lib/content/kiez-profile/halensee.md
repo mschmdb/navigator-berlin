@@ -3,7 +3,7 @@ slug: halensee
 name: Halensee
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: 819dc0f592364eb4
+inputHash: b617ebfe2ecdf9ac
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

@@ -3,7 +3,7 @@ slug: tempelhof-suedost
 name: Tempelhof Südost
 pageType: kiez
 locale: en
-sourceInputHash: '8da3f8e2afa39724'
+sourceInputHash: '4d8efc77d651e017'
 sourceTextHash: '05f6369adcb0b908'
 model: 'claude (subagent translation)'
 translatedAt: '2026-09-30T12:00:00.000Z'

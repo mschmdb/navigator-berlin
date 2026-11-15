@@ -3,7 +3,7 @@ slug: marienfelde-sued
 name: Marienfelde Süd
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: 56c8e2c3808eee12
+inputHash: 1492f457c3d4380a
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

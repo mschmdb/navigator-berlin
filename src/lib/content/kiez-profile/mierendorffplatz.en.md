@@ -3,7 +3,7 @@ slug: mierendorffplatz
 name: Mierendorffplatz
 pageType: kiez
 locale: en
-sourceInputHash: 'bc029dd164ab66d0'
+sourceInputHash: '2fd2d15e14e791e7'
 sourceTextHash: '38fc836df4d22620'
 model: 'claude (subagent translation)'
 translatedAt: '2026-09-30T12:00:00.000Z'

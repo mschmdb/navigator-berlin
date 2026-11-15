@@ -3,7 +3,7 @@ slug: alt-hohenschoenhausen-sued
 name: Alt-Hohenschönhausen Süd
 pageType: kiez
 locale: en
-sourceInputHash: '0153d7c0cc572bc5'
+sourceInputHash: '343d370a84de6d62'
 sourceTextHash: '5483999c27654631'
 model: 'claude (subagent translation)'
 translatedAt: '2026-09-30T12:00:00.000Z'
