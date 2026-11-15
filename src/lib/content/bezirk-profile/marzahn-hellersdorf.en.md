@@ -3,7 +3,7 @@ slug: marzahn-hellersdorf
 name: Marzahn-Hellersdorf
 pageType: bezirk
 locale: en
-sourceInputHash: '533035a96f5ae1e6'
+sourceInputHash: '16f29281664f828a'
 sourceTextHash: 'c46ab34dcd88c656'
 model: 'claude (subagent translation)'
 translatedAt: '2026-09-30T12:00:00.000Z'

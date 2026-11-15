@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { buildInput, DIMS } from './build.js';
+import { buildInput, countSharedRanks, DIMS } from './build.js';
 import { hashInput } from './input.js';
 
 const NO_NAMES = { kiez: new Map<string, string>(), bezirk: new Map<string, string>() };
@@ -86,5 +86,50 @@ describe('buildInput Anzeigenamen (#96)', () => {
 		);
 		expect(input.name).toBe('Friedrichshain-Kreuzberg');
 		expect(input.bezirk).toBeNull();
+	});
+});
+
+describe('geteilte Ränge im Profil-Input', () => {
+	const rank = (metricKey: string, rang: number | null, geteiltMit = 0) => ({
+		metricKey,
+		rang,
+		quartil: 1,
+		total: 143,
+		geteiltMit
+	});
+
+	it('zählt pro Metrik, wie viele andere Gebiete denselben Rang haben', () => {
+		const shared = countSharedRanks([
+			{ slug: 'a', metricKey: 'composite', rang: 1 },
+			{ slug: 'b', metricKey: 'composite', rang: 1 },
+			{ slug: 'c', metricKey: 'composite', rang: 1 },
+			{ slug: 'd', metricKey: 'composite', rang: 4 },
+			{ slug: 'a', metricKey: 'kultur', rang: 1 },
+			{ slug: 'e', metricKey: 'kultur', rang: null },
+			{ slug: 'f', metricKey: 'kultur', rang: null }
+		]);
+		expect(shared('composite', 1)).toBe(2);
+		expect(shared('composite', 4)).toBe(0);
+		expect(shared('kultur', 1)).toBe(0);
+		expect(shared('kultur', null)).toBe(0);
+	});
+
+	it('setzt rangGeteiltMit nur bei geteiltem Rang', () => {
+		const input = buildInput(
+			'kiez',
+			{
+				...area(),
+				ranks: new Map([
+					['composite', rank('composite', 1, 4)],
+					['kultur', rank('kultur', 2, 1)],
+					['ruheLuft', rank('ruheLuft', 2)]
+				])
+			},
+			NO_NAMES
+		);
+		expect(input.composite).toEqual({ score: 50, rang: 1, total: 143, rangGeteiltMit: 4 });
+		const byLabel = Object.fromEntries(input.dims.map((d) => [d.label, d]));
+		expect(byLabel['Kultur'].rangGeteiltMit).toBe(1);
+		expect('rangGeteiltMit' in byLabel['Ruhe & Luft']).toBe(false);
 	});
 });

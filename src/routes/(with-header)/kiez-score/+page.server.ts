@@ -1,6 +1,8 @@
 import { desc, sql } from 'drizzle-orm';
 import type { PageServerLoad } from './$types';
-import { bezirkScore, kiezScore } from '$lib/server/db/schema/index.js';
+import { bezirkRank, bezirkScore, kiezRank, kiezScore } from '$lib/server/db/schema/index.js';
+import { groupRanksBySlug } from '$lib/data/ranking-rank.js';
+import type { RankingRanks } from '$lib/data/ranking-types.js';
 import type { RankingRow } from '$lib/data/ranking-types.js';
 import {
 	fallbackNameFromSlug,
@@ -33,14 +35,22 @@ export interface RankingPageData {
 	readonly computedAt: string | null;
 }
 
+const NO_RANKS: RankingRanks = {};
+
 async function loadKieze(names: RegionDisplayNames): Promise<RankingRow[]> {
 	if (!process.env.DATABASE_URL) return [];
 	try {
 		const { getDb } = await import('$lib/server/db/index.js');
-		const rows = await getDb()
-			.select()
-			.from(kiezScore)
-			.orderBy(desc(sql`COALESCE(${kiezScore.composite}, -1)`));
+		const [rows, rankRows] = await Promise.all([
+			getDb()
+				.select()
+				.from(kiezScore)
+				.orderBy(desc(sql`COALESCE(${kiezScore.composite}, -1)`)),
+			getDb()
+				.select({ slug: kiezRank.slug, metricKey: kiezRank.metricKey, rang: kiezRank.rang })
+				.from(kiezRank)
+		]);
+		const ranks = groupRanksBySlug(rankRows);
 		return rows.map((r) => ({
 			slug: r.slug,
 			displayName: names.kiez.get(r.slug) ?? fallbackNameFromSlug(r.slug),
@@ -55,7 +65,8 @@ async function loadKieze(names: RegionDisplayNames): Promise<RankingRow[]> {
 			versorgung: r.versorgung,
 			wohnschutz: r.wohnschutz,
 			kultur: r.kultur,
-			kriminalitaet: r.kriminalitaet
+			kriminalitaet: r.kriminalitaet,
+			ranks: ranks.get(r.slug) ?? NO_RANKS
 		}));
 	} catch (err) {
 		const msg = err instanceof Error ? err.message : String(err);
@@ -68,10 +79,16 @@ async function loadBezirke(names: RegionDisplayNames): Promise<RankingRow[]> {
 	if (!process.env.DATABASE_URL) return [];
 	try {
 		const { getDb } = await import('$lib/server/db/index.js');
-		const rows = await getDb()
-			.select()
-			.from(bezirkScore)
-			.orderBy(desc(sql`COALESCE(${bezirkScore.composite}, -1)`));
+		const [rows, rankRows] = await Promise.all([
+			getDb()
+				.select()
+				.from(bezirkScore)
+				.orderBy(desc(sql`COALESCE(${bezirkScore.composite}, -1)`)),
+			getDb()
+				.select({ slug: bezirkRank.slug, metricKey: bezirkRank.metricKey, rang: bezirkRank.rang })
+				.from(bezirkRank)
+		]);
+		const ranks = groupRanksBySlug(rankRows);
 		return rows.map((r) => ({
 			slug: r.slug,
 			displayName: names.bezirk.get(r.slug) ?? fallbackNameFromSlug(r.slug),
@@ -84,7 +101,8 @@ async function loadBezirke(names: RegionDisplayNames): Promise<RankingRow[]> {
 			versorgung: r.versorgung,
 			wohnschutz: r.wohnschutz,
 			kultur: r.kultur,
-			kriminalitaet: r.kriminalitaet
+			kriminalitaet: r.kriminalitaet,
+			ranks: ranks.get(r.slug) ?? NO_RANKS
 		}));
 	} catch (err) {
 		const msg = err instanceof Error ? err.message : String(err);

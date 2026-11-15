@@ -3,7 +3,7 @@ slug: lichtenberg
 name: Lichtenberg
 pageType: bezirk
 locale: en
-sourceInputHash: '8767f4dc8fe350dd'
+sourceInputHash: '01e0091e3853dc08'
 sourceTextHash: '3d793e7ce84468bf'
 model: 'claude (subagent translation)'
 translatedAt: '2026-09-30T12:00:00.000Z'

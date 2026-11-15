@@ -9,6 +9,8 @@ export interface ProfileDim {
 	readonly label: string;
 	readonly score: number | null;
 	readonly rang: number | null;
+	/** Anzahl anderer Gebiete auf demselben Rang. Fehlt bei ungeteiltem Rang. */
+	readonly rangGeteiltMit?: number;
 	readonly total: number;
 	readonly bezirkMean: number | null;
 	readonly berlinMedian: number | null;
@@ -24,6 +26,7 @@ export interface ProfileInput {
 	readonly composite: {
 		readonly score: number | null;
 		readonly rang: number | null;
+		readonly rangGeteiltMit?: number;
 		readonly total: number;
 	};
 	readonly dims: readonly ProfileDim[];
@@ -31,9 +34,20 @@ export interface ProfileInput {
 	readonly facts: Readonly<Record<string, string | number>>;
 }
 
-/** Deterministischer Kurz-Hash über den Input (16 hex chars). */
+/**
+ * Deterministischer Kurz-Hash über den Input (16 hex chars). `rangGeteiltMit` bleibt
+ * draußen: Der Hinweis steuert nur die Wortwahl im Prompt. Ein neuer Gleichstand allein
+ * soll keine Regeneration aller Profile auslösen (mit dem Feld im Hash wären am 15.11.2026
+ * 147 von 155 Profilen stale gewesen).
+ * Bewusst akzeptiert: Tritt ein anderes Gebiet einem Gleichstand bei oder verlässt ihn,
+ * ohne dass sich Score oder Rang dieses Gebiets ändern, bleibt der Hash gleich. Ein Text
+ * wie „zweitbester“ oder „teilt sich Platz 1 mit 4 weiteren“ kann dann unbemerkt veralten.
+ */
 export function hashInput(input: ProfileInput): string {
-	return createHash('sha256').update(JSON.stringify(input)).digest('hex').slice(0, 16);
+	const json = JSON.stringify(input, (key, value: unknown) =>
+		key === 'rangGeteiltMit' ? undefined : value
+	);
+	return createHash('sha256').update(json).digest('hex').slice(0, 16);
 }
 
 /**

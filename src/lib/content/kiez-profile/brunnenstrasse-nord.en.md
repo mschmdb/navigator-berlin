@@ -3,12 +3,12 @@ slug: brunnenstrasse-nord
 name: Brunnenstraße Nord
 pageType: kiez
 locale: en
-sourceInputHash: 'ea9ffe59fe361e74'
-sourceTextHash: 'a8f4d21298cd6702'
+sourceInputHash: '2c2115dd160d148c'
+sourceTextHash: 'a6a3f26d294b0ca1'
 model: 'claude (subagent translation)'
 translatedAt: '2026-09-30T12:00:00.000Z'
 ---
 
-Culture and local amenities define Brunnenstraße Nord. On Culture, the Kiez is strong, at around 86 points and rank 19 of 143, far above the Berlin median and close to the Bezirk average. Local amenities reaches rank 15 and is above the median. On Mobility, the Kiez ranks 11th. Stop density is around 20 stops per square kilometre.
+Culture and local amenities define Brunnenstraße Nord. On Culture, the Kiez is strong, at around 86 points and rank 26 of 143, far above the Berlin median and close to the Bezirk average. Local amenities reaches rank 16 and is above the median. On Mobility, the Kiez ranks 11th. Stop density is around 20 stops per square kilometre.
 
-Quiet & air drops to rank 99 of 143. Green & heat also lands at rank 99 and stays below the Berlin median. The perceived temperature is around 36 degrees. The social situation is low. Overall, Brunnenstraße Nord ranks 64th.
+Quiet & air drops to rank 112 of 143. Green & heat also lands at rank 119 and stays below the Berlin median. The perceived temperature is around 36 degrees. The social situation is low. Overall, Brunnenstraße Nord ranks 79th.

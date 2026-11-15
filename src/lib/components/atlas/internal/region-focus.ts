@@ -80,7 +80,7 @@ export function resolveRegionFocus(
 }
 
 /**
- * Dichter Rang des Composite (1 = bester, Gleichstand teilt den Rang). Gleiche
+ * Wettkampf-Rang des Composite (1 = bester, Gleichstand teilt den Rang, 1224). Gleiche
  * Regel wie `rankBy` in `scripts/lib/ranking`, das `kiez_rank`/`bezirk_rank`
  * und damit den Rang auf den Profilseiten befüllt.
  */
@@ -94,6 +94,6 @@ export function compositeRank(
 	const own = field[slug];
 	if (typeof own !== 'number') return null;
 	const values = Object.values(field).filter((v): v is number => typeof v === 'number');
-	const distinctBetter = new Set(values.filter((v) => v > own));
-	return { composite: own, rang: distinctBetter.size + 1, total: values.length };
+	const better = values.filter((v) => v > own).length;
+	return { composite: own, rang: better + 1, total: values.length };
 }

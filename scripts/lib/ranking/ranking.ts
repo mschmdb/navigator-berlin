@@ -2,7 +2,7 @@
  * scripts/lib/ranking/ranking.ts (Story 11.0).
  *
  * Reine Ranking-/Quartil-Funktionen für Kiez/Bezirk-Metriken. Liefert pro Slug
- * einen dichten Rang (1 = bester Wert) plus Quartil über das Feld der nicht-null
+ * einen Wettkampf-Rang (1 = bester Wert, Schema „1224") plus Quartil über das Feld der nicht-null
  * Werte. `null`-Werte fallen aus dem Ranking (rang/quartil `null`, nicht im Total).
  *
  * Quartil ist rang-basiert (Position im Feld), NICHT wert-basiert. Das stützt das
@@ -20,7 +20,7 @@ export interface RankInput {
 
 export interface RankResult {
 	readonly slug: string;
-	/** Dichter Rang 1..total (1 = bester). `null` wenn value `null`. */
+	/** Wettkampf-Rang 1..total (1 = bester): 1 + Anzahl strikt besserer Werte. `null` wenn value `null`. */
 	readonly rang: number | null;
 	/** Quartil 1..4 (1 = bestes Viertel). `null` wenn value `null`. */
 	readonly quartil: number | null;
@@ -40,7 +40,10 @@ export function quartileOf(rang: number | null, total: number): number | null {
 }
 
 /**
- * Dichtes Ranking über die nicht-null Werte. Ties teilen sich den Rang.
+ * Wettkampf-Ranking (standard competition ranking, „1224") über die nicht-null
+ * Werte: Rang = 1 + Anzahl strikt besserer Werte. Ties teilen sich den Rang,
+ * der nächste Wert überspringt die geteilten Plätze. So stimmt „Platz n von total"
+ * immer mit der Zahl der Kieze davor überein.
  * `direction` steuert die Richtung: `higher-better` (Standard für Scores) vs.
  * `lower-better` (invertierte Metriken wie PET-Hitze oder Lärm).
  */
@@ -55,17 +58,16 @@ export function rankBy(items: readonly RankInput[], direction: RankDirection): R
 		direction === 'higher-better' ? b.value - a.value : a.value - b.value
 	);
 
-	// Dense rank: gleicher Wert → gleicher Rang.
 	const rangBySlug = new Map<string, number>();
 	let currentRang = 0;
 	let lastValue: number | null = null;
-	for (const entry of sorted) {
+	sorted.forEach((entry, index) => {
 		if (lastValue === null || entry.value !== lastValue) {
-			currentRang += 1;
+			currentRang = index + 1;
 			lastValue = entry.value;
 		}
 		rangBySlug.set(entry.slug, currentRang);
-	}
+	});
 
 	return items.map((item) => {
 		if (item.value === null) {

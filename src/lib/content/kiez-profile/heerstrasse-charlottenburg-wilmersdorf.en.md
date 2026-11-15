@@ -3,12 +3,12 @@ slug: heerstrasse-charlottenburg-wilmersdorf
 name: Heerstraße
 pageType: kiez
 locale: en
-sourceInputHash: '93f705dde60279d9'
-sourceTextHash: '9898f625d8c05b72'
+sourceInputHash: '2555c31465f4105d'
+sourceTextHash: 'a6dafab536eea459'
 model: 'claude (subagent translation)'
 translatedAt: '2026-09-30T12:00:00.000Z'
 ---
 
 Heerstraße is strong on Quiet & air. The score of 86.1 is far above the Bezirk average. On Green & heat the area scores 64.8, above the Berlin median. The perceived temperature on hot days stays low at around 30 degrees.
 
-Connections are clearly weak. The Mobility score of 12.2 is below the Bezirk average. Stop density is around two per square kilometre. Local amenities drop sharply to 17 and reach rank 124 of 143. Noise exposure is rated high. The overall score of 36 puts the area at rank 94 of 143.
+Connections are clearly weak. The Mobility score of 12.2 is below the Bezirk average. Stop density is around two per square kilometre. Local amenities drop sharply to 17 and reach rank 135 of 143. Noise exposure is rated high. The overall score of 36 puts the area at rank 124 of 143.

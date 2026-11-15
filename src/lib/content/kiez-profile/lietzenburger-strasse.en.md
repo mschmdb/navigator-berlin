@@ -3,12 +3,12 @@ slug: lietzenburger-strasse
 name: Lietzenburger Straße
 pageType: kiez
 locale: en
-sourceInputHash: '0fb48e389164b00a'
-sourceTextHash: '0c9526848b1d5256'
+sourceInputHash: 'a7b7b7090d259c37'
+sourceTextHash: '3824642f8e2aebb2'
 model: 'claude (subagent translation)'
 translatedAt: '2026-09-30T12:00:00.000Z'
 ---
 
-The area stands out for culture, rank 8 of 143 with around 96 points, far above the median. Mobility is also near the top, rank 6 with around 22 public transport stops per square kilometre. Local amenities are strong, rank 34. The overall score of around 46 is enough for rank 41.
+The area stands out for culture, rank 15 of 143 with around 96 points, far above the median. Mobility is also near the top, rank 6 with around 22 public transport stops per square kilometre. Local amenities are strong, rank 39. The overall score of around 46 is enough for rank 48.
 
-Green & heat drops sharply, to around 20 points and rank 120, far below the median. The perceived temperature reaches about 36 degrees. Quiet is also weak, around 46 points. Noise is medium.
+Green & heat drops sharply, to around 20 points and rank 141, far below the median. The perceived temperature reaches about 36 degrees. Quiet is also weak, around 46 points. Noise is medium.

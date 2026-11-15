@@ -3,10 +3,10 @@ slug: albrechtstrasse
 name: Albrechtstraße
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: d39a0b111e44bc6f
+inputHash: 2bafd112214ba4b4
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 
-Versorgung und Kultur tragen Albrechtstraße. Die Versorgung erreicht rund 66, klar über Bezirk und Berliner Median. Kulturell steht der Kiez stark, Rang 38 von 143 mit rund 62 Punkten. Das übertrifft Bezirk und Berliner Median deutlich. Insgesamt belegt der Kiez Platz 39 von 143.
+Versorgung und Kultur tragen Albrechtstraße. Die Versorgung erreicht rund 66, klar über Bezirk und Berliner Median. Kulturell steht der Kiez stark, Rang 48 von 143 mit rund 62 Punkten. Das übertrifft Bezirk und Berliner Median deutlich. Insgesamt belegt der Kiez Platz 44 von 143.
 
 Ruhe und Luft fallen unter den Berliner Median und deutlich unter den Bezirksschnitt. Die Mobilität liegt über Median und Bezirksschnitt, getragen von Bussen. Die Haltestellendichte erreicht rund 16 pro Quadratkilometer. Die gefühlte Temperatur bleibt bei rund 34 Grad. Die soziale Lage ist mittel.

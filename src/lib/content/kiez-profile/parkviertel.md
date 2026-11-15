@@ -3,7 +3,7 @@ slug: parkviertel
 name: Parkviertel
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: 162602c0709670ae
+inputHash: 0c018379431c4bac
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

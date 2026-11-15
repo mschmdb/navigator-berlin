@@ -3,7 +3,7 @@ slug: neukoelln
 name: Neukölln
 pageType: bezirk
 locale: en
-sourceInputHash: '27ddf6fbb500793b'
+sourceInputHash: 'ddbc773d659c283c'
 sourceTextHash: 'aebbe94b9bb0258e'
 model: 'claude (subagent translation)'
 translatedAt: '2026-09-30T12:00:00.000Z'

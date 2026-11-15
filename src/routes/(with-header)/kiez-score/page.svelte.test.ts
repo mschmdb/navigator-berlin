@@ -20,13 +20,17 @@ function row(slug: string, displayName: string, overrides: Partial<RankingRow> =
 		wohnschutz: 55,
 		kultur: 45,
 		kriminalitaet: 70,
+		ranks: {},
 		...overrides
 	};
 }
 
 const data = {
-	kieze: [row('alexanderplatz', 'Alexanderplatz', { composite: 70 }), row('wedding', 'Wedding')],
-	bezirke: [row('mitte', 'Mitte', { bezirkSlug: null, bezirkName: null })],
+	kieze: [
+		row('alexanderplatz', 'Alexanderplatz', { composite: 70, ranks: { composite: 1 } }),
+		row('wedding', 'Wedding', { ranks: { composite: 2 } })
+	],
+	bezirke: [row('mitte', 'Mitte', { bezirkSlug: null, bezirkName: null, ranks: { composite: 1 } })],
 	computedAt: '2026-09-30T00:00:00.000Z'
 };
 

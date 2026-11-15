@@ -22,6 +22,19 @@ describe('hashInput', () => {
 	it('ändert sich bei geänderten Daten', () => {
 		expect(hashInput(BASE)).not.toBe(hashInput({ ...BASE, einwohner: 12001 }));
 	});
+	it('ignoriert den Hinweis auf geteilte Ränge (keine Regeneration)', () => {
+		const shared: ProfileInput = {
+			...BASE,
+			composite: { ...BASE.composite, rangGeteiltMit: 4 },
+			dims: [{ ...BASE.dims[0], rangGeteiltMit: 2 }]
+		};
+		expect(hashInput(shared)).toBe(hashInput(BASE));
+	});
+	it('ändert sich weiter bei geändertem Rang', () => {
+		expect(hashInput(BASE)).not.toBe(
+			hashInput({ ...BASE, composite: { ...BASE.composite, rang: 71 } })
+		);
+	});
 });
 
 describe('collectNumbers', () => {

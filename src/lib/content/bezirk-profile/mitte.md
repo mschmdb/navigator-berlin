@@ -3,7 +3,7 @@ slug: mitte
 name: Mitte
 pageType: bezirk
 model: claude-opus-4-8 (subagent)
-inputHash: 67b47f953917f25f
+inputHash: 12e097fa70f8bfde
 generatedAt: '2026-06-07T16:56:20.188Z'
 ---
 

@@ -3,7 +3,7 @@ slug: mitte
 name: Mitte
 pageType: bezirk
 locale: en
-sourceInputHash: '67b47f953917f25f'
+sourceInputHash: '12e097fa70f8bfde'
 sourceTextHash: 'a0be76fc19ac1e65'
 model: 'claude (subagent translation)'
 translatedAt: '2026-09-30T12:00:00.000Z'

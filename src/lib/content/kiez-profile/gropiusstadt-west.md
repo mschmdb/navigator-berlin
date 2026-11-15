@@ -3,7 +3,7 @@ slug: gropiusstadt-west
 name: Gropiusstadt West
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: efc8a65988fda24b
+inputHash: e5b33da9a1d9f3f4
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

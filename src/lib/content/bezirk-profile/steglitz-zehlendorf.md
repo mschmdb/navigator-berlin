@@ -3,7 +3,7 @@ slug: steglitz-zehlendorf
 name: Steglitz-Zehlendorf
 pageType: bezirk
 model: claude-opus-4-8 (subagent)
-inputHash: 87fb6b9c72038670
+inputHash: 1ccaa3bf322fa2f2
 generatedAt: '2026-06-07T16:56:20.188Z'
 ---
 

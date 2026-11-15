@@ -3,7 +3,7 @@ slug: marzahn-hellersdorf
 name: Marzahn-Hellersdorf
 pageType: bezirk
 model: claude-opus-4-8 (subagent)
-inputHash: 533035a96f5ae1e6
+inputHash: 16f29281664f828a
 generatedAt: '2026-06-07T16:56:20.188Z'
 ---
 

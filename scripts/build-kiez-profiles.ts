@@ -42,7 +42,9 @@ So schreibst du:
 - Aktiv und konkret. Kein Nominalstil, keine Funktionsverben ("erreicht einen Wert von", "wird ausgewiesen", "lässt sich festhalten"). Schreib zum Beispiel "[Gebiet] ist gut angebunden" statt "[Gebiet] erreicht im Mobilitäts-Score einen Wert von".
 - Verwende im Text ausschließlich den Namen aus dem Input (Feld "name"). Übernimm KEINE Beispielnamen oder Orte aus dieser Anleitung.
 - Der erste Satz nennt das Charakteristische zuerst (die größte Stärke oder den größten Kontrast).
-- Rang nur nennen, wenn er etwas aussagt (sehr gut oder sehr schwach), und in Worte gepackt ("zweitbester von 143"), nicht roh.
+- Rang nur nennen, wenn er etwas aussagt (sehr gut oder sehr schwach), und in Worte gepackt, nicht roh. Die Gesamtzahl ist immer "total" aus dem Input (Kieze und Bezirke haben verschiedene).
+- Ränge sind Wettkampf-Ränge: Bei Gleichstand teilen sich Gebiete einen Platz, der nächste Platz wird übersprungen. "rangGeteiltMit" nennt, wie viele andere Gebiete denselben Platz haben. Fehlt das Feld, ist der Rang ungeteilt.
+- Ordinalwörter wie "bester", "zweitbester" oder "letzter" nur bei ungeteiltem Rang. Bei geteiltem Rang schreib den geteilten Platz aus, zum Beispiel "geteilter Platz 1 mit 4 weiteren" oder "teilt sich Platz 7 mit 2 anderen".
 
 Zahlen sparsam:
 - Nenne KEINE Einzel-Counts: nicht die Zahl der U-Bahn-, S-Bahn-, Tram- oder Bus-Halte, nicht die Zahl der Grünanlagen oder Spielplätze. Diese stehen bereits in der Steckbrief-Tabelle der Seite.
@@ -51,7 +53,7 @@ Zahlen sparsam:
 Kennzahlen-Bedeutung (so und nicht anders benennen):
 - Score-Werte (composite, ruheLuft, gruenHitze, mobilitaet, versorgung, wohnschutz, kultur) sind Punkte von 0 bis 100, höher ist besser.
 - Kultur misst Kulturorte in Reichweite. Verknüpfe Kultur im Text NIE mit dem Gesamt-Score (nicht "hebt/senkt den Gesamt-Score"). Schreibe AUCH KEINE Meta-Hinweise wie "zählt eigenständig", "eigene Dimension" oder "nicht im Gesamt-Score" in den Profiltext, das ist Methodik, kein Profil.
-- Wenn Kultur unter den zwei höchsten ODER zwei niedrigsten Dimensionen liegt, erwähne sie natürlich mit Wert und qualitativer Einordnung (z.B. "kulturell stark, Rang X von 143" oder "wenig Kultur in Reichweite"). Sonst nur, wenn sie etwas aussagt.
+- Wenn Kultur unter den zwei höchsten ODER zwei niedrigsten Dimensionen liegt, erwähne sie natürlich mit Wert und qualitativer Einordnung (z.B. "kulturell stark, Rang X von N" mit N = total oder "wenig Kultur in Reichweite"). Sonst nur, wenn sie etwas aussagt.
 - petGrad ist die mittlere gefühlte Temperatur (PET) an heißen Tagen in Grad Celsius. Nenne sie "gefühlte Temperatur", NICHT "Oberflächentemperatur" oder "Lufttemperatur".
 - oepnvStopsProKm2 ist die Haltestellendichte pro Quadratkilometer.
 - laermKlasse und wohnlage sind Kategorien (niedrig/mittel/hoch bzw. einfach/mittel/gut).

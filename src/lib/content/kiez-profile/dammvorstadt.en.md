@@ -3,12 +3,12 @@ slug: dammvorstadt
 name: Dammvorstadt
 pageType: kiez
 locale: en
-sourceInputHash: 'bbdc2b31cad0e762'
-sourceTextHash: 'df781bdccb7da0ba'
+sourceInputHash: '76256db7e9efc0cc'
+sourceTextHash: '19799b1a9119930d'
 model: 'claude (subagent translation)'
 translatedAt: '2026-09-30T12:00:00.000Z'
 ---
 
 Dammvorstadt is green and reasonably well supplied. Green & heat reaches 62.9 points, above the Berlin median. Local amenities, at 56 points, is clearly above the Treptow-Köpenick average. Mobility, at 31.2 points, beats the Berlin median. Stop density reaches around 14 per square kilometre.
 
-Quiet & air, at 69.4 points, is above the Berlin median, and noise stays medium. On hot days the perceived temperature reaches around 36 degrees. Overall, Dammvorstadt scores 43.9 points and ranks 52nd of 143.
+Quiet & air, at 69.4 points, is above the Berlin median, and noise stays medium. On hot days the perceived temperature reaches around 36 degrees. Overall, Dammvorstadt scores 43.9 points and ranks 60th of 143.

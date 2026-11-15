@@ -3,12 +3,12 @@ slug: britz
 name: Britz
 pageType: kiez
 locale: en
-sourceInputHash: '429433b58916f54b'
-sourceTextHash: '9c5299fa214db5a4'
+sourceInputHash: '3fd1a569beea71d2'
+sourceTextHash: '010be9209392e0d5'
 model: 'claude (subagent translation)'
 translatedAt: '2026-09-30T12:00:00.000Z'
 ---
 
-Britz is green and quiet. On Green & heat, the area scores 68.7 and ranks 18th of 143. Quiet & air scores 72.2 and beats the Berlin median. Noise stays low. On hot days the perceived temperature reaches around 36 degrees.
+Britz is green and quiet. On Green & heat, the area scores 68.7 and ranks 22nd of 143. Quiet & air scores 72.2 and beats the Berlin median. Noise stays low. On hot days the perceived temperature reaches around 36 degrees.
 
-Mobility is weak. With a score of 16.4, the area ranks 101st of 143. Stop density reaches only around 6 stops per square kilometre. Local amenities, at 37.1, is below the Berlin median. Overall, the area lands in the lower midfield with an overall value of 38.9.
+Mobility is weak. With a score of 16.4, the area ranks 125th of 143. Stop density reaches only around 6 stops per square kilometre. Local amenities, at 37.1, is below the Berlin median. Overall, the area lands in the lower midfield with an overall value of 38.9.

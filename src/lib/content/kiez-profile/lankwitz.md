@@ -3,7 +3,7 @@ slug: lankwitz
 name: Lankwitz
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: 923c96bb0123f63f
+inputHash: 85000f962d6ce9d4
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 

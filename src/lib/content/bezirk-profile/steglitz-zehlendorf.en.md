@@ -3,7 +3,7 @@ slug: steglitz-zehlendorf
 name: Steglitz-Zehlendorf
 pageType: bezirk
 locale: en
-sourceInputHash: '87fb6b9c72038670'
+sourceInputHash: '1ccaa3bf322fa2f2'
 sourceTextHash: 'c99e6e5567aeb70d'
 model: 'claude (subagent translation)'
 translatedAt: '2026-09-30T12:00:00.000Z'

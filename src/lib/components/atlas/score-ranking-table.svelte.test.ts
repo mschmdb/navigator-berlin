@@ -22,6 +22,7 @@ function row(
 		wohnschutz: 55,
 		kultur: 45,
 		kriminalitaet: 70,
+		ranks: {},
 		...overrides
 	};
 }
@@ -84,6 +85,22 @@ describe('ScoreRankingTable.svelte', () => {
 			(r) => r.querySelector('th[scope="row"] a')?.textContent?.trim() ?? ''
 		);
 		expect(names).toEqual(['Alpha', 'Bravo', 'Charlie', 'Delta']);
+	});
+
+	it('zeigt den Rang aus den Daten, auch geteilte Plätze, statt der Zeilennummer', async () => {
+		const tied: RankingRow[] = [
+			row('alpha', 80, { ranks: { composite: 1, kultur: 3 } }),
+			row('bravo', 80, { ranks: { composite: 1, kultur: 1 } }),
+			row('charlie', 30, { ranks: { composite: 3, kultur: 1 } }),
+			row('delta', null)
+		];
+		render(ScoreRankingTable, { kieze: tied, bezirke });
+		const rankCells = Array.from(
+			document.querySelectorAll(
+				'[data-testid="ranking-table"] tbody [data-testid="ranking-cell-rank"]'
+			)
+		).map((c) => c.textContent?.trim());
+		expect(rankCells).toEqual(['1', '1', '3', '–']);
 	});
 
 	it('rendert null-Score als en-dash am Listen-Ende', async () => {

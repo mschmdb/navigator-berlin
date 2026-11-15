@@ -3,10 +3,10 @@ slug: schillerpromenade
 name: Schillerpromenade
 pageType: kiez
 model: 'claude-opus-4-8 (subagent)'
-inputHash: b9c48126b889a4bc
+inputHash: 9ae99af9274c08b5
 generatedAt: '2026-06-07T12:00:00.000Z'
 ---
 
-Ruhe und Versorgung prägen Schillerpromenade. Bei Ruhe und Luft erreicht der Kiez Platz 33 von 143, über dem Bezirksschnitt. Die Versorgung liegt über dem Berliner Median und dem Bezirksschnitt. Die gefühlte Temperatur an heißen Tagen bleibt bei rund 34 Grad. Die Grünversorgung gilt als hoch.
+Ruhe und Versorgung prägen Schillerpromenade. Bei Ruhe und Luft erreicht der Kiez Platz 35 von 143, über dem Bezirksschnitt. Die Versorgung liegt über dem Berliner Median und dem Bezirksschnitt. Die gefühlte Temperatur an heißen Tagen bleibt bei rund 34 Grad. Die Grünversorgung gilt als hoch.
 
-Die Mobilität liegt nahe am Berliner Median. Die Haltestellendichte erreicht rund 11 pro Quadratkilometer. Der Wohnschutz liegt nahe am Bezirksschnitt. Bei Kulturorten in Reichweite belegt der Kiez Platz 16. Insgesamt kommt er auf Platz 21 von 143.
+Die Mobilität liegt nahe am Berliner Median. Die Haltestellendichte erreicht rund 11 pro Quadratkilometer. Der Wohnschutz liegt nahe am Bezirksschnitt. Bei Kulturorten in Reichweite belegt der Kiez Platz 23. Insgesamt kommt er auf Platz 22 von 143.
