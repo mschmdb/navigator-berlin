@@ -47,7 +47,7 @@ describe('rankBy', () => {
 		expect(byslug.b.rang).toBe(3);
 	});
 
-	it('dense-ranks ties to the same rank', () => {
+	it('competition-ranks ties: shared rank, next rank skips (1, 1, 3)', () => {
 		const tied: RankInput[] = [
 			{ slug: 'a', value: 10 },
 			{ slug: 'b', value: 10 },
@@ -57,7 +57,59 @@ describe('rankBy', () => {
 		const byslug = Object.fromEntries(out.map((r) => [r.slug, r]));
 		expect(byslug.a.rang).toBe(1);
 		expect(byslug.b.rang).toBe(1);
-		expect(byslug.c.rang).toBe(2);
+		expect(byslug.c.rang).toBe(3);
+	});
+
+	it('rank equals 1 + count of strictly better values (five tied at the top)', () => {
+		const tied: RankInput[] = [
+			...['a', 'b', 'c', 'd', 'e'].map((slug) => ({ slug, value: 100 })),
+			{ slug: 'f', value: 98.8 },
+			{ slug: 'g', value: 90 },
+			{ slug: 'h', value: 90 },
+			{ slug: 'i', value: 80 }
+		];
+		const out = rankBy(tied, 'higher-better');
+		const byslug = Object.fromEntries(out.map((r) => [r.slug, r.rang]));
+		expect(byslug).toEqual({ a: 1, b: 1, c: 1, d: 1, e: 1, f: 6, g: 7, h: 7, i: 9 });
+	});
+
+	it('gives every item rank 1 when all values are equal', () => {
+		const same: RankInput[] = [
+			{ slug: 'a', value: 7 },
+			{ slug: 'b', value: 7 },
+			{ slug: 'c', value: 7 }
+		];
+		const out = rankBy(same, 'higher-better');
+		expect(out.map((r) => r.rang)).toEqual([1, 1, 1]);
+		expect(out.map((r) => r.quartil)).toEqual([1, 1, 1]);
+	});
+
+	it('competition-ranks ties for lower-better metrics', () => {
+		const tied: RankInput[] = [
+			{ slug: 'hot', value: 40 },
+			{ slug: 'cool1', value: 28 },
+			{ slug: 'cool2', value: 28 },
+			{ slug: 'mid', value: 33 }
+		];
+		const out = rankBy(tied, 'lower-better');
+		const byslug = Object.fromEntries(out.map((r) => [r.slug, r.rang]));
+		expect(byslug).toEqual({ cool1: 1, cool2: 1, mid: 3, hot: 4 });
+	});
+
+	it('ignores null values when counting better values in a tie', () => {
+		const withNull: RankInput[] = [
+			{ slug: 'a', value: 10 },
+			{ slug: 'n', value: null },
+			{ slug: 'b', value: 10 },
+			{ slug: 'c', value: 5 }
+		];
+		const out = rankBy(withNull, 'higher-better');
+		const byslug = Object.fromEntries(out.map((r) => [r.slug, r]));
+		expect(byslug.a.rang).toBe(1);
+		expect(byslug.b.rang).toBe(1);
+		expect(byslug.c.rang).toBe(3);
+		expect(byslug.n.rang).toBeNull();
+		expect(byslug.c.total).toBe(3);
 	});
 
 	it('excludes null values from ranking (rang/quartil null, total only counts non-null)', () => {
