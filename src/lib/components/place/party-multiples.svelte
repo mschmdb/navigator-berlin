@@ -103,10 +103,7 @@
 									class="rv"
 								/>
 							{/each}
-							<ChartAxis
-								ticks={years}
-								format={(v) => `’${String(v).slice(2)}`}
-							/>
+							<ChartAxis ticks={years} format={(v) => `’${String(v).slice(2)}`} />
 							<Text
 								x={0}
 								y={context.yScale(yMax / 2) - 3}

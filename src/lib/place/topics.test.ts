@@ -26,12 +26,12 @@ describe('formatMetric', () => {
 describe('metricLead', () => {
 	it('uses the lower word when most places are higher', () => {
 		expect(metricLead('laermDb', 'Reuterstraße', 46, FIELD_20, 'Kieze')).toBe(
-			'Verkehrslärm in Reuterstraße: 46,0\u00a0dB. Das ist leiser als in 60 % der Berliner Kieze.'
+			'In Reuterstraße liegt der Verkehrslärm im Mittel bei 46,0\u00a0dB. Das ist leiser als in 60 % der Berliner Kieze.'
 		);
 	});
 	it('uses the higher word when most places are lower', () => {
 		expect(metricLead('bestandsmiete', 'X', 9, RENT_20, 'Bezirke')).toBe(
-			'Miete in laufenden Verträgen in X: 9,00\u00a0€/m². Das ist teurer als in 75 % der Berliner Bezirke.'
+			'In X kostet die Miete in laufenden Verträgen 9,00\u00a0€/m² kalt. Das ist teurer als in 75 % der Berliner Bezirke.'
 		);
 	});
 	it('names the chosen comparison with the difference, then the Berlin field', () => {
@@ -41,7 +41,7 @@ describe('metricLead', () => {
 				value: 47.2
 			})
 		).toBe(
-			'Verkehrslärm in Reuterstraße: 46,2\u00a0dB. Das ist 1,0\u00a0dB leiser als Neukölln gesamt, insgesamt leiser als in 60 % der Berliner Kieze.'
+			'In Reuterstraße liegt der Verkehrslärm im Mittel bei 46,2\u00a0dB. Das ist 1,0\u00a0dB leiser als Neukölln gesamt, insgesamt leiser als in 60 % der Berliner Kieze.'
 		);
 	});
 	it('uses percentage points for shares', () => {
@@ -58,10 +58,34 @@ describe('metricLead', () => {
 				[46.4, 47, 48, 49, 45, 50, 51, 52, 53, 54, 55, 56],
 				'Bezirke'
 			)
-		).toBe('Verkehrslärm in Spandau: 46,4\u00a0dB. Das ist leiser als 10 von 12 Bezirken.');
+		).toBe(
+			'In Spandau liegt der Verkehrslärm im Mittel bei 46,4\u00a0dB. Das ist leiser als 10 von 12 Bezirken.'
+		);
 	});
 	it('says so when there is no value', () => {
 		expect(metricLead('pet', 'X', null, [1, 2], 'Kieze')).toBe('Für X gibt es dazu keine Angabe.');
+	});
+	it('writes a full sentence for every chapter lead metric', () => {
+		const lead = (id: Parameters<typeof metricLead>[0], v: number) =>
+			metricLead(id, 'X', v, [], 'Kieze').split('. ')[0];
+		expect(lead('gruenanlagen', 1.2)).toBe(
+			'Parks und Grünanlagen bedecken in X 1,2\u00a0% der Fläche.'
+		);
+		expect(lead('pet', 35.3)).toBe(
+			'An einem heißen Sommernachmittag fühlt es sich in X an wie 35,3\u00a0°C.'
+		);
+		expect(lead('haltestellenKm2', 23.9)).toBe(
+			'In X gibt es 23,9 Haltestellen je Quadratkilometer.'
+		);
+		expect(lead('lebensmittel10k', 19)).toBe(
+			'In X kommen 19,0 Lebensmittelgeschäfte auf 10.000 Menschen.'
+		);
+		expect(lead('dichte', 26507)).toBe('In X leben 26.507 Menschen je Quadratkilometer.');
+	});
+	it('compares counts with more and less', () => {
+		expect(metricLead('haltestellenKm2', 'X', 20, FIELD_20, 'Kieze')).toMatch(
+			/Das ist (mehr|weniger) als in \d+ % der Berliner Kieze\.$/
+		);
 	});
 	it('keeps only the value sentence when all values are equal', () => {
 		expect(metricLead('kitas', 'X', 3, [3, 3], 'Kieze')).toBe(
@@ -127,7 +151,7 @@ describe('English output', () => {
 	});
 	it('builds the lead sentence in English', () => {
 		expect(metricLead('laermDb', 'Reuterstraße', 46, FIELD_20, 'Kieze', null, en)).toBe(
-			"Traffic noise in Reuterstraße: 46.0\u00a0dB. That is quieter than in 60% of Berlin's Kieze."
+			"Traffic noise in Reuterstraße averages 46.0\u00a0dB. That is quieter than in 60% of Berlin's Kieze."
 		);
 		expect(metricLead('altbau', 'X', 77, [], 'Kieze', { name: 'Rixdorf', value: 61 }, en)).toBe(
 			'Old buildings in X: 77% of homes. That is 16\u00a0percentage points more old buildings than Rixdorf.'

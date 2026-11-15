@@ -111,7 +111,7 @@
 			refIsBerlin
 				? zeroAwareMedian(values(id), METRIC_SPECS[id].zeroPile === true).value
 				: ref.metrics[id],
-			refIsBerlin ? m.place_ref_berlin_median() : refName,
+			refIsBerlin ? m.place_ref_berlin_median_text() : refName,
 			opts
 		);
 	const leadHint = $derived(hintOf(spec.main[0]));

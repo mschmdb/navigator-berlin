@@ -374,12 +374,7 @@
 							/>
 						{/if}
 					{/if}
-					<ChartAxis
-						{ticks}
-						format={axisFormat}
-						{unit}
-						{ends}
-					/>
+					<ChartAxis {ticks} format={axisFormat} {unit} {ends} />
 				</Svg>
 				<Tooltip.Root>
 					{#snippet children({ data })}

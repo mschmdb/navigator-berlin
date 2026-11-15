@@ -213,10 +213,6 @@ export function formatMetricNumber(id: MetricId, value: number, opts?: LocaleOpt
 	return numberFormat(Math.min(METRIC_SPECS[id].digits, 1), opts).format(value);
 }
 
-/**
- * Zwei Sätze je Kapitel: Wert und Lage unter allen Orten, dann der Vergleich.
- * „Verkehrslärm in Reuterstraße: 46,2 dB. Das ist leiser als in 80 % der Berliner Kieze.“
- */
 /** „als 11 von 12 Bezirken“: Dativ Plural im Deutschen, im Englischen unverändert. */
 function dativePlural(units: string, opts?: LocaleOpts): string {
 	return msgOpts(opts).locale === 'en' || units.endsWith('n') ? units : `${units}n`;
@@ -225,6 +221,10 @@ function dativePlural(units: string, opts?: LocaleOpts): string {
 /** Unter dieser Zahl von Orten sagt eine Anzahl mehr als ein Prozentwert. */
 const SMALL_SET = 20;
 
+/**
+ * Zwei Sätze je Kapitel: Wert und Lage unter allen Orten, dann der Vergleich.
+ * „In Reuterstraße liegt der Verkehrslärm im Mittel bei 46,2 dB. Das ist leiser als in 80 % der Berliner Kieze.“
+ */
 export function metricLead(
 	id: MetricId,
 	name: string,
@@ -240,10 +240,11 @@ export function metricLead(
 	const spec = METRIC_SPECS[id];
 	const text = metricText(id, opts);
 	const xs = others.filter((v): v is number => v !== null);
-	const head = m.place_lead_head(
-		{ label: text.label, name, value: formatMetric(id, own, opts) },
-		o
-	);
+	const value = formatMetric(id, own, opts);
+	const sentence = METRIC_TEXT[id].sentence;
+	const head = sentence
+		? sentence({ name, value, n: numberFormat(spec.digits, opts).format(own) }, o)
+		: m.place_lead_head({ label: text.label, name, value }, o);
 	const below = xs.filter((v) => v < own).length;
 	const above = xs.filter((v) => v > own).length;
 	const pct = (n: number) => String(Math.round((n / xs.length) * 100));
@@ -290,10 +291,6 @@ function diffText(id: MetricId, abs: number, opts?: LocaleOpts): string {
 	return `${n}\u00a0${METRIC_TEXT[id].unit({}, msgOpts(opts))}`;
 }
 
-/**
- * Was einen Ort prägt: die Messwerte, in denen er am weitesten vom Berliner Feld abweicht.
- * „Einwohnerdichte: dichter besiedelt als 95 % der Berliner Kieze“
- */
 /** Nur die Zahl mit den Nachkommastellen der Kennzahl, für Tabellenzellen. */
 export function formatMetricValue(id: MetricId, value: number | null, opts?: LocaleOpts): string {
 	return value === null ? '–' : numberFormat(METRIC_SPECS[id].digits, opts).format(value);

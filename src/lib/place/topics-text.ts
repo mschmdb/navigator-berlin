@@ -3,6 +3,10 @@ import type { Locale } from '$lib/paraglide/runtime';
 import type { ChapterId, LabelId, MetricId } from './topics';
 
 type TextFn = (inputs?: Record<string, never>, options?: { locale?: Locale }) => string;
+export type SentenceFn = (
+	inputs: { name: string; value: string; n: string },
+	options?: { locale?: Locale }
+) => string;
 
 export interface MetricTextFns {
 	readonly label: TextFn;
@@ -13,10 +17,13 @@ export interface MetricTextFns {
 	readonly lower: TextFn;
 	readonly zeroName?: TextFn;
 	readonly zeroMedianLabel?: TextFn;
+	/** Ganzer Satz für den Kapiteleinstieg; ohne ihn baut `metricLead` „{label} in {name}: {value}.“ */
+	readonly sentence?: SentenceFn;
 }
 
 export const METRIC_TEXT: Readonly<Record<MetricId, MetricTextFns>> = {
 	laermDb: {
+		sentence: m.place_m_laermdb_sentence,
 		label: m.place_m_laermdb_label,
 		unit: m.place_m_laermdb_unit,
 		what: m.place_m_laermdb_what,
@@ -35,6 +42,7 @@ export const METRIC_TEXT: Readonly<Record<MetricId, MetricTextFns>> = {
 		zeroMedianLabel: m.place_m_lufthoch_zero_median
 	},
 	gruenanlagen: {
+		sentence: m.place_m_gruenanlagen_sentence,
 		label: m.place_m_gruenanlagen_label,
 		unit: m.place_m_gruenanlagen_unit,
 		what: m.place_m_gruenanlagen_what,
@@ -53,6 +61,7 @@ export const METRIC_TEXT: Readonly<Record<MetricId, MetricTextFns>> = {
 		zeroMedianLabel: m.place_m_gruenschlecht_zero_median
 	},
 	pet: {
+		sentence: m.place_m_pet_sentence,
 		label: m.place_m_pet_label,
 		unit: m.place_m_pet_unit,
 		what: m.place_m_pet_what,
@@ -61,6 +70,7 @@ export const METRIC_TEXT: Readonly<Record<MetricId, MetricTextFns>> = {
 		lower: m.place_m_pet_lower
 	},
 	bestandsmiete: {
+		sentence: m.place_m_bestandsmiete_sentence,
 		label: m.place_m_bestandsmiete_label,
 		unit: m.place_m_bestandsmiete_unit,
 		what: m.place_m_bestandsmiete_what,
@@ -87,6 +97,7 @@ export const METRIC_TEXT: Readonly<Record<MetricId, MetricTextFns>> = {
 		zeroMedianLabel: m.place_m_milieuschutz_zero_median
 	},
 	haltestellenKm2: {
+		sentence: m.place_m_haltestellenkm2_sentence,
 		label: m.place_m_haltestellenkm2_label,
 		unit: m.place_m_haltestellenkm2_unit,
 		what: m.place_m_haltestellenkm2_what,
@@ -111,6 +122,7 @@ export const METRIC_TEXT: Readonly<Record<MetricId, MetricTextFns>> = {
 		lower: m.place_m_bahnhoefe_lower
 	},
 	lebensmittel10k: {
+		sentence: m.place_m_lebensmittel10k_sentence,
 		label: m.place_m_lebensmittel10k_label,
 		unit: m.place_m_lebensmittel10k_unit,
 		what: m.place_m_lebensmittel10k_what,
@@ -151,6 +163,7 @@ export const METRIC_TEXT: Readonly<Record<MetricId, MetricTextFns>> = {
 		lower: m.place_m_kulturorte_lower
 	},
 	dichte: {
+		sentence: m.place_m_dichte_sentence,
 		label: m.place_m_dichte_label,
 		unit: m.place_m_dichte_unit,
 		what: m.place_m_dichte_what,

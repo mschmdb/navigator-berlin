@@ -92,6 +92,8 @@
 				? m.place_total_of({ name: ref.label })
 				: ref.label
 	);
+	// Im Satz mit Artikel („Der Ring ist der Berliner Median.“), als Beschriftung ohne.
+	const refText = $derived(kind === 'berlin' ? m.place_ref_berlin_median_text() : refName);
 
 	// Gespeicherter Wettkampf-Rang (kiez_rank/bezirk_rank), nicht selbst gerechnet.
 	const scoreRank = $derived(
@@ -159,9 +161,9 @@
 						score: formatScore(self.dims.composite, opts),
 						rank: scoreRank.rang,
 						total: scoreRank.total,
-						ref: refName
+						ref: refText
 					})
-				: m.place_ov_kiez({ name, score: formatScore(self.dims.composite, opts), ref: refName })
+				: m.place_ov_kiez({ name, score: formatScore(self.dims.composite, opts), ref: refText })
 			: ''
 	);
 	const profileDims: readonly Dim[] = ['composite', ...RATED_DIMS, 'kriminalitaet'];

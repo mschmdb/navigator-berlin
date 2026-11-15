@@ -28,7 +28,7 @@
 			ticks.map((t) => format(t)),
 			ticks,
 			decimalSep
-		).map((t, i) => (i === ticks.length - 1 && unit ? `${t} ${unit}` : t));
+		).map((t, i) => (i === ticks.length - 1 && unit ? `${t}\u00a0${unit}` : t));
 		return layoutAxisLabels(
 			texts,
 			ticks.map((t) => context.xScale(t) as number),

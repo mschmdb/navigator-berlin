@@ -76,7 +76,7 @@
 			const count = METRIC_SPECS[id].unitKind === 'count';
 			const hint = refHead
 				? hintFor(id, own.metrics[id], ref.metrics[id], refHead.name, opts)
-				: hintFor(id, own.metrics[id], b.value, m.place_ref_berlin_median(), opts);
+				: hintFor(id, own.metrics[id], b.value, m.place_ref_berlin_median_text(), opts);
 			return {
 				key: id,
 				count,
