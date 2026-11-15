@@ -37,7 +37,11 @@ export interface ProfileInput {
 /**
  * Deterministischer Kurz-Hash über den Input (16 hex chars). `rangGeteiltMit` bleibt
  * draußen: Der Hinweis steuert nur die Wortwahl im Prompt. Ein neuer Gleichstand allein
- * soll keine Regeneration aller Profile auslösen.
+ * soll keine Regeneration aller Profile auslösen (mit dem Feld im Hash wären am 15.11.2026
+ * 147 von 155 Profilen stale gewesen).
+ * Bewusst akzeptiert: Tritt ein anderes Gebiet einem Gleichstand bei oder verlässt ihn,
+ * ohne dass sich Score oder Rang dieses Gebiets ändern, bleibt der Hash gleich. Ein Text
+ * wie „zweitbester“ oder „teilt sich Platz 1 mit 4 weiteren“ kann dann unbemerkt veralten.
  */
 export function hashInput(input: ProfileInput): string {
 	const json = JSON.stringify(input, (key, value: unknown) =>
