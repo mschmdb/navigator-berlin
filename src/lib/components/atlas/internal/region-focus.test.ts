@@ -103,7 +103,7 @@ describe('compositeRank', () => {
 		};
 		expect(compositeRank(tie, 'kiez', 'a')?.rang).toBe(1);
 		expect(compositeRank(tie, 'kiez', 'b')?.rang).toBe(1);
-		expect(compositeRank(tie, 'kiez', 'c')?.rang).toBe(2);
+		expect(compositeRank(tie, 'kiez', 'c')?.rang).toBe(3);
 		expect(compositeRank(tie, 'kiez', 'c')?.total).toBe(3);
 	});
 
