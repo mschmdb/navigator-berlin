@@ -133,72 +133,80 @@
 	{#snippet text()}
 		<p>{lead}</p>
 		{#if leadHint}<p><Hint hint={leadHint} /></p>{/if}
-		<p class="text-sm">{METRIC_SPECS[spec.main[0]].what}.</p>
+		<p class="text-sm">
+			{METRIC_SPECS[spec.main[0]].what}. Quelle: {METRIC_SPECS[spec.main[0]].source}.
+		</p>
 		{#if mapHref}
 			<!-- eslint-disable-next-line svelte/no-navigation-without-resolve -->
 			<p><a class="text-accent underline" href={mapHref}>Auf der Karte ansehen</a></p>
 		{/if}
 	{/snippet}
 	{#snippet chart()}
-		<div class="flex flex-col gap-8">
-			{#each spec.main as m (m)}
-				<div>
-					<p
-						class="flex items-baseline justify-between gap-3 border-b border-rule pb-1 text-sm font-semibold text-ink"
-					>
-						<span>{METRIC_SPECS[m].label}, {METRIC_SPECS[m].unit}</span>
-						<!-- Richtung ohne Legende lesbar: links weniger, rechts mehr -->
-						<span class="shrink-0 text-dense-label font-normal text-ink-subtle" aria-hidden="true"
-							>← {METRIC_SPECS[m].lower}&emsp;{METRIC_SPECS[m].higher} →</span
-						>
-					</p>
-					<StripChart
-						items={items(regions, m)}
-						domain={domainOf(m)}
-						format={(v) => formatMetric(m, v)}
-						axisFormat={(v) => formatMetricNumber(m, v)}
-						unit={METRIC_SPECS[m].unit}
-						ownSlug={own.slug}
-						{highlight}
-						{highlightLabel}
-						refSlug={refIsLine ? null : ref.slug}
-						refLine={refIsLine ? { value: ref.metrics[m], label: refName } : null}
-						medianLabel={`Median der ${regions.length} ${unitPlural}`}
-						zeroName={METRIC_SPECS[m].zeroName}
-						zeroMedianLabel={METRIC_SPECS[m].zeroMedianLabel}
-						{unitPlural}
-						ownHint={hintOf(m)}
-						r={regions.length < 20 ? 6 : 2.9}
-						{onpick}
-					/>
-				</div>
-				{#if kieze.length > 1}
-					{@const s = spread(kieze, (k) => k.metrics[m])}
-					{#if s}
-						<div class="-mt-4">
-							<p class="text-sm text-ink">
-								Die {kieze.length} Kieze in {own.name}: von {formatMetric(m, s.min.metrics[m])} in
-								{s.min.name} bis {formatMetric(m, s.max.metrics[m])} in {s.max.name}.
+		<!-- Abstände: zwischen Grafiken im Kapitel 4rem, Bezirk und Kieze 2rem, Grafik zu Tabelle 3rem -->
+		<div class="flex flex-col gap-12">
+			<div class="flex flex-col gap-16">
+				{#each spec.main as m (m)}
+					<div class="flex flex-col gap-8">
+						<div>
+							<p
+								class="flex items-baseline justify-between gap-3 border-b border-rule pb-1 text-sm font-semibold text-ink"
+							>
+								<span>{METRIC_SPECS[m].label}, {METRIC_SPECS[m].unit}</span>
+								<!-- Richtung ohne Legende lesbar: links weniger, rechts mehr -->
+								<span
+									class="shrink-0 text-dense-label font-normal text-ink-subtle"
+									aria-hidden="true">← {METRIC_SPECS[m].lower}&emsp;{METRIC_SPECS[m].higher} →</span
+								>
 							</p>
 							<StripChart
-								items={items(kieze, m)}
+								items={items(regions, m)}
 								domain={domainOf(m)}
 								format={(v) => formatMetric(m, v)}
 								axisFormat={(v) => formatMetricNumber(m, v)}
 								unit={METRIC_SPECS[m].unit}
-								ownSlug={null}
-								highlight={new Set([s.min.slug, s.max.slug])}
-								highlightLabel={`${s.min.name} und ${s.max.name}`}
-								refSlug={null}
-								refLine={{ value: own.metrics[m], label: `${own.name} gesamt` }}
-								medianLabel={`Median der Kieze in ${own.name}`}
-								unitPlural="Kieze"
-								r={4.5}
+								ownSlug={own.slug}
+								{highlight}
+								{highlightLabel}
+								refSlug={refIsLine ? null : ref.slug}
+								refLine={refIsLine ? { value: ref.metrics[m], label: refName } : null}
+								medianLabel={`Median der ${regions.length} ${unitPlural}`}
+								zeroName={METRIC_SPECS[m].zeroName}
+								zeroMedianLabel={METRIC_SPECS[m].zeroMedianLabel}
+								{unitPlural}
+								ownHint={hintOf(m)}
+								r={regions.length < 20 ? 6 : 2.9}
+								{onpick}
 							/>
 						</div>
-					{/if}
-				{/if}
-			{/each}
+						{#if kieze.length > 1}
+							{@const s = spread(kieze, (k) => k.metrics[m])}
+							{#if s}
+								<div>
+									<p class="text-sm text-ink">
+										Die {kieze.length} Kieze in {own.name}: von {formatMetric(m, s.min.metrics[m])} in
+										{s.min.name} bis {formatMetric(m, s.max.metrics[m])} in {s.max.name}.
+									</p>
+									<StripChart
+										items={items(kieze, m)}
+										domain={domainOf(m)}
+										format={(v) => formatMetric(m, v)}
+										axisFormat={(v) => formatMetricNumber(m, v)}
+										unit={METRIC_SPECS[m].unit}
+										ownSlug={null}
+										highlight={new Set([s.min.slug, s.max.slug])}
+										highlightLabel={`${s.min.name} und ${s.max.name}`}
+										refSlug={null}
+										refLine={{ value: own.metrics[m], label: `${own.name} gesamt` }}
+										medianLabel={`Median der Kieze in ${own.name}`}
+										unitPlural="Kieze"
+										r={4.5}
+									/>
+								</div>
+							{/if}
+						{/if}
+					</div>
+				{/each}
+			</div>
 
 			<SideTable
 				metrics={spec.side}

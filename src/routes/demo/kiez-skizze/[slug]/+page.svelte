@@ -5,6 +5,7 @@
 -->
 <script lang="ts">
 	import '$lib/skizzen/components/skizze.css';
+	import PlaceSeo from '$lib/skizzen/components/PlaceSeo.svelte';
 	import ReferenceBar from '$lib/skizzen/components/ReferenceBar.svelte';
 	import Section from '$lib/skizzen/components/Section.svelte';
 	import Chapter from '$lib/skizzen/components/Chapter.svelte';
@@ -143,11 +144,6 @@
 	];
 </script>
 
-<svelte:head>
-	<title>Skizze: {name}</title>
-	<meta name="robots" content="noindex" />
-</svelte:head>
-
 <ReferenceBar
 	berlinNote={berlin.note ?? ''}
 	bezirkLabel={bezirkName}
@@ -163,6 +159,20 @@
 	chapters={jump}
 	onchoice={(c) => skizze.setChoice(c)}
 	onmode={(m) => skizze.setMode(m)}
+/>
+
+<PlaceSeo
+	kind="kiez"
+	slug={data.profile.slug}
+	{name}
+	{bezirkName}
+	bezirkSlug={data.bezirkSlug}
+	centroid={data.profile.centroid}
+	einwohner={data.profile.einwohner}
+	flaecheHa={data.profile.flaecheHa}
+	stichtag={data.einwohnerStichtag}
+	score={self?.dims.composite ?? null}
+	rank={data.compositeRank}
 />
 
 <main class="mx-auto max-w-6xl px-4 pb-24">

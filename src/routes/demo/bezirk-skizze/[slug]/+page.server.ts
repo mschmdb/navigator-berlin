@@ -61,8 +61,11 @@ export const load: PageServerLoad = async (event) => {
 			slug: base.profile.slug,
 			name: base.profile.name,
 			einwohner: base.profile.einwohner,
-			flaecheHa: base.profile.flaecheHa
+			flaecheHa: base.profile.flaecheHa,
+			centroid: base.profile.centroid
 		},
+		einwohnerStichtag: base.einwohnerStichtag,
+		bezirkComposite: base.bezirkComposite,
 		prose: base.profileProse,
 		compositeRank: base.compositeRank,
 		outline: base.kiezeView.outline,
