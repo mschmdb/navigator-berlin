@@ -4,17 +4,19 @@
 // Severity-Richtung läuft separat in `value-severity-mapping.ts`.
 
 const TO_SENAT: Record<string, string> = {
-	'sehr gut': 'sehr gut',
-	'sehr hoch': 'sehr gut',
+	// Der Senat kennt nur drei Stufen; „sehr …“ fällt auf die nächste Stufe, damit jede
+	// Ausgabe eine Übersetzung hat.
+	'sehr gut': 'gut',
+	'sehr hoch': 'gut',
 	gut: 'gut',
 	hoch: 'gut',
 	mittel: 'mittel',
 	schlecht: 'schlecht',
 	gering: 'schlecht',
 	niedrig: 'schlecht',
-	'sehr schlecht': 'sehr schlecht',
-	'sehr gering': 'sehr schlecht',
-	'sehr niedrig': 'sehr schlecht'
+	'sehr schlecht': 'schlecht',
+	'sehr gering': 'schlecht',
+	'sehr niedrig': 'schlecht'
 };
 
 export function mapGruenversorgungKategorie(raw: string): string {

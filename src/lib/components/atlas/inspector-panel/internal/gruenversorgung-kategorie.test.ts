@@ -12,8 +12,9 @@ describe('mapGruenversorgungKategorie()', () => {
 		expect(mapGruenversorgungKategorie('hoch')).toBe('gut');
 		expect(mapGruenversorgungKategorie('gering')).toBe('schlecht');
 		expect(mapGruenversorgungKategorie('niedrig')).toBe('schlecht');
-		expect(mapGruenversorgungKategorie('sehr hoch')).toBe('sehr gut');
-		expect(mapGruenversorgungKategorie('sehr gering')).toBe('sehr schlecht');
+		expect(mapGruenversorgungKategorie('sehr hoch')).toBe('gut');
+		expect(mapGruenversorgungKategorie('sehr gering')).toBe('schlecht');
+		expect(mapGruenversorgungKategorie('sehr gut')).toBe('gut');
 	});
 	it('case-insensitive + trim', () => {
 		expect(mapGruenversorgungKategorie('  Schlecht ')).toBe('schlecht');
