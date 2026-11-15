@@ -4,11 +4,11 @@ name: Haselhorst
 pageType: kiez
 locale: en
 sourceInputHash: 'c3bdf7fc5fa78aaa'
-sourceTextHash: '8d1dd6d468789167'
+sourceTextHash: 'c9dbce45f9207090'
 model: 'claude (subagent translation)'
 translatedAt: '2026-09-30T12:00:00.000Z'
 ---
 
-Haselhorst scores well on Quiet & air. The score of around 78 is above the Berlin median but below the Bezirk average. Green & heat reaches 53 points, close to the Berlin median. Green space provision is rated high and the noise class medium. On hot days the perceived temperature reaches around 36 degrees.
+Haselhorst scores well on Quiet & air. The score of around 78 is above the Berlin median but below the Bezirk average. Green & heat reaches 53 points, close to the Berlin median. The Senate rates green space provision as good, and the noise class is medium. On hot days the perceived temperature reaches around 36 degrees.
 
 Connections stay weak. Stop density reaches around 9 stops per square kilometre. The Mobility score is below the Berlin median. Local amenities reach around 48 points, above the Bezirk average. Overall, Haselhorst ranks 91st.

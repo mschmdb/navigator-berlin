@@ -4,11 +4,11 @@ name: Mitte
 pageType: bezirk
 locale: en
 sourceInputHash: '12e097fa70f8bfde'
-sourceTextHash: 'a0be76fc19ac1e65'
+sourceTextHash: 'c5879c2943424f34'
 model: 'claude (subagent translation)'
 translatedAt: '2026-09-30T12:00:00.000Z'
 ---
 
-Mitte is the hub for Mobility and Culture. On Mobility, the Bezirk reaches the top value at around 38 points, far above the median. Culture follows with about 84 points, the second best value. Stop density is very high, at around 17 per square kilometre. Local amenities are also far above average at just under 64 points.
+Mitte is the hub for Mobility and Culture. On Mobility, the Bezirk reaches the top value at around 38 points, far above the median. Culture follows with about 84 points, the second best value. The stop network is dense, at around 17 per square kilometre. Local amenities are also far above average at just under 64 points.
 
-Green shows the contrast. Green & heat stays below the median at around 39 points. Green space provision is rated low, and Quiet & air comes out below average at about 47 points. Overall, Mitte ranks 2 of 12.
+Green shows the contrast. Green & heat stays below the median at around 39 points. The Senate rates green space provision mostly as poor, and Quiet & air comes out below average at about 47 points. Overall, Mitte ranks 2 of 12.
