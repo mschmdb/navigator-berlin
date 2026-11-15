@@ -79,7 +79,8 @@ export interface LlmsSourceEntry {
 
 const SECTION_DEFAULTS: Record<LlmsSourceEntry['section'], string> = {
 	methodik: 'Methodik-Erklärung',
-	bezirk: 'Bezirksseite nach Themen: Lärm, Grün, Wohnen, Mobilität, Versorgung, Menschen, Wahlen, im Vergleich mit Berlin',
+	bezirk:
+		'Bezirksseite nach Themen: Lärm, Grün, Wohnen, Mobilität, Versorgung, Menschen, Wahlen, im Vergleich mit Berlin',
 	kiez: 'Kiezseite (LOR-Bezirksregion) nach Themen: Lärm, Grün, Wohnen, Mobilität, Versorgung, Menschen, Wahlen, im Vergleich mit Berlin',
 	layer: 'Daten-Layer',
 	static: 'Statische Seite',
