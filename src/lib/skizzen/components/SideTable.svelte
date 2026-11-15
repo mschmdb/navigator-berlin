@@ -31,8 +31,26 @@
 		/** Kopf des Vergleichs: Name und Art, etwa „Neukölln“ / „gesamt“. */
 		refHead: { readonly name: string; readonly sub: string } | null;
 		unitPlural: string;
+		/** Kompaktes Muster: kein „dieser Ort“, Hinweise direkt unter der Überschrift, Tönung statt Badge. */
+		compact?: boolean;
 	}
-	let { metrics, labels, regions, own, ref, refHead, unitPlural }: Props = $props();
+	let {
+		metrics,
+		labels,
+		regions,
+		own,
+		ref,
+		refHead,
+		unitPlural,
+		compact = false
+	}: Props = $props();
+	const typicalTitle = $derived(
+		m.skizze_typical_title({ count: regions.length, units: unitPlural })
+	);
+	const tintOf = (r: { hint: HintData | null }) =>
+		compact && r.hint
+			? `rounded-sm px-0.5 ${r.hint.tone === 'good' ? 'bg-[var(--hint-good-bg)]' : 'bg-[var(--hint-bad-bg)]'}`
+			: '';
 	// Ebene aus der Zahl der Orte: 143 Kieze oder 12 Bezirke.
 	const typical = $derived(
 		regions.length > 20 ? m.skizze_side_typical_kiez() : m.skizze_side_typical_bezirk()
@@ -90,6 +108,18 @@
 		}))
 	]);
 	const hasCounts = $derived(rows.some((r) => r.count));
+	// Kompakt: gemeinsame Einheit einmal unter der Überschrift statt in jeder Zeile.
+	const sharedUnit = $derived(
+		compact && rows.length > 1 && rows.every((r) => r.unit && r.unit === rows[0].unit)
+			? rows[0].unit
+			: null
+	);
+	const showUnit = (r: { unit: string }) => r.unit && !sharedUnit;
+	// Kompakt: Beschreibung nur, wenn sie etwas Eigenes sagt (was zu Kulturorten zählt).
+	const showWhat = (r: { key: string; what: string }) =>
+		r.what && (!compact || r.key === 'kulturorte');
+	const whatOf = (r: { key: string; what: string }) =>
+		compact && r.key === 'kulturorte' ? m.skizze_m_kulturorte_short() : r.what;
 	const zeroNotes = $derived(
 		metrics
 			.map((id) => ({ id, z: zeroAwareMedian(regions.map((r) => r.metrics[id])).zerosLeftOut }))
@@ -110,7 +140,13 @@
 <table
 	class="hidden w-full table-fixed border-collapse text-left [overflow-wrap:break-word] sm:table"
 >
-	<caption class="mb-2 text-left text-sm font-semibold text-ink">{m.skizze_side_caption()}</caption>
+	<caption class="mb-2 text-left text-sm font-semibold text-ink">
+		{m.skizze_side_caption()}
+		{#if compact && (hasCounts || sharedUnit)}<span
+				class="block text-dense-label font-normal text-ink-subtle"
+				>{sharedUnit ?? m.skizze_side_count_note()}</span
+			>{/if}
+	</caption>
 	<colgroup>
 		<col />
 		<col class="w-40" />
@@ -121,10 +157,10 @@
 		<tr class="border-b border-rule align-bottom">
 			<th scope="col" class="pb-1.5"><span class="sr-only">{m.skizze_table_value()}</span></th>
 			<th scope="col" class="pb-1.5 pl-3 text-right text-sm font-semibold text-accent">
-				{own.name.replaceAll('/', '/\u200b')}<span
-					class="block text-dense-label font-normal text-ink-subtle"
-					>{m.skizze_side_this_place()}</span
-				>
+				{own.name.replaceAll('/', '/\u200b')}{#if !compact}<span
+						class="block text-dense-label font-normal text-ink-subtle"
+						>{m.skizze_side_this_place()}</span
+					>{/if}
 			</th>
 			{#if refHead}
 				<th scope="col" class="pb-1.5 pl-3 text-right text-sm font-normal text-ink">
@@ -132,8 +168,13 @@
 				</th>
 			{/if}
 			<th scope="col" class="pb-1.5 pl-3 text-right text-sm font-normal text-ink">
-				{m.skizze_side_berlin()}<span class="block text-dense-label text-ink-subtle">{typical}</span
-				>
+				{#if compact}
+					<abbr title={typicalTitle} class="no-underline">{typical}</abbr>
+				{:else}
+					{m.skizze_side_berlin()}<span class="block text-dense-label text-ink-subtle"
+						>{typical}</span
+					>
+				{/if}
 			</th>
 		</tr>
 	</thead>
@@ -141,14 +182,17 @@
 		{#each rows as r (r.key)}
 			<tr class="border-b border-rule align-top">
 				<th scope="row" class="py-2 pr-2 text-left text-sm font-normal text-ink">
-					{r.label}{#if r.unit}<span class="text-dense-label text-ink-subtle">, {r.unit}</span>{/if}
-					{#if r.what}<span class="block text-dense-label text-ink-subtle">{r.what}</span>{/if}
+					{r.label}{#if showUnit(r)}<span class="text-dense-label text-ink-subtle">, {r.unit}</span
+						>{/if}
+					{#if showWhat(r)}<span class="block text-dense-label text-ink-subtle">{whatOf(r)}</span
+						>{/if}
 				</th>
 				<td class="py-2 pl-3 text-right align-top">
-					<span class="block font-mono text-sm whitespace-nowrap text-accent tabular-nums"
+					<span class="font-mono text-sm whitespace-nowrap text-accent tabular-nums {tintOf(r)}"
 						>{r.own}</span
 					>
-					{#if r.hint}<span class="mt-0.5 block"><Hint hint={r.hint} short /></span>{/if}
+					{#if r.hint && !compact}<span class="mt-0.5 block"><Hint hint={r.hint} short /></span
+						>{/if}
 				</td>
 				{#if refHead}
 					<td class="py-2 pl-3 text-right font-mono text-sm whitespace-nowrap tabular-nums"
@@ -167,33 +211,39 @@
 <!-- Mobil: eine Zeile je Wert in natürlicher Sprache, Vergleich klein darunter -->
 <div class="sm:hidden">
 	<p class="text-sm font-semibold text-ink">{m.skizze_side_caption()}</p>
-	{#if hasCounts}<p class="text-dense-label text-ink-subtle">{m.skizze_side_count_note()}</p>{/if}
+	{#if sharedUnit}<p class="text-dense-label text-ink-subtle">{sharedUnit}</p>
+	{:else if hasCounts}<p class="text-dense-label text-ink-subtle">
+			{m.skizze_side_count_note()}
+		</p>{/if}
 	<ul class="mt-1 flex flex-col">
 		{#each rows as r (r.key)}
 			<li class="border-b border-rule py-1.5">
 				<div class="flex items-baseline justify-between gap-3">
 					<span class="text-sm text-ink"
-						>{r.label}{#if r.unit}<span class="text-dense-label text-ink-subtle">, {r.unit}</span
+						>{r.label}{#if showUnit(r)}<span class="text-dense-label text-ink-subtle"
+								>, {r.unit}</span
 							>{/if}</span
 					>
-					<span class="font-mono text-sm text-accent tabular-nums">{r.own}</span>
+					<span class="font-mono text-sm text-accent tabular-nums {tintOf(r)}">{r.own}</span>
 				</div>
-				{#if r.what}<p class="text-dense-label text-ink-subtle">{r.what}</p>{/if}
+				{#if showWhat(r)}<p class="text-dense-label text-ink-subtle">{whatOf(r)}</p>{/if}
 				<p
 					class="flex flex-wrap items-center gap-x-2 text-dense-label text-ink-subtle tabular-nums"
 				>
 					{#if refHead}<span>{refHead.name}: {r.ref}</span>{/if}
 					<span>{typical}: {r.berlin}</span>
-					{#if r.hint}<Hint hint={r.hint} short />{/if}
+					{#if r.hint && !compact}<Hint hint={r.hint} short />{/if}
 				</p>
 			</li>
 		{/each}
 	</ul>
 </div>
 <div class="mt-1 flex flex-col gap-0.5 text-dense-label text-ink-subtle">
-	<p class="hidden sm:block">
-		{#if hasCounts}{m.skizze_side_count_note()}{/if}
-	</p>
-	<p>{m.skizze_side_typical_note({ count: regions.length, units: unitPlural })}</p>
+	{#if !compact}
+		<p class="hidden sm:block">
+			{#if hasCounts}{m.skizze_side_count_note()}{/if}
+		</p>
+		<p>{m.skizze_side_typical_note({ count: regions.length, units: unitPlural })}</p>
+	{/if}
 	{#each zeroNotes as n (n)}<p>{n}</p>{/each}
 </div>

@@ -48,6 +48,8 @@
 		r?: number;
 		/** Lesehilfe hinter dem eigenen Wert in der Legende. */
 		ownHint?: HintData | null;
+		/** Richtungswörter unter der Achse (kompaktes Muster). */
+		ends?: readonly [string, string] | null;
 		onpick?: (slug: string) => void;
 	}
 	let {
@@ -67,12 +69,13 @@
 		unitPlural = m.skizze_units_kieze(),
 		r: R = 2.9,
 		ownHint = null,
+		ends = null,
 		onpick
 	}: Props = $props();
 
 	const OWN_R = $derived(R + 3);
 	const STEP = $derived(2 * R * 0.86);
-	const AXIS = 26;
+	const AXIS = $derived(ends ? 42 : 26);
 	const MAX_SWARM = 240;
 	const BLOCK_GAP = 6;
 	const pad = $derived(OWN_R + 2);
@@ -376,6 +379,7 @@
 						top={0}
 						bottom={SWARM}
 						width={context.width}
+						{ends}
 					/>
 				</Svg>
 				<Tooltip.Root>

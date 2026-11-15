@@ -283,6 +283,7 @@
 				highlightLabel={m.skizze_highlight_kiez()}
 				mapHref={mapHref(spec.mapLayers)}
 				onpick={pick}
+				compact={spec.id === 'versorgung'}
 			/>
 		{/each}
 	{/if}

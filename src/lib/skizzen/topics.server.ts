@@ -24,6 +24,8 @@ interface Area {
 	readonly box: [number, number, number, number];
 }
 
+const MIN_PEOPLE_PER10K = 1000;
+
 const POINT_LAYERS = {
 	bahnhoefe: ['ubahn-stationen', 'sbahn-stationen'],
 	lebensmittel: ['nahversorgung-lebensmittel'],
@@ -229,7 +231,14 @@ async function build(): Promise<TopicData> {
 		const st = level === 'kiez' ? statsKiez.get(slug) : statsBezirk.get(slug);
 		const c = (k: PointKey) => counts.get(k)?.[level].get(slug) ?? null;
 		const bewohner = story?.bewohner ?? null;
-		const lebensmittel = c('lebensmittel');
+		// Je 10.000 Einwohner, fair zwischen großen und kleinen Gebieten. Unter 1.000 Einwohnern
+		// (Gewerbe, Parks) würden einzelne Orte riesige Ausreißer erzeugen: dann keine Angabe.
+		const per10k = (k: PointKey) => {
+			const n = c(k);
+			return n !== null && bewohner !== null && bewohner >= MIN_PEOPLE_PER10K
+				? (n / bewohner) * 10_000
+				: null;
+		};
 		const metrics: Record<(typeof METRICS)[number], number | null> = {
 			laermDb: story?.laermDb ?? null,
 			luftHoch: share(agg('luft-2023'), 'hoch'),
@@ -243,12 +252,11 @@ async function build(): Promise<TopicData> {
 			haltestelle400m:
 				story?.haltestelle400mAnteil == null ? null : story.haltestelle400mAnteil * 100,
 			bahnhoefe: c('bahnhoefe'),
-			lebensmittel10k:
-				lebensmittel !== null && bewohner ? (lebensmittel / bewohner) * 10_000 : null,
-			apotheken: c('apotheken'),
-			kitas: c('kitas'),
-			schulen: c('schulen'),
-			kulturorte: c('kulturorte'),
+			lebensmittel10k: per10k('lebensmittel'),
+			apotheken: per10k('apotheken'),
+			kitas: per10k('kitas'),
+			schulen: per10k('schulen'),
+			kulturorte: per10k('kulturorte'),
 			dichte: story?.bewohnerProKm2 ?? null,
 			kriminalitaet
 		};

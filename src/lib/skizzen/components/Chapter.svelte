@@ -9,6 +9,7 @@
 	import DataTable from './DataTable.svelte';
 	import SideTable from './SideTable.svelte';
 	import Hint from './Hint.svelte';
+	import { splitForTint } from '../tint';
 	import { m } from '$lib/paraglide/messages.js';
 	import { getLocale } from '$lib/paraglide/runtime';
 	import { mostCommon, niceDomain, spread, zeroAwareMedian } from '../stats';
@@ -16,6 +17,7 @@
 		chapterText,
 		formatMetric,
 		formatMetricNumber,
+		formatMetricValue,
 		hintFor,
 		labelText,
 		labelValueText,
@@ -49,6 +51,8 @@
 		/** Bezirksseite: die eigenen Kieze für die Spanne. */
 		kieze?: readonly RegionSnapshot[];
 		onpick?: (slug: string) => void;
+		/** Kompaktes Muster (Probe in einem Kapitel): jede Information genau einmal. */
+		compact?: boolean;
 	}
 	let {
 		spec,
@@ -66,7 +70,8 @@
 		refHeadName = '',
 		refHeadSub = '',
 		kieze = [],
-		onpick
+		onpick,
+		compact = false
 	}: Props = $props();
 
 	const opts = $derived({ locale: getLocale() });
@@ -103,6 +108,13 @@
 			opts
 		);
 	const leadHint = $derived(hintOf(spec.main[0]));
+	// Kompakt: die Lesehilfe als Tönung um die wertende Phrase im Satz, kein eigenes Badge.
+	const leadTint = $derived(
+		compact && leadHint && leadHint.tone !== 'neutral' ? splitForTint(lead, leadHint.short) : null
+	);
+	const typicalLabel = $derived(
+		regions.length > 20 ? m.skizze_side_typical_kiez() : m.skizze_side_typical_bezirk()
+	);
 	const classOf = (v: string | null | undefined) => (v ? labelValueText(v, opts) : '–');
 	const mainText = $derived(metricText(spec.main[0], opts));
 	// Textfassung für Screenreader und Tabellen-Ansicht: alle Werte, Klassen und die Kiez-Spanne.
@@ -155,8 +167,18 @@
 
 <Section id={spec.id} {title} {mode}>
 	{#snippet text()}
-		<p>{lead}</p>
-		{#if leadHint}<p><Hint hint={leadHint} /></p>{/if}
+		{#if leadTint}
+			<p>
+				{leadTint.before}<span
+					class="-mx-0.5 rounded-sm box-decoration-clone px-0.5 {leadHint?.tone === 'good'
+						? 'bg-[var(--hint-good-bg)]'
+						: 'bg-[var(--hint-bad-bg)]'}">{leadTint.tinted}</span
+				>{leadTint.after}
+			</p>
+		{:else}
+			<p>{lead}</p>
+			{#if leadHint && !compact}<p><Hint hint={leadHint} /></p>{/if}
+		{/if}
 		<p class="text-sm">
 			{m.skizze_chapter_what_source({ what: mainText.what, source: mainText.source })}
 		</p>
@@ -172,41 +194,51 @@
 	{/snippet}
 	{#snippet chart()}
 		<!-- Abstände: zwischen Grafiken im Kapitel 4rem, Bezirk und Kieze 2rem, Grafik zu Tabelle 3rem -->
-		<div class="flex flex-col gap-12">
+		<div class="flex flex-col {compact ? 'gap-8' : 'gap-12'}">
 			<div class="flex flex-col gap-16">
 				{#each spec.main as id (id)}
 					{@const text = metricText(id, opts)}
 					<div class="flex flex-col gap-8">
 						<div>
-							<p
-								class="flex items-baseline justify-between gap-3 border-b border-rule pb-1 text-sm font-semibold text-ink"
-							>
-								<span>{text.label}, {text.unit}</span>
-								<!-- Richtung ohne Legende lesbar: links weniger, rechts mehr -->
-								<span
-									class="shrink-0 text-dense-label font-normal text-ink-subtle"
-									aria-hidden="true">← {text.lower}&emsp;{text.higher} →</span
+							{#if compact}
+								<p class="border-b border-rule pb-1 text-sm font-semibold text-ink">
+									{text.label}
+									<span class="ml-1 text-dense-label font-normal text-ink-subtle">{text.unit}</span>
+								</p>
+							{:else}
+								<p
+									class="flex items-baseline justify-between gap-3 border-b border-rule pb-1 text-sm font-semibold text-ink"
 								>
-							</p>
+									<span>{text.label}, {text.unit}</span>
+									<!-- Richtung ohne Legende lesbar: links weniger, rechts mehr -->
+									<span
+										class="shrink-0 text-dense-label font-normal text-ink-subtle"
+										aria-hidden="true">← {text.lower}&emsp;{text.higher} →</span
+									>
+								</p>
+							{/if}
 							<StripChart
 								items={items(regions, id)}
 								domain={domainOf(id)}
-								format={(v) => fmt(id, v)}
+								format={compact ? (v) => formatMetricValue(id, v, opts) : (v) => fmt(id, v)}
 								axisFormat={(v) => formatMetricNumber(id, v, opts)}
-								unit={text.unit}
+								unit={compact ? '' : text.unit}
+								ends={compact ? [m.skizze_axis_less(), m.skizze_axis_more()] : null}
 								ownSlug={own.slug}
 								{highlight}
 								{highlightLabel}
 								refSlug={refIsLine ? null : ref.slug}
 								refLine={refIsLine ? { value: ref.metrics[id], label: refName } : null}
-								medianLabel={m.skizze_chapter_median_of({
-									count: regions.length,
-									units: unitPlural
-								})}
+								medianLabel={compact
+									? typicalLabel
+									: m.skizze_chapter_median_of({
+											count: regions.length,
+											units: unitPlural
+										})}
 								zeroName={text.zeroName}
 								zeroMedianLabel={text.zeroMedianLabel}
 								{unitPlural}
-								ownHint={hintOf(id)}
+								ownHint={compact ? null : hintOf(id)}
 								r={regions.length < 20 ? 6 : 2.9}
 								{onpick}
 							/>
@@ -258,6 +290,7 @@
 				{ref}
 				refHead={refIsBerlin ? null : { name: refHeadName, sub: refHeadSub }}
 				{unitPlural}
+				{compact}
 			/>
 		</div>
 	{/snippet}

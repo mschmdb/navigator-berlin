@@ -17,8 +17,10 @@
 		top: number;
 		bottom: number;
 		width: number;
+		/** Richtung unter der Achse: links „← weniger“, rechts „mehr →“. */
+		ends?: readonly [string, string] | null;
 	}
-	let { ticks, x, format, unit = '', top, bottom, width }: Props = $props();
+	let { ticks, x, format, unit = '', top, bottom, width, ends = null }: Props = $props();
 
 	// Ca. 6,3 px je Zeichen bei 10,5 px Plex Mono.
 	const labels = $derived.by(() => {
@@ -59,4 +61,19 @@
 			>
 		{/if}
 	{/each}
+	{#if ends}
+		<text
+			x={0}
+			y={bottom + 25}
+			dominant-baseline="hanging"
+			class="fill-[var(--ink-subtle)] text-[11px]">← {ends[0]}</text
+		>
+		<text
+			x={width}
+			y={bottom + 25}
+			dominant-baseline="hanging"
+			text-anchor="end"
+			class="fill-[var(--ink-subtle)] text-[11px]">{ends[1]} →</text
+		>
+	{/if}
 </g>

@@ -77,10 +77,10 @@ export const METRIC_SPECS: Readonly<Record<MetricId, MetricSpec>> = {
 	haltestelle400m: { digits: 0, unitKind: 'percent', better: 'higher' },
 	bahnhoefe: { digits: 0, unitKind: 'count' },
 	lebensmittel10k: { digits: 1, unitKind: 'other', better: 'higher' },
-	apotheken: { digits: 0, unitKind: 'count' },
-	kitas: { digits: 0, unitKind: 'count' },
-	schulen: { digits: 0, unitKind: 'count' },
-	kulturorte: { digits: 0, unitKind: 'count' },
+	apotheken: { digits: 1, unitKind: 'other', better: 'higher' },
+	kitas: { digits: 1, unitKind: 'other', better: 'higher' },
+	schulen: { digits: 1, unitKind: 'other', better: 'higher' },
+	kulturorte: { digits: 1, unitKind: 'other', better: 'higher' },
 	dichte: { digits: 0, unitKind: 'other' },
 	kriminalitaet: { digits: 0, unitKind: 'other' }
 };

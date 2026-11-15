@@ -51,7 +51,9 @@ describe('metricLead', () => {
 		expect(metricLead('pet', 'X', null, [1, 2], 'Kieze')).toBe('Für X gibt es dazu keine Angabe.');
 	});
 	it('keeps only the value sentence when all values are equal', () => {
-		expect(metricLead('kitas', 'X', 3, [3, 3], 'Kieze')).toBe('Kitas in X: 3\u00a0im Gebiet.');
+		expect(metricLead('kitas', 'X', 3, [3, 3], 'Kieze')).toBe(
+			'Kitas in X: 3,0\u00a0je 10.000 Menschen.'
+		);
 	});
 });
 
