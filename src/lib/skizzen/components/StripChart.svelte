@@ -13,6 +13,8 @@
 	import { median, splitsZeros, zeroShare } from '../stats';
 	import { chartMotion } from './motion.svelte';
 	import ChartAxis from './ChartAxis.svelte';
+	import Hint from './Hint.svelte';
+	import type { Hint as HintData } from '../topics';
 
 	interface Props {
 		items: readonly StripItem[];
@@ -40,6 +42,8 @@
 		/** Was gezählt wird: „Kieze“ oder „Bezirke“. */
 		unitPlural?: string;
 		r?: number;
+		/** Lesehilfe hinter dem eigenen Wert in der Legende. */
+		ownHint?: HintData | null;
 		onpick?: (slug: string) => void;
 	}
 	let {
@@ -58,6 +62,7 @@
 		zeroMedianLabel = 'Median ohne die Nullwerte',
 		unitPlural = 'Kieze',
 		r: R = 2.9,
+		ownHint = null,
 		onpick
 	}: Props = $props();
 
@@ -151,6 +156,9 @@
 			>{own.name}
 			{fmt(own.value)}
 		</li>
+	{/if}
+	{#if own && ownHint}
+		<li><Hint hint={ownHint} short /></li>
 	{/if}
 	{#if ref}
 		<li class="inline-flex items-center gap-1.5 text-ink">

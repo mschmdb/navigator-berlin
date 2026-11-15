@@ -5,6 +5,7 @@ import {
 	METRICS,
 	characterPoints,
 	formatMetric,
+	hintFor,
 	metricLead,
 	type MetricValues
 } from './topics';
@@ -75,5 +76,40 @@ describe('characterPoints', () => {
 	it('returns nothing when the place is ordinary everywhere', () => {
 		const own = make({ dichte: 25, altbau: 25 });
 		expect(characterPoints(own, all, 'Kieze')).toEqual([]);
+	});
+});
+
+describe('hintFor', () => {
+	it('marks quieter as good and names the comparison', () => {
+		expect(hintFor('laermDb', 46.2, 49.1, 'Berlin-Median')).toEqual({
+			dir: 'lower',
+			tone: 'good',
+			text: 'leiser als Berlin-Median',
+			short: 'leiser'
+		});
+	});
+	it('marks less green as bad', () => {
+		expect(hintFor('gruenanlagen', 1.2, 5.3, 'Berlin-Median')?.tone).toBe('bad');
+	});
+	it('stays neutral for rent, density and crime', () => {
+		expect(hintFor('bestandsmiete', 7.83, 7.62, 'X')).toEqual({
+			dir: 'higher',
+			tone: 'neutral',
+			text: 'teurer als X',
+			short: 'teurer'
+		});
+		expect(hintFor('dichte', 26000, 6000, 'X')?.tone).toBe('neutral');
+		expect(hintFor('kieztaten', 4000, 3000, 'X')?.tone).toBe('neutral');
+	});
+	it('says roughly equal below the display precision', () => {
+		expect(hintFor('laermDb', 46.21, 46.24, 'X')).toEqual({
+			dir: 'same',
+			tone: 'neutral',
+			text: 'etwa wie X',
+			short: 'etwa gleich'
+		});
+	});
+	it('returns null without values', () => {
+		expect(hintFor('pet', null, 30, 'X')).toBeNull();
 	});
 });

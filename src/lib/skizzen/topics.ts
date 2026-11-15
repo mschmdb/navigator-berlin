@@ -47,6 +47,11 @@ export interface MetricSpec {
 	readonly zeroMedianLabel?: string;
 	/** Auf Bezirksebene nicht vorhanden. */
 	readonly kiezOnly?: boolean;
+	/**
+	 * Lesehilfe nur, wo die Richtung für fast alle gilt (leiser, grüner, kühler, näher).
+	 * Ohne Wertung bleiben Miete, Altbau, Milieuschutz, Dichte, soziale Lage, Kriminalität und Zählwerte.
+	 */
+	readonly better?: 'higher' | 'lower';
 }
 
 export const METRIC_SPECS: Readonly<Record<MetricId, MetricSpec>> = {
@@ -57,7 +62,8 @@ export const METRIC_SPECS: Readonly<Record<MetricId, MetricSpec>> = {
 		what: 'Mittlerer Lärmpegel über Tag, Abend und Nacht (L_DEN), Strategische Lärmkarte 2022',
 		source: 'Umweltatlas Berlin',
 		higher: 'lauter',
-		lower: 'leiser'
+		lower: 'leiser',
+		better: 'lower'
 	},
 	luftHoch: {
 		label: 'Hohe Luftbelastung',
@@ -68,7 +74,8 @@ export const METRIC_SPECS: Readonly<Record<MetricId, MetricSpec>> = {
 		higher: 'mehr belastet',
 		lower: 'weniger belastet',
 		zeroName: 'ohne hohe Luftbelastung',
-		zeroMedianLabel: 'Median der Kieze mit hoher Luftbelastung'
+		zeroMedianLabel: 'Median der Kieze mit hoher Luftbelastung',
+		better: 'lower'
 	},
 	gruenanlagen: {
 		label: 'Parks und Grünanlagen',
@@ -77,7 +84,8 @@ export const METRIC_SPECS: Readonly<Record<MetricId, MetricSpec>> = {
 		what: 'Anteil öffentlicher Parks und Grünanlagen an der Fläche',
 		source: 'Grünanlagenbestand Berlin',
 		higher: 'grüner',
-		lower: 'weniger grün'
+		lower: 'weniger grün',
+		better: 'higher'
 	},
 	gruenSchlecht: {
 		label: 'Wenig Grün in Wohnungsnähe',
@@ -88,7 +96,8 @@ export const METRIC_SPECS: Readonly<Record<MetricId, MetricSpec>> = {
 		higher: 'schlechter versorgt',
 		lower: 'besser versorgt',
 		zeroName: 'ohne schlecht versorgte Teilgebiete',
-		zeroMedianLabel: 'Median der Kieze mit schlecht versorgten Teilgebieten'
+		zeroMedianLabel: 'Median der Kieze mit schlecht versorgten Teilgebieten',
+		better: 'lower'
 	},
 	pet: {
 		label: 'Gefühlte Temperatur am Nachmittag',
@@ -97,7 +106,8 @@ export const METRIC_SPECS: Readonly<Record<MetricId, MetricSpec>> = {
 		what: 'So warm fühlt es sich an einem heißen Sommertag um 14 Uhr an, Mittel im Gebiet',
 		source: 'Umweltatlas Berlin, Klimamodell 2022',
 		higher: 'heißer',
-		lower: 'kühler'
+		lower: 'kühler',
+		better: 'lower'
 	},
 	bestandsmiete: {
 		label: 'Miete in laufenden Verträgen',
@@ -135,7 +145,8 @@ export const METRIC_SPECS: Readonly<Record<MetricId, MetricSpec>> = {
 		what: 'Haltestellen von U-Bahn, S-Bahn, Tram und Bus je Quadratkilometer',
 		source: 'OpenStreetMap',
 		higher: 'dichter angebunden',
-		lower: 'weniger dicht angebunden'
+		lower: 'weniger dicht angebunden',
+		better: 'higher'
 	},
 	haltestelle400m: {
 		label: 'Haltestelle in 400 m',
@@ -144,7 +155,8 @@ export const METRIC_SPECS: Readonly<Record<MetricId, MetricSpec>> = {
 		what: 'Anteil der Menschen, die höchstens 400 Meter bis zur nächsten Haltestelle haben',
 		source: 'Zensus 2022 und OpenStreetMap',
 		higher: 'näher dran',
-		lower: 'weiter weg'
+		lower: 'weiter weg',
+		better: 'higher'
 	},
 	bahnhoefe: {
 		label: 'U- und S-Bahnhöfe',
@@ -162,7 +174,8 @@ export const METRIC_SPECS: Readonly<Record<MetricId, MetricSpec>> = {
 		what: 'Supermärkte, Discounter und andere Lebensmittelgeschäfte je 10.000 Einwohnerinnen und Einwohner',
 		source: 'OpenStreetMap',
 		higher: 'besser versorgt',
-		lower: 'schlechter versorgt'
+		lower: 'schlechter versorgt',
+		better: 'higher'
 	},
 	apotheken: {
 		label: 'Apotheken',
@@ -421,4 +434,34 @@ export function characterPoints(
 /** Nur die Zahl mit den Nachkommastellen der Kennzahl, für Tabellenzellen. */
 export function formatMetricValue(id: MetricId, value: number | null): string {
 	return value === null ? '–' : nf(METRIC_SPECS[id].digits).format(value);
+}
+
+export type HintTone = 'good' | 'bad' | 'neutral';
+export interface Hint {
+	/** Richtung des Werts selbst, unabhängig von der Wertung. */
+	readonly dir: 'higher' | 'lower' | 'same';
+	readonly tone: HintTone;
+	/** Klartext, etwa „leiser als Berlin-Median“. */
+	readonly text: string;
+	/** Kurzform für Tabellen, wo die Vergleichsspalte daneben steht: „leiser“. */
+	readonly short: string;
+}
+
+/** Lesehilfe am Wert: Richtung in Worten, Ton nur bei Kennzahlen mit klarer Richtung. */
+export function hintFor(
+	id: MetricId,
+	own: number | null,
+	ref: number | null,
+	refLabel: string
+): Hint | null {
+	if (own === null || ref === null) return null;
+	const spec = METRIC_SPECS[id];
+	const step = 10 ** -spec.digits;
+	if (Math.abs(own - ref) < step / 2) {
+		return { dir: 'same', tone: 'neutral', text: `etwa wie ${refLabel}`, short: 'etwa gleich' };
+	}
+	const dir = own > ref ? 'higher' : 'lower';
+	const tone: HintTone = !spec.better ? 'neutral' : spec.better === dir ? 'good' : 'bad';
+	const word = dir === 'higher' ? spec.higher : spec.lower;
+	return { dir, tone, text: `${word} als ${refLabel}`, short: word };
 }

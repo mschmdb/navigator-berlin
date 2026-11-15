@@ -10,10 +10,13 @@
 		LABEL_SPECS,
 		METRIC_SPECS,
 		formatMetricValue,
+		hintFor,
+		type Hint as HintData,
 		type LabelId,
 		type MetricId
 	} from '../topics';
 	import type { ReferenceProfile, RegionSnapshot } from '../types';
+	import Hint from './Hint.svelte';
 
 	interface Props {
 		metrics: readonly MetricId[];
@@ -35,6 +38,7 @@
 		own: string;
 		ref: string;
 		berlin: string;
+		hint: HintData | null;
 	}
 	const rows = $derived<Row[]>([
 		...metrics.map((m) => {
@@ -46,7 +50,10 @@
 				what: METRIC_SPECS[m].what,
 				own: formatMetricValue(m, own.metrics[m]),
 				ref: formatMetricValue(m, ref.metrics[m]),
-				berlin: `${formatMetricValue(m, b.value)}${b.zerosLeftOut > 0 ? '*' : ''}`
+				berlin: `${formatMetricValue(m, b.value)}${b.zerosLeftOut > 0 ? '¹' : ''}`,
+				hint: refHead
+					? hintFor(m, own.metrics[m], ref.metrics[m], refHead.name)
+					: hintFor(m, own.metrics[m], b.value, 'Berlin-Median')
 			};
 		}),
 		...labels.map((l) => ({
@@ -56,7 +63,8 @@
 			what: LABEL_SPECS[l].what,
 			own: own.labels[l] ?? '–',
 			ref: ref.labels[l] ?? '–',
-			berlin: `${mostCommon(regions.map((r) => r.labels[l])) ?? '–'}†`
+			berlin: mostCommon(regions.map((r) => r.labels[l])) ?? '–',
+			hint: null
 		}))
 	]);
 	const zeroNotes = $derived(
@@ -65,10 +73,10 @@
 			.filter((e) => e.z > 0)
 			.map(
 				(e) =>
-					`* ${METRIC_SPECS[e.m].label}: Median ohne die ${e.z} ${unitPlural} ${METRIC_SPECS[e.m].zeroName ?? 'mit Wert 0'}.`
+					`¹ ${METRIC_SPECS[e.m].label}: Median ohne die ${e.z} ${unitPlural} ${METRIC_SPECS[e.m].zeroName ?? 'mit Wert 0'}.`
 			)
 	);
-	const berlinSub = $derived(`Median der ${regions.length} ${unitPlural}`);
+	const berlinSub = 'Median, bei Klassen die häufigste';
 </script>
 
 <!-- Ab sm: Tabelle mit festen Zahlenspalten -->
@@ -78,9 +86,9 @@
 	<caption class="mb-2 text-left text-sm font-semibold text-ink">Weitere Werte</caption>
 	<colgroup>
 		<col />
-		<col class="w-32" />
+		<col class="w-40" />
 		{#if refHead}<col class="w-32" />{/if}
-		<col class="w-32" />
+		<col class="w-28" />
 	</colgroup>
 	<thead>
 		<tr class="border-b border-rule align-bottom">
@@ -107,10 +115,12 @@
 					{r.label}<span class="font-mono text-dense-label text-ink-subtle">, {r.unit}</span>
 					<span class="block text-dense-label text-ink-subtle">{r.what}</span>
 				</th>
-				<td
-					class="py-2 pl-3 text-right font-mono text-sm whitespace-nowrap text-accent tabular-nums"
-					>{r.own}</td
-				>
+				<td class="py-2 pl-3 text-right align-top">
+					<span class="block font-mono text-sm whitespace-nowrap text-accent tabular-nums"
+						>{r.own}</span
+					>
+					{#if r.hint}<span class="mt-0.5 block"><Hint hint={r.hint} short /></span>{/if}
+				</td>
 				{#if refHead}
 					<td class="py-2 pl-3 text-right font-mono text-sm whitespace-nowrap tabular-nums"
 						>{r.ref}</td
@@ -139,6 +149,7 @@
 					<div>
 						<dt class="truncate text-dense-label text-accent">{own.name}</dt>
 						<dd class="font-mono text-sm text-accent tabular-nums">{r.own}</dd>
+						{#if r.hint}<dd class="mt-0.5"><Hint hint={r.hint} short /></dd>{/if}
 					</div>
 					{#if refHead}
 						<div>
@@ -156,6 +167,6 @@
 	</ul>
 </div>
 <div class="mt-1.5 flex flex-col gap-0.5 text-dense-label text-ink-subtle">
-	<p>Berlin: Median der {regions.length} {unitPlural}. † Bei Klassen die häufigste Klasse.</p>
+	<p>Berlin: Median der {regions.length} {unitPlural}, bei Klassen die häufigste Klasse.</p>
 	{#each zeroNotes as n (n)}<p>{n}</p>{/each}
 </div>

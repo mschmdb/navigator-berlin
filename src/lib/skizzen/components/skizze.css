@@ -13,3 +13,11 @@
 		transition: none;
 	}
 }
+
+/* Lesehilfe: entsättigtes Salbeigrün und gedämpftes Terrakotta, nur als Zusatz zum Text. */
+:root {
+	--hint-good: #4f6f4d;
+	--hint-good-bg: #e1e8dc;
+	--hint-bad: #a3583a;
+	--hint-bad-bg: #f2e1d7;
+}

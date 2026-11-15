@@ -8,12 +8,14 @@
 	import StripChart from './StripChart.svelte';
 	import DataTable from './DataTable.svelte';
 	import SideTable from './SideTable.svelte';
+	import Hint from './Hint.svelte';
 	import { mostCommon, niceDomain, spread, zeroAwareMedian } from '../stats';
 	import {
 		LABEL_SPECS,
 		METRIC_SPECS,
 		formatMetric,
 		formatMetricNumber,
+		hintFor,
 		metricLead,
 		type ChapterSpec,
 		type MetricId
@@ -84,6 +86,14 @@
 	const items = (rs: readonly RegionSnapshot[], m: MetricId) =>
 		rs.map((r) => ({ slug: r.slug, name: r.name, value: r.metrics[m] }));
 	const allSide = $derived([...spec.main, ...spec.side]);
+	const hintOf = (m: MetricId) =>
+		hintFor(
+			m,
+			own.metrics[m],
+			refIsBerlin ? zeroAwareMedian(values(m)).value : ref.metrics[m],
+			refIsBerlin ? 'Berlin-Median' : refName
+		);
+	const leadHint = $derived(hintOf(spec.main[0]));
 	// Textfassung für Screenreader und Tabellen-Ansicht: alle Werte, Klassen und die Kiez-Spanne.
 	const tableRows = $derived([
 		...allSide.map((m) => {
@@ -92,7 +102,7 @@
 				METRIC_SPECS[m].label,
 				formatMetric(m, own.metrics[m]),
 				formatMetric(m, ref.metrics[m]),
-				`${formatMetric(m, b.value)}${b.zerosLeftOut > 0 ? ` * ohne ${b.zerosLeftOut} Nullwerte` : ''}`
+				`${formatMetric(m, b.value)}${b.zerosLeftOut > 0 ? ` (ohne ${b.zerosLeftOut} Nullwerte)` : ''}`
 			];
 		}),
 		...(spec.labels ?? []).map((l) => [
@@ -122,6 +132,7 @@
 <Section id={spec.id} title={spec.title} {mode}>
 	{#snippet text()}
 		<p>{lead}</p>
+		{#if leadHint}<p><Hint hint={leadHint} /></p>{/if}
 		<p class="text-sm">{METRIC_SPECS[spec.main[0]].what}.</p>
 		{#if mapHref}
 			<!-- eslint-disable-next-line svelte/no-navigation-without-resolve -->
@@ -132,8 +143,14 @@
 		<div class="flex flex-col gap-8">
 			{#each spec.main as m (m)}
 				<div>
-					<p class="border-b border-rule pb-1 text-sm font-semibold text-ink">
-						{METRIC_SPECS[m].label}, {METRIC_SPECS[m].unit}
+					<p
+						class="flex items-baseline justify-between gap-3 border-b border-rule pb-1 text-sm font-semibold text-ink"
+					>
+						<span>{METRIC_SPECS[m].label}, {METRIC_SPECS[m].unit}</span>
+						<!-- Richtung ohne Legende lesbar: links weniger, rechts mehr -->
+						<span class="shrink-0 text-dense-label font-normal text-ink-subtle" aria-hidden="true"
+							>← {METRIC_SPECS[m].lower}&emsp;{METRIC_SPECS[m].higher} →</span
+						>
 					</p>
 					<StripChart
 						items={items(regions, m)}
@@ -150,6 +167,7 @@
 						zeroName={METRIC_SPECS[m].zeroName}
 						zeroMedianLabel={METRIC_SPECS[m].zeroMedianLabel}
 						{unitPlural}
+						ownHint={hintOf(m)}
 						r={regions.length < 20 ? 6 : 2.9}
 						{onpick}
 					/>
@@ -196,7 +214,7 @@
 	{#snippet table(visible)}
 		<DataTable
 			{visible}
-			caption="{spec.title}: {own.name}, {refName} und Berlin. * Median ohne große Nullstapel, bei Klassen die häufigste Klasse."
+			caption="{spec.title}: {own.name}, {refName} und Berlin (Median, bei Klassen die häufigste Klasse)"
 			head={['Wert', own.name, refName, 'Berlin, Median']}
 			rows={tableRows}
 		/>
