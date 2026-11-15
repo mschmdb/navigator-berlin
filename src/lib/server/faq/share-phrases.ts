@@ -101,7 +101,7 @@ const LAERM: Vocab = {
 
 const REGION: Record<TemplateLocale, Record<ShareRegion, string>> = {
 	de: { kiez: 'Der ganze Kiez', bezirk: 'Der ganze Bezirk' },
-	en: { kiez: 'the whole Kiez', bezirk: 'the whole Bezirk' }
+	en: { kiez: 'the whole Kiez', bezirk: 'the whole district' }
 };
 
 const MIXED: Record<TemplateLocale, string> = { de: 'Gemischt', en: 'Mixed' };

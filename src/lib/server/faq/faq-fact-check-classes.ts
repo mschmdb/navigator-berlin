@@ -16,7 +16,7 @@ type ShareCluster = keyof typeof SHARE_VOCAB;
 
 const SHARE_TOKEN: Record<TemplateLocale, string> = {
 	de: '[Dd]ie andere Hälfte|[Dd]ie Hälfte|(?:[Jj]e )?(?:ein|zwei|drei|vier) (?:Drittel|Viertel|Fünftel)|\\d+ Prozent|Der ganze (?:Kiez|Bezirk)',
-	en: 'the other half|half|(?:one|two|three|four) (?:thirds?|quarters?|fifths?)|\\d+ percent|the whole (?:Kiez|Bezirk)'
+	en: 'the other half|half|(?:one|two|three|four) (?:thirds?|quarters?|fifths?)|\\d+ percent|the whole (?:Kiez|district)'
 };
 
 const CLASS_PREFIX: Record<ShareCluster, Record<TemplateLocale, string>> = {

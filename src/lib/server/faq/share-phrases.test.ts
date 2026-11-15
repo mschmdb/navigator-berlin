@@ -40,7 +40,7 @@ describe('gruenSatz', () => {
 			'Laut Senat gut. Der ganze Kiez gilt als gut mit Grün versorgt.'
 		);
 		expect(gruenSatz({ gut: 1 }, 'bezirk', 'en')).toBe(
-			'Good, according to the Senate. The whole Bezirk is rated as well served with green space.'
+			'Good, according to the Senate. The whole district is rated as well served with green space.'
 		);
 	});
 

@@ -5,10 +5,10 @@ templates:
     topic: oepnv
     applicableTo: [bezirk]
     requires: [oepnv.stopsPerKm2]
-    question: 'How well is the Bezirk {name} served by bus and train?'
+    question: 'How well is the {name} district served by bus and train?'
     answer: >-
       {oepnvUrteil} There are {oepnvStopsPerKm2} stops per square kilometre.
-      {oepnvModi} In the navigator.berlin Mobility score, the Bezirk gets
+      {oepnvModi} In the navigator.berlin Mobility score, the district gets
       {mobilitaetScore} of 100 points, {mobilitaetLage}. That is {mobilitaetVergleich}.
       Source: {oepnvSource}, as of {oepnvStand}.
 

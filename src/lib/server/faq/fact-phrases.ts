@@ -30,7 +30,7 @@ export const REGION_WORDS: Record<
 	},
 	en: {
 		kiez: { der: 'the Kiez', im: 'in the Kiez', many: 'Kieze', manyDat: 'Kieze' },
-		bezirk: { der: 'the Bezirk', im: 'in the Bezirk', many: 'Bezirke', manyDat: 'Bezirke' }
+		bezirk: { der: 'the district', im: 'in the district', many: 'districts', manyDat: 'districts' }
 	}
 };
 
@@ -248,14 +248,14 @@ export const VERGLEICH: Record<
 	},
 	en: {
 		bezirk: {
-			above: 'more than the average of the Kieze in its Bezirk',
-			below: 'less than the average of the Kieze in its Bezirk',
-			same: 'about the same as the average of the Kieze in its Bezirk'
+			above: 'more than the average of the Kieze in its district',
+			below: 'less than the average of the Kieze in its district',
+			same: 'about the same as the average of the Kieze in its district'
 		},
 		berlin: {
-			above: 'more than the median Berlin Bezirk',
-			below: 'less than the median Berlin Bezirk',
-			same: 'about the same as the median Berlin Bezirk'
+			above: 'more than the median Berlin district',
+			below: 'less than the median Berlin district',
+			same: 'about the same as the median Berlin district'
 		}
 	}
 };

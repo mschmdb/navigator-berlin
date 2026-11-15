@@ -5,7 +5,7 @@ templates:
     topic: klima
     applicableTo: [bezirk]
     requires: [klima.meanPet]
-    question: 'How hot does the Bezirk {name} get in summer?'
+    question: 'How hot does the {name} district get in summer?'
     answer: >-
       {klimaSatz} The perceived temperature (PET) takes sun, wind and humidity into
       account. Source: {klimaSource}, as of {klimaStand}.

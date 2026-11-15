@@ -5,7 +5,7 @@ templates:
     topic: wohnlage
     applicableTo: [bezirk]
     requires: [wohnen.dominantWohnlage]
-    question: 'Which residential area type is most common in the Bezirk {name}?'
+    question: 'Which residential area type is most common in the {name} district?'
     answer: >-
       The {wohnenWohnlage} of the Berlin Mietspiegel is the most common. The Mietspiegel
       sorts street sections into simple, medium and good residential areas by buildings
@@ -26,7 +26,7 @@ templates:
     topic: sozialstruktur
     applicableTo: [bezirk]
     requires: [wohnen.dominantMss]
-    question: 'Where does the Bezirk {name} stand in the Senate social monitoring?'
+    question: 'Where does the {name} district stand in the Senate social monitoring?'
     answer: >-
       {wohnenMssBeschreibung} The Monitoring Social Urban Development sorts every planning
       area into one of four levels by income, employment and education. The level applies
@@ -62,7 +62,7 @@ templates:
       No. We show ratings from official data, such as the Mietspiegel residential area
       type, the social monitoring or the standard land value. These ratings describe a
       place; they do not judge it. We do not use labels such as “popular Kiez” or “good
-      Bezirk”.
+      district”.
 
   - id: wohnen-wohnschutz-einordnung
     topic: wohnschutz

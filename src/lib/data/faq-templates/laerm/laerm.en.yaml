@@ -5,11 +5,11 @@ templates:
     topic: laerm
     applicableTo: [bezirk]
     requires: [laerm.categoryDistribution]
-    question: 'How loud is it in the Bezirk {name}?'
+    question: 'How loud is it in the {name} district?'
     answer: >-
       {laermSatz} This means traffic noise from roads, rail and aircraft, averaged over
       day, evening and night. The navigator.berlin Quiet & air score combines noise and
-      air{ruheLuftAktiv}. There the Bezirk gets {ruheLuftScore} of 100 points, {ruheLuftLage}. That
+      air{ruheLuftAktiv}. There the district gets {ruheLuftScore} of 100 points, {ruheLuftLage}. That
       is {ruheLuftVergleich}. Source: {laermSource}, as of {laermStand}.
 
   - id: laerm-dominant-kiez
@@ -67,7 +67,7 @@ templates:
     answer: >-
       The Senate Department for Mobility takes suggestions for the noise action plan.
       Complaints about a specific source, such as a construction site or a business, go
-      to the Bezirk office (Bezirksamt) or the public order office (Ordnungsamt).
+      to the district office (Bezirksamt) or the public order office (Ordnungsamt).
 
   - id: laerm-warum-keine-db-werte
     applicableTo: [layer]

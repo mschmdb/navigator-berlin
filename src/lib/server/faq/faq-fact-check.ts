@@ -146,15 +146,15 @@ const SCORE_NAMES: readonly [RegExp, string][] = [
 ];
 const SCORE_VALUE: Record<TemplateLocale, RegExp> = {
 	de: /kommt (?:der Kiez|der Bezirk) auf (\d+) von 100 Punkten, ([^.]+)\.(?: Das ist ([^.]+)\.)?/g,
-	en: /(?:the Kiez|the Bezirk) gets (\d+) of 100 points, ([^.]+)\.(?: That is ([^.]+)\.)?/g
+	en: /(?:the Kiez|the district) gets (\d+) of 100 points, ([^.]+)\.(?: That is ([^.]+)\.)?/g
 };
 const RANK_LABEL: Record<TemplateLocale, RegExp> = {
 	de: /^(geteilter )?Platz (\d+) von (\d+) (?:Kiezen|Bezirken)$/,
-	en: /^(joint )?rank (\d+) of (\d+) (?:Kieze|Bezirke)$/
+	en: /^(joint )?rank (\d+) of (\d+) (?:Kieze|districts)$/
 };
 const BOTTOM: Record<TemplateLocale, RegExp> = {
 	de: /^im unteren Viertel der (\d+) (?:Kieze|Bezirke)$/,
-	en: /^in the bottom quarter of the (\d+) (?:Kieze|Bezirke)$/
+	en: /^in the bottom quarter of the (\d+) (?:Kieze|districts)$/
 };
 const COMPARE: Record<TemplateLocale, { same: string; above: string; below: string }> = {
 	de: { same: 'etwa so viel wie', above: 'mehr als', below: 'weniger als' },
@@ -162,7 +162,7 @@ const COMPARE: Record<TemplateLocale, { same: string; above: string; below: stri
 };
 const COMPARE_TARGET: Record<TemplateLocale, Record<'bezirk' | 'berlin', string>> = {
 	de: { bezirk: 'Schnitt der Kieze im Bezirk', berlin: 'mittleren Berliner Bezirk' },
-	en: { bezirk: 'average of the Kieze in its Bezirk', berlin: 'median Berlin Bezirk' }
+	en: { bezirk: 'average of the Kieze in its district', berlin: 'median Berlin district' }
 };
 
 function scoreKeyBefore(text: string, index: number): string | null {

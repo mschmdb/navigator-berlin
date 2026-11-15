@@ -278,7 +278,7 @@ describe('checkFaqAnswer: Scores und Ränge', () => {
 
 	it('prüft EN', () => {
 		const en = (lage: string) =>
-			`In the navigator.berlin Mobility score, the Kiez gets 30 of 100 points, ${lage}. That is more than the average of the Kieze in its Bezirk.`;
+			`In the navigator.berlin Mobility score, the Kiez gets 30 of 100 points, ${lage}. That is more than the average of the Kieze in its district.`;
 		expect(kinds(en('rank 2 of 4 Kieze'), { locale: 'en' })).toEqual([]);
 		expect(kinds(en('rank 3 of 4 Kieze'), { locale: 'en' })).toContain('rang');
 	});
@@ -299,7 +299,7 @@ describe('checkFaqAnswer: Zahl gehört zur richtigen Kennzahl', () => {
 	it('meldet eine Grünanlagen-Zahl aus einem fremden Feld', () => {
 		expect(kinds('Der Senat zählt im Bezirk 10 öffentliche Grünanlagen.')).toContain('zahl');
 		expect(
-			kinds('The Senate counts 3 public green spaces in the Bezirk.', { locale: 'en' })
+			kinds('The Senate counts 3 public green spaces in the district.', { locale: 'en' })
 		).toEqual([]);
 	});
 });

@@ -5,11 +5,11 @@ templates:
     topic: gruen
     applicableTo: [bezirk]
     requires: [gruen.versorgungDistribution]
-    question: 'How well is the Bezirk {name} supplied with green space?'
+    question: 'How well is the {name} district supplied with green space?'
     answer: >-
       {gruenSatz} The Senate measures how much public green space per person lies near
       homes. The navigator.berlin Green & heat score is a different measure{gruenHitzeAktiv}.
-      It combines green space and heat{gruenHitzeAktiv}. There the Bezirk gets
+      It combines green space and heat{gruenHitzeAktiv}. There the district gets
       {gruenHitzeScore} of 100 points, {gruenHitzeLage}. That is {gruenHitzeVergleich}. Source: {gruenSource}, as of
       {gruenStand}.
 
@@ -29,9 +29,9 @@ templates:
     topic: gruen-anlagen
     applicableTo: [bezirk]
     requires: [gruen.gruenanlagenCount]
-    question: 'How many public green spaces are there in the Bezirk {name}?'
+    question: 'How many public green spaces are there in the {name} district?'
     answer: >-
-      The Senate counts {gruenanlagenCount} public green spaces in the Bezirk. Private
+      The Senate counts {gruenanlagenCount} public green spaces in the district. Private
       gardens and allotments are not included. Source: {gruenanlagenSource}, as of
       {gruenanlagenStand}.
 
@@ -44,7 +44,7 @@ templates:
       person lies near homes. The benchmark is 6 square metres per person. Depending on
       how far an area reaches this value, it counts as well, moderately or poorly served.
       Planning areas are the smallest units of Berlin's urban planning; every Kiez
-      consists of several. In the answers about Kieze and Bezirke they are called
+      consists of several. In the answers about Kieze and districts they are called
       subareas.
 
   - id: gruen-rolle-hitze

@@ -97,7 +97,7 @@ describe('template-renderer metrics slots (Story 11.3, NAV-108)', () => {
 				'The Kiez gets {gruenHitzeScore} of 100 points, {gruenHitzeLage}. That is {gruenHitzeVergleich}.'
 		};
 		expect(renderTemplate(tpl, ctxWith(m({}), 'en'))?.answer).toBe(
-			'The Kiez gets 72 of 100 points, rank 12 of 143 Kieze. That is more than the average of the Kieze in its Bezirk.'
+			'The Kiez gets 72 of 100 points, rank 12 of 143 Kieze. That is more than the average of the Kieze in its district.'
 		);
 		const weak = renderTemplate(
 			tpl,
@@ -106,6 +106,6 @@ describe('template-renderer metrics slots (Story 11.3, NAV-108)', () => {
 		expect(weak?.answer).toContain('in the bottom quarter of the 143 Kieze');
 		expect(weak?.answer).not.toContain('142');
 		const same = renderTemplate(tpl, ctxWith(m({ value: 65, compareKind: 'berlin' }), 'en'));
-		expect(same?.answer).toContain('about the same as the median Berlin Bezirk');
+		expect(same?.answer).toContain('about the same as the median Berlin district');
 	});
 });

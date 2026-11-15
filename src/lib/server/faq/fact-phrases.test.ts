@@ -99,7 +99,7 @@ describe('rangLage / vergleich', () => {
 		expect(vergleich(22, 22.3, 'berlin', 'de')).toBe(
 			'etwa so viel wie beim mittleren Berliner Bezirk'
 		);
-		expect(vergleich(10, 20, 'berlin', 'en')).toBe('less than the median Berlin Bezirk');
+		expect(vergleich(10, 20, 'berlin', 'en')).toBe('less than the median Berlin district');
 		expect(vergleich(null, 20, 'berlin', 'en')).toBeNull();
 	});
 });
