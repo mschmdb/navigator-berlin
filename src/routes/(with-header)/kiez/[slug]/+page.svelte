@@ -221,7 +221,7 @@
 				{#if bezirkName && data.bezirkSlug}
 					{m.place_eyebrow_kiez_prefix()}
 					<a
-						class="underline underline-offset-2 hover:text-accent"
+						class="inline-flex min-h-6 items-center underline underline-offset-2 hover:text-accent"
 						href={localizedHref(`/bezirk/${data.bezirkSlug}`, opts.locale)}
 						onclick={() => trackLanding('eyebrow_link', 'kiez')}>{bezirkName}</a
 					>
@@ -248,8 +248,9 @@
 			<p class="mt-6 border-t border-rule pt-4 text-base text-ink">
 				<strong class="font-semibold">{headline}</strong>
 				<span class="text-ink-muted"> {m.place_explainer_kiez()}</span>
-				<a class="text-accent underline" href={localizedHref('/methodik/kiez-score', opts.locale)}
-					>{m.place_method_link()}</a
+				<a
+					class="inline-flex min-h-6 items-center text-accent underline"
+					href={localizedHref('/methodik/kiez-score', opts.locale)}>{m.place_method_link()}</a
 				>
 			</p>
 		</div>
@@ -258,6 +259,7 @@
 				outline={data.outline}
 				scores={scoreMap}
 				ownSlug={data.profile.slug}
+				ownName={name}
 				label={m.place_map_label_kiez({ bezirk: bezirkName ?? '', name })}
 			/>
 		{/if}
@@ -339,8 +341,9 @@
 		{#snippet sources()}
 			<p>
 				{m.place_wahl_sources()}
-				<a class="text-accent underline" href={localizedHref('/methodik', opts.locale)}
-					>{m.place_wahl_method_link()}</a
+				<a
+					class="inline-flex min-h-6 items-center text-accent underline"
+					href={localizedHref('/methodik', opts.locale)}>{m.place_wahl_method_link()}</a
 				>.
 			</p>
 		{/snippet}
@@ -349,7 +352,7 @@
 	<section
 		id="nachbarn"
 		aria-labelledby="nachbarn-h"
-		class="scroll-mt-44 border-t border-rule py-12"
+		class="scroll-mt-16 border-t border-rule py-12"
 	>
 		<h2 id="nachbarn-h" class="text-xl font-semibold text-ink">{m.place_nb_title_kiez()}</h2>
 		<p class="mt-2 mb-6 max-w-2xl text-base text-ink-muted">
@@ -449,8 +452,9 @@
 			{/snippet}
 			{#snippet sources()}
 				<p>
-					<a class="text-accent underline" href={localizedHref('/methodik/kiez-score', opts.locale)}
-						>{m.place_method_link()}</a
+					<a
+						class="inline-flex min-h-6 items-center text-accent underline"
+						href={localizedHref('/methodik/kiez-score', opts.locale)}>{m.place_method_link()}</a
 					>
 				</p>
 			{/snippet}

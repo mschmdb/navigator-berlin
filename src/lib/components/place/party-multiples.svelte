@@ -57,7 +57,7 @@
 					xScale={scaleLinear()}
 					xDomain={[years[0], years[years.length - 1]]}
 					yDomain={[0, yMax]}
-					padding={{ top: 6, right: 8, bottom: 24, left: 8 }}
+					padding={{ top: 6, right: 8, bottom: 26, left: 8 }}
 				>
 					{#snippet children({ context })}
 						<Svg>
@@ -108,7 +108,7 @@
 								x={0}
 								y={context.yScale(yMax / 2) - 3}
 								value={fmt(yMax / 2)}
-								class="fill-[var(--ink-subtle)] text-[10px]"
+								class="fill-[var(--ink-subtle)] text-[12px]"
 							/>
 						</Svg>
 					{/snippet}

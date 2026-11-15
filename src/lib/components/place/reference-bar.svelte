@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { SvelteMap } from 'svelte/reactivity';
+	import { ChevronDown } from '@lucide/svelte';
 	import { m } from '$lib/paraglide/messages.js';
 	import type { ReferenceChoice, ReferenceKind } from '$lib/place/types';
 
@@ -50,9 +51,6 @@
 	const neighborLabel = $derived(
 		level === 'kiez' ? m.place_ref_neighbor_kiez() : m.place_ref_neighbor_bezirk()
 	);
-	const neighborGroup = $derived(
-		level === 'kiez' ? m.place_ref_neighbor_kiez_group() : m.place_ref_neighbor_bezirk_group()
-	);
 	const kinds = $derived(
 		[
 			{ kind: 'berlin', label: m.place_side_berlin(), list: [] },
@@ -82,138 +80,144 @@
 		onchoice({ kind, slug: k.list.length > 0 ? (keep ?? k.list[0].slug) : null });
 	}
 
-	/** Mobil: eine native Auswahl für alles, der Wert ist `kind:slug`. */
-	const compactValue = $derived(`${choice.kind}:${choice.slug ?? ''}`);
-	function pickCompact(value: string) {
-		const [kind, slug] = value.split(':') as [ReferenceKind, string];
-		onchoice({ kind, slug: slug || null });
+	/** Der Vergleich sitzt als kompaktes Menü in der Kapitelleiste: nur eine Leiste bleibt stehen. */
+	let open = $state(false);
+	let toggle = $state<HTMLButtonElement>();
+	let panel = $state<HTMLDivElement>();
+	const current = $derived(
+		choice.slug ? (all.find((o) => o.slug === choice.slug)?.name ?? active.label) : active.label
+	);
+	function close(focusButton = false) {
+		open = false;
+		if (focusButton) toggle?.focus();
+	}
+	function onWindowPointer(e: PointerEvent) {
+		const t = e.target as Node | null;
+		if (open && t && !panel?.contains(t) && !toggle?.contains(t)) close();
+	}
+	function onKey(e: KeyboardEvent) {
+		if (open && e.key === 'Escape') close(true);
 	}
 </script>
 
+<svelte:window onpointerdown={onWindowPointer} onkeydown={onKey} />
+
 <div
-	class="sticky top-[var(--site-header-h)] z-20 border-b border-rule bg-bg/95 backdrop-blur supports-[backdrop-filter]:bg-bg/85"
+	class="place-sticky-bar sticky top-0 z-20 border-b border-rule bg-bg/95 backdrop-blur supports-[backdrop-filter]:bg-bg/85"
 >
-	<div class="mx-auto flex max-w-6xl items-center gap-3 px-4 py-2 lg:gap-6">
-		<!-- Desktop: Voreinstellungen sichtbar, Detail-Auswahl erscheint nur, wo sie gebraucht wird -->
-		<fieldset class="hidden min-w-0 flex-1 items-center gap-3 lg:flex">
-			<legend class="sr-only">{m.place_ref_compare_with()}</legend>
-			<span class="shrink-0 text-dense-label text-ink-subtle" aria-hidden="true"
-				>{m.place_ref_compare_with()}</span
+	<div class="mx-auto flex h-12 max-w-6xl items-center gap-2 px-4">
+		{#if chapters.length > 0}
+			<nav aria-label={m.place_ref_nav()} class="min-w-0 flex-1">
+				<ul class="flex [scrollbar-width:none] gap-1.5 overflow-x-auto py-1">
+					{#each chapters as c (c.id)}
+						<li class="shrink-0">
+							<a
+								href="#{c.id}"
+								class="inline-flex min-h-8 items-center rounded-full bg-bg-elevated px-3 text-sm text-ink underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-focus"
+								>{c.short}</a
+							>
+						</li>
+					{/each}
+				</ul>
+			</nav>
+		{:else}
+			<div class="flex-1"></div>
+		{/if}
+		<div class="relative shrink-0">
+			<button
+				bind:this={toggle}
+				type="button"
+				class="inline-flex min-h-8 max-w-48 items-center gap-1 rounded-full border border-rule-strong bg-bg-elevated px-3 text-sm text-ink hover:border-accent sm:max-w-72"
+				aria-expanded={open}
+				aria-controls="place-compare-panel"
+				onclick={() => (open = !open)}
 			>
-			<div class="flex flex-wrap gap-1">
-				{#each kinds as k (k.kind)}
-					<label
-						class="relative inline-flex min-h-8 cursor-pointer items-center rounded-full border border-rule-strong px-3
-						text-sm text-ink hover:border-accent
-						has-[:checked]:border-accent has-[:checked]:bg-accent has-[:checked]:text-bg
-						has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-focus"
-					>
-						<input
-							type="radio"
-							name="vs-kind"
-							class="sr-only"
-							value={k.kind}
-							checked={choice.kind === k.kind}
-							onchange={() => pickKind(k.kind)}
-						/>
-						{k.label}
-					</label>
-				{/each}
-			</div>
-			{#if active.list.length > 0}
-				<label class="flex min-w-0 items-center gap-2 text-sm">
-					<span class="sr-only">{m.place_ref_choose({ label: active.label })}</span>
-					<select
-						class="min-h-8 max-w-64 rounded border border-rule-strong bg-bg-elevated px-2 text-sm"
-						value={choice.slug ?? ''}
-						onchange={(e) => onchoice({ kind: active.kind, slug: e.currentTarget.value })}
-					>
-						{#if active.kind === 'frei'}
-							{#each groups as [g, opts] (g)}
-								<optgroup label={g}>
-									{#each opts as o (o.slug)}<option value={o.slug}>{o.name}</option>{/each}
-								</optgroup>
-							{/each}
-						{:else}
-							{#each active.list as o (o.slug)}<option value={o.slug}>{o.name}</option>{/each}
+				<span class="shrink-0 text-ink-subtle">{m.place_ref_compare_short()}:</span>
+				<span class="truncate">{current}</span>
+				<ChevronDown size={14} aria-hidden="true" class="shrink-0" />
+			</button>
+			<div
+				bind:this={panel}
+				id="place-compare-panel"
+				hidden={!open}
+				class="absolute top-full right-0 mt-2 w-[min(26rem,calc(100vw-2rem))] rounded border border-rule-strong bg-bg-elevated p-4 shadow-lg"
+			>
+				<fieldset class="flex min-w-0 flex-col gap-3">
+					<legend class="mb-2 text-sm font-semibold text-ink">{m.place_ref_compare_with()}</legend>
+					<div class="flex flex-wrap gap-1">
+						{#each kinds as k (k.kind)}
+							<label
+								class="relative inline-flex min-h-8 cursor-pointer items-center rounded-full border border-rule-strong px-3
+								text-sm text-ink hover:border-accent
+								has-[:checked]:border-accent has-[:checked]:bg-accent has-[:checked]:text-bg
+								has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-focus"
+							>
+								<input
+									type="radio"
+									name="vs-kind"
+									class="sr-only"
+									value={k.kind}
+									checked={choice.kind === k.kind}
+									onchange={() => pickKind(k.kind)}
+								/>
+								{k.label}
+							</label>
+						{/each}
+					</div>
+					{#if active.list.length > 0}
+						<label class="flex min-w-0 flex-col gap-1 text-sm">
+							<span class="text-dense-label text-ink-subtle"
+								>{m.place_ref_choose({ label: active.label })}</span
+							>
+							<select
+								class="min-h-9 w-full rounded border border-rule-strong bg-bg px-2 text-sm"
+								value={choice.slug ?? ''}
+								onchange={(e) => onchoice({ kind: active.kind, slug: e.currentTarget.value })}
+							>
+								{#if active.kind === 'frei'}
+									{#each groups as [g, opts] (g)}
+										<optgroup label={g || freeLabel}>
+											{#each opts as o (o.slug)}<option value={o.slug}>{o.name}</option>{/each}
+										</optgroup>
+									{/each}
+								{:else}
+									{#each active.list as o (o.slug)}<option value={o.slug}>{o.name}</option>{/each}
+								{/if}
+							</select>
+						</label>
+						{#if active.kind === 'aehnlich'}
+							<p class="text-dense-label text-ink-subtle">{m.place_ref_similar_hint()}</p>
 						{/if}
-					</select>
-				</label>
-				{#if active.kind === 'aehnlich'}
-					<span class="hidden truncate text-dense-label text-ink-subtle xl:inline"
-						>{m.place_ref_similar_hint()}</span
+					{:else if active.kind === 'berlin'}
+						<p class="text-dense-label text-ink-subtle">{berlinNote}</p>
+					{/if}
+				</fieldset>
+				<div class="mt-4 flex items-center gap-3 border-t border-rule pt-3">
+					<span class="text-dense-label text-ink-subtle" id="place-view-label"
+						>{m.place_ref_view()}</span
 					>
-				{/if}
-			{:else if active.kind === 'berlin'}
-				<span class="truncate text-dense-label text-ink-subtle">{berlinNote}</span>
-			{/if}
-		</fieldset>
-
-		<!-- Mobil: eine native Auswahl, der Picker des Telefons trägt die lange Liste -->
-		<label class="flex min-w-0 flex-1 items-center gap-2 lg:hidden">
-			<span class="shrink-0 text-dense-label text-ink-subtle">{m.place_ref_compare_short()}</span>
-			<select
-				class="min-h-9 w-full min-w-0 rounded border border-rule-strong bg-bg-elevated px-2 text-sm"
-				value={compactValue}
-				onchange={(e) => pickCompact(e.currentTarget.value)}
-			>
-				<option value="berlin:">Berlin</option>
-				{#if bezirkLabel}<option value="bezirk:">{bezirkLabel}</option>{/if}
-				{#if neighbors.length > 0}
-					<optgroup label={neighborGroup}>
-						{#each neighbors as o (o.slug)}<option value="nachbar:{o.slug}">{o.name}</option>{/each}
-					</optgroup>
-				{/if}
-				{#if similar.length > 0}
-					<optgroup label={m.place_ref_similar_group()}>
-						{#each similar as o (o.slug)}<option value="aehnlich:{o.slug}">{o.name}</option>{/each}
-					</optgroup>
-				{/if}
-				{#each groups as [g, opts] (g)}
-					<optgroup label={g || freeLabel}>
-						{#each opts as o (o.slug)}<option value="frei:{o.slug}">{o.name}</option>{/each}
-					</optgroup>
-				{/each}
-			</select>
-		</label>
-
-		<div
-			class="flex shrink-0 rounded-full border border-rule-strong p-0.5"
-			role="group"
-			aria-label={m.place_ref_view()}
-		>
-			<button
-				type="button"
-				class="min-h-7 rounded-full px-3 text-sm aria-pressed:bg-ink aria-pressed:text-bg"
-				aria-pressed={mode === 'erzaehlen'}
-				onclick={() => onmode('erzaehlen')}>{m.place_ref_charts()}</button
-			>
-			<button
-				type="button"
-				class="min-h-7 rounded-full px-3 text-sm aria-pressed:bg-ink aria-pressed:text-bg"
-				aria-pressed={mode === 'zahlen'}
-				onclick={() => onmode('zahlen')}
-				><span class="lg:hidden">{m.place_ref_tables_short()}</span><span class="hidden lg:inline"
-					>{m.place_ref_tables_long()}</span
-				></button
-			>
+					<div
+						class="flex shrink-0 rounded-full border border-rule-strong p-0.5"
+						role="group"
+						aria-labelledby="place-view-label"
+					>
+						<button
+							type="button"
+							class="min-h-7 rounded-full px-3 text-sm aria-pressed:bg-ink aria-pressed:text-bg"
+							aria-pressed={mode === 'erzaehlen'}
+							onclick={() => onmode('erzaehlen')}>{m.place_ref_charts()}</button
+						>
+						<button
+							type="button"
+							class="min-h-7 rounded-full px-3 text-sm aria-pressed:bg-ink aria-pressed:text-bg"
+							aria-pressed={mode === 'zahlen'}
+							onclick={() => onmode('zahlen')}>{m.place_ref_tables_long()}</button
+						>
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
-	{#if chapters.length > 0}
-		<nav aria-label={m.place_ref_nav()} class="border-t border-rule">
-			<ul class="mx-auto flex max-w-6xl [scrollbar-width:none] gap-1.5 overflow-x-auto px-4 py-1.5">
-				{#each chapters as c (c.id)}
-					<li class="shrink-0">
-						<a
-							href="#{c.id}"
-							class="inline-flex min-h-7 items-center rounded-full bg-bg-elevated px-3 text-sm text-ink underline-offset-2 hover:underline focus-visible:outline-2 focus-visible:outline-focus"
-							>{c.short}</a
-						>
-					</li>
-				{/each}
-			</ul>
-		</nav>
-	{/if}
 	<p class="sr-only" aria-live="polite">
 		{m.place_ref_live({
 			label:

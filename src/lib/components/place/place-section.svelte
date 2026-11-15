@@ -39,10 +39,10 @@
 <section
 	{id}
 	aria-labelledby={headingId}
-	class="scroll-mt-44 border-t border-rule pt-12 pb-10 lg:pt-16 lg:pb-12"
+	class="scroll-mt-16 border-t border-rule pt-12 pb-10 lg:pt-16 lg:pb-12"
 >
 	<div class="grid gap-8 lg:grid-cols-[minmax(0,22rem)_minmax(0,1fr)] lg:gap-16">
-		<div class="lg:sticky lg:top-48 lg:self-start">
+		<div class="lg:sticky lg:top-20 lg:self-start">
 			{#if eyebrow}<p class="text-dense-label tracking-wide text-ink-subtle uppercase">
 					{eyebrow}
 				</p>{/if}

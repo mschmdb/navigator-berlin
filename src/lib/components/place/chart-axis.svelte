@@ -21,7 +21,7 @@
 
 	const context = getChartContext();
 
-	// Ca. 6,3 px je Zeichen bei 10,5 px Plex Mono.
+	// Ca. 7,2 px je Zeichen bei 12 px Plex Mono.
 	const labels = $derived.by(() => {
 		const decimalSep = getLocale() === 'en' ? '.' : ',';
 		const texts = trimZeroDecimals(
@@ -33,7 +33,7 @@
 			texts,
 			ticks.map((t) => context.xScale(t) as number),
 			context.width,
-			6.3
+			7.2
 		);
 	});
 </script>
@@ -54,7 +54,7 @@
 				value={l.text}
 				textAnchor={l.anchor}
 				verticalAnchor="start"
-				class="fill-[var(--ink-subtle)] font-mono text-[10.5px] tabular-nums"
+				class="fill-[var(--ink-subtle)] font-mono text-[12px] tabular-nums"
 			/>
 		{/if}
 	{/snippet}
@@ -62,19 +62,19 @@
 {#if ends}
 	<Text
 		x={0}
-		y={context.height + 25}
+		y={context.height + 28}
 		value={`← ${ends[0]}`}
 		verticalAnchor="start"
-		class="fill-[var(--ink-subtle)] text-[11px]"
+		class="fill-[var(--ink-subtle)] text-[12px]"
 		aria-hidden="true"
 	/>
 	<Text
 		x={context.width}
-		y={context.height + 25}
+		y={context.height + 28}
 		value={`${ends[1]} →`}
 		textAnchor="end"
 		verticalAnchor="start"
-		class="fill-[var(--ink-subtle)] text-[11px]"
+		class="fill-[var(--ink-subtle)] text-[12px]"
 		aria-hidden="true"
 	/>
 {/if}

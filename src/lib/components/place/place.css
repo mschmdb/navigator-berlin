@@ -22,7 +22,8 @@
 	--hint-bad-bg: #f2e1d7;
 }
 
-/* Höhe der fixierten Kopfzeile der Seite: die Vergleichsleiste klebt darunter. */
-:root {
-	--site-header-h: 73px;
+/* Auf Kiez- und Bezirksseiten bleibt nur die Kapitelleiste stehen (48 px): die Kopfzeile der
+   Seite scrollt hier mit. */
+body:has(.place-sticky-bar) [data-testid='site-header'] {
+	position: relative;
 }

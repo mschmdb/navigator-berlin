@@ -2769,14 +2769,10 @@
 	"place_ref_choose": "Choose {label}",
 	"place_ref_similar_kiez": "Similar Kiez",
 	"place_ref_similar_hint": "similar values in all five areas",
-	"place_ref_similar_group": "Kieze with similar values",
 	"place_ref_neighbor_kiez": "Neighbouring Kiez",
-	"place_ref_neighbor_kiez_group": "Neighbouring Kieze",
 	"place_ref_neighbor_bezirk": "Neighbouring district",
-	"place_ref_neighbor_bezirk_group": "Neighbouring districts",
 	"place_ref_view": "View",
 	"place_ref_charts": "Charts",
-	"place_ref_tables_short": "Tables",
 	"place_ref_tables_long": "Tables and sources",
 	"place_ref_nav": "Topics on this page",
 	"place_ref_live": "Comparing with: {label}",
@@ -2895,5 +2891,6 @@
 	"overview_topic_ranking_kieze": "Sort the Kieze by noise, green space, mobility or another area",
 	"overview_topic_ranking_bezirke": "Sort the districts by noise, green space, mobility or another area",
 	"place_wahl_ref_failed": "The election data for {ref} could not be loaded.",
-	"place_wahl_retry": "Try again"
+	"place_wahl_retry": "Try again",
+	"place_map_own_outline": "thick outline"
 }

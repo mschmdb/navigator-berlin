@@ -78,7 +78,7 @@
 
 	const OWN_R = $derived(R + 3);
 	const STEP = $derived(2 * R * 0.86);
-	const AXIS = $derived(ends ? 42 : 26);
+	const AXIS = $derived(ends ? 46 : 28);
 	const MAX_SWARM = 240;
 	const BLOCK_GAP = 6;
 	const pad = $derived(OWN_R + 2);
@@ -279,7 +279,7 @@
 							y={SWARM + 9}
 							dominant-baseline="hanging"
 							text-anchor="middle"
-							class="fill-[var(--ink-subtle)] font-mono text-[10.5px]">0</text
+							class="fill-[var(--ink-subtle)] font-mono text-[12px]">0</text
 						>
 						<line
 							x1={-8}

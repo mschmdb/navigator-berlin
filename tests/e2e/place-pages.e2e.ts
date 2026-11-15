@@ -138,6 +138,7 @@ test.describe('Kiezseite', () => {
 		await page.goto('/kiez/reuterstrasse');
 		// Erst nach der Hydration hört die Auswahl zu.
 		await page.waitForLoadState('networkidle');
+		await page.locator('[aria-controls="place-compare-panel"]').click();
 		await page.locator('fieldset label', { hasText: /^\s*Neukölln\s*$/ }).click();
 		await expect(page).toHaveURL(/vs=bezirk/);
 		await expect(page.locator('section[id="laerm"]')).toContainText('Neukölln gesamt');
@@ -146,6 +147,21 @@ test.describe('Kiezseite', () => {
 	test('Dublette heerstrasse-spandau gehört zu Spandau', async ({ page }) => {
 		await page.goto('/kiez/heerstrasse-spandau');
 		expect(await linkPaths(page, 'main a[href]')).toContain('/bezirk/spandau');
+	});
+
+	test('nur die Kapitelleiste bleibt stehen, höchstens 56 px', async ({ page }) => {
+		await page.setViewportSize({ width: 390, height: 844 });
+		await page.goto('/kiez/reuterstrasse');
+		await page.locator('section[id="gruen"]').scrollIntoViewIfNeeded();
+		await page.evaluate(() => window.scrollBy(0, 400));
+		const covered = await page.evaluate(() =>
+			[...document.querySelectorAll('body *')]
+				.filter((e) => ['sticky', 'fixed'].includes(getComputedStyle(e).position))
+				.map((e) => e.getBoundingClientRect())
+				.filter((r) => r.top <= 0 && r.bottom > 0)
+				.reduce((h, r) => Math.max(h, r.bottom), 0)
+		);
+		expect(covered).toBeLessThanOrEqual(56);
 	});
 
 	test('375 px: kein horizontaler Überlauf', async ({ page }) => {

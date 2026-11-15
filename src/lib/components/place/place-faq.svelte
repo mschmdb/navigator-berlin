@@ -14,7 +14,7 @@
 
 {#if items.length > 0}
 	<JsonLd data={jsonLd} testid="place-faq-jsonld" />
-	<section id="fragen" aria-labelledby="fragen-h" class="scroll-mt-44 border-t border-rule py-12">
+	<section id="fragen" aria-labelledby="fragen-h" class="scroll-mt-16 border-t border-rule py-12">
 		<h2 id="fragen-h" class="text-xl font-semibold text-ink">{m.place_faq_heading()}</h2>
 		<div class="mt-4 flex max-w-3xl flex-col">
 			{#each items as item, i (i)}

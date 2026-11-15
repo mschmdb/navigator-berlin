@@ -2769,14 +2769,10 @@
 	"place_ref_choose": "{label} wählen",
 	"place_ref_similar_kiez": "Ähnlicher Kiez",
 	"place_ref_similar_hint": "ähnliche Werte in allen fünf Bereichen",
-	"place_ref_similar_group": "Kieze mit ähnlichen Werten",
 	"place_ref_neighbor_kiez": "Nachbarkiez",
-	"place_ref_neighbor_kiez_group": "Nachbarkieze",
 	"place_ref_neighbor_bezirk": "Nachbarbezirk",
-	"place_ref_neighbor_bezirk_group": "Nachbarbezirke",
 	"place_ref_view": "Darstellung",
 	"place_ref_charts": "Grafiken",
-	"place_ref_tables_short": "Tabellen",
 	"place_ref_tables_long": "Tabellen und Quellen",
 	"place_ref_nav": "Themen auf dieser Seite",
 	"place_ref_live": "Vergleich mit: {label}",
@@ -2895,5 +2891,6 @@
 	"overview_topic_ranking_kieze": "Kieze nach Lärm, Grün, Mobilität oder einem anderen Bereich sortieren",
 	"overview_topic_ranking_bezirke": "Bezirke nach Lärm, Grün, Mobilität oder einem anderen Bereich sortieren",
 	"place_wahl_ref_failed": "Die Wahldaten für {ref} ließen sich nicht laden.",
-	"place_wahl_retry": "Erneut laden"
+	"place_wahl_retry": "Erneut laden",
+	"place_map_own_outline": "dick umrandet"
 }
