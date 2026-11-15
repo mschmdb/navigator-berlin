@@ -366,6 +366,60 @@ function checkScores(text: string, subject: FaqCheckSubject, facts: FaqCheckFact
 
 // ---------------------------------------------------------------- Zahlen
 
+interface BoundNumber {
+	readonly label: string;
+	readonly pattern: Record<TemplateLocale, RegExp>;
+	readonly value: (a: TemplateAggregate) => number | null | undefined;
+}
+
+/** Zahlen mit Einheit gehören zu genau einer Kennzahl, nicht zu irgendeinem Datenwert. */
+const BOUND_NUMBERS: readonly BoundNumber[] = [
+	{
+		label: 'Haltedichte',
+		pattern: {
+			de: /([\d.,]+) Halte(?:stellen)? pro Quadratkilometer/g,
+			en: /([\d.,]+) stops per square kilomet/g
+		},
+		value: (a) => a.oepnv.stopsPerKm2?.value
+	},
+	{
+		label: 'PET',
+		pattern: { de: /([\d.,]+) Grad Celsius/g, en: /([\d.,]+) degrees Celsius/g },
+		value: (a) => a.klima.meanPet?.value
+	},
+	{
+		label: 'Grünanlagen',
+		pattern: {
+			de: /([\d.]+) öffentlich gewidmete Grünanlagen/g,
+			en: /([\d,]+) officially designated public green spaces/g
+		},
+		value: (a) => a.gruen.gruenanlagenCount?.value
+	}
+];
+
+function checkBoundNumbers(
+	text: string,
+	subject: FaqCheckSubject,
+	aggregate: TemplateAggregate
+): FaqFinding[] {
+	const out: FaqFinding[] = [];
+	for (const bound of BOUND_NUMBERS) {
+		const value = bound.value(aggregate);
+		for (const match of text.matchAll(bound.pattern[subject.locale])) {
+			const said = match[1];
+			const digits = said.includes(subject.locale === 'de' ? ',' : '.') ? 1 : 0;
+			const ok = typeof value === 'number' && fmt(value, digits, subject.locale) === said;
+			if (!ok) {
+				out.push({
+					kind: 'zahl',
+					message: `${bound.label}: Text ${said}, Daten ${typeof value === 'number' ? fmt(value, 1, subject.locale) : 'fehlt'}`
+				});
+			}
+		}
+	}
+	return out;
+}
+
 function allowedNumbers(subject: FaqCheckSubject, facts: FaqCheckFacts): Set<string> {
 	const locale = subject.locale;
 	const allowed = new Set<string>(['100']);
@@ -429,6 +483,7 @@ export function checkFaqAnswer(subject: FaqCheckSubject, facts: FaqCheckFacts): 
 		...checkOepnvClass(text, subject, facts.aggregate),
 		...checkMss(text, subject, facts.aggregate),
 		...checkScores(text, subject, facts),
+		...checkBoundNumbers(text, subject, facts.aggregate),
 		...checkNumbers(text, subject, facts)
 	];
 }

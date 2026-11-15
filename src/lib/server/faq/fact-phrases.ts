@@ -85,8 +85,11 @@ export function oepnvModiSatz(counts: OepnvCounts, locale: TemplateLocale): stri
 			const n = counts[key] ?? 0;
 			return `${n.toLocaleString(NUMBER_LOCALE[locale])} ${n === 1 ? words[key].one : words[key].many}`;
 		});
-	if (present.length === 0) return s.empty;
 	const missing = known.filter((key) => counts[key] === 0).map((key) => words[key].none);
+	if (present.length === 0) {
+		// Pauschal „keine Halte“ nur, wenn alle vier Zählungen bekannt sind.
+		return known.length === MODE_ORDER.length ? s.empty : s.missing(joinList(missing, s.and));
+	}
 	const parts = [s.counts(joinList(present, s.and))];
 	if (missing.length > 0) parts.push(s.missing(joinList(missing, s.and)));
 	return parts.join(' ');

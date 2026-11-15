@@ -36,6 +36,11 @@ describe('oepnvModiSatz', () => {
 		expect(oepnvModiSatz(counts(null, null, null, null), 'de')).toBe('');
 	});
 
+	it('verneint nur bekannte Nullen, wenn Zähldaten fehlen', () => {
+		expect(oepnvModiSatz(counts(0, null, null, null), 'de')).toBe('Es gibt keinen U-Bahnhof.');
+		expect(oepnvModiSatz(counts(0, null, null, null), 'en')).toBe('There is no U-Bahn station.');
+	});
+
 	it('meldet einen Ort ganz ohne Halte', () => {
 		expect(oepnvModiSatz(counts(0, 0, 0, 0), 'de')).toBe('Der Datensatz zählt hier keine Halte.');
 	});

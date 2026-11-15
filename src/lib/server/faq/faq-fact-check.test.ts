@@ -241,3 +241,25 @@ describe('checkFaqAnswer: Scores und Ränge', () => {
 		expect(kinds(en, { locale: 'en' })).toContain('rang');
 	});
 });
+
+describe('checkFaqAnswer: Zahl gehört zur richtigen Kennzahl (Review NAV-108)', () => {
+	it('meldet eine Dichte, die nur zufällig einem anderen Wert gleicht', () => {
+		expect(kinds('Im Kiez liegen 32 Halte pro Quadratkilometer.')).toContain('zahl');
+		expect(kinds('The Kiez has 32.0 stops per square kilometre.', { locale: 'en' })).toContain(
+			'zahl'
+		);
+		expect(kinds('Im Kiez liegen 23,9 Halte pro Quadratkilometer.')).toEqual([]);
+	});
+
+	it('meldet eine PET aus einem fremden Feld', () => {
+		expect(kinds('Die mittlere PET liegt bei 32 Grad Celsius.')).toContain('zahl');
+		expect(kinds('The mean PET is 35.3 degrees Celsius.', { locale: 'en' })).toEqual([]);
+	});
+
+	it('meldet eine Grünanlagen-Zahl aus einem fremden Feld', () => {
+		expect(kinds('Im Bezirk liegen 10 öffentlich gewidmete Grünanlagen.')).toContain('zahl');
+		expect(
+			kinds('The Bezirk has 3 officially designated public green spaces.', { locale: 'en' })
+		).toEqual([]);
+	});
+});
