@@ -1,26 +1,25 @@
 <!--
-	Gemeinsame x-Achse aller Grafiken der Kiez- und Bezirksseiten: keine Achslinie, dezente Gitterlinien an den Ticks
-	über die Plothöhe, Zahlen mit Abstand darunter in Plex Mono, Einheit einmal an der letzten Zahl.
-	Erste und letzte Beschriftung stehen nach innen, damit nichts angeschnitten wird.
+	Gemeinsame x-Achse der Kiez- und Bezirksseiten, gebaut mit LayerChart `Axis`: keine Achslinie,
+	dezente Gitterlinien an den Ticks über die Plothöhe, Zahlen mit Abstand darunter in Plex Mono,
+	Einheit einmal an der letzten Zahl. Das eigene `tickLabel`-Snippet blendet Beschriftungen aus,
+	die sich berühren würden, und richtet die Ränder nach innen aus (`layoutAxisLabels`).
 -->
 <script lang="ts">
+	import { Axis, Text, getChartContext } from 'layerchart';
 	import { getLocale } from '$lib/paraglide/runtime';
 	import { layoutAxisLabels, trimZeroDecimals } from '$lib/place/axis';
 
 	interface Props {
 		ticks: readonly number[];
-		x: (v: number) => number;
 		format: (v: number) => string;
 		/** Einheit an der letzten Zahl, etwa „Punkte“ oder „€/m²“. */
 		unit?: string;
-		/** Oberkante und Unterkante der Gitterlinien (Plotbereich). */
-		top: number;
-		bottom: number;
-		width: number;
 		/** Richtung unter der Achse: links „← weniger“, rechts „mehr →“. */
 		ends?: readonly [string, string] | null;
 	}
-	let { ticks, x, format, unit = '', top, bottom, width, ends = null }: Props = $props();
+	let { ticks, format, unit = '', ends = null }: Props = $props();
+
+	const context = getChartContext();
 
 	// Ca. 6,3 px je Zeichen bei 10,5 px Plex Mono.
 	const labels = $derived.by(() => {
@@ -29,51 +28,53 @@
 			ticks.map((t) => format(t)),
 			ticks,
 			decimalSep
-		).map((t, i) => (i === ticks.length - 1 && unit ? `${t}\u00a0${unit}` : t));
+		).map((t, i) => (i === ticks.length - 1 && unit ? `${t} ${unit}` : t));
 		return layoutAxisLabels(
 			texts,
-			ticks.map((t) => x(t)),
-			width,
+			ticks.map((t) => context.xScale(t) as number),
+			context.width,
 			6.3
 		);
 	});
 </script>
 
-<g aria-hidden="true">
-	{#each ticks as t, i (t)}
-		{@const l = labels[i]}
-		<line
-			x1={x(t)}
-			x2={x(t)}
-			y1={top}
-			y2={bottom}
-			class="stroke-[var(--rule)]"
-			stroke-width="1"
-			opacity="0.7"
-		/>
-		{#if l.visible}
-			<text
+<Axis
+	placement="bottom"
+	ticks={[...ticks]}
+	rule={false}
+	tickMarks={false}
+	grid={{ class: 'stroke-[var(--rule)]', opacity: 0.7 }}
+>
+	{#snippet tickLabel({ index })}
+		{@const l = labels[index]}
+		{#if l?.visible}
+			<Text
 				x={l.x}
-				y={bottom + 9}
-				dominant-baseline="hanging"
-				text-anchor={l.anchor}
-				class="fill-[var(--ink-subtle)] font-mono text-[10.5px] tabular-nums">{l.text}</text
-			>
+				y={context.height + 9}
+				value={l.text}
+				textAnchor={l.anchor}
+				verticalAnchor="start"
+				class="fill-[var(--ink-subtle)] font-mono text-[10.5px] tabular-nums"
+			/>
 		{/if}
-	{/each}
-	{#if ends}
-		<text
-			x={0}
-			y={bottom + 25}
-			dominant-baseline="hanging"
-			class="fill-[var(--ink-subtle)] text-[11px]">← {ends[0]}</text
-		>
-		<text
-			x={width}
-			y={bottom + 25}
-			dominant-baseline="hanging"
-			text-anchor="end"
-			class="fill-[var(--ink-subtle)] text-[11px]">{ends[1]} →</text
-		>
-	{/if}
-</g>
+	{/snippet}
+</Axis>
+{#if ends}
+	<Text
+		x={0}
+		y={context.height + 25}
+		value={`← ${ends[0]}`}
+		verticalAnchor="start"
+		class="fill-[var(--ink-subtle)] text-[11px]"
+		aria-hidden="true"
+	/>
+	<Text
+		x={context.width}
+		y={context.height + 25}
+		value={`${ends[1]} →`}
+		textAnchor="end"
+		verticalAnchor="start"
+		class="fill-[var(--ink-subtle)] text-[11px]"
+		aria-hidden="true"
+	/>
+{/if}

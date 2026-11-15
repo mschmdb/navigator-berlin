@@ -253,7 +253,7 @@
 			x="value"
 			xScale={scaleLinear()}
 			xDomain={[domain[0], domain[1]]}
-			padding={{ top: 0, right: pad, bottom: 0, left: pad + blockW }}
+			padding={{ top: 0, right: pad, bottom: AXIS, left: pad + blockW }}
 		>
 			{#snippet children({ context })}
 				<Svg>
@@ -376,12 +376,8 @@
 					{/if}
 					<ChartAxis
 						{ticks}
-						{x}
 						format={axisFormat}
 						{unit}
-						top={0}
-						bottom={SWARM}
-						width={context.width}
 						{ends}
 					/>
 				</Svg>

@@ -51,12 +51,8 @@
 			<Svg>
 				<ChartAxis
 					ticks={[0, 25, 50, 75, 100]}
-					x={(v) => context.xScale(v)}
 					format={(v) => String(v)}
 					unit={m.place_profile_points()}
-					top={0}
-					bottom={rows.length * ROW}
-					width={context.width}
 				/>
 				{#each rows as r, i (r.dim)}
 					{@const cy = i * ROW + ROW / 2}

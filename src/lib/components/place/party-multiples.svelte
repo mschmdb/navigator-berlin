@@ -105,11 +105,7 @@
 							{/each}
 							<ChartAxis
 								ticks={years}
-								x={(v) => context.xScale(v)}
 								format={(v) => `’${String(v).slice(2)}`}
-								top={0}
-								bottom={context.height}
-								width={context.width}
 							/>
 							<Text
 								x={0}
