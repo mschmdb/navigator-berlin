@@ -16,21 +16,21 @@ import {
 	type LocaleOptions
 } from '../../components/atlas/internal/atlas-label-options.js';
 
-export type GruenCategoryDe = 'gut' | 'mittel' | 'gering' | 'unbekannt';
+export type GruenCategoryDe = 'gut' | 'mittel' | 'schlecht' | 'unbekannt';
 
 /**
  * Quell-Layer `gruenversorgung-2023` publiziert die Werte `gut` / `mittel` /
- * `schlecht`. Wir normalisieren + akzeptieren zusätzlich `hoch` / `niedrig` /
- * `gering` damit der Helper robust gegenüber künftigen Layer-Wechseln bleibt.
+ * `schlecht`. Der Helper nennt diese Senats-Stufen (NAV-108) und mappt ältere
+ * Bezeichnungen (`hoch` / `niedrig` / `gering`) darauf.
  */
 const NORMALISATION: Record<string, GruenCategoryDe> = {
 	gut: 'gut',
 	hoch: 'gut',
 	'sehr hoch': 'gut',
 	mittel: 'mittel',
-	schlecht: 'gering',
-	niedrig: 'gering',
-	gering: 'gering'
+	schlecht: 'schlecht',
+	niedrig: 'schlecht',
+	gering: 'schlecht'
 };
 
 function normalizeCategory(raw: string | null | undefined): GruenCategoryDe {
@@ -48,7 +48,8 @@ export function describeGruenversorgungDe(
 			return m.faq_helper_gruen_category_gut(undefined, options);
 		case 'mittel':
 			return m.faq_helper_gruen_category_mittel(undefined, options);
-		case 'gering':
+		case 'schlecht':
+			// Message-Key heißt historisch `_gering`, der Text ist seit NAV-108 „schlecht“.
 			return m.faq_helper_gruen_category_gering(undefined, options);
 		default:
 			return m.faq_helper_gruen_category_unbekannt(undefined, options);

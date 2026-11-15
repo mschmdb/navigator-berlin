@@ -82,16 +82,15 @@ function severityFromUmweltatlasKategorie(kategorie: string): SeverityLevel {
 	return 'neutral';
 }
 
-// Story 1.22: Grünversorgung als Versorgungs-Skala — invertiert ggü. Belastungs-Kategorien.
-// Roh-Daten (gut/mittel/schlecht) werden auf harmonisierte Skala gemappt; Severity bezieht
-// sich auf die harmonisierten Werte (sehr hoch/hoch = gut versorgt = success).
+// Grünversorgung ist eine Versorgungs-Skala, invertiert ggü. Belastungs-Kategorien.
+// Senats-Wörter (NAV-108): gut/sehr gut = success, mittel = neutral, schlecht = warning.
 function severityFromGruenversorgung(value: unknown): SeverityLevel {
 	const kat = pickKategorie(value);
 	if (!kat) return 'neutral';
 	const v = mapGruenversorgungKategorie(kat).toLowerCase().trim();
-	if (v === 'hoch' || v === 'sehr hoch') return 'success';
+	if (v === 'gut' || v === 'sehr gut') return 'success';
 	if (v === 'mittel') return 'neutral';
-	if (v === 'gering' || v === 'sehr gering') return 'warning';
+	if (v === 'schlecht' || v === 'sehr schlecht') return 'warning';
 	return 'neutral';
 }
 

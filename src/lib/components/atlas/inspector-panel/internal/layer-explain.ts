@@ -96,8 +96,8 @@ export const LAYER_EXPLAIN_DE: Record<string, LayerExplain> = {
 	},
 	'gruenversorgung-2023': {
 		short: 'Grünversorgung im Stadtteil (Umweltatlas 2023)',
-		long: 'Pro-Kopf-Versorgung mit nutzbarem öffentlichem Grün im Planungsraum. Indikator für Erholungsräume und Klimaresilienz. Drei Kategorien: gering, mittel, hoch.',
-		valueScaleExplain: 'gering = wenig Grün, hoch = gut versorgt'
+		long: 'Pro-Kopf-Versorgung mit nutzbarem öffentlichem Grün im Planungsraum. Indikator für Erholungsräume und Klimaresilienz. Der Senat unterscheidet drei Stufen: gut, mittel, schlecht.',
+		valueScaleExplain: 'gut = viel Grün in Wohnungsnähe, schlecht = wenig Grün'
 	},
 	'bioklima-2023': {
 		short: 'Thermische Belastung im Sommer (Umweltatlas 2023)',

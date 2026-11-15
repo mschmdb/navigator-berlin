@@ -199,7 +199,7 @@ describe('KiezDetails.svelte', () => {
 
 	// i18n Block B4a
 	describe('opts.locale (EN)', () => {
-		it('Verteilungen englisch: Lärm "Medium", Grün gut/schlecht → High/Low, Wohnlage "Good residential area"', async () => {
+		it('Verteilungen englisch: Lärm "Medium", Grün gut/schlecht → Good/Poor, Wohnlage "Good residential area"', async () => {
 			overwriteGetLocale(() => 'en');
 			const stats = {
 				...statsFixtureFull,
@@ -233,7 +233,7 @@ describe('KiezDetails.svelte', () => {
 				document.querySelector('[data-testid="kiez-steckbrief"]')?.textContent ?? ''
 			).replace(/\s+/g, ' ');
 			expect(text).toContain('Medium 60%, Low 40%');
-			expect(text).toContain('High 70%, Low 30%');
+			expect(text).toContain('Good 70%, Poor 30%');
 			expect(text).toContain('Good residential area 80%, Medium residential area 20%');
 			expect(text).not.toMatch(/Mittel \d+%|Schlecht \d+%/);
 		});
@@ -256,7 +256,7 @@ describe('KiezDetails.svelte', () => {
 			expect(table?.textContent).toMatch(/June 2023/);
 			// Grünversorgung: übersetzter Wert + EN-Zähler (Komma-Tausender).
 			expect(table?.textContent).toMatch(/Green space provision/);
-			expect(table?.textContent).toMatch(/moderate/);
+			expect(table?.textContent).toMatch(/medium/);
 			expect(table?.textContent).toMatch(/Green spaces 1,234/);
 			expect(table?.textContent).toMatch(/Playgrounds 12/);
 			// Klima/PET: übersetzte Kategorie + EN-Dezimalformat (Punkt).

@@ -44,7 +44,7 @@ describe('toSegments (i18n Block D1: Seiten-Locale)', () => {
 			{ schlecht: 0.2, niedrig: 0.1, gering: 0.1, gut: 0.6 },
 			{ locale: 'en', kind: 'gruen' }
 		);
-		expect(gruen.map((s) => s.label)).toEqual(['High', 'Low']);
+		expect(gruen.map((s) => s.label)).toEqual(['Good', 'Poor']);
 		expect(gruen[1].share).toBeCloseTo(0.4);
 		const laerm = toSegments(
 			{ niedrig: 0.3, gering: 0.2, hoch: 0.5 },
@@ -70,12 +70,12 @@ describe('toSegments (i18n Block D1: Seiten-Locale)', () => {
 		]);
 		expect(w.every((s) => s.lang === undefined)).toBe(true);
 	});
-	it('Grün EN: gut/mittel/schlecht → High/Medium/Low (Story 1.22 harmonisiert)', () => {
+	it('Grün EN: gut/mittel/schlecht → Good/Medium/Poor (Senats-Skala, NAV-108)', () => {
 		const out = toSegments(
 			{ gut: 0.5, mittel: 0.3, schlecht: 0.2 },
 			{ locale: 'en', kind: 'gruen' }
 		);
-		expect(out.map((s) => s.label)).toEqual(['High', 'Medium', 'Low']);
+		expect(out.map((s) => s.label)).toEqual(['Good', 'Medium', 'Poor']);
 	});
 	it('Wohnlage EN: einfach/mittel/gut → residential-area-Wörter', () => {
 		const out = toSegments(

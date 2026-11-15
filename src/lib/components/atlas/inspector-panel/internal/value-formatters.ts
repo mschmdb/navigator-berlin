@@ -24,7 +24,9 @@ const CLOSED_CATEGORY_MESSAGE: Record<string, MessageFn> = {
 	hoch: m.atlas_scale_label_hoch,
 	'sehr hoch': m.atlas_scale_label_sehr_hoch,
 	einfach: m.atlas_legend_word_einfach,
-	gut: m.atlas_legend_word_gut
+	gut: m.atlas_legend_word_gut,
+	// NAV-108: Grünversorgung in Senats-Wörtern (gut/mittel/schlecht).
+	schlecht: m.atlas_legend_word_schlecht
 };
 
 export function translateClosedCategory(raw: string, opts?: LocaleOptions): string {
@@ -120,9 +122,9 @@ function formatUmweltatlasKategorie(
 	const kategorie = pickProp(raw, 'kategorie');
 	const plr = pickProp(raw, 'plr_name');
 	if (typeof kategorie !== 'string') return missingValue(opts);
-	// Koordinator-Entscheidung: die geschlossene Kategorien-Menge (gering/
-	// mittel/hoch, nach Gruenversorgungs-Harmonisierung auch sehr gering/sehr
-	// hoch) wird übersetzt; ein echter offener Rohwert bleibt unverändert.
+	// Koordinator-Entscheidung: die geschlossene Kategorien-Menge (gering/mittel/hoch,
+	// für die Grünversorgung seit NAV-108 gut/mittel/schlecht) wird übersetzt; ein
+	// echter offener Rohwert bleibt unverändert.
 	const harmonized = mapKategorie ? mapKategorie(kategorie) : kategorie;
 	const display = translateClosedCategory(harmonized, opts);
 	const suffix = typeof plr === 'string' ? `, ${plr}` : '';

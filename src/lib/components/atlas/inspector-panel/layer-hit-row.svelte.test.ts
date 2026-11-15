@@ -329,11 +329,11 @@ describe('layer-hit-row.svelte', () => {
 		});
 	});
 
-	// Story 1.22: Grünversorgung-Skala harmonisiert (gering/mittel/hoch) + invertierte Severity.
-	describe('Story 1.22: Grünversorgung Skala-Harmonisierung', () => {
+	// NAV-108: Grünversorgung in Senats-Wörtern (gut/mittel/schlecht) + invertierte Severity.
+	describe('NAV-108: Grünversorgung in Senats-Wörtern', () => {
 		const gruenSource = 'https://gdi.berlin.de/services/wfs/ua_umweltgerechtigkeit2023';
 
-		it('Grünversorgung "gut" (raw) → ValueChip "hoch" mit success-Severity', async () => {
+		it('Grünversorgung "gut" (raw) → ValueChip "gut" mit success-Severity', async () => {
 			render(LayerHitRow, {
 				hit: {
 					layer: 'gruenversorgung-2023',
@@ -346,11 +346,11 @@ describe('layer-hit-row.svelte', () => {
 			});
 			const chip = (await page.getByTestId('value-chip').element()) as HTMLElement;
 			expect(chip.getAttribute('data-severity')).toBe('success');
-			expect(chip.textContent).toMatch(/hoch/);
-			expect(chip.textContent).not.toMatch(/gut/);
+			expect(chip.textContent).toMatch(/gut/);
+			expect(chip.textContent).not.toMatch(/hoch/);
 		});
 
-		it('Grünversorgung "schlecht" (raw) → ValueChip "gering" mit warning-Severity', async () => {
+		it('Grünversorgung "schlecht" (raw) → ValueChip "schlecht" mit warning-Severity', async () => {
 			render(LayerHitRow, {
 				hit: {
 					layer: 'gruenversorgung-2023',
@@ -363,8 +363,8 @@ describe('layer-hit-row.svelte', () => {
 			});
 			const chip = (await page.getByTestId('value-chip').element()) as HTMLElement;
 			expect(chip.getAttribute('data-severity')).toBe('warning');
-			expect(chip.textContent).toMatch(/gering/);
-			expect(chip.textContent).not.toMatch(/schlecht/);
+			expect(chip.textContent).toMatch(/schlecht/);
+			expect(chip.textContent).not.toMatch(/gering/);
 		});
 
 		it('Grünversorgung "mittel" → ValueChip "mittel" mit neutral-Severity (GH-88)', async () => {
