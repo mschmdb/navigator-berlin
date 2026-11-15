@@ -22,7 +22,7 @@ const detailLayerSlugs = readJson<{
 
 const PAGES = [
 	{ path: '/kieze', h1: 'Alle Kieze in Berlin', enH1: 'All Kieze in Berlin' },
-	{ path: '/bezirke', h1: 'Alle Bezirke in Berlin', enH1: 'All Bezirke in Berlin' },
+	{ path: '/bezirke', h1: 'Alle Bezirke in Berlin', enH1: 'All districts in Berlin' },
 	{ path: '/daten', h1: 'Daten-Layer', enH1: 'Data layers' }
 ] as const;
 
