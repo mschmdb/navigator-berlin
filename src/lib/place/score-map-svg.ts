@@ -47,7 +47,7 @@ export function renderScoreMapSvg({
 				!plain && s?.composite != null
 					? `${s.name}: ${Math.round(s.composite)}`
 					: (s?.name ?? p.id);
-			return `<path d="${p.d}" fill="${fill}" stroke="${own ? INK : GAP}" stroke-width="${own ? 4 : 1.2}" stroke-linejoin="round" fill-rule="evenodd"><title>${esc(title)}</title></path>`;
+			return `<path d="${p.d}" fill="${fill}" stroke="${own ? INK : GAP}" stroke-width="${own ? 12 : 3}" stroke-linejoin="round" fill-rule="evenodd"><title>${esc(title)}</title></path>`;
 		})
 		.join('');
 	return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="${outline.viewBox}" width="${outline.width}" height="${outline.height}">${body}</svg>`;

@@ -31,7 +31,7 @@ describe('renderScoreMapSvg', () => {
 	});
 	it('draws the own place last with a thick dark outline', () => {
 		const last = svg.lastIndexOf('<path');
-		expect(svg.slice(last)).toContain('stroke="#141414" stroke-width="4"');
+		expect(svg.slice(last)).toContain('stroke="#141414" stroke-width="12"');
 		expect(svg.slice(last)).toContain('d="M0 0L10 0L10 10Z"');
 	});
 	it('escapes names in titles', () => {
