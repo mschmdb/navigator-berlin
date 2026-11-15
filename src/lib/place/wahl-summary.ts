@@ -18,14 +18,3 @@ export function partiesOf(points: readonly WahlPunkt[]): string[] {
 export function seriesFor(points: readonly WahlPunkt[], partei: string): WahlPunkt[] {
 	return points.filter((p) => p.partei === partei).sort((a, b) => a.jahr - b.jahr);
 }
-
-export function latestLeader(
-	own: readonly WahlPunkt[],
-	ref: readonly WahlPunkt[]
-): { jahr: number; partei: string; anteil: number; refAnteil: number | null } | null {
-	const jahr = latestYear(own);
-	if (jahr === null) return null;
-	const top = own.filter((p) => p.jahr === jahr).sort((a, b) => b.anteil - a.anteil)[0];
-	const refPoint = ref.find((p) => p.jahr === jahr && p.partei === top.partei);
-	return { jahr, partei: top.partei, anteil: top.anteil, refAnteil: refPoint?.anteil ?? null };
-}

@@ -20,7 +20,7 @@
 	import DataTable from '$lib/components/place/data-table.svelte';
 	import { aggregateProfile, resolveReference } from '$lib/place/reference';
 	import { PlaceViewState, WahlCache } from '$lib/place/reference-state.svelte';
-	import { latestLeader } from '$lib/place/wahl-summary';
+	import { wahlFacts, wahlSentences } from '$lib/place/wahl-text';
 	import { CHAPTERS, chapterText } from '$lib/place/topics';
 	import { trackLanding } from '$lib/utils/plausible.js';
 	import { atlasQuery } from '$lib/place/atlas-link';
@@ -28,6 +28,7 @@
 	import { RATED_DIMS, type Dim } from '$lib/place/types';
 	import type { WahlArt } from '$lib/place/wahl-types';
 	import { dimLabel, formatScore, signedPoints } from '$lib/place/labels';
+	import { bezirkAnchorId } from '$lib/data/region-overview.js';
 	import { localizedHref } from '$lib/i18n/localized-href.js';
 	import { page } from '$app/state';
 	import { m } from '$lib/paraglide/messages.js';
@@ -94,7 +95,14 @@
 	const wahlRefName = $derived(kind === 'berlin' ? m.place_ref_all_berlin() : ref.label);
 	const wahlOwn = $derived(data.wahl.own[wahlArt]);
 	const wahlRefPoints = $derived(wahlRef?.[wahlArt] ?? []);
-	const leader = $derived(latestLeader(wahlOwn, wahlRefPoints));
+	const wahlLead = $derived(
+		wahlSentences(wahlFacts(wahlOwn, wahlRefPoints), {
+			wahl: wahlArt,
+			name,
+			ref: wahlRefName,
+			locale: getLocale()
+		})
+	);
 	const years = $derived([...new Set(wahlOwn.map((p) => p.jahr))].sort());
 	const pct = (v: number) => formatPercent(v / 100, { decimals: 0, locale: opts.locale });
 
@@ -246,19 +254,8 @@
 
 	<Section id="wahlen" title={m.place_wahl_title_bezirk()} mode={view.mode}>
 		{#snippet text()}
-			{#if leader}
-				<p>
-					{m.place_wahl_leader({
-						jahr: leader.jahr,
-						partei: leader.partei,
-						name,
-						pct: pct(leader.anteil)
-					})}{#if leader.refAnteil !== null}{` ${m.place_wahl_leader_ref({
-							ref: wahlRefName,
-							partei: leader.partei,
-							pct: pct(leader.refAnteil)
-						})}`}{/if}
-				</p>
+			{#if wahlLead.length > 0}
+				<p>{wahlLead.join(' ')}</p>
 			{/if}
 			<p class="text-sm">{m.place_wahl_hint_bezirk()}</p>
 		{/snippet}
@@ -339,6 +336,15 @@
 				<li>
 					<a
 						class="inline-flex min-h-6 items-center text-accent underline"
+						data-testid="overview-link-kieze"
+						href={`${localizedHref('/kieze', opts.locale)}#${bezirkAnchorId(data.profile.slug)}`}
+						>{m.overview_link_kieze_in_bezirk({ bezirk: data.profile.name })}</a
+					>
+				</li>
+				<li>
+					<a
+						class="inline-flex min-h-6 items-center text-accent underline"
+						data-testid="overview-link-bezirke"
 						href={localizedHref('/bezirke', opts.locale)}>{m.place_more_bezirke()}</a
 					>
 				</li>
