@@ -12,9 +12,16 @@ export class SkizzeState {
 	choice = $state<ReferenceChoice>({ kind: 'berlin', slug: null });
 	mode = $state<Lesart>('erzaehlen');
 
+	#ctx: () => ReferenceParseContext;
+
 	constructor(ctx: () => ReferenceParseContext) {
-		const url = page.url;
-		this.choice = parseReference(url.searchParams.get('vs'), ctx());
+		this.#ctx = ctx;
+		this.readUrl(page.url);
+	}
+
+	/** Auch nach Client-Navigation aufrufen: dieselbe Komponente kann einen anderen Ort zeigen. */
+	readUrl(url: URL) {
+		this.choice = parseReference(url.searchParams.get('vs'), this.#ctx());
 		this.mode = url.searchParams.get('lesart') === 'zahlen' ? 'zahlen' : 'erzaehlen';
 	}
 
@@ -44,20 +51,25 @@ export class SkizzeState {
 /** Wahl-Zeitreihen frei gewählter Vergleichsgebiete, einmal geladen und gemerkt. */
 export class WahlCache {
 	#cache = new SvelteMap<string, WahlBundle>();
-	current = $state<WahlBundle | null>(null);
+	#wanted = $state<string | null>(null);
+	failed = $state(false);
+
+	/** Nur die Daten des zuletzt gewünschten Gebiets; eine langsame ältere Antwort zählt nicht. */
+	get current(): WahlBundle | null {
+		return this.#wanted ? (this.#cache.get(this.#wanted) ?? null) : null;
+	}
 
 	async load(ebene: Exclude<WahlEbene, 'berlin'>, slug: string) {
 		const key = `${ebene}:${slug}`;
-		const hit = this.#cache.get(key);
-		if (hit) {
-			this.current = hit;
-			return;
+		this.#wanted = key;
+		this.failed = false;
+		if (this.#cache.has(key)) return;
+		try {
+			const res = await fetch(`/demo/skizze-wahl?ebene=${ebene}&slug=${encodeURIComponent(slug)}`);
+			if (!res.ok) throw new Error(`HTTP ${res.status}`);
+			this.#cache.set(key, (await res.json()) as WahlBundle);
+		} catch {
+			if (this.#wanted === key) this.failed = true;
 		}
-		this.current = null;
-		const res = await fetch(`/demo/skizze-wahl?ebene=${ebene}&slug=${encodeURIComponent(slug)}`);
-		if (!res.ok) return;
-		const bundle = (await res.json()) as WahlBundle;
-		this.#cache.set(key, bundle);
-		this.current = bundle;
 	}
 }

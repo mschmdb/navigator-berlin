@@ -27,6 +27,7 @@
 		formatScore
 	} from '$lib/skizzen/labels';
 	import { resolve } from '$app/paths';
+	import { page } from '$app/state';
 	import type { PageData } from './$types';
 
 	let { data }: { data: PageData } = $props();
@@ -135,6 +136,9 @@
 	const wahlCache = new WahlCache();
 	$effect(() => {
 		if (ref.slug) void wahlCache.load('bezirk', ref.slug);
+	});
+	$effect(() => {
+		skizze.readUrl(page.url);
 	});
 	const wahlRef = $derived(skizze.choice.kind === 'berlin' ? data.wahl.berlin : wahlCache.current);
 	const wahlOwn = $derived(data.wahl.own[wahlArt]);
@@ -257,8 +261,8 @@
 		>
 			{#snippet text()}
 				<p>
-					Jeder Punkt ist einer der {data.kieze.length} Berliner Kieze. Schwarz sind die {own.length} Kieze
-					in {data.profile.name}. Die blaue Linie ist der Bezirkswert, die gestrichelte {refName}.
+					Jeder Punkt ist einer der {data.kieze.length} Berliner Kieze. Schwarz sind die {own.length}
+					Kieze in {data.profile.name}. Die blaue Linie ist der Bezirkswert, die gestrichelte {refName}.
 				</p>
 				{#if widest?.s}
 					<p>
@@ -282,13 +286,13 @@
 				<DataTable
 					{visible}
 					caption="Spannweite der Kieze in {data.profile.name}"
-					head={['Dimension', 'Niedrigster Kiez', 'Höchster Kiez', 'Bezirk', 'Berlin-Median Kieze']}
+					head={['Dimension', 'Niedrigster Kiez', 'Höchster Kiez', 'Bezirk', refName]}
 					rows={spreads.map(({ dim, s }) => [
 						dimLabel(dim),
 						s ? `${s.min.name} ${formatScore(s.min.dims[dim])}` : '–',
 						s ? `${s.max.name} ${formatScore(s.max.dims[dim])}` : '–',
 						formatScore(self.dims[dim]),
-						formatScore(kiezMedian(dim))
+						formatScore(ref.dims[dim])
 					])}
 				/>
 			{/snippet}

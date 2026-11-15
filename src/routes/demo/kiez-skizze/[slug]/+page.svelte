@@ -26,6 +26,7 @@
 		formatScore
 	} from '$lib/skizzen/labels';
 	import { resolve } from '$app/paths';
+	import { page } from '$app/state';
 	import type { PageData } from './$types';
 
 	let { data }: { data: PageData } = $props();
@@ -171,6 +172,9 @@
 	const wahlCache = new WahlCache();
 	$effect(() => {
 		if (ref.slug) void wahlCache.load('kiez', ref.slug);
+	});
+	$effect(() => {
+		skizze.readUrl(page.url);
 	});
 	const wahlRef = $derived(
 		skizze.choice.kind === 'berlin'
@@ -434,7 +438,11 @@
 				Jede Kachel ist eine Partei, alle mit derselben Skala. Die gestrichelte Linie zeigt {refName}.
 			</p>
 			{#if wahlRefPoints.length === 0 && ref.slug}
-				<p class="text-sm">Lade Vergleichswerte …</p>
+				<p class="text-sm">
+					{wahlCache.failed
+						? 'Vergleichswerte konnten nicht geladen werden.'
+						: 'Lade Vergleichswerte …'}
+				</p>
 			{/if}
 		{/snippet}
 		{#snippet controls()}
