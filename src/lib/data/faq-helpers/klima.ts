@@ -7,8 +7,8 @@
  *
  * i18n Block B4a: `opts` mit DE-Default (Boundary: geteilte Helfer ohne
  * `opts.locale` bleiben DE). `describePetKategorie`/`formatPet` rendern auch
- * direkt im Kiez-/Bezirk-Steckbrief (Client, übersetzt); `petErklaerungDe`
- * bleibt ausschließlich ein Server-FAQ-Slot (bleibt deutsch).
+ * direkt im Kiez-/Bezirk-Steckbrief (Client, übersetzt).
+ * Die FAQ-Sätze stehen seit NAV-108 in `src/lib/server/faq/fact-phrases.ts`.
  */
 import { m } from '$lib/paraglide/messages.js';
 import { formatDecimal, type LocaleFormatOptions } from '$lib/i18n/format.js';
@@ -53,25 +53,6 @@ export function describePetKategorie(
 			return m.faq_helper_klima_kategorie_stark_belastet(undefined, options);
 		default:
 			return m.faq_helper_klima_kategorie_unbekannt(undefined, options);
-	}
-}
-
-export function petErklaerungDe(
-	petCelsius: number | null | undefined,
-	opts?: LocaleOptions
-): string {
-	const options = toAtlasMessageOptions(opts);
-	switch (normalizeKategorie(petCelsius)) {
-		case 'thermisch entspannt':
-			return m.faq_helper_klima_erklaerung_entspannt(undefined, options);
-		case 'gemäßigt':
-			return m.faq_helper_klima_erklaerung_gemaessigt(undefined, options);
-		case 'thermisch belastet':
-			return m.faq_helper_klima_erklaerung_belastet(undefined, options);
-		case 'stark belastet':
-			return m.faq_helper_klima_erklaerung_stark_belastet(undefined, options);
-		default:
-			return m.faq_helper_klima_erklaerung_unbekannt(undefined, options);
 	}
 }
 

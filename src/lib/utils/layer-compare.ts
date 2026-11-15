@@ -104,17 +104,17 @@ export function getCompareProfile(slug: string): CompareProfile {
 
 const ORDINAL_RANKINGS: Record<string, readonly string[]> = {
 	wohnlage: ['einfach', 'mittel', 'gut', 'sehr gut'],
-	gruenversorgung: ['sehr gering', 'gering', 'mittel', 'hoch', 'sehr hoch'],
+	gruenversorgung: ['sehr schlecht', 'schlecht', 'mittel', 'gut', 'sehr gut'],
 	belastung: ['gering', 'mittel', 'hoch', 'sehr hoch'],
 	umweltgerechtigkeit: ['keine', 'einfach', 'zweifach', 'dreifach', 'vierfach']
 };
 
+/** NAV-108: Senats-Skala; ältere neutrale Bezeichnungen werden zurückgemappt. */
 const GRUENVERSORGUNG_RAW_MAP: Record<string, string> = {
-	'sehr gut': 'sehr hoch',
-	gut: 'hoch',
-	mittel: 'mittel',
-	schlecht: 'gering',
-	'sehr schlecht': 'sehr gering'
+	'sehr hoch': 'sehr gut',
+	hoch: 'gut',
+	gering: 'schlecht',
+	'sehr gering': 'sehr schlecht'
 };
 
 const NUMERIC_UNITS: Record<string, string> = {

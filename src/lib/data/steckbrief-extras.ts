@@ -32,6 +32,9 @@ const SCALE_KEYS: ReadonlySet<string> = new Set([
 	'sehr hoch'
 ]);
 
+/** NAV-108: Grünversorgung nutzt die Senats-Skala gut/mittel/schlecht. */
+const GRUEN_KEYS: ReadonlySet<string> = new Set(['gut', 'mittel', 'schlecht']);
+
 const LAERM_SYNONYMS: Readonly<Record<string, string>> = {
 	niedrig: 'gering',
 	'sehr niedrig': 'sehr gering'
@@ -43,8 +46,11 @@ function localizeCategory(raw: string, kind: DistributionKind, locale: Locale): 
 		return isKnownWohnlage(raw) ? describeWohnlageDe(raw, { locale }) : null;
 	}
 	const key = raw.trim().toLowerCase();
-	const harmonized =
-		kind === 'gruen' ? mapGruenversorgungKategorie(key) : (LAERM_SYNONYMS[key] ?? key);
+	if (kind === 'gruen') {
+		const senat = mapGruenversorgungKategorie(key);
+		return GRUEN_KEYS.has(senat) ? translateClosedCategory(senat, { locale }) : null;
+	}
+	const harmonized = LAERM_SYNONYMS[key] ?? key;
 	return SCALE_KEYS.has(harmonized) ? translateClosedCategory(harmonized, { locale }) : null;
 }
 

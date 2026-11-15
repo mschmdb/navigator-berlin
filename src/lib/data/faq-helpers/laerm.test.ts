@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { describeLaermCategoryDe, laermErklaerungDe } from './laerm.js';
+import { describeLaermCategoryDe } from './laerm.js';
 
 describe('describeLaermCategoryDe', () => {
 	it('normalisiert Roh-Kategorien auf DE-Substantive (Alt-Verhalten)', () => {
@@ -14,16 +14,5 @@ describe('describeLaermCategoryDe', () => {
 	it('liefert EN mit opts.locale', () => {
 		expect(describeLaermCategoryDe('hoch', { locale: 'en' })).toBe('high');
 		expect(describeLaermCategoryDe(null, { locale: 'en' })).toBe('unknown');
-	});
-});
-
-describe('laermErklaerungDe', () => {
-	it('bleibt DE ohne opts (Server-FAQ-Boundary)', () => {
-		expect(laermErklaerungDe('hoch')).toMatch(/hohe Pegel-Klasse/);
-	});
-	it('liefert EN mit opts.locale', () => {
-		expect(laermErklaerungDe('hoch', { locale: 'en' })).toBe(
-			'That is a high noise class, typical along main roads or railway lines.'
-		);
 	});
 });

@@ -1,5 +1,12 @@
 import type { PageType, TemplateLocale } from './template-schema.js';
 import type { MetricContext, TemplateAggregate } from './template-renderer.js';
+import {
+	checkGruenScale,
+	checkMss,
+	checkOepnvClass,
+	checkPetClass,
+	checkShares
+} from './faq-fact-check-classes.js';
 
 /**
  * NAV-108: Prüft eine gerenderte FAQ-Antwort gegen die Quelldaten.
@@ -66,31 +73,32 @@ const MODES: readonly ModeSpec[] = [
 		key: 'uBahnCount',
 		label: 'U-Bahn',
 		mention: /\bU-(?=Bahn|\s)/g,
-		counted: /(\d[\d.,]*)\s+(?:U-Bahnh(?:of|öfe)|U-Bahn stations?)/g
+		counted: /(\d[\d.,]*|\bein|\beine|\bone)\s+(?:U-Bahnh(?:of|öfe)|U-Bahn stations?)/g
 	},
 	{
 		key: 'sBahnCount',
 		label: 'S-Bahn',
 		mention: /\bS-(?=Bahn|\s)/g,
-		counted: /(\d[\d.,]*)\s+(?:S-Bahnh(?:of|öfe)|S-Bahn stations?)/g
+		counted: /(\d[\d.,]*|\bein|\beine|\bone)\s+(?:S-Bahnh(?:of|öfe)|S-Bahn stations?)/g
 	},
 	{
 		key: 'tramCount',
 		label: 'Tram',
 		mention: /\btram/gi,
-		counted: /(\d[\d.,]*)\s+(?:Tramhaltestellen?|tram stops?)/g
+		counted: /(\d[\d.,]*|\bein|\beine|\bone)\s+(?:Tramhaltestellen?|tram stops?)/g
 	},
 	{
 		key: 'busCount',
 		label: 'Bus',
 		mention: /\b[Bb]us(?!ch|iness)/g,
-		counted: /(\d[\d.,]*)\s+(?:Bushalte(?:stellen?)?|bus stops?)/g
+		counted: /(\d[\d.,]*|\bein|\beine|\bone)\s+(?:Bushalte(?:stellen?)?|bus stops?)/g
 	}
 ];
 
 const NEGATION_BEFORE = /\b(?:kein(?:e|en|er)?|no|without|ohne)\s+(?:\S+\s+)?$/i;
 
 function parseCount(raw: string): number {
+	if (/^(?:ein|eine|one)$/.test(raw)) return 1;
 	return Number(raw.replace(/[.,]/g, ''));
 }
 
@@ -127,154 +135,6 @@ function checkModes(text: string, aggregate: TemplateAggregate): FaqFinding[] {
 	return out;
 }
 
-// ---------------------------------------------------------------- Grünversorgung
-
-/** Senats-Klassen der Grünversorgung (Umweltatlas 2023) und ihre EN-Wörter. */
-const GRUEN_EN: Record<string, string> = { good: 'gut', medium: 'mittel', poor: 'schlecht' };
-const GRUEN_FOREIGN_SCALE: Record<TemplateLocale, RegExp> = {
-	de: /\b(?:gering|hoch)\b/,
-	en: /\b(?:low|high)\b/
-};
-
-function gruenRaw(word: string, locale: TemplateLocale): string {
-	return locale === 'en' ? (GRUEN_EN[word] ?? word) : word;
-}
-
-function checkGruen(
-	text: string,
-	subject: FaqCheckSubject,
-	aggregate: TemplateAggregate
-): FaqFinding[] {
-	if (!subject.templateId.startsWith('gruen-versorgung')) return [];
-	const out: FaqFinding[] = [];
-	const locale = subject.locale;
-	const dist = aggregate.gruen.versorgungDistribution?.value ?? {};
-	const dominant = aggregate.gruen.dominantVersorgung?.value ?? null;
-	const top = Math.max(0, ...Object.values(dist));
-	const topClasses = Object.entries(dist)
-		.filter(([, share]) => share === top)
-		.map(([key]) => key);
-	if (GRUEN_FOREIGN_SCALE[locale].test(text)) {
-		out.push({
-			kind: 'klasse',
-			message: `Grün-Klasse nicht in der Senats-Skala (Daten: ${dominant})`
-		});
-	}
-	const claim = locale === 'de' ? /\bals „([^“]+)“/ : /\bas “([^”]+)”/;
-	const claimed = claim.exec(text);
-	if (claimed) {
-		const raw = gruenRaw(claimed[1], locale);
-		const allowed = topClasses.length > 0 ? topClasses : dominant ? [dominant] : [];
-		if (!allowed.includes(raw)) {
-			out.push({ kind: 'klasse', message: `Grün-Klasse „${raw}“, Daten: ${allowed.join('/')}` });
-		}
-	}
-	const pct = locale === 'de' ? /„([^“]+)“ (\d+) %/g : /“([^”]+)” (\d+)%/g;
-	for (const match of text.matchAll(pct)) {
-		const raw = gruenRaw(match[1], locale);
-		const share = dist[raw];
-		const expected = share === undefined ? null : Math.round(share * 100);
-		if (expected !== Number(match[2])) {
-			out.push({
-				kind: 'klasse',
-				message: `Anteil „${raw}“ ${match[2]} %, Daten: ${expected ?? 'fehlt'}`
-			});
-		}
-	}
-	return out;
-}
-
-// ---------------------------------------------------------------- Klassen
-
-const LAERM_EXPECTED: Record<string, Record<TemplateLocale, string>> = {
-	niedrig: { de: 'gering', en: 'low' },
-	gering: { de: 'gering', en: 'low' },
-	mittel: { de: 'mittel', en: 'medium' },
-	hoch: { de: 'hoch', en: 'high' },
-	'sehr hoch': { de: 'sehr hoch', en: 'very high' }
-};
-const LAERM_CLAIM: Record<TemplateLocale, RegExp> = {
-	de: /\bKlasse (sehr hoch|hoch|mittel|gering|unbekannt)\b/,
-	en: /\bclass (very high|high|medium|low|unknown)\b/
-};
-
-function checkLaerm(
-	text: string,
-	subject: FaqCheckSubject,
-	aggregate: TemplateAggregate
-): FaqFinding[] {
-	if (!subject.templateId.startsWith('laerm-')) return [];
-	const claimed = LAERM_CLAIM[subject.locale].exec(text);
-	if (!claimed) return [];
-	const raw = aggregate.laerm.dominantCategory?.value;
-	const expected =
-		typeof raw === 'string'
-			? LAERM_EXPECTED[raw.trim().toLowerCase()]?.[subject.locale]
-			: undefined;
-	return claimed[1] === expected
-		? []
-		: [{ kind: 'klasse', message: `Lärm-Klasse ${claimed[1]}, Daten: ${raw ?? 'fehlt'}` }];
-}
-
-const OEPNV_CLASSES: Record<TemplateLocale, readonly [number, string][]> = {
-	de: [
-		[20, 'sehr dicht'],
-		[12, 'dicht'],
-		[6, 'mittel'],
-		[0, 'dünn']
-	],
-	en: [
-		[20, 'very dense'],
-		[12, 'dense'],
-		[6, 'moderate'],
-		[0, 'sparse']
-	]
-};
-const OEPNV_CLAIM: Record<TemplateLocale, RegExp> = {
-	de: /gilt damit als (sehr dicht|dicht|mittel|dünn)\b/,
-	en: /considered (very dense|dense|moderate|sparse)\b/
-};
-
-function checkOepnvClass(
-	text: string,
-	subject: FaqCheckSubject,
-	aggregate: TemplateAggregate
-): FaqFinding[] {
-	const value = aggregate.oepnv.stopsPerKm2?.value;
-	const claimed = OEPNV_CLAIM[subject.locale].exec(text);
-	if (!claimed || typeof value !== 'number') return [];
-	const expected = OEPNV_CLASSES[subject.locale].find(([min]) => value >= min)?.[1];
-	return claimed[1] === expected
-		? []
-		: [
-				{
-					kind: 'klasse',
-					message: `ÖPNV-Dichte „${claimed[1]}“, Daten ${value.toFixed(1)} = „${expected}“`
-				}
-			];
-}
-
-/** MSS-Status-Index: hoch = wenig Benachteiligung, sehr niedrig = am meisten. */
-const MSS_WRONG_DIRECTION: Record<string, RegExp> = {
-	hoch: /überdurchschnittliche|höchste|above-average|highest/i,
-	'sehr hoch': /überdurchschnittliche|höchste|above-average|highest/i,
-	niedrig: /wenig|niedrigste|little|lowest/i,
-	'sehr niedrig': /wenig|niedrigste|little|lowest/i
-};
-
-function checkMss(
-	text: string,
-	subject: FaqCheckSubject,
-	aggregate: TemplateAggregate
-): FaqFinding[] {
-	if (!subject.templateId.startsWith('wohnen-mss')) return [];
-	const raw = aggregate.wohnen.dominantMss?.value;
-	const wrong = typeof raw === 'string' ? MSS_WRONG_DIRECTION[raw.trim().toLowerCase()] : undefined;
-	return wrong?.test(text)
-		? [{ kind: 'klasse', message: `MSS-Text widerspricht dem Status-Index „${raw}“` }]
-		: [];
-}
-
 // ---------------------------------------------------------------- Scores + Ränge
 
 const SCORE_NAMES: readonly [RegExp, string][] = [
@@ -284,12 +144,25 @@ const SCORE_NAMES: readonly [RegExp, string][] = [
 	[/Wohnschutz-Score|Tenant protection score/, 'wohnschutz'],
 	[/Versorgungs-Score|Amenities score/, 'versorgung']
 ];
-const SCORE_VALUE = /(\d+) (?:von|out of) 100(?: in the [^(]*?)? \(([^)]*)\)(?:,? ([^.]*))?/g;
-const RANK_LABEL = /^(?:Platz|[Rr]ank) (\d+) (?:von|of) (\d+)$/;
-const BOTTOM: Record<TemplateLocale, string> = { de: 'unteres Viertel', en: 'bottom quartile' };
+const SCORE_VALUE: Record<TemplateLocale, RegExp> = {
+	de: /kommt (?:der Kiez|der Bezirk) auf (\d+) von 100 Punkten, ([^.]+)\.(?: Das ist ([^.]+)\.)?/g,
+	en: /(?:the Kiez|the district) gets (\d+) of 100 points, ([^.]+)\.(?: That is ([^.]+)\.)?/g
+};
+const RANK_LABEL: Record<TemplateLocale, RegExp> = {
+	de: /^(geteilter )?Platz (\d+) von (\d+) (?:Kiezen|Bezirken)$/,
+	en: /^(joint )?rank (\d+) of (\d+) (?:Kieze|districts)$/
+};
+const BOTTOM: Record<TemplateLocale, RegExp> = {
+	de: /^im unteren Viertel der (\d+) (?:Kieze|Bezirke)$/,
+	en: /^in the bottom quarter of the (\d+) (?:Kieze|districts)$/
+};
 const COMPARE: Record<TemplateLocale, { same: string; above: string; below: string }> = {
-	de: { same: 'etwa im', above: 'über dem', below: 'unter dem' },
-	en: { same: 'about the same as', above: 'above', below: 'below' }
+	de: { same: 'etwa so viel wie', above: 'mehr als', below: 'weniger als' },
+	en: { same: 'about the same as', above: 'more than', below: 'less than' }
+};
+const COMPARE_TARGET: Record<TemplateLocale, Record<'bezirk' | 'berlin', string>> = {
+	de: { bezirk: 'Schnitt der Kieze im Bezirk', berlin: 'mittleren Berliner Bezirk' },
+	en: { bezirk: 'average of the Kieze in its district', berlin: 'median Berlin district' }
 };
 
 function scoreKeyBefore(text: string, index: number): string | null {
@@ -313,9 +186,50 @@ function competitionRank(own: number, field: readonly number[]): number {
 	return 1 + field.filter((v) => v > own).length;
 }
 
+/** Gleiche Formel wie `scripts/lib/ranking`: Quartil aus Rang-Position. */
+function quartileOf(rang: number, total: number): number {
+	return Math.min(4, Math.max(1, Math.floor(((rang - 1) / total) * 4) + 1));
+}
+
+function checkRankLabel(
+	label: string,
+	key: string,
+	m: MetricContext,
+	field: readonly number[] | undefined,
+	locale: TemplateLocale
+): FaqFinding[] {
+	const value = m.value ?? 0;
+	const rank = field ? competitionRank(value, field) : (m.rang ?? 0);
+	const total = field ? field.length : m.total;
+	const tied = field ? field.filter((v) => v === value).length > 1 : (m.geteiltMit ?? 0) > 0;
+	const expected = quartileOf(rank, total) === 4 ? 'unteres Viertel' : `Platz ${rank} von ${total}`;
+	const bottom = BOTTOM[locale].exec(label);
+	if (bottom) {
+		return quartileOf(rank, total) === 4 && Number(bottom[1]) === total
+			? []
+			: [{ kind: 'rang', message: `${key}: „${label}“, erwartet ${expected}` }];
+	}
+	const placed = RANK_LABEL[locale].exec(label);
+	const ok =
+		placed !== null &&
+		quartileOf(rank, total) !== 4 &&
+		Number(placed[2]) === rank &&
+		Number(placed[3]) === total &&
+		Boolean(placed[1]) === tied;
+	return ok
+		? []
+		: [
+				{
+					kind: 'rang',
+					message: `${key}: „${label}“, erwartet ${expected}${tied ? ' (geteilt)' : ''}`
+				}
+			];
+}
+
 function checkScores(text: string, subject: FaqCheckSubject, facts: FaqCheckFacts): FaqFinding[] {
 	const out: FaqFinding[] = [];
-	for (const match of text.matchAll(SCORE_VALUE)) {
+	const locale = subject.locale;
+	for (const match of text.matchAll(SCORE_VALUE[locale])) {
 		const key = scoreKeyBefore(text, match.index ?? 0);
 		const m = key ? facts.metrics?.get(key) : undefined;
 		if (!key || !m || m.value === null) {
@@ -331,32 +245,13 @@ function checkScores(text: string, subject: FaqCheckSubject, facts: FaqCheckFact
 				message: `${key}: Text ${match[1]}, Daten ${Math.round(m.value)}`
 			});
 		}
-		const label = match[2];
-		const field = facts.field?.get(key);
-		if (m.quartil === 4) {
-			if (label !== BOTTOM[subject.locale]) {
-				out.push({
-					kind: 'rang',
-					message: `${key}: „${label}“, erwartet „${BOTTOM[subject.locale]}“`
-				});
-			}
-		} else {
-			const rank = RANK_LABEL.exec(label);
-			const expectedRank = field ? competitionRank(m.value, field) : m.rang;
-			const expectedTotal = field ? field.length : m.total;
-			if (!rank || Number(rank[1]) !== expectedRank || Number(rank[2]) !== expectedTotal) {
-				out.push({
-					kind: 'rang',
-					message: `${key}: „${label}“, erwartet Platz ${expectedRank} von ${expectedTotal}`
-				});
-			}
-		}
-		const phrase = match[3] ?? '';
-		if (m.compareValue !== null && phrase) {
+		out.push(...checkRankLabel(match[2], key, m, facts.field?.get(key), locale));
+		const phrase = match[3];
+		if (phrase && m.compareValue !== null) {
 			const delta = m.value - m.compareValue;
-			const c = COMPARE[subject.locale];
+			const c = COMPARE[locale];
 			const expected = Math.abs(delta) < 1 ? c.same : delta > 0 ? c.above : c.below;
-			if (!phrase.startsWith(expected)) {
+			if (!phrase.startsWith(expected) || !phrase.includes(COMPARE_TARGET[locale][m.compareKind])) {
 				out.push({ kind: 'vergleich', message: `${key}: „${phrase}“, erwartet „${expected} …“` });
 			}
 		}
@@ -377,21 +272,21 @@ const BOUND_NUMBERS: readonly BoundNumber[] = [
 	{
 		label: 'Haltedichte',
 		pattern: {
-			de: /([\d.,]+) Halte(?:stellen)? pro Quadratkilometer/g,
-			en: /([\d.,]+) stops per square kilomet/g
+			de: /kommen ([\d.,]+) Haltestellen/g,
+			en: /There are ([\d.,]+) stops per square kilomet/g
 		},
 		value: (a) => a.oepnv.stopsPerKm2?.value
 	},
 	{
 		label: 'PET',
-		pattern: { de: /([\d.,]+) Grad Celsius/g, en: /([\d.,]+) degrees Celsius/g },
+		pattern: { de: /bei ([\d.,]+) Grad/g, en: /averages ([\d.,]+) degrees/g },
 		value: (a) => a.klima.meanPet?.value
 	},
 	{
 		label: 'Grünanlagen',
 		pattern: {
-			de: /([\d.]+) öffentlich gewidmete Grünanlagen/g,
-			en: /([\d,]+) officially designated public green spaces/g
+			de: /zählt im Bezirk ([\d.]+) öffentliche Grünanlagen/g,
+			en: /counts ([\d,]+) public green spaces/g
 		},
 		value: (a) => a.gruen.gruenanlagenCount?.value
 	}
@@ -478,10 +373,22 @@ export function checkFaqAnswer(subject: FaqCheckSubject, facts: FaqCheckFacts): 
 	return [
 		...slots,
 		...checkModes(text, facts.aggregate),
-		...checkGruen(text, subject, facts.aggregate),
-		...checkLaerm(text, subject, facts.aggregate),
-		...checkOepnvClass(text, subject, facts.aggregate),
-		...checkMss(text, subject, facts.aggregate),
+		...checkGruenScale(text, subject.templateId, subject.locale),
+		...checkShares(
+			text,
+			'gruen',
+			subject.locale,
+			facts.aggregate.gruen.versorgungDistribution?.value
+		),
+		...checkShares(
+			text,
+			'laerm',
+			subject.locale,
+			facts.aggregate.laerm.categoryDistribution?.value
+		),
+		...checkOepnvClass(text, subject.locale, facts.aggregate),
+		...checkPetClass(text, subject.locale, facts.aggregate),
+		...checkMss(text, subject.templateId, facts.aggregate),
 		...checkScores(text, subject, facts),
 		...checkBoundNumbers(text, subject, facts.aggregate),
 		...checkNumbers(text, subject, facts)

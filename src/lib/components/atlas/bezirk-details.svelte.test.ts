@@ -126,7 +126,7 @@ describe('BezirkDetails.svelte', () => {
 
 	// i18n Block B4a
 	describe('opts.locale (EN)', () => {
-		it('Verteilungen englisch: Lärm "Medium", Grün gut/schlecht → High/Low, Wohnlage "Good residential area"', async () => {
+		it('Verteilungen englisch: Lärm "Medium", Grün gut/schlecht → Good/Poor, Wohnlage "Good residential area"', async () => {
 			overwriteGetLocale(() => 'en');
 			const stats = {
 				...statsFixtureFull,
@@ -160,7 +160,7 @@ describe('BezirkDetails.svelte', () => {
 				document.querySelector('[data-testid="bezirk-steckbrief"]')?.textContent ?? ''
 			).replace(/\s+/g, ' ');
 			expect(text).toContain('Medium 60%, Low 40%');
-			expect(text).toContain('High 70%, Low 30%');
+			expect(text).toContain('Good 70%, Poor 30%');
 			expect(text).toContain('Good residential area 80%, Medium residential area 20%');
 			expect(text).not.toMatch(/Mittel \d+%|Schlecht \d+%/);
 		});

@@ -42,21 +42,21 @@ describe('getLayerHitDisplay()', () => {
 			expect(d.context).toBe('Mitte');
 		});
 
-		// Story 1.22: gruenversorgung-Skala harmonisiert auf gering/mittel/hoch (statt schlecht/gut).
-		it('gruenversorgung-2023 raw schlecht → chip "gering"', () => {
+		// NAV-108: Grünversorgung in Senats-Wörtern (gut/mittel/schlecht).
+		it('gruenversorgung-2023 raw schlecht → chip "schlecht"', () => {
 			const d = getLayerHitDisplay('gruenversorgung-2023', {
 				kategorie: 'schlecht',
 				plr_name: 'Pankow'
 			});
-			expect(d.chip?.value).toBe('gering');
+			expect(d.chip?.value).toBe('schlecht');
 			expect(d.context).toBe('Pankow');
 		});
-		it('gruenversorgung-2023 raw gut → chip "hoch"', () => {
+		it('gruenversorgung-2023 raw gut → chip "gut"', () => {
 			const d = getLayerHitDisplay('gruenversorgung-2023', {
 				kategorie: 'gut',
 				plr_name: 'Wilmersdorf'
 			});
-			expect(d.chip?.value).toBe('hoch');
+			expect(d.chip?.value).toBe('gut');
 		});
 		it('gruenversorgung-2023 raw mittel → chip "mittel" (unverändert)', () => {
 			const d = getLayerHitDisplay('gruenversorgung-2023', { kategorie: 'mittel' });

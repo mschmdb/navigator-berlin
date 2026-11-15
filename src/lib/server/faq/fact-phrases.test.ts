@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { gruenEinstufung, gruenVerteilung, oepnvModiSatz } from './fact-phrases.js';
+import { klimaSatz, oepnvModiSatz, oepnvUrteil, rangLage, vergleich } from './fact-phrases.js';
 
 const counts = (u: number | null, s: number | null, t: number | null, b: number | null) => ({
 	uBahnCount: u,
@@ -9,67 +9,97 @@ const counts = (u: number | null, s: number | null, t: number | null, b: number 
 });
 
 describe('oepnvModiSatz', () => {
-	it('nennt vorhandene Verkehrsmittel mit Zahl und verneint fehlende', () => {
-		expect(oepnvModiSatz(counts(2, 0, 0, 32), 'de')).toBe(
-			'Der Datensatz zählt hier 2 U-Bahnhöfe und 32 Bushaltestellen. Es gibt keinen S-Bahnhof und keine Tramhaltestelle.'
+	it('nennt vorhandene Verkehrsmittel und verneint fehlende (Reuterstraße)', () => {
+		expect(oepnvModiSatz(counts(2, 0, 0, 32), 'kiez', 'de')).toBe(
+			'Im Kiez liegen 2 U-Bahnhöfe und 32 Bushaltestellen, aber kein S-Bahnhof und keine Tramhaltestelle.'
 		);
-		expect(oepnvModiSatz(counts(2, 0, 0, 32), 'en')).toBe(
-			'The dataset counts 2 U-Bahn stations and 32 bus stops here. There is no S-Bahn station and no tram stop.'
-		);
-	});
-
-	it('nutzt Einzahl und Listen mit drei Einträgen', () => {
-		expect(oepnvModiSatz(counts(1, 1, 3, 1), 'de')).toBe(
-			'Der Datensatz zählt hier 1 U-Bahnhof, 1 S-Bahnhof, 3 Tramhaltestellen und 1 Bushaltestelle.'
-		);
-		expect(oepnvModiSatz(counts(1, 1, 3, 1), 'en')).toBe(
-			'The dataset counts 1 U-Bahn station, 1 S-Bahn station, 3 tram stops and 1 bus stop here.'
+		expect(oepnvModiSatz(counts(2, 0, 0, 32), 'kiez', 'en')).toBe(
+			'The Kiez has 2 U-Bahn stations and 32 bus stops, but no S-Bahn station and no tram stop.'
 		);
 	});
 
-	it('formatiert große Zahlen nach Locale', () => {
-		expect(oepnvModiSatz(counts(0, 0, 0, 1234), 'de')).toContain('1.234 Bushaltestellen');
-		expect(oepnvModiSatz(counts(0, 0, 0, 1234), 'en')).toContain('1,234 bus stops');
+	it('Kiez ohne Bahnhof, nur Bus, Einzahl', () => {
+		expect(oepnvModiSatz(counts(0, 0, 0, 1), 'kiez', 'de')).toBe(
+			'Im Kiez liegt eine Bushaltestelle, aber kein U-Bahnhof, kein S-Bahnhof und keine Tramhaltestelle.'
+		);
 	});
 
-	it('liefert einen leeren Text ohne Zähldaten', () => {
-		expect(oepnvModiSatz(counts(null, null, null, null), 'de')).toBe('');
+	it('zwei Bahnhöfe mit Zahlwort (sehr kleiner Kiez)', () => {
+		expect(oepnvModiSatz(counts(1, 1, 0, 0), 'kiez', 'de')).toBe(
+			'Im Kiez liegen ein U-Bahnhof und ein S-Bahnhof, aber keine Tramhaltestelle und keine Bushaltestelle.'
+		);
+		expect(oepnvModiSatz(counts(1, 1, 0, 0), 'kiez', 'en')).toBe(
+			'The Kiez has one U-Bahn station and one S-Bahn station, but no tram stop and no bus stop.'
+		);
 	});
 
-	it('verneint nur bekannte Nullen, wenn Zähldaten fehlen', () => {
-		expect(oepnvModiSatz(counts(0, null, null, null), 'de')).toBe('Es gibt keinen U-Bahnhof.');
-		expect(oepnvModiSatz(counts(0, null, null, null), 'en')).toBe('There is no U-Bahn station.');
+	it('formatiert große Zahlen nach Locale (Bezirk)', () => {
+		expect(oepnvModiSatz(counts(0, 0, 0, 1234), 'bezirk', 'de')).toContain(
+			'Im Bezirk liegen 1.234 Bushaltestellen'
+		);
+		expect(oepnvModiSatz(counts(0, 0, 0, 1234), 'bezirk', 'en')).toContain('1,234 bus stops');
 	});
 
-	it('meldet einen Ort ganz ohne Halte', () => {
-		expect(oepnvModiSatz(counts(0, 0, 0, 0), 'de')).toBe('Der Datensatz zählt hier keine Halte.');
+	it('ohne Zähldaten leer, bei Teil-Nullen nur diese verneinen', () => {
+		expect(oepnvModiSatz(counts(null, null, null, null), 'kiez', 'de')).toBe('');
+		expect(oepnvModiSatz(counts(0, null, null, null), 'kiez', 'de')).toBe(
+			'Im Kiez liegt kein U-Bahnhof.'
+		);
+		expect(oepnvModiSatz(counts(0, null, null, null), 'kiez', 'en')).toBe(
+			'The Kiez has no U-Bahn station.'
+		);
+	});
+
+	it('ganz ohne Halte', () => {
+		expect(oepnvModiSatz(counts(0, 0, 0, 0), 'kiez', 'de')).toBe(
+			'Im Kiez liegt keine Haltestelle.'
+		);
 	});
 });
 
-describe('gruenEinstufung / gruenVerteilung', () => {
-	it('überwiegend bei Mehrheit, Anteile absteigend', () => {
-		const dist = { mittel: 0.2, schlecht: 0.8 };
-		expect(gruenEinstufung(dist, 'de')).toBe('überwiegend als „schlecht“');
-		expect(gruenVerteilung(dist, 'de')).toBe('„schlecht“ 80 %, „mittel“ 20 %');
-		expect(gruenEinstufung(dist, 'en')).toBe('mostly as “poor”');
-		expect(gruenVerteilung(dist, 'en')).toBe('“poor” 80%, “medium” 20%');
+describe('oepnvUrteil / klimaSatz', () => {
+	it('Urteil folgt den Dichte-Schwellen', () => {
+		expect(oepnvUrteil(23.9, 'de')).toMatch(/sehr dicht/);
+		expect(oepnvUrteil(11.9, 'de')).toMatch(/mittel dicht/);
+		expect(oepnvUrteil(2, 'en')).toMatch(/sparse/);
 	});
 
-	it('durchgehend bei 100 %', () => {
-		expect(gruenEinstufung({ gut: 1 }, 'de')).toBe('durchgehend als „gut“');
-		expect(gruenEinstufung({ gut: 1 }, 'en')).toBe('throughout as “good”');
-	});
-
-	it('am häufigsten ohne Mehrheit, beide Klassen bei Gleichstand', () => {
-		expect(gruenEinstufung({ gut: 0.4, mittel: 0.3, schlecht: 0.3 }, 'de')).toBe(
-			'am häufigsten als „gut“'
+	it('gefühlte Temperatur mit Urteil zuerst', () => {
+		expect(klimaSatz(35.3, 'de')).toBe(
+			'An heißen Tagen wird es hier warm, aber nicht extrem: Die gefühlte Temperatur liegt im Schnitt bei 35,3 Grad.'
 		);
-		expect(gruenEinstufung({ gut: 0.5, schlecht: 0.5 }, 'de')).toBe(
-			'je zur Hälfte als „gut“ und „schlecht“'
+		expect(klimaSatz(34.2, 'en')).toBe(
+			'On hot days it stays comparatively bearable here: the perceived temperature averages 34.2 degrees.'
 		);
 	});
+});
 
-	it('unbekannte Rohwerte bleiben, wie sie sind', () => {
-		expect(gruenVerteilung({ 'sehr gut': 1 }, 'en')).toBe('“sehr gut” 100%');
+describe('rangLage / vergleich', () => {
+	it('Platz, geteilter Platz, unteres Viertel', () => {
+		expect(rangLage({ rang: 55, quartil: 2, total: 143 }, 'kiez', 'de')).toBe(
+			'Platz 55 von 143 Kiezen'
+		);
+		expect(rangLage({ rang: 7, quartil: 1, total: 143, geteiltMit: 2 }, 'kiez', 'de')).toBe(
+			'geteilter Platz 7 von 143 Kiezen'
+		);
+		expect(rangLage({ rang: 7, quartil: 1, total: 143, geteiltMit: 2 }, 'kiez', 'en')).toBe(
+			'joint rank 7 of 143 Kieze'
+		);
+		expect(rangLage({ rang: 140, quartil: 4, total: 143 }, 'kiez', 'de')).toBe(
+			'im unteren Viertel der 143 Kieze'
+		);
+		expect(rangLage({ rang: 9, quartil: 3, total: 12 }, 'bezirk', 'de')).toBe(
+			'Platz 9 von 12 Bezirken'
+		);
+		expect(rangLage({ rang: null, quartil: null, total: 143 }, 'kiez', 'de')).toBeNull();
+	});
+
+	it('Vergleich mit Ein-Punkt-Toleranz', () => {
+		expect(vergleich(30, 25, 'bezirk', 'de')).toBe('mehr als im Schnitt der Kieze im Bezirk');
+		expect(vergleich(22, 22.3, 'berlin', 'de')).toBe(
+			'etwa so viel wie beim mittleren Berliner Bezirk'
+		);
+		expect(vergleich(10, 20, 'berlin', 'en')).toBe('less than the median Berlin district');
+		expect(vergleich(null, 20, 'berlin', 'en')).toBeNull();
 	});
 });

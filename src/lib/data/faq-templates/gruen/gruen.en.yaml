@@ -5,56 +5,53 @@ templates:
     topic: gruen
     applicableTo: [bezirk]
     requires: [gruen.versorgungDistribution]
-    question: 'What is the green space provision in the Bezirk {name}?'
+    question: 'How well is the {name} district supplied with green space?'
     answer: >-
-      The Senate rates green space provision near homes in the Bezirk {name}
-      {gruenEinstufung}. Shares of planning areas: {gruenVerteilung}. The classes
-      describe how much public green space per person lies near homes.
-      The Green & heat score is a separate measure: {name} scores {gruenHitzeScore}
-      out of 100 ({gruenHitzeRang}), {gruenHitzeVergleich}. The score combines green
-      space provision and heat exposure. A higher value means greener and cooler.
-      Source: {gruenSource}, as of {gruenStand}.
+      {gruenSatz} The Senate measures how much public green space per person lies near
+      homes. The navigator.berlin Green & heat score is a different measure{gruenHitzeAktiv}.
+      It combines green space and heat{gruenHitzeAktiv}. There the district gets
+      {gruenHitzeScore} of 100 points, {gruenHitzeLage}. That is {gruenHitzeVergleich}. Source: {gruenSource}, as of
+      {gruenStand}.
 
   - id: gruen-versorgung-kiez
     topic: gruen
     applicableTo: [kiez]
     requires: [gruen.versorgungDistribution]
-    question: 'What is the green space provision in the Kiez {name}?'
+    question: 'How well is the Kiez {name} supplied with green space?'
     answer: >-
-      The Senate rates green space provision near homes in the Kiez {name}
-      {gruenEinstufung}. Shares of planning areas: {gruenVerteilung}. The classes
-      describe how much public green space per person lies near homes.
-      The Green & heat score is a separate measure: {name} scores {gruenHitzeScore}
-      out of 100 ({gruenHitzeRang}), {gruenHitzeVergleich}. The score combines green
-      space provision and heat exposure. A higher value means greener and cooler.
-      Source: {gruenSource}, as of {gruenStand}.
+      {gruenSatz} The Senate measures how much public green space per person lies near
+      homes. The navigator.berlin Green & heat score is a different measure{gruenHitzeAktiv}.
+      It combines green space and heat{gruenHitzeAktiv}. There the Kiez gets
+      {gruenHitzeScore} of 100 points, {gruenHitzeLage}. That is {gruenHitzeVergleich}. Source: {gruenSource}, as of
+      {gruenStand}.
 
   - id: gruen-anzahl-anlagen
     topic: gruen-anlagen
     applicableTo: [bezirk]
     requires: [gruen.gruenanlagenCount]
-    question: 'How many public green spaces are there in {name}?'
+    question: 'How many public green spaces are there in the {name} district?'
     answer: >-
-      The Bezirk {name} has {gruenanlagenCount} officially designated public green spaces,
-      according to the current register of the Senate Department. Private gardens and
-      cultivated allotment gardens do not count in this category.
+      The Senate counts {gruenanlagenCount} public green spaces in the district. Private
+      gardens and allotments are not included. Source: {gruenanlagenSource}, as of
+      {gruenanlagenStand}.
 
   - id: gruen-was-bedeutet-versorgung
     applicableTo: [layer]
     requires: []
-    question: 'What does green space provision near homes mean?'
+    question: 'How does the Senate measure green space provision?'
     answer: >-
-      For each planning area, the Senate Department calculates how many square metres of
-      green space near homes are available per resident within the catchment area. The
-      benchmark is 6 square metres per person. Depending on how far a planning area
-      reaches this value, the Senate rates its provision as “good”, “medium” or “poor”.
+      For each planning area, the Senate works out how much public green space per
+      person lies near homes. The benchmark is 6 square metres per person. Depending on
+      how far an area reaches this value, it counts as well, moderately or poorly served.
+      Planning areas are the smallest units of Berlin's urban planning; every Kiez
+      consists of several. In the answers about Kieze and districts they are called
+      subareas.
 
   - id: gruen-rolle-hitze
     applicableTo: [layer]
     requires: []
-    question: 'What role do green spaces play in heat mitigation?'
+    question: 'How do green spaces cool the city?'
     answer: >-
-      Trees and larger green spaces lower the air temperature through shading and
-      evaporation. Urban climate analyses show that densely built neighbourhoods with
-      little vegetation stay measurably warmer on summer days than areas with comparable
-      buildings and more greenery. The climate category on this map reflects that.
+      Trees and larger green spaces cool through shade and evaporation. Densely built
+      neighbourhoods with little greenery stay measurably warmer on summer days than
+      similar neighbourhoods with more green. Urban climate analyses show this.

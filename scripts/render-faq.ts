@@ -22,14 +22,13 @@ import 'dotenv/config';
 import { sql } from 'drizzle-orm';
 import { getDb, closeDb } from '../src/lib/server/db/index.js';
 import { faqQna } from '../src/lib/server/db/schema/index.js';
-import { computeFaqPositions, faqPositionKey } from '../src/lib/server/faq/faq-positions.js';
 import { loadAllFaqTemplates } from '../src/lib/server/faq/load-templates.js';
-import { templateAppliesToTarget } from '../src/lib/server/faq/layer-faq-clusters.js';
-import { renderTemplate, type TemplateContext } from '../src/lib/server/faq/template-renderer.js';
-import type {
-	ClusterKey,
-	PageType,
-	TemplateLocale
+import { renderPlaceFaq } from '../src/lib/server/faq/place-faq.js';
+import {
+	TEMPLATE_LOCALES,
+	type ClusterKey,
+	type PageType,
+	type TemplateLocale
 } from '../src/lib/server/faq/template-schema.js';
 import { checkFaqAnswer } from '../src/lib/server/faq/faq-fact-check.js';
 import { loadAllTargets, scoreField, type RenderTarget } from './lib/faq/targets.js';
@@ -48,37 +47,19 @@ interface RenderedRow {
 
 async function renderAll(targets: readonly RenderTarget[]): Promise<RenderedRow[]> {
 	const loaded = await loadAllFaqTemplates();
-	const positions = computeFaqPositions(loaded);
 	const out: RenderedRow[] = [];
 	for (const target of targets) {
-		for (const { cluster, locale, file } of loaded) {
-			if (!templateAppliesToTarget(target, cluster)) continue;
-			for (const template of file.templates) {
-				const context: TemplateContext = {
-					pageType: target.pageType,
-					slug: target.slug,
-					name: target.localizedName?.[locale] ?? target.name,
-					locale,
-					aggregate: target.aggregate,
-					metrics: target.metrics
-				};
-				const rendered = renderTemplate(template, context);
-				if (!rendered) continue;
-				const sortOrder = positions.get(faqPositionKey(cluster, template.id));
-				if (sortOrder === undefined) {
-					throw new Error(`Keine FAQ-Position für Template ${cluster}/${template.id}`);
-				}
-				out.push({
-					pageType: target.pageType,
-					slug: target.slug,
-					cluster,
-					locale,
-					templateId: template.id,
-					question: rendered.question,
-					answer: rendered.answer,
-					sortOrder,
-					templateText: template.answer
-				});
+		for (const locale of TEMPLATE_LOCALES) {
+			const items = renderPlaceFaq(loaded, {
+				pageType: target.pageType,
+				slug: target.slug,
+				name: target.localizedName?.[locale] ?? target.name,
+				locale,
+				aggregate: target.aggregate,
+				metrics: target.metrics
+			});
+			for (const item of items) {
+				out.push({ pageType: target.pageType, slug: target.slug, locale, ...item });
 			}
 		}
 	}

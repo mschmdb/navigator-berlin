@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { describePetKategorie, petErklaerungDe, formatPet, formatShareProzent } from './klima.js';
+import { describePetKategorie, formatPet, formatShareProzent } from './klima.js';
 
 describe('describePetKategorie', () => {
 	it('kategorisiert nach DWD-Schwellen (Alt-Verhalten)', () => {
@@ -16,17 +16,6 @@ describe('describePetKategorie', () => {
 		expect(describePetKategorie(38, { locale: 'en' })).toBe('moderate heat stress');
 		expect(describePetKategorie(43, { locale: 'en' })).toBe('heat stress');
 		expect(describePetKategorie(50, { locale: 'en' })).toBe('strong heat stress');
-	});
-});
-
-describe('petErklaerungDe', () => {
-	it('bleibt DE ohne opts (Server-FAQ-Boundary)', () => {
-		expect(petErklaerungDe(30)).toMatch(/gefühlte Temperatur/);
-	});
-	it('liefert EN mit opts.locale', () => {
-		expect(petErklaerungDe(30, { locale: 'en' })).toBe(
-			'On typical summer days, the perceived temperature stays below the stress threshold.'
-		);
 	});
 });
 

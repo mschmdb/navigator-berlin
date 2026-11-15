@@ -248,17 +248,17 @@ describe('formatLayerValue', () => {
 		});
 	});
 
-	// Story 1.22: Grünversorgung-Skala harmonisiert auf gering/mittel/hoch.
-	describe('Grünversorgung Skala-Harmonisierung (Story 1.22)', () => {
-		it('schlecht → "Grünversorgung: gering"', () => {
+	// NAV-108: Grünversorgung in Senats-Wörtern (gut/mittel/schlecht), Story 1.22 entfällt.
+	describe('Grünversorgung in Senats-Wörtern (NAV-108)', () => {
+		it('schlecht bleibt "schlecht"', () => {
 			expect(
 				formatLayerValue('gruenversorgung-2023', { kategorie: 'schlecht', plr_name: 'Pankow' })
-			).toEqual({ text: 'Grünversorgung: gering, Pankow', isNumeric: false, isMissing: false });
+			).toEqual({ text: 'Grünversorgung: schlecht, Pankow', isNumeric: false, isMissing: false });
 		});
-		it('gut → "Grünversorgung: hoch"', () => {
+		it('gut bleibt "gut"', () => {
 			expect(
 				formatLayerValue('gruenversorgung-2023', { kategorie: 'gut', plr_name: 'Wilmersdorf' })
-			).toEqual({ text: 'Grünversorgung: hoch, Wilmersdorf', isNumeric: false, isMissing: false });
+			).toEqual({ text: 'Grünversorgung: gut, Wilmersdorf', isNumeric: false, isMissing: false });
 		});
 		it('mittel → "Grünversorgung: mittel" (unverändert)', () => {
 			expect(formatLayerValue('gruenversorgung-2023', { kategorie: 'mittel' })).toEqual({
@@ -267,12 +267,17 @@ describe('formatLayerValue', () => {
 				isMissing: false
 			});
 		});
-		it('sehr gut → "Grünversorgung: sehr hoch"', () => {
-			expect(formatLayerValue('gruenversorgung-2023', { kategorie: 'sehr gut' })).toEqual({
-				text: 'Grünversorgung: sehr hoch',
+		it('ältere Bezeichnung gering → "schlecht"', () => {
+			expect(formatLayerValue('gruenversorgung-2023', { kategorie: 'gering' })).toEqual({
+				text: 'Grünversorgung: schlecht',
 				isNumeric: false,
 				isMissing: false
 			});
+		});
+		it('EN übersetzt schlecht als poor', () => {
+			expect(
+				formatLayerValue('gruenversorgung-2023', { kategorie: 'schlecht' }, { locale: 'en' }).text
+			).toMatch(/poor/);
 		});
 	});
 

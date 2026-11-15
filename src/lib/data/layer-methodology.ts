@@ -246,7 +246,7 @@ const LAYER_METHODOLOGY_SPECS = {
 	},
 	'gruenversorgung-2023': {
 		calculation:
-			'Pro-Kopf-Versorgung mit öffentlichen Grün- und Freiflächen pro LOR-Planungsraum aus dem Umweltatlas 2023. Drei Kategorien: gering, mittel, hoch.',
+			'Pro-Kopf-Versorgung mit öffentlichen Grün- und Freiflächen pro LOR-Planungsraum aus dem Umweltatlas 2023. Drei Stufen des Senats: gut, mittel, schlecht.',
 		aggregationLevel: 'lor-planungsraum',
 		updateFrequency: 'alle 5 Jahre',
 		authorityKey: 'senatsvw-umwelt',

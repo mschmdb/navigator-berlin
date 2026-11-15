@@ -1,24 +1,25 @@
-// Story 1.22: Skala-Harmonisierung Grünversorgung.
-// Quelle: Umweltatlas 2023 c_gruen2023 nutzt wertende Kategorien (gut/mittel/schlecht).
-// Display-Mapping auf objektive Skala (gering/mittel/hoch), Wert-Richtung erklärt
-// `valueScaleExplain` ("gering = wenig Grün, hoch = gut versorgt").
-// Severity-Inversion läuft separat in `value-severity-mapping.ts`.
+// Grünversorgung in der Skala des Senats (Umweltatlas 2023, c_gruen2023): gut/mittel/schlecht.
+// NAV-108 (15.11.2026): Die neutrale Umbenennung aus Story 1.22 (gering/mittel/hoch) entfällt
+// für diese Kennzahl. Ältere oder fremde Bezeichnungen werden auf die Senats-Wörter gemappt.
+// Severity-Richtung läuft separat in `value-severity-mapping.ts`.
 
-const RAW_TO_HARMONIZED: Record<string, string> = {
-	'sehr schlecht': 'sehr gering',
-	'sehr niedrig': 'sehr gering',
-	schlecht: 'gering',
-	niedrig: 'gering',
+const TO_SENAT: Record<string, string> = {
+	// Der Senat kennt nur drei Stufen; „sehr …“ fällt auf die nächste Stufe, damit jede
+	// Ausgabe eine Übersetzung hat.
+	'sehr gut': 'gut',
+	'sehr hoch': 'gut',
+	gut: 'gut',
+	hoch: 'gut',
 	mittel: 'mittel',
-	gut: 'hoch',
-	'sehr gut': 'sehr hoch',
-	gering: 'gering',
-	'sehr gering': 'sehr gering',
-	hoch: 'hoch',
-	'sehr hoch': 'sehr hoch'
+	schlecht: 'schlecht',
+	gering: 'schlecht',
+	niedrig: 'schlecht',
+	'sehr schlecht': 'schlecht',
+	'sehr gering': 'schlecht',
+	'sehr niedrig': 'schlecht'
 };
 
 export function mapGruenversorgungKategorie(raw: string): string {
 	const key = raw.toLowerCase().trim();
-	return RAW_TO_HARMONIZED[key] ?? raw;
+	return TO_SENAT[key] ?? raw;
 }

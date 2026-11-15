@@ -5,62 +5,55 @@ templates:
     topic: oepnv
     applicableTo: [bezirk]
     requires: [oepnv.stopsPerKm2]
-    question: 'Wie dicht ist das ÖPNV-Netz im Bezirk {name}?'
+    question: 'Wie gut ist der Bezirk {name} mit Bus und Bahn angebunden?'
     answer: >-
-      Im Bezirk {name} liegen {oepnvStopsPerKm2} Haltestellen pro Quadratkilometer.
-      Das Netz gilt damit als {oepnvDichte}. {oepnvErklaerung} {oepnvModi}
-      Im Mobilitäts-Score erreicht {name} {mobilitaetScore} von 100
-      ({mobilitaetRang}), {mobilitaetVergleich}. Der Score bildet die
-      ÖPNV-Anbindung ab; ein höherer Wert heißt besser angebunden.
-      Datengrundlage: {oepnvSource}, Stand {oepnvStand}.
+      {oepnvUrteil} Auf einen Quadratkilometer kommen {oepnvStopsPerKm2} Haltestellen.
+      {oepnvModi} Im Mobilitäts-Score von navigator.berlin kommt der Bezirk auf
+      {mobilitaetScore} von 100 Punkten, {mobilitaetLage}. Das ist {mobilitaetVergleich}.
+      Quelle: {oepnvSource}, Stand {oepnvStand}.
 
   - id: oepnv-dichte-kiez
     topic: oepnv
     applicableTo: [kiez]
     requires: [oepnv.stopsPerKm2]
-    question: 'Wie ist der Kiez {name} an den ÖPNV angebunden?'
+    question: 'Wie gut ist der Kiez {name} mit Bus und Bahn angebunden?'
     answer: >-
-      Im Kiez {name} liegen {oepnvStopsPerKm2} Halte pro Quadratkilometer.
-      {oepnvErklaerung} {oepnvModi}
-      Im Mobilitäts-Score erreicht {name} {mobilitaetScore} von 100
-      ({mobilitaetRang}), {mobilitaetVergleich}. Der Score bildet die
-      ÖPNV-Anbindung ab; ein höherer Wert heißt besser angebunden.
+      {oepnvUrteil} Auf einen Quadratkilometer kommen {oepnvStopsPerKm2} Haltestellen.
+      {oepnvModi} Im Mobilitäts-Score von navigator.berlin kommt der Kiez auf
+      {mobilitaetScore} von 100 Punkten, {mobilitaetLage}. Das ist {mobilitaetVergleich}.
       Quelle: {oepnvSource}, Stand {oepnvStand}.
 
   - id: oepnv-was-bedeutet-dichte
     applicableTo: [layer]
     requires: []
-    question: 'Was sagt die Haltedichte pro Quadratkilometer aus?'
+    question: 'Wie aussagekräftig ist die Haltestellendichte?'
     answer: >-
-      Die Haltedichte ist ein erster grober Indikator für Anbindung. Sie sagt
-      nichts über Taktung, Linienführung oder Barrierefreiheit aus. Eine hohe
-      Dichte korreliert in Berlin häufig mit Innenstadt-Lagen und Verknüpfungs-
-      Knoten, eine niedrige Dichte mit Stadtrand-Bereichen.
+      Sie ist ein grobes Maß dafür, wie viele Haltestellen in der Nähe liegen. Über Takt,
+      Linien und Barrierefreiheit sagt sie nichts. In Berlin ist die Dichte in der
+      Innenstadt und an Umsteigeknoten meist hoch, am Stadtrand niedrig.
 
   - id: oepnv-walk-score-logik
     applicableTo: [layer]
     requires: []
-    question: 'Berücksichtigt der Wert Fußwege oder Barrierefreiheit?'
+    question: 'Zählen Fußwege oder Barrierefreiheit mit?'
     answer: >-
-      Aktuell nicht. Der Wert zählt Haltepunkte innerhalb der Flächengrenzen und
-      teilt sie durch die Fläche. Wir verbessern den Indikator schrittweise um
-      Fußweg-Distanzen und Stationskategorien. Die Methodik-Seite dokumentiert
-      jede Erweiterung.
+      Nein. Der Wert zählt die Haltestellen innerhalb der Gebietsgrenzen und teilt sie
+      durch die Fläche. Wie weit der Fußweg ist und ob eine Station barrierefrei ist,
+      fließt nicht ein.
 
   - id: oepnv-welche-modi
     applicableTo: [layer]
     requires: []
-    question: 'Welche Verkehrsmittel fließen in die Haltedichte ein?'
+    question: 'Welche Verkehrsmittel zählen mit?'
     answer: >-
-      Wir zählen U-Bahn-, S-Bahn-, Tram- und Bus-Haltestellen der BVG und der
-      S-Bahn Berlin GmbH zusammen. Regional-Bahn-Stationen werden zusätzlich
-      ausgewiesen, weil sie für Pendelverkehr relevant sind.
+      U-Bahnhöfe, S-Bahnhöfe, Tram- und Bushaltestellen, alle zusammen. Regionalbahnhöfe
+      zählen nicht extra.
 
   - id: oepnv-warum-nicht-fahrplandaten
     applicableTo: [layer]
     requires: []
-    question: 'Warum zeigt navigator.berlin keine Live-Fahrplan-Daten?'
+    question: 'Warum zeigt navigator.berlin keine Live-Fahrpläne?'
     answer: >-
-      Live-Daten erfordern Server-Caching, Lizenz-Kosten und stehen oft nur
-      kurzfristig zur Verfügung. Wir setzen bewusst auf statische Aggregate aus
-      offenen Datensätzen, die wir prüfen und versionieren können.
+      Wir arbeiten mit festen Datenständen aus offenen Quellen, die wir prüfen und
+      versionieren können. Live-Fahrpläne bräuchten einen dauernd laufenden Abruf, und ihre
+      Werte wären nach wenigen Minuten überholt.

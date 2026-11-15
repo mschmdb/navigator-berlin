@@ -5,58 +5,52 @@ templates:
     topic: klima
     applicableTo: [bezirk]
     requires: [klima.meanPet]
-    question: 'Wie heiß wird der Bezirk {name} im Sommer?'
+    question: 'Wie heiß wird es im Bezirk {name} im Sommer?'
     answer: >-
-      Die mittlere Physiologische Äquivalent-Temperatur (PET) im Bezirk {name}
-      liegt bei {klimaPet} Grad Celsius (Klassifikation: {klimaKategorie}).
-      {klimaErklaerung}
-      Quelle: {klimaSource}, Stand {klimaStand}.
+      {klimaSatz} Die gefühlte Temperatur (PET) rechnet Sonne, Wind und Luftfeuchte mit
+      ein. Quelle: {klimaSource}, Stand {klimaStand}.
 
   - id: klima-pet-kiez
     topic: klima
     applicableTo: [kiez]
     requires: [klima.meanPet]
-    question: 'Wie warm wird der Kiez {name} an Hitzetagen?'
+    question: 'Wie heiß wird es im Kiez {name} an Hitzetagen?'
     answer: >-
-      Die mittlere PET im Kiez {name} liegt bei {klimaPet} Grad Celsius.
-      {klimaErklaerung}
-      Quelle: {klimaSource}, Stand {klimaStand}.
+      {klimaSatz} Die gefühlte Temperatur (PET) rechnet Sonne, Wind und Luftfeuchte mit
+      ein. Quelle: {klimaSource}, Stand {klimaStand}.
 
   - id: klima-was-ist-pet
     applicableTo: [layer]
     requires: []
-    question: 'Was ist die Physiologische Äquivalent-Temperatur (PET)?'
+    question: 'Wofür steht PET?'
     answer: >-
-      PET ist ein bioklimatischer Kennwert. Er gibt an, welche Lufttemperatur in
-      einem geschlossenen Raum einer gefühlten Temperatur draußen entsprechen
-      würde. Wind, Luftfeuchte und Strahlung gehen ein. Der Wert eignet sich,
-      um Hitzestress in Stadtgebieten zu vergleichen.
+      Für Physiologisch Äquivalente Temperatur, also die gefühlte Temperatur. Sie gibt an,
+      welcher Lufttemperatur in einem geschlossenen Raum das Wetter draußen entspricht.
+      Wind, Luftfeuchte und Sonnenstrahlung gehen mit ein. So lässt sich Hitzestress
+      zwischen Stadtteilen vergleichen.
 
   - id: klima-was-ist-hitzetag
     applicableTo: [layer]
     requires: []
-    question: 'Was zählt als Hitzetag?'
+    question: 'Ab wann zählt ein Tag als Hitzetag?'
     answer: >-
-      Der Deutsche Wetterdienst zählt einen Tag mit Tageshöchsttemperatur ab
-      30 Grad Celsius als Hitzetag. Die Anzahl der Hitzetage pro Jahr ist in
-      Berlin seit den 1990er Jahren deutlich gestiegen, was in der Klima-
-      Normalperiode 1991-2020 dokumentiert ist.
+      Ab 30 Grad Höchsttemperatur, so zählt es der Deutsche Wetterdienst. Seit den
+      1990er-Jahren ist die Zahl der Hitzetage in Berlin deutlich gestiegen.
 
   - id: klima-normalperiode
     applicableTo: [layer]
     requires: []
-    question: 'Was bedeutet Klima-Normalperiode?'
+    question: 'Wozu dient eine Klima-Normalperiode?'
     answer: >-
-      Eine Klima-Normalperiode ist ein 30-Jahres-Referenzzeitraum, mit dem die
-      Weltorganisation für Meteorologie Wetter-Mittelwerte vergleichbar macht.
-      In Berlin nutzen wir die aktuelle Periode 1991-2020 als Vergleichsbasis.
+      Sie ist ein Zeitraum von 30 Jahren, mit dem die Weltorganisation für Meteorologie
+      Mittelwerte vergleichbar macht. Für Berlin vergleichen wir mit der aktuellen Periode
+      1991 bis 2020.
 
   - id: klima-rolle-versiegelung
     applicableTo: [layer]
     requires: []
-    question: 'Welche Rolle spielt die Versiegelung für das Stadtklima?'
+    question: 'Wie wirkt sich Versiegelung auf das Stadtklima aus?'
     answer: >-
-      Asphalt und Stein speichern Wärme und geben sie nachts wieder ab. Stark
-      versiegelte Quartiere kühlen schlechter aus als Quartiere mit Vegetation
-      oder offenen Wasserflächen. Die Stadtklima-Analyse berücksichtigt
-      Versiegelung als einen Faktor unter mehreren.
+      Asphalt und Stein speichern tagsüber Wärme und geben sie nachts ab. Stark versiegelte
+      Viertel kühlen deshalb schlechter aus als Viertel mit Bäumen, Wiesen oder Wasser. Die
+      Stadtklima-Analyse berücksichtigt Versiegelung als einen von mehreren Faktoren.

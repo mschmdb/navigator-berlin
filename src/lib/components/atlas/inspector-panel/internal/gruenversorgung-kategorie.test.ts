@@ -1,37 +1,25 @@
-// Story 1.22: Skala-Harmonisierung Grünversorgung.
-import { describe, expect, it } from 'vitest';
+import { describe, it, expect } from 'vitest';
 import { mapGruenversorgungKategorie } from './gruenversorgung-kategorie.js';
 
+// NAV-108: Senats-Skala gut/mittel/schlecht, ältere neutrale Bezeichnungen werden zurückgemappt.
 describe('mapGruenversorgungKategorie()', () => {
-	it('schlecht → gering', () => {
-		expect(mapGruenversorgungKategorie('schlecht')).toBe('gering');
-	});
-	it('mittel → mittel', () => {
+	it('Senats-Wörter bleiben', () => {
+		expect(mapGruenversorgungKategorie('gut')).toBe('gut');
 		expect(mapGruenversorgungKategorie('mittel')).toBe('mittel');
+		expect(mapGruenversorgungKategorie('schlecht')).toBe('schlecht');
 	});
-	it('gut → hoch', () => {
-		expect(mapGruenversorgungKategorie('gut')).toBe('hoch');
-	});
-	it('sehr schlecht → sehr gering', () => {
-		expect(mapGruenversorgungKategorie('sehr schlecht')).toBe('sehr gering');
-	});
-	it('sehr gut → sehr hoch', () => {
-		expect(mapGruenversorgungKategorie('sehr gut')).toBe('sehr hoch');
-	});
-	it('already-harmonized gering/hoch passes through', () => {
-		expect(mapGruenversorgungKategorie('gering')).toBe('gering');
-		expect(mapGruenversorgungKategorie('hoch')).toBe('hoch');
-		expect(mapGruenversorgungKategorie('sehr hoch')).toBe('sehr hoch');
-	});
-	it('niedrig → gering (Alias)', () => {
-		expect(mapGruenversorgungKategorie('niedrig')).toBe('gering');
-		expect(mapGruenversorgungKategorie('sehr niedrig')).toBe('sehr gering');
+	it('neutrale Bezeichnungen aus Story 1.22 werden zu Senats-Wörtern', () => {
+		expect(mapGruenversorgungKategorie('hoch')).toBe('gut');
+		expect(mapGruenversorgungKategorie('gering')).toBe('schlecht');
+		expect(mapGruenversorgungKategorie('niedrig')).toBe('schlecht');
+		expect(mapGruenversorgungKategorie('sehr hoch')).toBe('gut');
+		expect(mapGruenversorgungKategorie('sehr gering')).toBe('schlecht');
+		expect(mapGruenversorgungKategorie('sehr gut')).toBe('gut');
 	});
 	it('case-insensitive + trim', () => {
-		expect(mapGruenversorgungKategorie(' GUT ')).toBe('hoch');
-		expect(mapGruenversorgungKategorie('Schlecht')).toBe('gering');
+		expect(mapGruenversorgungKategorie('  Schlecht ')).toBe('schlecht');
 	});
-	it('unknown bleibt unverändert', () => {
+	it('unbekannte Werte bleiben unverändert', () => {
 		expect(mapGruenversorgungKategorie('unbekannt')).toBe('unbekannt');
 	});
 });
