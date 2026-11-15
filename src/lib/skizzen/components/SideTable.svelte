@@ -47,10 +47,6 @@
 	const typicalTitle = $derived(
 		m.skizze_typical_title({ count: regions.length, units: unitPlural })
 	);
-	const tintOf = (r: { hint: HintData | null }) =>
-		compact && r.hint
-			? `rounded-sm px-0.5 ${r.hint.tone === 'good' ? 'bg-[var(--hint-good-bg)]' : 'bg-[var(--hint-bad-bg)]'}`
-			: '';
 	// Ebene aus der Zahl der Orte: 143 Kieze oder 12 Bezirke.
 	const typical = $derived(
 		regions.length > 20 ? m.skizze_side_typical_kiez() : m.skizze_side_typical_bezirk()
@@ -116,10 +112,11 @@
 	);
 	const showUnit = (r: { unit: string }) => r.unit && !sharedUnit;
 	// Kompakt: Beschreibung nur, wenn sie etwas Eigenes sagt (was zu Kulturorten zählt).
-	const showWhat = (r: { key: string; what: string }) =>
-		r.what && (!compact || r.key === 'kulturorte');
-	const whatOf = (r: { key: string; what: string }) =>
-		compact && r.key === 'kulturorte' ? m.skizze_m_kulturorte_short() : r.what;
+	const showWhat = (r: { label: string; what: string }) =>
+		r.what && (!compact || r.what !== r.label);
+	const whatOf = (r: { what: string }) => r.what;
+	// Kompakt: Richtung nur als kurzer Text ohne Farbe, und nur bei Werten mit klarer Richtung.
+	const arrowOf = (h: HintData) => (h.dir === 'higher' ? '↑' : h.dir === 'lower' ? '↓' : '≈');
 	const zeroNotes = $derived(
 		metrics
 			.map((id) => ({ id, z: zeroAwareMedian(regions.map((r) => r.metrics[id])).zerosLeftOut }))
@@ -142,10 +139,14 @@
 >
 	<caption class="mb-2 text-left text-sm font-semibold text-ink">
 		{m.skizze_side_caption()}
-		{#if compact && (hasCounts || sharedUnit)}<span
-				class="block text-dense-label font-normal text-ink-subtle"
-				>{sharedUnit ?? m.skizze_side_count_note()}</span
-			>{/if}
+		{#if compact}
+			{#if sharedUnit || hasCounts}<span class="block text-dense-label font-normal text-ink-subtle"
+					>{sharedUnit ?? m.skizze_side_count_note()}</span
+				>{/if}
+			<span class="block text-dense-label font-normal text-ink-subtle"
+				>{m.skizze_side_typical_line({ typical, count: regions.length, units: unitPlural })}</span
+			>
+		{/if}
 	</caption>
 	<colgroup>
 		<col />
@@ -167,7 +168,7 @@
 					{refHead.name}<span class="block text-dense-label text-ink-subtle">{refHead.sub}</span>
 				</th>
 			{/if}
-			<th scope="col" class="pb-1.5 pl-3 text-right text-sm font-normal text-ink">
+			<th scope="col" class="pr-2 pb-1.5 pl-3 text-right text-sm font-normal text-ink">
 				{#if compact}
 					<abbr title={typicalTitle} class="no-underline">{typical}</abbr>
 				{:else}
@@ -188,10 +189,10 @@
 						>{/if}
 				</th>
 				<td class="py-2 pl-3 text-right align-top">
-					<span class="font-mono text-sm whitespace-nowrap text-accent tabular-nums {tintOf(r)}"
-						>{r.own}</span
-					>
+					<span class="font-mono text-sm whitespace-nowrap text-accent tabular-nums">{r.own}</span>
 					{#if r.hint && !compact}<span class="mt-0.5 block"><Hint hint={r.hint} short /></span
+						>{:else if r.hint}<span class="block text-dense-label text-ink-subtle"
+							><span aria-hidden="true">{arrowOf(r.hint)}</span> {r.hint.short}</span
 						>{/if}
 				</td>
 				{#if refHead}
@@ -200,7 +201,7 @@
 					>
 				{/if}
 				<td
-					class="py-2 pl-3 text-right font-mono text-sm whitespace-nowrap text-ink-muted tabular-nums"
+					class="py-2 pr-2 pl-3 text-right font-mono text-sm whitespace-nowrap text-ink-muted tabular-nums"
 					>{r.berlin}</td
 				>
 			</tr>
@@ -215,6 +216,9 @@
 	{:else if hasCounts}<p class="text-dense-label text-ink-subtle">
 			{m.skizze_side_count_note()}
 		</p>{/if}
+	{#if compact}<p class="text-dense-label text-ink-subtle">
+			{m.skizze_side_typical_line({ typical, count: regions.length, units: unitPlural })}
+		</p>{/if}
 	<ul class="mt-1 flex flex-col">
 		{#each rows as r (r.key)}
 			<li class="border-b border-rule py-1.5">
@@ -224,7 +228,7 @@
 								>, {r.unit}</span
 							>{/if}</span
 					>
-					<span class="font-mono text-sm text-accent tabular-nums {tintOf(r)}">{r.own}</span>
+					<span class="font-mono text-sm text-accent tabular-nums">{r.own}</span>
 				</div>
 				{#if showWhat(r)}<p class="text-dense-label text-ink-subtle">{whatOf(r)}</p>{/if}
 				<p
@@ -232,7 +236,9 @@
 				>
 					{#if refHead}<span>{refHead.name}: {r.ref}</span>{/if}
 					<span>{typical}: {r.berlin}</span>
-					{#if r.hint && !compact}<Hint hint={r.hint} short />{/if}
+					{#if r.hint && !compact}<Hint hint={r.hint} short />{:else if r.hint}<span
+							><span aria-hidden="true">{arrowOf(r.hint)}</span> {r.hint.short}</span
+						>{/if}
 				</p>
 			</li>
 		{/each}

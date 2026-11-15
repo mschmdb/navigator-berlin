@@ -71,7 +71,7 @@
 		refHeadSub = '',
 		kieze = [],
 		onpick,
-		compact = false
+		compact = true
 	}: Props = $props();
 
 	const opts = $derived({ locale: getLocale() });
@@ -260,9 +260,10 @@
 									<StripChart
 										items={items(kieze, id)}
 										domain={domainOf(id)}
-										format={(v) => fmt(id, v)}
+										format={compact ? (v) => formatMetricValue(id, v, opts) : (v) => fmt(id, v)}
 										axisFormat={(v) => formatMetricNumber(id, v, opts)}
-										unit={text.unit}
+										unit={compact ? '' : text.unit}
+										ends={compact ? [m.skizze_axis_less(), m.skizze_axis_more()] : null}
 										ownSlug={null}
 										highlight={new Set([s.min.slug, s.max.slug])}
 										highlightLabel={m.skizze_and({ a: s.min.name, b: s.max.name })}
