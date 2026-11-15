@@ -40,7 +40,9 @@ export const FaqTemplateSchema = v.object({
 	 * #100: Thema der Frage. Kiez- und Bezirks-Templates tragen eins; pro
 	 * Seitentyp und Sprache darf ein Thema nur einmal vorkommen.
 	 */
-	topic: v.optional(v.string())
+	topic: v.optional(v.string()),
+	/** NAV-108: Score-Dimensionen, ohne die die Antwort nichts sagt (z. B. `wohnschutz`). */
+	requiresScore: v.optional(v.array(v.string()))
 });
 export type FaqTemplate = v.InferOutput<typeof FaqTemplateSchema>;
 

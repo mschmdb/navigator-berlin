@@ -10,18 +10,23 @@ import type {
 	OepnvAggregat,
 	WohnenAggregat
 } from '$lib/server/db/schema/aggregate-types.js';
-import { describeLaermCategoryDe, laermErklaerungDe } from '$lib/data/faq-helpers/laerm.js';
-import { describeGruenversorgungDe, gruenErklaerungDe } from '$lib/data/faq-helpers/gruen.js';
-import {
-	describeOepnvDichte,
-	formatStopsPerKm2,
-	oepnvErklaerungDe
-} from '$lib/data/faq-helpers/oepnv.js';
+import { describeLaermCategoryDe } from '$lib/data/faq-helpers/laerm.js';
+import { formatStopsPerKm2 } from '$lib/data/faq-helpers/oepnv.js';
 import { describeWohnlageDe, mssBeschreibungDe } from '$lib/data/faq-helpers/wohnen.js';
-import { describePetKategorie, formatPet, petErklaerungDe } from '$lib/data/faq-helpers/klima.js';
-import { formatRank } from '$lib/data/rank-format.js';
 import { sourceLabel } from '$lib/data/source-label.js';
-import { gruenEinstufung, gruenVerteilung, oepnvModiSatz } from './fact-phrases.js';
+import {
+	REGION_WORDS,
+	klimaSatz,
+	oepnvModiSatz,
+	oepnvUrteil,
+	rangLage,
+	vergleich,
+	type CompareKind,
+	type Region
+} from './fact-phrases.js';
+import { gruenSatz, laermSatz } from './share-phrases.js';
+
+export type { CompareKind } from './fact-phrases.js';
 
 /**
  * Story 2.5b T3: Pure-Function-Slot-Renderer.
@@ -52,8 +57,6 @@ export interface TemplateAggregate {
  * `compareKind` benennt den Vergleichswert, das Label folgt der Template-Locale.
  * Optional, da Layer-Seiten kein Rang.
  */
-export type CompareKind = 'bezirk' | 'berlin';
-
 export interface MetricContext {
 	readonly value: number | null;
 	readonly rang: number | null;
@@ -61,6 +64,8 @@ export interface MetricContext {
 	readonly total: number;
 	readonly compareValue: number | null;
 	readonly compareKind: CompareKind;
+	/** Wie viele andere Gebiete denselben Wettkampf-Rang haben (NAV-108). */
+	readonly geteiltMit?: number;
 }
 
 export interface TemplateContext {
@@ -73,50 +78,7 @@ export interface TemplateContext {
 	readonly metrics?: ReadonlyMap<string, MetricContext>;
 }
 
-/** Neutrale, nicht-wertende Richtungsphrase für den Vergleich (Story 11.3). */
-const COMPARE_PHRASES: Record<
-	TemplateLocale,
-	{
-		readonly same: string;
-		readonly above: string;
-		readonly below: string;
-		readonly label: Record<CompareKind, string>;
-	}
-> = {
-	de: {
-		same: 'etwa im',
-		above: 'über dem',
-		below: 'unter dem',
-		label: { bezirk: 'Bezirksschnitt', berlin: 'Berlin-Median' }
-	},
-	en: {
-		same: 'about the same as',
-		above: 'above',
-		below: 'below',
-		label: { bezirk: 'the district average', berlin: 'the Berlin median' }
-	}
-};
-
 const NUMBER_LOCALE: Record<TemplateLocale, string> = { de: 'de-DE', en: 'en-GB' };
-
-/** Der Rang steht mitten im Satz: EN-Label „Rank 12 of 143“ wird zu „rank 12 of 143“. */
-function rankInSentence(label: string, locale: TemplateLocale): string {
-	return locale === 'en' ? label.replace(/^Rank /, 'rank ') : label;
-}
-
-function compareSentence(
-	value: number | null,
-	compareValue: number | null,
-	kind: CompareKind,
-	locale: TemplateLocale
-): string | null {
-	if (value === null || compareValue === null) return null;
-	const phrases = COMPARE_PHRASES[locale];
-	const delta = value - compareValue;
-	const direction = Math.abs(delta) < 1 ? phrases.same : delta > 0 ? phrases.above : phrases.below;
-	const label = phrases.label[kind];
-	return `${direction} ${label}`;
-}
 
 export interface RenderedFaq {
 	readonly question: string;
@@ -163,82 +125,89 @@ export function formatSourceStand(iso: string, locale: TemplateLocale = 'de'): s
 	return date.toLocaleDateString(NUMBER_LOCALE[locale], { month: 'long', year: 'numeric' });
 }
 
+export const SCORE_DIMS = [
+	'ruheLuft',
+	'gruenHitze',
+	'mobilitaet',
+	'versorgung',
+	'wohnschutz'
+] as const;
+
 /**
  * Sammelt alle Slot-Substitutionen für ein Template. Pure Function: alle
- * Slots werden deterministisch aus dem Context abgeleitet.
+ * Slots folgen deterministisch aus dem Context.
  *
- * Slot-Namen (DE-Phase-1):
- * - `{name}`, `{slug}`
- * - Lärm: `{laermKategorie}`, `{laermErklaerung}`, `{laermSource}`, `{laermStand}`
- * - Grün: `{gruenKategorie}`, `{gruenErklaerung}`, `{gruenanlagenCount}`,
- *   `{spielplaetzeCount}`, `{gruenEinstufung}`, `{gruenVerteilung}` (Senats-Klassen
- *   mit Anteil), `{gruenSource}`, `{gruenStand}`
- * - ÖPNV: `{oepnvStopsPerKm2}`, `{oepnvDichte}`, `{oepnvErklaerung}`,
- *   `{oepnvModi}` (Verkehrsmittel aus den Zähldaten), `{oepnvSource}`, `{oepnvStand}`
- * - Wohnen: `{wohnenWohnlage}`, `{wohnenMssBeschreibung}`, `{wohnenSource}`,
- *   `{wohnenStand}`
- * - Klima: `{klimaPet}`, `{klimaKategorie}`, `{klimaErklaerung}`,
- *   `{klimaSource}`, `{klimaStand}`
+ * Slots (NAV-108, menschliche Fassung):
+ * - Ort: `{name}`, `{ortDer}`/`{OrtDer}` („der Kiez“), `{ortIm}`/`{OrtIm}` („im Kiez“)
+ * - Lärm: `{laermSatz}` (Urteil + Verteilung), `{laermKategorie}`, `{laermSource}`, `{laermStand}`
+ * - Grün: `{gruenSatz}` (Senats-Urteil + Verteilung), `{gruenanlagenCount}`,
+ *   `{gruenSource}`, `{gruenStand}`
+ * - ÖPNV: `{oepnvUrteil}`, `{oepnvStopsPerKm2}`, `{oepnvModi}`, `{oepnvSource}`, `{oepnvStand}`
+ * - Wohnen: `{wohnenWohnlage}`, `{wohnenMssBeschreibung}`, `{wohnenSource}`, `{wohnenStand}`
+ * - Klima: `{klimaSatz}`, `{klimaSource}`, `{klimaStand}`
+ * - Scores: `{<dim>Score}`, `{<dim>Lage}` („Platz 55 von 143 Kiezen“), `{<dim>Vergleich}`,
+ *   `{<dim>Aktiv}` (leer; markiert Erklärsätze, die nur mit Score Sinn ergeben)
  */
 function buildSlotMap(ctx: TemplateContext): Record<string, string> {
 	const locale = ctx.locale;
 	const opts = { locale };
+	const region: Region = ctx.pageType === 'bezirk' ? 'bezirk' : 'kiez';
+	const words = REGION_WORDS[locale][region];
+	const cap = (t: string) => t[0].toUpperCase() + t.slice(1);
 	const stand = (iso: string) => formatSourceStand(iso, locale);
 	const slots: Record<string, string> = {
 		name: ctx.name,
-		slug: ctx.slug
+		slug: ctx.slug,
+		ortDer: words.der,
+		OrtDer: cap(words.der),
+		ortIm: words.im,
+		OrtIm: cap(words.im)
 	};
 
-	const laerm = ctx.aggregate.laerm.dominantCategory;
-	if (laerm) {
-		const raw = typeof laerm.value === 'string' ? laerm.value : null;
+	const laerm = ctx.aggregate.laerm;
+	if (laerm.dominantCategory) {
+		const raw =
+			typeof laerm.dominantCategory.value === 'string' ? laerm.dominantCategory.value : null;
 		slots.laermKategorie = describeLaermCategoryDe(raw, opts);
-		slots.laermErklaerung = laermErklaerungDe(raw, opts);
-		slots.laermSource = sourceLabel(laerm.layer, opts);
-		slots.laermStand = stand(laerm.sourceUpdatedAt);
+		slots.laermSource = sourceLabel(laerm.dominantCategory.layer, opts);
+		slots.laermStand = stand(laerm.dominantCategory.sourceUpdatedAt);
+	}
+	const laermDist = laerm.categoryDistribution?.value;
+	if (laermDist && Object.keys(laermDist).length > 0) {
+		slots.laermSatz = laermSatz(laermDist, region, locale);
 	}
 
 	const gruen = ctx.aggregate.gruen;
-	if (gruen.dominantVersorgung) {
-		const raw =
-			typeof gruen.dominantVersorgung.value === 'string' ? gruen.dominantVersorgung.value : null;
-		slots.gruenKategorie = describeGruenversorgungDe(raw, opts);
-		slots.gruenErklaerung = gruenErklaerungDe(raw, opts);
-		slots.gruenSource = sourceLabel(gruen.dominantVersorgung.layer, opts);
-		slots.gruenStand = stand(gruen.dominantVersorgung.sourceUpdatedAt);
-	}
-	// NAV-108: Senats-Klassen wörtlich und mit Anteil der Planungsräume.
-	const versorgung = gruen.versorgungDistribution?.value;
-	if (versorgung && Object.keys(versorgung).length > 0) {
-		slots.gruenEinstufung = gruenEinstufung(versorgung, locale);
-		slots.gruenVerteilung = gruenVerteilung(versorgung, locale);
+	const versorgung = gruen.versorgungDistribution;
+	if (versorgung && Object.keys(versorgung.value).length > 0) {
+		slots.gruenSatz = gruenSatz(versorgung.value, region, locale);
+		slots.gruenSource = sourceLabel(versorgung.layer, opts);
+		slots.gruenStand = stand(versorgung.sourceUpdatedAt);
 	}
 	if (gruen.gruenanlagenCount && typeof gruen.gruenanlagenCount.value === 'number') {
 		slots.gruenanlagenCount = gruen.gruenanlagenCount.value.toLocaleString(NUMBER_LOCALE[locale]);
-	}
-	if (gruen.spielplaetzeCount && typeof gruen.spielplaetzeCount.value === 'number') {
-		slots.spielplaetzeCount = gruen.spielplaetzeCount.value.toLocaleString(NUMBER_LOCALE[locale]);
+		slots.gruenanlagenSource = sourceLabel(gruen.gruenanlagenCount.layer, opts);
+		slots.gruenanlagenStand = stand(gruen.gruenanlagenCount.sourceUpdatedAt);
 	}
 
-	const oepnv = ctx.aggregate.oepnv.stopsPerKm2;
-	if (oepnv && typeof oepnv.value === 'number') {
-		slots.oepnvStopsPerKm2 = formatStopsPerKm2(oepnv.value, opts);
-		slots.oepnvDichte = describeOepnvDichte(oepnv.value, opts);
-		slots.oepnvErklaerung = oepnvErklaerungDe(oepnv.value, opts);
-		slots.oepnvSource = sourceLabel(oepnv.layer, opts);
-		slots.oepnvStand = stand(oepnv.sourceUpdatedAt);
+	const oepnv = ctx.aggregate.oepnv;
+	if (oepnv.stopsPerKm2 && typeof oepnv.stopsPerKm2.value === 'number') {
+		slots.oepnvStopsPerKm2 = formatStopsPerKm2(oepnv.stopsPerKm2.value, opts);
+		slots.oepnvUrteil = oepnvUrteil(oepnv.stopsPerKm2.value, locale);
+		slots.oepnvSource = sourceLabel(oepnv.stopsPerKm2.layer, opts);
+		slots.oepnvStand = stand(oepnv.stopsPerKm2.sourceUpdatedAt);
 	}
 	// NAV-108: Verkehrsmittel nur aus den Zähldaten, nie aus festen Sätzen.
-	const o = ctx.aggregate.oepnv;
 	const count = (entry: AggregateValue<number> | null | undefined) =>
 		entry && typeof entry.value === 'number' ? entry.value : null;
 	slots.oepnvModi = oepnvModiSatz(
 		{
-			uBahnCount: count(o.uBahnCount),
-			sBahnCount: count(o.sBahnCount),
-			tramCount: count(o.tramCount),
-			busCount: count(o.busCount)
+			uBahnCount: count(oepnv.uBahnCount),
+			sBahnCount: count(oepnv.sBahnCount),
+			tramCount: count(oepnv.tramCount),
+			busCount: count(oepnv.busCount)
 		},
+		region,
 		locale
 	);
 
@@ -253,34 +222,35 @@ function buildSlotMap(ctx: TemplateContext): Record<string, string> {
 	if (wohnen.dominantMss) {
 		const raw = typeof wohnen.dominantMss.value === 'string' ? wohnen.dominantMss.value : null;
 		slots.wohnenMssBeschreibung = mssBeschreibungDe(raw, opts);
+		slots.wohnenMssSource = sourceLabel(wohnen.dominantMss.layer, opts);
+		slots.wohnenMssStand = stand(wohnen.dominantMss.sourceUpdatedAt);
 	}
 
-	const klima = ctx.aggregate.klima.meanPet;
-	if (klima && typeof klima.value === 'number') {
-		slots.klimaPet = formatPet(klima.value, opts);
-		slots.klimaKategorie = describePetKategorie(klima.value, opts);
-		slots.klimaErklaerung = petErklaerungDe(klima.value, opts);
-		slots.klimaSource = sourceLabel(klima.layer, opts);
-		slots.klimaStand = stand(klima.sourceUpdatedAt);
+	const pet = ctx.aggregate.klima.meanPet;
+	if (pet && typeof pet.value === 'number') {
+		slots.klimaSatz = klimaSatz(pet.value, locale);
+		slots.klimaSource = sourceLabel(pet.layer, opts);
+		slots.klimaStand = stand(pet.sourceUpdatedAt);
 	}
 
-	// Story 11.3: Rang + Vergleich je Score-Dimension. Slots `<dim>Score`,
-	// `<dim>Rang`, `<dim>Vergleich` (z. B. `gruenHitzeRang`).
-	if (ctx.metrics) {
-		for (const [key, m] of ctx.metrics) {
-			if (m.value !== null) slots[`${key}Score`] = Math.round(m.value).toString();
-			slots[`${key}Rang`] = rankInSentence(formatRank(m.rang, m.quartil, m.total, opts), locale);
-			const vergleich = compareSentence(m.value, m.compareValue, m.compareKind, locale);
-			if (vergleich) slots[`${key}Vergleich`] = vergleich;
-		}
+	// Scores: ein Satz nur, wenn Punkte und Rang vorliegen; sonst fällt alles zur Dimension weg.
+	for (const [key, m] of ctx.metrics ?? []) {
+		const lage = rangLage(m, region, locale);
+		if (m.value === null || lage === null) continue;
+		slots[`${key}Score`] = Math.round(m.value).toString();
+		slots[`${key}Lage`] = lage;
+		// Leerer Marker: Erklärsätze zum Score tragen ihn und fallen ohne Score mit weg.
+		slots[`${key}Aktiv`] = '';
+		const v = vergleich(m.value, m.compareValue, m.compareKind, locale);
+		if (v) slots[`${key}Vergleich`] = v;
 	}
 
 	return slots;
 }
 
 /**
- * Substituiert `{slot}`-Platzhalter im Text. Unbekannte Slots werden NICHT
- * ersetzt (graceful, statt zu werfen).
+ * Substituiert `{slot}`-Platzhalter im Text. Unbekannte Slots bleiben stehen;
+ * die Faktenprüfung meldet sie.
  */
 function substitute(text: string, slots: Record<string, string>): string {
 	return text.replace(/\{([a-zA-Z][a-zA-Z0-9]*)\}/g, (match, key: string) => {
@@ -289,22 +259,30 @@ function substitute(text: string, slots: Record<string, string>): string {
 	});
 }
 
-const SCORE_SLOT = /\{((?:ruheLuft|gruenHitze|mobilitaet|versorgung|wohnschutz)(?:Score|Rang))\}/g;
-const VERGLEICH_CLAUSE =
-	/,\s*\{((?:ruheLuft|gruenHitze|mobilitaet|versorgung|wohnschutz)Vergleich)\}/g;
+const SCORE_SLOT = new RegExp(
+	`\\{((?:${SCORE_DIMS.join('|')})(?:Score|Lage|Vergleich|Aktiv))\\}`,
+	'g'
+);
+
+/** Slots, die selbst ganze Sätze sind, beenden einen Satz wie ein Punkt. */
+const SENTENCE_SLOTS = [
+	'laermSatz',
+	'gruenSatz',
+	'oepnvUrteil',
+	'oepnvModi',
+	'klimaSatz',
+	'wohnenMssBeschreibung'
+];
+const SENTENCE_BREAK = new RegExp(`(?<=\\.)\\s+|(?<=\\{(?:${SENTENCE_SLOTS.join('|')})\\})\\s+`);
 
 /**
- * #100: Score-Sätze sind ein Zusatz zur Datenantwort. Läuft auf dem Template
- * VOR der Substitution, damit Punkte in Namen („St. …“) die Satztrennung
- * nicht stören. Fehlt nur der Vergleich, fällt nur dieser Nebensatz weg.
- * Fehlen Score oder Rang, fällt der ganze Score-Satz weg, nicht die Antwort.
+ * #100: Score-Sätze sind ein Zusatz zur Datenantwort. Fehlt ein Score-Slot,
+ * fällt der Satz weg, nicht die Antwort. Läuft vor der Substitution, damit
+ * Punkte in Namen („St. …“) die Satztrennung nicht stören.
  */
 function pruneMissingScoreParts(text: string, slots: Record<string, string>): string {
-	const withoutVergleich = text.replace(VERGLEICH_CLAUSE, (clause, key: string) =>
-		slots[key] !== undefined ? clause : ''
-	);
-	return withoutVergleich
-		.split(/(?<=\.)\s+/)
+	return text
+		.split(SENTENCE_BREAK)
 		.filter((sentence) =>
 			[...sentence.matchAll(SCORE_SLOT)].every((m) => slots[m[1]] !== undefined)
 		)
@@ -322,6 +300,10 @@ export function renderTemplate(
 		if (!resolved) return null;
 	}
 	const slots = buildSlotMap(context);
+	// requiresScore: Antworten, die nur aus einem Score bestehen, brauchen ihn.
+	for (const dim of template.requiresScore ?? []) {
+		if (slots[`${dim}Score`] === undefined) return null;
+	}
 	return {
 		question: substitute(template.question, slots),
 		// Leere Slots (z. B. `{oepnvModi}` ohne Zähldaten) hinterlassen keine Doppel-Leerzeichen.

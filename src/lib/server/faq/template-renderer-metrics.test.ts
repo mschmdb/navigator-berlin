@@ -44,100 +44,68 @@ const TEMPLATE: FaqTemplate = {
 	applicableTo: ['kiez'],
 	requires: [],
 	question: 'Wie grün ist {name}?',
-	answer: '{name}: {gruenHitzeScore} von 100 ({gruenHitzeRang}), {gruenHitzeVergleich}.'
+	answer:
+		'Der Kiez kommt auf {gruenHitzeScore} von 100 Punkten, {gruenHitzeLage}. Das ist {gruenHitzeVergleich}.'
 };
 
-describe('template-renderer metrics slots (Story 11.3)', () => {
-	it('füllt Score, Rang und Vergleich für starke Werte', () => {
-		const out = renderTemplate(
-			TEMPLATE,
-			ctxWith({
-				value: 72,
-				rang: 12,
-				quartil: 1,
-				total: 143,
-				compareValue: 65,
-				compareKind: 'bezirk'
-			})
+const m = (over: Partial<MetricContext>): MetricContext => ({
+	value: 72,
+	rang: 12,
+	quartil: 1,
+	total: 143,
+	compareValue: 65,
+	compareKind: 'bezirk',
+	...over
+});
+
+describe('template-renderer metrics slots (Story 11.3, NAV-108)', () => {
+	it('füllt Score, Lage und Vergleich für starke Werte', () => {
+		expect(renderTemplate(TEMPLATE, ctxWith(m({})))?.answer).toBe(
+			'Der Kiez kommt auf 72 von 100 Punkten, Platz 12 von 143 Kiezen. Das ist mehr als im Schnitt der Kieze im Bezirk.'
 		);
-		expect(out?.answer).toBe('Test-Kiez: 72 von 100 (Platz 12 von 143), über dem Bezirksschnitt.');
 	});
 
-	it('Anti-Stigma: Quartil 4 → „unteres Viertel" statt letztem Rang', () => {
+	it('Anti-Stigma: Quartil 4 nennt das untere Viertel, keinen Platz', () => {
 		const out = renderTemplate(
 			TEMPLATE,
-			ctxWith({
-				value: 30,
-				rang: 142,
-				quartil: 4,
-				total: 143,
-				compareValue: 60,
-				compareKind: 'bezirk'
-			})
+			ctxWith(m({ value: 30, rang: 142, quartil: 4, compareValue: 60 }))
 		);
-		expect(out?.answer).toContain('unteres Viertel');
-		expect(out?.answer).toContain('unter dem Bezirksschnitt');
+		expect(out?.answer).toContain('im unteren Viertel der 143 Kieze');
+		expect(out?.answer).toContain('weniger als im Schnitt');
 		expect(out?.answer).not.toContain('Platz 142');
 	});
 
-	it('„etwa im" bei nahezu gleichem Wert', () => {
-		const out = renderTemplate(
-			TEMPLATE,
-			ctxWith({
-				value: 65,
-				rang: 70,
-				quartil: 2,
-				total: 143,
-				compareValue: 65,
-				compareKind: 'bezirk'
-			})
-		);
-		expect(out?.answer).toContain('etwa im Bezirksschnitt');
+	it('Gleichstand: geteilter Platz', () => {
+		const out = renderTemplate(TEMPLATE, ctxWith(m({ rang: 7, geteiltMit: 2 })));
+		expect(out?.answer).toContain('geteilter Platz 7 von 143 Kiezen');
 	});
 
-	it('EN: Rang, Vergleich und Anti-Stigma-Formulierung', () => {
-		const strong = renderTemplate(
-			TEMPLATE,
-			ctxWith(
-				{ value: 72, rang: 12, quartil: 1, total: 143, compareValue: 65, compareKind: 'bezirk' },
-				'en'
-			)
-		);
-		expect(strong?.answer).toBe(
-			'Test-Kiez: 72 von 100 (rank 12 of 143), above the district average.'
+	it('etwa so viel bei nahezu gleichem Wert', () => {
+		const out = renderTemplate(TEMPLATE, ctxWith(m({ value: 65, rang: 70, quartil: 2 })));
+		expect(out?.answer).toContain('etwa so viel wie im Schnitt der Kieze im Bezirk');
+	});
+
+	it('ohne Rang fallen Score- und Vergleichssatz weg', () => {
+		const out = renderTemplate(TEMPLATE, ctxWith(m({ rang: null, quartil: null })));
+		expect(out?.answer).toBe('');
+	});
+
+	it('EN: Lage, Vergleich und Anti-Stigma-Formulierung', () => {
+		const tpl = {
+			...TEMPLATE,
+			answer:
+				'The Kiez gets {gruenHitzeScore} of 100 points, {gruenHitzeLage}. That is {gruenHitzeVergleich}.'
+		};
+		expect(renderTemplate(tpl, ctxWith(m({}), 'en'))?.answer).toBe(
+			'The Kiez gets 72 of 100 points, rank 12 of 143 Kieze. That is more than the average of the Kieze in its Bezirk.'
 		);
 		const weak = renderTemplate(
-			TEMPLATE,
-			ctxWith(
-				{ value: 30, rang: 142, quartil: 4, total: 143, compareValue: 60, compareKind: 'bezirk' },
-				'en'
-			)
+			tpl,
+			ctxWith(m({ value: 30, rang: 142, quartil: 4, compareValue: 60 }), 'en')
 		);
-		expect(weak?.answer).toContain('bottom quartile');
-		expect(weak?.answer).toContain('below the district average');
+		expect(weak?.answer).toContain('in the bottom quarter of the 143 Kieze');
 		expect(weak?.answer).not.toContain('142');
-		const same = renderTemplate(
-			TEMPLATE,
-			ctxWith(
-				{ value: 65, rang: 70, quartil: 2, total: 143, compareValue: 65, compareKind: 'berlin' },
-				'en'
-			)
-		);
-		expect(same?.answer).toContain('about the same as the Berlin median');
-	});
-
-	it('DE: Berlin-Median bleibt unverändert', () => {
-		const out = renderTemplate(
-			TEMPLATE,
-			ctxWith({
-				value: 65,
-				rang: 70,
-				quartil: 2,
-				total: 143,
-				compareValue: 40,
-				compareKind: 'berlin'
-			})
-		);
-		expect(out?.answer).toContain('über dem Berlin-Median');
+		const same = renderTemplate(tpl, ctxWith(m({ value: 65, compareKind: 'berlin' }), 'en'));
+		expect(same?.answer).toContain('about the same as the median Berlin Bezirk');
 	});
 });

@@ -1,19 +1,9 @@
 import { describe, it, expect } from 'vitest';
 import { renderTemplate, type TemplateContext } from './template-renderer.js';
 import type { FaqTemplate } from './template-schema.js';
-import { describeLaermCategoryDe, laermErklaerungDe } from '$lib/data/faq-helpers/laerm.js';
-import { describeGruenversorgungDe, gruenErklaerungDe } from '$lib/data/faq-helpers/gruen.js';
-import {
-	describeOepnvDichte,
-	formatStopsPerKm2,
-	oepnvErklaerungDe
-} from '$lib/data/faq-helpers/oepnv.js';
-import { describeWohnlageDe, mssBeschreibungDe } from '$lib/data/faq-helpers/wohnen.js';
-import { describePetKategorie, formatPet, petErklaerungDe } from '$lib/data/faq-helpers/klima.js';
-import { sourceLabel } from '$lib/data/source-label.js';
 
 /**
- * Story 2.5b T3.4 + AC-8: Pure-Function-Tests für den Slot-Renderer.
+ * Story 2.5b T3.4 + AC-8, NAV-108: Pure-Function-Tests für den Slot-Renderer.
  */
 
 const ctx = (overrides: Partial<TemplateContext> = {}): TemplateContext => ({
@@ -24,11 +14,23 @@ const ctx = (overrides: Partial<TemplateContext> = {}): TemplateContext => ({
 	aggregate: {
 		laerm: {
 			dominantCategory: { value: 'hoch', layer: 'laerm-2023', sourceUpdatedAt: '2023-06-01' },
-			categoryDistribution: null
+			categoryDistribution: {
+				value: { hoch: 0.75, mittel: 0.25 },
+				layer: 'laerm-2023',
+				sourceUpdatedAt: '2023-06-01'
+			}
 		},
 		gruen: {
-			dominantVersorgung: null,
-			versorgungDistribution: null,
+			dominantVersorgung: {
+				value: 'gut',
+				layer: 'gruenversorgung-2023',
+				sourceUpdatedAt: '2024-01-01'
+			},
+			versorgungDistribution: {
+				value: { gut: 1 },
+				layer: 'gruenversorgung-2023',
+				sourceUpdatedAt: '2024-01-01'
+			},
 			gruenanlagenCount: { value: 42, layer: 'gruenanlagen', sourceUpdatedAt: '2024-04-01' },
 			spielplaetzeCount: null
 		},
@@ -38,10 +40,10 @@ const ctx = (overrides: Partial<TemplateContext> = {}): TemplateContext => ({
 		},
 		oepnv: {
 			stopsPerKm2: { value: 18.4, layer: 'oepnv-composite', sourceUpdatedAt: '2024-09-01' },
-			uBahnCount: null,
-			sBahnCount: null,
-			tramCount: null,
-			busCount: null
+			uBahnCount: { value: 3, layer: 'ubahn-stationen', sourceUpdatedAt: '2024-09-01' },
+			sBahnCount: { value: 0, layer: 'sbahn-stationen', sourceUpdatedAt: '2024-09-01' },
+			tramCount: { value: 0, layer: 'tram-haltestellen', sourceUpdatedAt: '2024-09-01' },
+			busCount: { value: 40, layer: 'bus-haltestellen', sourceUpdatedAt: '2024-09-01' }
 		},
 		wohnen: {
 			dominantWohnlage: {
@@ -60,36 +62,29 @@ const ctx = (overrides: Partial<TemplateContext> = {}): TemplateContext => ({
 	...overrides
 });
 
-const laermDominantTemplate: FaqTemplate = {
+const laermTemplate: FaqTemplate = {
 	id: 'laerm-dominant-bezirk',
 	applicableTo: ['bezirk'],
-	requires: ['laerm.dominantCategory'],
-	question: 'Wie ist die Lärmlage in {name}?',
-	answer:
-		'Die dominante Lärm-Kategorie in {name} ist {laermKategorie}. {laermErklaerung} Quelle: {laermSource}, Stand {laermStand}.'
+	requires: ['laerm.categoryDistribution'],
+	question: 'Wie laut ist es im Bezirk {name}?',
+	answer: '{laermSatz} Quelle: {laermSource}, Stand {laermStand}.'
 };
 
 describe('renderTemplate', () => {
-	it('substituiert {name} mit dem Page-Namen', () => {
-		const result = renderTemplate(laermDominantTemplate, ctx());
-		expect(result).not.toBeNull();
-		expect(result?.question).toContain('Mitte');
-	});
-
-	it('substituiert Lärm-Slots (Kategorie + Erklärung + Quelle + Stand)', () => {
-		const result = renderTemplate(laermDominantTemplate, ctx());
-		expect(result?.answer).toContain('hoch'); // GH-92: Stufenwort wie im Inspector
-		expect(result?.answer).toContain('Hauptverkehrsstraßen');
-		expect(result?.answer).toContain('Lärmbelastung 2023'); // lesbarer Quellen-Name statt slug (11.3-Fix)
-		expect(result?.answer).not.toContain('laerm-2023');
-		expect(result?.answer).toContain('Juni 2023');
+	it('substituiert {name} in der Frage, die Antwort nennt den Ort ohne Namen', () => {
+		const result = renderTemplate(laermTemplate, ctx());
+		expect(result?.question).toBe('Wie laut ist es im Bezirk Mitte?');
+		expect(result?.answer).toBe(
+			'Eher laut. Drei Viertel der Teilgebiete liegen in der Lärmklasse hoch, ein Viertel in der Klasse mittel. Quelle: Lärmbelastung 2023, Stand Juni 2023.'
+		);
 	});
 
 	it('liefert null wenn requires-Feld null ist', () => {
-		const result = renderTemplate(laermDominantTemplate, {
-			...ctx(),
+		const base = ctx();
+		const result = renderTemplate(laermTemplate, {
+			...base,
 			aggregate: {
-				...ctx().aggregate,
+				...base.aggregate,
 				laerm: { dominantCategory: null, categoryDistribution: null }
 			}
 		});
@@ -97,102 +92,68 @@ describe('renderTemplate', () => {
 	});
 
 	it('skippt Template wenn pageType nicht in applicableTo', () => {
-		const result = renderTemplate(laermDominantTemplate, ctx({ pageType: 'kiez' }));
-		expect(result).toBeNull();
+		expect(renderTemplate(laermTemplate, ctx({ pageType: 'kiez' }))).toBeNull();
 	});
 
-	it('rendert deterministisch (zweimal selbe Eingabe = selbe Ausgabe)', () => {
-		const a = renderTemplate(laermDominantTemplate, ctx());
-		const b = renderTemplate(laermDominantTemplate, ctx());
-		expect(a).toEqual(b);
+	it('rendert deterministisch', () => {
+		expect(renderTemplate(laermTemplate, ctx())).toEqual(renderTemplate(laermTemplate, ctx()));
 	});
 
-	it('substituiert Grün-Slots (Anzahl)', () => {
+	it('Grün: Senats-Urteil für den ganzen Bezirk', () => {
+		const tpl: FaqTemplate = { ...laermTemplate, id: 'g', requires: [], answer: '{gruenSatz}' };
+		expect(renderTemplate(tpl, ctx())?.answer).toBe(
+			'Laut Senat gut. Der ganze Bezirk gilt als gut mit Grün versorgt.'
+		);
+	});
+
+	it('ÖPNV: Urteil, Dichte und Verkehrsmittel', () => {
 		const tpl: FaqTemplate = {
-			id: 'gruen-count',
-			applicableTo: ['bezirk'],
-			requires: ['gruen.gruenanlagenCount'],
-			question: 'Wie viele Grünanlagen liegen in {name}?',
-			answer: 'In {name} liegen {gruenanlagenCount} öffentliche Grünanlagen.'
-		};
-		const result = renderTemplate(tpl, ctx());
-		expect(result?.answer).toContain('42');
-	});
-
-	it('substituiert ÖPNV-Slots (formatierte Dichte + Erklärung)', () => {
-		const tpl: FaqTemplate = {
-			id: 'oepnv-dichte',
-			applicableTo: ['bezirk'],
+			...laermTemplate,
+			id: 'o',
 			requires: ['oepnv.stopsPerKm2'],
-			question: 'Wie dicht ist das ÖPNV-Netz in {name}?',
 			answer:
-				'In {name} liegen {oepnvStopsPerKm2} Halte pro km². Das Netz gilt damit als {oepnvDichte}.'
+				'{oepnvUrteil} Auf einen Quadratkilometer kommen {oepnvStopsPerKm2} Haltestellen. {oepnvModi}'
 		};
-		const result = renderTemplate(tpl, ctx());
-		expect(result?.answer).toContain('18,4');
-		expect(result?.answer).toContain('dicht');
+		expect(renderTemplate(tpl, ctx())?.answer).toBe(
+			'Das Haltestellennetz ist hier dicht, typisch für gemischte Innenstadtlagen. Auf einen Quadratkilometer kommen 18,4 Haltestellen. Im Bezirk liegen 3 U-Bahnhöfe und 40 Bushaltestellen, aber kein S-Bahnhof und keine Tramhaltestelle.'
+		);
 	});
 
-	it('substituiert Klima-Slots (PET-Wert + Kategorie)', () => {
+	it('Klima: gefühlte Temperatur mit Urteil', () => {
 		const tpl: FaqTemplate = {
-			id: 'klima-pet',
-			applicableTo: ['bezirk'],
+			...laermTemplate,
+			id: 'k',
 			requires: ['klima.meanPet'],
-			question: 'Wie heiß wird {name} im Sommer?',
-			answer: 'Die mittlere PET in {name} liegt bei {klimaPet} °C. {klimaErklaerung}'
+			answer: '{klimaSatz}'
 		};
-		const result = renderTemplate(tpl, ctx());
-		expect(result?.answer).toContain('42,5');
-		expect(result?.answer).toContain('Hitzetagen');
+		expect(renderTemplate(tpl, ctx())?.answer).toBe(
+			'An heißen Tagen wird es hier heiß: Die gefühlte Temperatur liegt im Schnitt bei 42,5 Grad. Schatten und Trinkwasser werden dann wichtig.'
+		);
+		expect(renderTemplate(tpl, ctx({ locale: 'en' }))?.answer).toContain('averages 42.5 degrees');
 	});
 
-	it('substituiert Wohnen-Slots (Wohnlage + MSS-Beschreibung)', () => {
+	it('Ortswörter je Seitentyp und Sprache', () => {
 		const tpl: FaqTemplate = {
-			id: 'wohnen-lage',
-			applicableTo: ['bezirk'],
-			requires: ['wohnen.dominantWohnlage'],
-			question: 'Welche Wohnlage dominiert in {name}?',
-			answer: 'In {name} dominiert die {wohnenWohnlage}. {wohnenMssBeschreibung}'
-		};
-		const result = renderTemplate(tpl, ctx());
-		expect(result?.answer).toContain('mittlere Wohnlage');
-	});
-
-	it('verbleibt unverändert wenn ein unbekannter Slot vorkommt', () => {
-		const tpl: FaqTemplate = {
-			id: 'oddslot',
-			applicableTo: ['bezirk'],
+			...laermTemplate,
+			id: 'w',
+			applicableTo: ['bezirk', 'kiez'],
 			requires: [],
-			question: '{name}?',
-			answer: 'Hallo {unbekannterSlot}.'
+			answer: '{OrtDer}|{ortIm}'
 		};
-		const result = renderTemplate(tpl, ctx());
-		// Renderer wirft NICHT, lässt unbekannte Slots stehen (gracefuller Fallback).
-		expect(result?.answer).toBe('Hallo {unbekannterSlot}.');
-	});
-});
-
-describe('renderTemplate EN (Block C3)', () => {
-	const en = (overrides: Partial<TemplateContext> = {}) => ctx({ locale: 'en', ...overrides });
-
-	it('Lärm-Slots englisch, Stand „June 2023"', () => {
-		const result = renderTemplate(laermDominantTemplate, en());
-		expect(result?.answer).toContain('June 2023');
-		expect(result?.answer).not.toContain('Juni');
-		expect(result?.answer).not.toContain('Hauptverkehrsstraßen');
-		expect(result?.answer).not.toContain('Lärmbelastung 2023');
-		expect(result?.answer).not.toMatch(/\blaut\b/);
+		expect(renderTemplate(tpl, ctx())?.answer).toBe('Der Bezirk|im Bezirk');
+		expect(renderTemplate(tpl, ctx({ pageType: 'kiez', locale: 'en' }))?.answer).toBe(
+			'The Kiez|in the Kiez'
+		);
 	});
 
 	it('Grün-Anzahl mit en-GB-Tausendertrenner', () => {
+		const base = ctx();
 		const tpl: FaqTemplate = {
-			id: 'gruen-count',
-			applicableTo: ['bezirk'],
-			requires: ['gruen.gruenanlagenCount'],
-			question: 'q {name}?',
+			...laermTemplate,
+			id: 'c',
+			requires: [],
 			answer: '{gruenanlagenCount}'
 		};
-		const base = ctx();
 		const result = renderTemplate(tpl, {
 			...base,
 			locale: 'en',
@@ -207,104 +168,37 @@ describe('renderTemplate EN (Block C3)', () => {
 		expect(result?.answer).toBe('1,234');
 	});
 
-	it('jeder Aggregat-Slot folgt den EN-Helpern', () => {
-		const slotNames = [
-			'laermKategorie',
-			'laermErklaerung',
-			'laermSource',
-			'laermStand',
-			'gruenKategorie',
-			'gruenErklaerung',
-			'gruenSource',
-			'gruenStand',
-			'gruenanlagenCount',
-			'spielplaetzeCount',
-			'oepnvStopsPerKm2',
-			'oepnvDichte',
-			'oepnvErklaerung',
-			'oepnvSource',
-			'oepnvStand',
-			'wohnenWohnlage',
-			'wohnenMssBeschreibung',
-			'wohnenSource',
-			'wohnenStand',
-			'klimaPet',
-			'klimaKategorie',
-			'klimaErklaerung',
-			'klimaSource',
-			'klimaStand'
-		] as const;
+	it('lässt unbekannte Slots stehen (die Faktenprüfung meldet sie)', () => {
 		const tpl: FaqTemplate = {
-			id: 'all-slots',
-			applicableTo: ['bezirk'],
+			...laermTemplate,
+			id: 'x',
 			requires: [],
-			question: 'q {name}?',
-			answer: slotNames.map((n) => `{${n}}`).join('|')
+			answer: 'Hallo {unbekannterSlot}.'
 		};
-		const base = ctx();
-		const aggregate = {
-			...base.aggregate,
-			gruen: {
-				dominantVersorgung: {
-					value: 'mittel',
-					layer: 'gruenversorgung-2023',
-					sourceUpdatedAt: '2024-01-01'
-				},
-				versorgungDistribution: null,
-				gruenanlagenCount: { value: 1234, layer: 'gruenanlagen', sourceUpdatedAt: '2024-04-01' },
-				spielplaetzeCount: { value: 5678, layer: 'spielplaetze', sourceUpdatedAt: '2024-04-01' }
-			}
-		} as unknown as TemplateContext['aggregate'];
-		const render = (locale: 'de' | 'en') =>
-			renderTemplate(tpl, { ...base, aggregate, locale })?.answer.split('|') ?? [];
-		const en = render('en');
-		const de = render('de');
-		const o = { locale: 'en' } as const;
-		const expected: Record<(typeof slotNames)[number], string> = {
-			laermKategorie: describeLaermCategoryDe('hoch', o),
-			laermErklaerung: laermErklaerungDe('hoch', o),
-			laermSource: sourceLabel('laerm-2023', o),
-			laermStand: 'June 2023',
-			gruenKategorie: describeGruenversorgungDe('mittel', o),
-			gruenErklaerung: gruenErklaerungDe('mittel', o),
-			gruenSource: sourceLabel('gruenversorgung-2023', o),
-			gruenStand: 'January 2024',
-			gruenanlagenCount: '1,234',
-			spielplaetzeCount: '5,678',
-			oepnvStopsPerKm2: formatStopsPerKm2(18.4, o),
-			oepnvDichte: describeOepnvDichte(18.4, o),
-			oepnvErklaerung: oepnvErklaerungDe(18.4, o),
-			oepnvSource: sourceLabel('oepnv-composite', o),
-			oepnvStand: 'September 2024',
-			wohnenWohnlage: describeWohnlageDe('mittel', o),
-			wohnenMssBeschreibung: mssBeschreibungDe('mittel', o),
-			wohnenSource: sourceLabel('mietspiegel-2024', o),
-			wohnenStand: 'May 2024',
-			klimaPet: formatPet(42.5, o),
-			klimaKategorie: describePetKategorie(42.5, o),
-			klimaErklaerung: petErklaerungDe(42.5, o),
-			klimaSource: sourceLabel('stadtklima-2015', o),
-			klimaStand: 'September 2015'
+		expect(renderTemplate(tpl, ctx())?.answer).toBe('Hallo {unbekannterSlot}.');
+	});
+
+	it('requiresScore: ohne Score keine Antwort', () => {
+		const tpl: FaqTemplate = {
+			...laermTemplate,
+			id: 'ws',
+			requires: [],
+			requiresScore: ['wohnschutz'],
+			answer: '{OrtDer} kommt auf {wohnschutzScore} von 100 Punkten, {wohnschutzLage}.'
 		};
-		slotNames.forEach((name, i) => {
-			expect(en[i], name).toBe(expected[name]);
+		expect(renderTemplate(tpl, ctx())).toBeNull();
+		const withScore = renderTemplate(tpl, {
+			...ctx(),
+			metrics: new Map([
+				[
+					'wohnschutz',
+					{ value: 18, rang: 2, quartil: 1, total: 12, compareValue: 10, compareKind: 'berlin' }
+				]
+			])
 		});
-		// Locale-abhängige Text-Slots dürfen nicht der DE-Ausgabe entsprechen.
-		const localized = [
-			'laermKategorie',
-			'laermErklaerung',
-			'gruenKategorie',
-			'gruenErklaerung',
-			'oepnvErklaerung',
-			'wohnenWohnlage',
-			'wohnenMssBeschreibung',
-			'klimaKategorie',
-			'klimaErklaerung'
-		] as const;
-		for (const name of localized) {
-			const idx = slotNames.indexOf(name);
-			expect(en[idx], name).not.toBe(de[idx]);
-		}
+		expect(withScore?.answer).toBe(
+			'Der Bezirk kommt auf 18 von 100 Punkten, Platz 2 von 12 Bezirken.'
+		);
 	});
 });
 
@@ -312,44 +206,42 @@ describe('renderTemplate ohne Score-Metriken (#100)', () => {
 	const merged: FaqTemplate = {
 		id: 'laerm-dominant-bezirk',
 		applicableTo: ['bezirk'],
-		requires: ['laerm.dominantCategory'],
+		requires: ['laerm.categoryDistribution'],
 		question: 'Wie laut ist es im Bezirk {name}?',
 		answer:
-			'Im Bezirk {name} dominiert die Lärm-Klasse {laermKategorie}. Im Ruhe-und-Luft-Score erreicht {name} {ruheLuftScore} von 100 ({ruheLuftRang}), {ruheLuftVergleich}. Quelle: {laermSource}, Stand {laermStand}.'
+			'{laermSatz} Im Ruhe-und-Luft-Score kommt der Bezirk auf {ruheLuftScore} von 100 Punkten, {ruheLuftLage}. Das ist {ruheLuftVergleich}. Quelle: {laermSource}, Stand {laermStand}.'
 	};
 
-	it('lässt den Score-Satz weg, wenn Metriken fehlen, der Rest bleibt', () => {
+	it('lässt die Score-Sätze weg, wenn Metriken fehlen, der Rest bleibt', () => {
 		const result = renderTemplate(merged, ctx());
 		expect(result?.answer).not.toMatch(/\{[a-zA-Z]+\}/);
-		expect(result?.answer).toContain('Im Bezirk Mitte dominiert die Lärm-Klasse hoch.');
+		expect(result?.answer).toContain('Eher laut.');
 		expect(result?.answer).toContain('Quelle: Lärmbelastung 2023');
 		expect(result?.answer).not.toContain('Ruhe-und-Luft-Score');
+		expect(result?.answer).not.toContain('Das ist');
 	});
 
-	it('behält Score und Rang, wenn nur der Vergleich fehlt', () => {
+	it('behält den Score-Satz, wenn nur der Vergleich fehlt', () => {
 		const result = renderTemplate(merged, {
 			...ctx(),
 			metrics: new Map([
 				[
 					'ruheLuft',
-					{
-						value: 72,
-						rang: 12,
-						quartil: 1,
-						total: 143,
-						compareValue: null,
-						compareKind: 'berlin'
-					}
+					{ value: 72, rang: 2, quartil: 1, total: 12, compareValue: null, compareKind: 'berlin' }
 				]
 			])
 		});
 		expect(result?.answer).not.toMatch(/\{[a-zA-Z]+\}/);
-		expect(result?.answer).toContain('Im Ruhe-und-Luft-Score erreicht Mitte 72 von 100');
+		expect(result?.answer).toContain(
+			'kommt der Bezirk auf 72 von 100 Punkten, Platz 2 von 12 Bezirken.'
+		);
+		expect(result?.answer).not.toContain('Das ist');
 	});
 
 	it('lässt bei Namen mit Abkürzungspunkt keinen Satzrest stehen', () => {
-		const result = renderTemplate(merged, ctx({ name: 'St. Beispiel' }));
-		expect(result?.answer).not.toContain('Score erreicht');
-		expect(result?.answer).toContain('Im Bezirk St. Beispiel dominiert');
+		const tpl = { ...merged, answer: 'In {name} ist es laut. ' + merged.answer };
+		const result = renderTemplate(tpl, ctx({ name: 'St. Beispiel' }));
+		expect(result?.answer).toContain('In St. Beispiel ist es laut.');
+		expect(result?.answer).not.toContain('Score');
 	});
 });
