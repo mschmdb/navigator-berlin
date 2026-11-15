@@ -161,8 +161,9 @@
 			{m.skizze_chapter_what_source({ what: mainText.what, source: mainText.source })}
 		</p>
 		{#if mapHref}
-			<!-- eslint-disable-next-line svelte/no-navigation-without-resolve -->
 			<p>
+				<!-- mapHref baut resolve('/explore') plus Query, siehe Seiten -->
+				<!-- eslint-disable-next-line svelte/no-navigation-without-resolve -->
 				<a class="inline-flex min-h-6 items-center text-accent underline" href={mapHref}
 					>{m.skizze_chapter_on_map()}</a
 				>
