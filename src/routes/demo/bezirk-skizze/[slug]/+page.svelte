@@ -392,7 +392,7 @@
 					Bei der letzten Wahl {leader.jahr} lag {leader.partei} vorn, mit {fmtPct(
 						leader.anteil
 					)}.{#if leader.refAnteil !== null}
-						In {refName} kam {leader.partei} auf {fmtPct(leader.refAnteil)}.{/if}
+						{' '}In {refName} kam {leader.partei} auf {fmtPct(leader.refAnteil)}.{/if}
 				</p>
 			{/if}
 			<p>
