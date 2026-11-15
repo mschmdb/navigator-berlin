@@ -56,6 +56,20 @@
 					navigator.webdriver === true
 				)
 					return;
+				// Veraltete Desktop-Browser (15.11.): Proxy-Scraper mit Chrome/Edge
+				// 118-120 und Firefox 120/121 machten am 14.11. rund 200 Fake-Besuche
+				// (0 s, 100 % Absprung). Die Fenster lassen echte Altgeräte drin:
+				// Chrome 109 (Windows 7/8.1), Chrome 116 (altes macOS), Firefox ESR
+				// 115. Mobil zählt immer, dort sind alte WebViews echte Nutzer.
+				var ua = navigator.userAgent;
+				if (!/Mobile|Android/.test(ua)) {
+					var chrome = /Chrome\/(\d+)/.exec(ua);
+					var firefox = /Firefox\/(\d+)/.exec(ua);
+					var chromeMajor = chrome ? Number(chrome[1]) : 0;
+					var firefoxMajor = firefox ? Number(firefox[1]) : 0;
+					if (chromeMajor >= 118 && chromeMajor < 130) return;
+					if (firefoxMajor >= 116 && firefoxMajor < 128) return;
+				}
 				var s = document.createElement('script');
 				s.defer = true;
 				s.dataset.domain = 'navigator.berlin';
