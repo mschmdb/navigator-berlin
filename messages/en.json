@@ -2719,7 +2719,7 @@
 	"place_table_party": "Party",
 	"place_chapter_what_source": "{what}. Source: {source}.",
 	"place_chapter_on_map": "View on the map",
-	"place_chapter_zero_values": "{value} (without {count} zero values)",
+	"place_chapter_zero_values": "{value} (median of the {count} {group})",
 	"place_chapter_most_common": "{value} (most common class)",
 	"place_chapter_range_label": "{label}, range of the Kieze in {name}",
 	"place_chapter_range_value": "{min} ({minName}) to {max} ({maxName})",
@@ -2736,8 +2736,7 @@
 	"place_side_this_place": "this place",
 	"place_side_berlin": "Berlin",
 	"place_side_class": "class",
-	"place_side_zero_default": "with value 0",
-	"place_side_zero_note": "¹ {label}: Median without the {count} {units} {zeroName}.",
+	"place_side_zero_note": "¹ {label}: {typical} = median of the {count} {group}.",
 	"place_ref_compare_with": "Compare with",
 	"place_ref_compare_short": "Compare",
 	"place_ref_choose": "Choose {label}",
@@ -2864,5 +2863,9 @@
 	"overview_topic_ranking_bezirke": "Sort the districts by noise, green space, mobility or another area",
 	"place_wahl_ref_failed": "The election data for {ref} could not be loaded.",
 	"place_wahl_retry": "Try again",
-	"place_map_own_outline": "thick outline"
+	"place_map_own_outline": "thick outline",
+	"place_m_lufthoch_with": "{units} with high air pollution",
+	"place_m_gruenschlecht_with": "{units} that have poorly supplied sub-areas",
+	"place_m_milieuschutz_with": "{units} with area in Milieuschutz zones",
+	"place_zero_with_default": "{units} with a value above zero"
 }

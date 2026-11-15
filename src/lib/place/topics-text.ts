@@ -3,6 +3,7 @@ import type { Locale } from '$lib/paraglide/runtime';
 import type { ChapterId, LabelId, MetricId } from './topics';
 
 type TextFn = (inputs?: Record<string, never>, options?: { locale?: Locale }) => string;
+export type GroupFn = (inputs: { units: string }, options?: { locale?: Locale }) => string;
 export type SentenceFn = (
 	inputs: { name: string; value: string; n: string },
 	options?: { locale?: Locale }
@@ -17,6 +18,8 @@ export interface MetricTextFns {
 	readonly lower: TextFn;
 	readonly zeroName?: TextFn;
 	readonly zeroMedianLabel?: TextFn;
+	/** Positiv: welche Orte der Median ohne Nullstapel umfasst („Kieze mit hoher Luftbelastung“). */
+	readonly withName?: GroupFn;
 	/** Ganzer Satz für den Kapiteleinstieg; ohne ihn baut `metricLead` „{label} in {name}: {value}.“ */
 	readonly sentence?: SentenceFn;
 }
@@ -39,7 +42,8 @@ export const METRIC_TEXT: Readonly<Record<MetricId, MetricTextFns>> = {
 		higher: m.place_m_lufthoch_higher,
 		lower: m.place_m_lufthoch_lower,
 		zeroName: m.place_m_lufthoch_zero_name,
-		zeroMedianLabel: m.place_m_lufthoch_zero_median
+		zeroMedianLabel: m.place_m_lufthoch_zero_median,
+		withName: m.place_m_lufthoch_with
 	},
 	gruenanlagen: {
 		sentence: m.place_m_gruenanlagen_sentence,
@@ -58,7 +62,8 @@ export const METRIC_TEXT: Readonly<Record<MetricId, MetricTextFns>> = {
 		higher: m.place_m_gruenschlecht_higher,
 		lower: m.place_m_gruenschlecht_lower,
 		zeroName: m.place_m_gruenschlecht_zero_name,
-		zeroMedianLabel: m.place_m_gruenschlecht_zero_median
+		zeroMedianLabel: m.place_m_gruenschlecht_zero_median,
+		withName: m.place_m_gruenschlecht_with
 	},
 	pet: {
 		sentence: m.place_m_pet_sentence,
@@ -94,7 +99,8 @@ export const METRIC_TEXT: Readonly<Record<MetricId, MetricTextFns>> = {
 		higher: m.place_m_milieuschutz_higher,
 		lower: m.place_m_milieuschutz_lower,
 		zeroName: m.place_m_milieuschutz_zero_name,
-		zeroMedianLabel: m.place_m_milieuschutz_zero_median
+		zeroMedianLabel: m.place_m_milieuschutz_zero_median,
+		withName: m.place_m_milieuschutz_with
 	},
 	haltestellenKm2: {
 		sentence: m.place_m_haltestellenkm2_sentence,

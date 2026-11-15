@@ -25,6 +25,7 @@
 		labelValueText,
 		metricLead,
 		metricText,
+		zeroPileGroup,
 		type ChapterSpec,
 		type MetricId
 	} from '$lib/place/topics';
@@ -160,7 +161,11 @@
 			fmt(id, own.metrics[id]),
 			fmt(id, ref.metrics[id]),
 			b.zerosLeftOut > 0
-				? m.place_chapter_zero_values({ value: median, count: b.zerosLeftOut })
+				? m.place_chapter_zero_values({
+						value: median,
+						count: values(id).filter((v) => v !== null).length - b.zerosLeftOut,
+						group: zeroPileGroup(id, unitPlural, opts)
+					})
 				: median
 		];
 	};

@@ -15,6 +15,7 @@
 		labelText,
 		labelValueText,
 		metricText,
+		zeroPileNote,
 		type Hint as HintData,
 		type LabelId,
 		type MetricId
@@ -129,23 +130,13 @@
 	const arrowOf = (h: HintData) => (h.dir === 'higher' ? '↑' : h.dir === 'lower' ? '↓' : '≈');
 	const zeroNotes = $derived(
 		metrics
-			.map((id) => ({
-				id,
-				z: zeroAwareMedian(
-					regions.map((r) => r.metrics[id]),
-					METRIC_SPECS[id].zeroPile === true
-				).zerosLeftOut
-			}))
-			.filter((e) => e.z > 0)
-			.map((e) => {
-				const text = metricText(e.id, opts);
-				return m.place_side_zero_note({
-					label: text.label,
-					count: e.z,
-					units: unitPlural,
-					zeroName: text.zeroName ?? m.place_side_zero_default()
-				});
+			.map((id) => {
+				const vs = regions.map((r) => r.metrics[id]);
+				const z = zeroAwareMedian(vs, METRIC_SPECS[id].zeroPile === true).zerosLeftOut;
+				return { id, z, withValue: vs.filter((v) => v !== null).length - z };
 			})
+			.filter((e) => e.z > 0)
+			.map((e) => zeroPileNote(e.id, e.withValue, typical, unitPlural, opts))
 	);
 </script>
 

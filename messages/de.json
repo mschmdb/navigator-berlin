@@ -2719,7 +2719,7 @@
 	"place_table_party": "Partei",
 	"place_chapter_what_source": "{what}. Quelle: {source}.",
 	"place_chapter_on_map": "Auf der Karte ansehen",
-	"place_chapter_zero_values": "{value} (ohne {count} Nullwerte)",
+	"place_chapter_zero_values": "{value} (Median der {count} {group})",
 	"place_chapter_most_common": "{value} (häufigste Klasse)",
 	"place_chapter_range_label": "{label}, Spanne der Kieze in {name}",
 	"place_chapter_range_value": "{min} ({minName}) bis {max} ({maxName})",
@@ -2736,8 +2736,7 @@
 	"place_side_this_place": "dieser Ort",
 	"place_side_berlin": "Berlin",
 	"place_side_class": "Klasse",
-	"place_side_zero_default": "mit Wert 0",
-	"place_side_zero_note": "¹ {label}: Median ohne die {count} {units} {zeroName}.",
+	"place_side_zero_note": "¹ {label}: {typical} = Median der {count} {group}.",
 	"place_ref_compare_with": "Vergleichen mit",
 	"place_ref_compare_short": "Vergleich",
 	"place_ref_choose": "{label} wählen",
@@ -2864,5 +2863,9 @@
 	"overview_topic_ranking_bezirke": "Bezirke nach Lärm, Grün, Mobilität oder einem anderen Bereich sortieren",
 	"place_wahl_ref_failed": "Die Wahldaten für {ref} ließen sich nicht laden.",
 	"place_wahl_retry": "Erneut laden",
-	"place_map_own_outline": "dick umrandet"
+	"place_map_own_outline": "dick umrandet",
+	"place_m_lufthoch_with": "{units} mit hoher Luftbelastung",
+	"place_m_gruenschlecht_with": "{units}, in denen es schlecht versorgte Teilgebiete gibt",
+	"place_m_milieuschutz_with": "{units} mit Fläche in Milieuschutzgebieten",
+	"place_zero_with_default": "{units} mit einem Wert über null"
 }

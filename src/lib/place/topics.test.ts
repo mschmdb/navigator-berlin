@@ -201,3 +201,26 @@ describe('compactMetrics', () => {
 		expect(out.altbau).toBeNull();
 	});
 });
+
+import { zeroPileNote } from './topics';
+
+describe('zeroPileNote', () => {
+	it('says positively which places the typical value covers', () => {
+		expect(zeroPileNote('gruenSchlecht', 60, 'typischer Kiez', 'Kieze')).toBe(
+			'¹ Wenig Grün in Wohnungsnähe: typischer Kiez = Median der 60 Kieze, in denen es schlecht versorgte Teilgebiete gibt.'
+		);
+		expect(zeroPileNote('luftHoch', 87, 'typischer Kiez', 'Kieze')).toBe(
+			'¹ Hohe Luftbelastung: typischer Kiez = Median der 87 Kieze mit hoher Luftbelastung.'
+		);
+	});
+	it('reads the same way in English', () => {
+		expect(zeroPileNote('milieuschutz', 64, 'typical Kiez', 'Kieze', { locale: 'en' })).toMatch(
+			/^¹ .+: typical Kiez = median of the 64 Kieze with area in Milieuschutz zones\.$/
+		);
+	});
+	it('never uses a double negation', () => {
+		for (const id of ['luftHoch', 'gruenSchlecht', 'milieuschutz'] as const) {
+			expect(zeroPileNote(id, 10, 'typischer Kiez', 'Kieze')).not.toMatch(/ohne/);
+		}
+	});
+});

@@ -369,3 +369,28 @@ export function compactMetrics(metrics: MetricValues): MetricValues {
 	}
 	return out;
 }
+
+/**
+ * Fußnote zum Nullstapel, positiv formuliert: „typischer Kiez = Median der 60 Kieze, in denen es
+ * schlecht versorgte Teilgebiete gibt.“ `count` zählt die Orte mit Wert über null.
+ */
+export function zeroPileNote(
+	id: MetricId,
+	count: number,
+	typical: string,
+	units: string,
+	opts?: LocaleOpts
+): string {
+	const o = msgOpts(opts);
+	return m.place_side_zero_note(
+		{ label: metricText(id, opts).label, typical, count, group: zeroPileGroup(id, units, opts) },
+		o
+	);
+}
+
+/** „Kieze mit hoher Luftbelastung“: die Orte, die der Median ohne Nullstapel umfasst. */
+export function zeroPileGroup(id: MetricId, units: string, opts?: LocaleOpts): string {
+	const o = msgOpts(opts);
+	const fn = METRIC_TEXT[id].withName;
+	return fn ? fn({ units }, o) : m.place_zero_with_default({ units }, o);
+}
