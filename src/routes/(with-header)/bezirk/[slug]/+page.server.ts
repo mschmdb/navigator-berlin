@@ -3,54 +3,28 @@ import { getBezirkProfile } from '$lib/data/get-bezirk-profile.js';
 import { getLocale, type Locale } from '$lib/paraglide/runtime.js';
 import { m } from '$lib/paraglide/messages.js';
 import { readBezirkSlugsFromGeoJson } from '$lib/seo/sources/bezirk-slugs.js';
-import {
-	readBezirkComposite,
-	readEinwohnerStichtag,
-	readLayerAggregatesFile
-} from '$lib/server/profile/meta-sources.js';
-import { buildKeyFigures, type KeyFigure } from '$lib/data/region-key-figures.js';
-import { toCompositeRank } from '$lib/server/profile/composite-rank.js';
-import { getFaqForPage } from '$lib/server/db/queries/get-faq-qna.js';
-import {
-	buildBezirkKiezeView,
-	type BezirkKiezeView,
-	type KiezRankInfo
-} from '$lib/data/bezirk-kieze-view.js';
-import type { BezirkStats } from '$lib/server/db/queries/get-bezirk-stats.js';
-import type { BezirkProfile, FaqEntry } from '$lib/data/types.js';
-import { SCORE_DIMENSION_KEYS, type ComparisonDimRow } from '$lib/data/comparison-types.js';
+import { readBezirkComposite, readEinwohnerStichtag } from '$lib/server/profile/meta-sources.js';
+import { toCompositeRank, type CompositeRank } from '$lib/server/profile/composite-rank.js';
+import { loadBezirkRegions, loadKiezRegions } from '$lib/place/load-regions.server';
+import { loadNeighborBezirkSlugs } from '$lib/place/bezirk-context.server';
+import { loadWahlBundle } from '$lib/place/wahl.server';
+import { loadPageFaq } from '$lib/place/faq.server';
+import type { PageFaqItem } from '$lib/place/faq-items';
+import { mapImage } from '$lib/place/maps.server';
+import type { MapImage } from '$lib/place/types';
+import { packRegions, packWahl, type PackedRegions, type PackedWahl } from '$lib/place/pack';
 import type { EntryGenerator, PageServerLoad } from './$types';
-
-// i18n Block B4a: geteilte Zuordnung camelCase-Datenschlüssel → hyphenierter
-// KiezScoreDimension-Anzeige-Schlüssel, siehe `comparison-types.ts`
-// (Review-Fund: vormals 3x dupliziert -- hier, in `kiez/[slug]/+page.server.ts`
-// und `kiez-hero.svelte`).
-const SCORE_DIMS = SCORE_DIMENSION_KEYS;
 
 export const prerender = true;
 
 /**
- * Story 2.3 T1.1: 12 prerendered Bezirks-Routes, je einmal DE + einmal
- * `/en` (Crawl-Links im Layout, ADR-005). i18n Block B4a übersetzt den
- * Seitenrahmen; Prosa (`profileProse`) und FAQ-Inhalte
- * (`faq_qna`) kommen in der Seiten-Locale, mit DE-Fallback (Blocks C3, C5).
+ * Bezirksseite nach Themen (NAV-104/105): 12 vorgerenderte Seiten, je DE und `/en`.
+ * Der Bezirk steht unter den 12 Bezirken, seine Kieze erscheinen als Spanne je Kapitel.
  */
 export const entries: EntryGenerator = async () => {
 	const slugs = await readBezirkSlugsFromGeoJson();
 	return slugs.map((slug) => ({ slug }));
 };
-
-async function tryLoadBezirkStats(slug: string): Promise<BezirkStats | null> {
-	if (!process.env.DATABASE_URL) return null;
-	try {
-		const { getBezirkStats } = await import('$lib/server/db/queries/get-bezirk-stats.js');
-		return (await getBezirkStats(slug)) as BezirkStats | null;
-	} catch (err) {
-		const msg = err instanceof Error ? err.message : String(err);
-		process.stderr.write(`[bezirk-page] WARN: bezirk_stats unavailable (${msg})\n`);
-		return null;
-	}
-}
 
 async function tryLoadBezirkRank(slug: string) {
 	if (!process.env.DATABASE_URL) return null;
@@ -64,122 +38,35 @@ async function tryLoadBezirkRank(slug: string) {
 	}
 }
 
-async function tryLoadBezirkComparison(slug: string) {
-	if (!process.env.DATABASE_URL) return null;
-	try {
-		const { getBezirkComparison } = await import('$lib/server/db/queries/get-bezirk-comparison.js');
-		return await getBezirkComparison(slug);
-	} catch (err) {
-		const msg = err instanceof Error ? err.message : String(err);
-		process.stderr.write(`[bezirk-page] WARN: bezirk_comparison unavailable (${msg})\n`);
-		return null;
-	}
-}
-
-export type BezirkPageData = {
-	readonly profile: BezirkProfile;
-	readonly stats: BezirkStats | null;
-	readonly faq: readonly FaqEntry[];
-	readonly faqLocale: Locale;
-	readonly kiezeView: BezirkKiezeView;
-	readonly comparison: readonly ComparisonDimRow[];
-	readonly compositeRank: {
-		readonly rang: number | null;
-		readonly quartil: number | null;
-		readonly total: number;
+export interface BezirkPageData {
+	readonly profile: {
+		readonly slug: string;
+		readonly name: string;
+		readonly einwohner: number;
+		readonly flaecheHa: number;
+		readonly centroid: [number, number];
 	};
 	readonly einwohnerStichtag: string | null;
 	readonly bezirkComposite: number | null;
-	/** Sechs Kennzahl-Kacheln mit Berlin-Wert (L4), DB-frei aus den Layer-Aggregaten. */
-	readonly keyFigures: readonly KeyFigure[];
+	/** Geprüfte FAQ aus `renderPlaceFaq` (dieselbe Quelle wie faq_qna). */
+	readonly faq: readonly PageFaqItem[];
 	readonly profileProse: readonly string[];
 	readonly profileLocale: Locale;
-};
-
-const EMPTY_VIEW: BezirkKiezeView = { kieze: [], outline: null };
-
-async function tryLoadKiezRanks(): Promise<Map<string, KiezRankInfo>> {
-	if (!process.env.DATABASE_URL) return new Map();
-	try {
-		const { getKiezCompositeRanks } =
-			await import('$lib/server/db/queries/get-kiez-composite-ranks.js');
-		return await getKiezCompositeRanks();
-	} catch (err) {
-		const msg = err instanceof Error ? err.message : String(err);
-		process.stderr.write(`[bezirk-page] WARN: kiez_rank unavailable (${msg})\n`);
-		return new Map();
-	}
+	readonly compositeRank: CompositeRank;
+	/** Karte der Kieze im Bezirk und Lage in Berlin, je als SVG-Datei. */
+	readonly map: MapImage | null;
+	readonly locationMap: MapImage | null;
+	/** Die Kieze dieses Bezirks mit Themenwerten (Spanne je Kapitel). */
+	readonly kieze: PackedRegions;
+	readonly neighborSlugs: readonly string[];
+	/** Alle 12 Bezirke. */
+	readonly bezirke: PackedRegions;
+	readonly wahl: { readonly own: PackedWahl; readonly berlin: PackedWahl };
 }
 
-async function tryLoadKiezeView(bezirkSlug: string): Promise<BezirkKiezeView> {
-	try {
-		const { readFile } = await import('node:fs/promises');
-		const { resolve } = await import('node:path');
-		const manifestPath = resolve(process.cwd(), 'static/layers/MANIFEST.json');
-		const manifestRaw = await readFile(manifestPath, 'utf-8');
-		const manifest = JSON.parse(manifestRaw) as {
-			layers: { slug: string; filename: string }[];
-		};
-		const bezirkeLayer = manifest.layers.find((l) => l.slug === 'bezirke');
-		const lorLayer = manifest.layers.find((l) => l.slug === 'lor-bezirksregion');
-		if (!bezirkeLayer || !lorLayer) return EMPTY_VIEW;
-
-		const [bezirkeRaw, lorRaw] = await Promise.all([
-			readFile(resolve(process.cwd(), 'static/layers', bezirkeLayer.filename), 'utf-8'),
-			readFile(resolve(process.cwd(), 'static/layers', lorLayer.filename), 'utf-8')
-		]);
-		const bezirkeFc = JSON.parse(bezirkeRaw) as {
-			features: { properties?: Record<string, unknown> }[];
-		};
-		const lorFc = JSON.parse(lorRaw) as {
-			features: { properties?: Record<string, unknown> }[];
-		};
-
-		const { normalizeSlug } = await import('$lib/data/internal/slug.js');
-		const bezirkCodeToSlug = new Map<string, string>();
-		for (const f of bezirkeFc.features) {
-			const props = f.properties ?? {};
-			const schluessel = props.Schluessel_gesamt;
-			const name = props.Gemeinde_name;
-			if (typeof schluessel === 'string' && typeof name === 'string') {
-				bezirkCodeToSlug.set(schluessel.slice(-2), normalizeSlug(name));
-			}
-		}
-
-		const scores = new Map<string, number>();
-		if (process.env.DATABASE_URL) {
-			try {
-				const { getDb } = await import('$lib/server/db/index.js');
-				const { kiezScore } = await import('$lib/server/db/schema/index.js');
-				const rows = await getDb()
-					.select({ slug: kiezScore.slug, composite: kiezScore.composite })
-					.from(kiezScore);
-				for (const r of rows) {
-					if (typeof r.composite === 'number') scores.set(r.slug, Math.round(r.composite));
-				}
-			} catch (err) {
-				const msg = err instanceof Error ? err.message : String(err);
-				process.stderr.write(`[bezirk-page] WARN: kiez_score unavailable (${msg})\n`);
-			}
-		}
-
-		return buildBezirkKiezeView({
-			lorFeatureCollection: lorFc,
-			bezirkCodeToSlug,
-			scores,
-			ranks: await tryLoadKiezRanks(),
-			bezirkSlug
-		});
-	} catch (err) {
-		const msg = err instanceof Error ? err.message : String(err);
-		process.stderr.write(`[bezirk-page] WARN: kieze-load failed (${msg})\n`);
-		return EMPTY_VIEW;
-	}
-}
-
-export const load: PageServerLoad = async ({ params, fetch }) => {
+export const load: PageServerLoad = async ({ params, fetch }): Promise<BezirkPageData> => {
 	const slug = params.slug;
-	let profile: BezirkProfile;
+	let profile;
 	try {
 		profile = await getBezirkProfile(getLocale() as 'de' | 'en', slug, fetch);
 	} catch {
@@ -187,52 +74,55 @@ export const load: PageServerLoad = async ({ params, fetch }) => {
 	}
 	const { getLocalizedProfile } = await import('$lib/server/profile/get-profile.js');
 	const [
-		stats,
-		faqResult,
-		kiezeView,
 		rank,
-		comparisonMap,
-		profileResult,
+		prose,
+		faq,
 		einwohnerStichtag,
 		bezirkComposite,
-		layerAggregates
+		map,
+		locationMap,
+		kieze,
+		bezirke,
+		wahlOwn,
+		wahlBerlin
 	] = await Promise.all([
-		tryLoadBezirkStats(slug),
-		getFaqForPage({ pageType: 'bezirk', slug, locale: getLocale() }),
-		tryLoadKiezeView(slug),
 		tryLoadBezirkRank(slug),
-		tryLoadBezirkComparison(slug),
 		getLocalizedProfile('bezirk', slug, getLocale()),
+		loadPageFaq('bezirk', slug, profile.name, getLocale() as 'de' | 'en'),
 		readEinwohnerStichtag(),
 		readBezirkComposite(slug),
-		readLayerAggregatesFile()
+		mapImage('bezirk', slug, slug),
+		mapImage('lage', slug, slug),
+		loadKiezRegions(),
+		loadBezirkRegions(),
+		loadWahlBundle('bezirk', slug),
+		loadWahlBundle('berlin', null)
 	]);
-	const comparison: ComparisonDimRow[] = SCORE_DIMS.map(({ field, key }) => {
-		const cmp = comparisonMap?.get(field);
-		const rk = rank?.get(field);
-		return {
-			key,
-			value: cmp?.bezirkValue ?? null,
-			berlinMedian: cmp?.berlinMedian ?? null,
-			rang: rk?.rang ?? null,
-			quartil: rk?.quartil ?? null,
-			total: rk?.total ?? 0
-		};
-	});
-	const compositeRank = toCompositeRank(rank);
-	const data: BezirkPageData = {
-		profile,
-		stats,
-		faq: faqResult.items,
-		faqLocale: faqResult.locale,
-		kiezeView,
-		comparison,
-		compositeRank,
+	const ownKieze = kieze.filter((k) => k.parentSlug === slug);
+	const neighborSlugs = await loadNeighborBezirkSlugs(
+		slug,
+		profile.name,
+		ownKieze.map((k) => k.slug)
+	);
+	return {
+		profile: {
+			slug: profile.slug,
+			name: profile.name,
+			einwohner: profile.einwohner,
+			flaecheHa: profile.flaecheHa,
+			centroid: profile.centroid
+		},
 		einwohnerStichtag,
 		bezirkComposite,
-		keyFigures: buildKeyFigures(layerAggregates, { kind: 'bezirk', slug }),
-		profileProse: profileResult.paragraphs,
-		profileLocale: profileResult.locale
+		faq,
+		profileProse: prose.paragraphs,
+		profileLocale: prose.locale,
+		compositeRank: toCompositeRank(rank),
+		map,
+		locationMap,
+		kieze: packRegions(ownKieze),
+		neighborSlugs,
+		bezirke: packRegions(bezirke),
+		wahl: { own: packWahl(wahlOwn), berlin: packWahl(wahlBerlin) }
 	};
-	return data;
 };

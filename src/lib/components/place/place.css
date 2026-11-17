@@ -1,0 +1,52 @@
+/* Ruhiger Aufbau beim Scrollen. Punkte/Linien erscheinen der Reihe nach (--i). */
+.place-reveal .rv {
+	opacity: 0;
+	transition: opacity 420ms ease-out;
+	transition-delay: calc(var(--i, 0) * 4ms);
+}
+.place-reveal[data-shown] .rv {
+	opacity: 1;
+}
+@media (prefers-reduced-motion: reduce) {
+	.place-reveal .rv {
+		opacity: 1;
+		transition: none;
+	}
+}
+
+/* Lesehilfe: entsättigtes Salbeigrün und gedämpftes Terrakotta, nur als Zusatz zum Text. */
+:root {
+	--hint-good: #4f6f4d;
+	--hint-good-bg: #e1e8dc;
+	--hint-bad: #a3583a;
+	--hint-bad-bg: #f2e1d7;
+}
+
+/* Auf Kiez- und Bezirksseiten bleibt nur die Kapitelleiste stehen (48 px): die Kopfzeile der
+   Seite scrollt hier mit. */
+body:has(.place-sticky-bar) [data-testid='site-header'] {
+	position: relative;
+}
+
+/* Datentabellen der Kapitel (data-table.svelte): Zellstile einmal hier statt an jeder Zelle. */
+.place-dt tr {
+	border-bottom: 1px solid var(--rule);
+}
+.place-dt tr.head {
+	border-bottom-color: var(--rule-strong);
+}
+.place-dt th,
+.place-dt td {
+	padding: 0.375rem 0.75rem 0.375rem 0;
+	text-align: right;
+}
+.place-dt th[scope='col'] {
+	font-weight: 600;
+}
+.place-dt th[scope='col']:first-child,
+.place-dt th[scope='row'] {
+	text-align: left;
+}
+.place-dt th[scope='row'] {
+	font-weight: 400;
+}

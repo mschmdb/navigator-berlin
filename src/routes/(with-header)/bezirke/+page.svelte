@@ -62,6 +62,14 @@
 		{#if stand}
 			<p class="font-sans text-sm text-ink-muted">{m.overview_bezirke_stichtag({ stand })}</p>
 		{/if}
+		<p class="font-sans text-base">
+			<a
+				href={`${localizedHref('/kiez-score')}?view=bezirke`}
+				class="text-accent underline underline-offset-2 hover:text-accent-strong"
+			>
+				{m.overview_topic_ranking_bezirke()}
+			</a>
+		</p>
 	</header>
 
 	<ul class="flex flex-col gap-4">

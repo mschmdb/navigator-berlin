@@ -19,6 +19,7 @@
 	import { rankForSort } from '$lib/data/ranking-rank.js';
 	import RichText from '$lib/components/rich-text.svelte';
 	import { localizedHref } from '$lib/i18n/localized-href.js';
+	import { chapterAnchorForSort } from '$lib/place/topics';
 	import { richSegments } from '$lib/i18n/rich-text.js';
 	import { m } from '$lib/paraglide/messages.js';
 	import { getLocale } from '$lib/paraglide/runtime.js';
@@ -146,7 +147,9 @@
 	}
 
 	function detailHref(row: RankingRow): string {
-		return localizedHref(view === 'kieze' ? `/kiez/${row.slug}` : `/bezirk/${row.slug}`);
+		// Nach einem Bereich sortiert: direkt ins passende Kapitel der Detailseite springen.
+		const anchor = chapterAnchorForSort(sortKey);
+		return `${localizedHref(view === 'kieze' ? `/kiez/${row.slug}` : `/bezirk/${row.slug}`)}${anchor}`;
 	}
 
 	/**

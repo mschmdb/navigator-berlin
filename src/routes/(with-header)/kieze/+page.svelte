@@ -68,6 +68,14 @@
 				{m.kiez_page_methodik_link_label()}
 			</a>
 		</p>
+		<p class="font-sans text-base">
+			<a
+				href={localizedHref('/kiez-score')}
+				class="text-accent underline underline-offset-2 hover:text-accent-strong"
+			>
+				{m.overview_topic_ranking_kieze()}
+			</a>
+		</p>
 	</header>
 
 	<nav aria-label={m.overview_kieze_jump_aria()} class="border border-rule bg-bg p-4">
@@ -89,7 +97,7 @@
 		<section
 			id={bezirkAnchorId(bezirk.slug)}
 			aria-labelledby={`${bezirkAnchorId(bezirk.slug)}-h`}
-			class="flex scroll-mt-4 flex-col gap-3 border-t border-rule pt-6"
+			class="flex scroll-mt-24 flex-col gap-3 border-t border-rule pt-6"
 		>
 			<header class="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
 				<h2 id={`${bezirkAnchorId(bezirk.slug)}-h`} class="text-2xl font-bold text-ink">

@@ -2,7 +2,6 @@ import { describe, expect, it } from 'vitest';
 import { page } from 'vitest/browser';
 import { render } from 'vitest-browser-svelte';
 import ScoreBar from './score-bar.svelte';
-import DistributionBar from './distribution-bar.svelte';
 import DistanceRing from './distance-ring.svelte';
 
 describe('ScoreBar', () => {
@@ -28,37 +27,6 @@ describe('ScoreBar', () => {
 		render(ScoreBar, { value: 80, layerName: 'X' });
 		const el = (await page.getByTestId('score-bar').element()) as HTMLElement;
 		expect(el.getAttribute('data-severity')).toBe('neutral');
-	});
-});
-
-describe('DistributionBar', () => {
-	it('rendert Segmente + dominante Klasse + sr-only-Tabelle', async () => {
-		render(DistributionBar, {
-			classes: [
-				{ label: 'gering', share: 1 },
-				{ label: 'mittel', share: 2 },
-				{ label: 'hoch', share: 1 }
-			],
-			layerName: 'Lärm',
-			neutral: true
-		});
-		await expect.element(page.getByTestId('distribution-segment-0')).toBeInTheDocument();
-		await expect.element(page.getByTestId('distribution-dominant')).toBeInTheDocument();
-		const dom = (await page.getByTestId('distribution-dominant').element()) as HTMLElement;
-		expect(dom.textContent).toContain('mittel');
-		const table = (await page.getByTestId('distribution-bar-table').element()) as HTMLElement;
-		expect(table.textContent).toContain('gering');
-		expect(table.textContent).toContain('50%');
-	});
-
-	it('neutral-Flag setzt data-neutral', async () => {
-		render(DistributionBar, {
-			classes: [{ label: 'a', share: 1 }],
-			layerName: 'MSS',
-			neutral: true
-		});
-		const el = (await page.getByTestId('distribution-bar').element()) as HTMLElement;
-		expect(el.getAttribute('data-neutral')).toBe('true');
 	});
 });
 

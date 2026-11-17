@@ -1,0 +1,91 @@
+import { describe, expect, it } from 'vitest';
+import { mean, median } from './stats';
+
+describe('median', () => {
+	it('ignores null and returns the middle value', () => {
+		expect(median([3, null, 1, 2])).toBe(2);
+	});
+	it('averages the two middle values for even counts', () => {
+		expect(median([1, 2, 3, 4])).toBe(2.5);
+	});
+	it('returns null without values', () => {
+		expect(median([null, null])).toBeNull();
+		expect(median([])).toBeNull();
+	});
+	it('returns 0 when most values are 0 (Wohnschutz case)', () => {
+		expect(median([0, 0, 0, 90, 40])).toBe(0);
+	});
+});
+
+describe('mean', () => {
+	it('ignores null', () => {
+		expect(mean([2, null, 4])).toBe(3);
+	});
+	it('returns null without values', () => {
+		expect(mean([null])).toBeNull();
+	});
+});
+
+import { spread } from './stats';
+
+describe('spread', () => {
+	it('returns min and max item with range', () => {
+		const items = [
+			{ name: 'A', v: 28.4 },
+			{ name: 'B', v: 57.4 },
+			{ name: 'C', v: null }
+		];
+		const s = spread(items, (i) => i.v);
+		expect(s?.min.name).toBe('A');
+		expect(s?.max.name).toBe('B');
+		expect(s?.range).toBeCloseTo(29);
+	});
+	it('returns null with fewer than two values', () => {
+		expect(spread([{ v: 1 }], (i) => i.v)).toBeNull();
+	});
+});
+
+import { niceDomain } from './stats';
+
+describe('niceDomain', () => {
+	it('rounds outward to the step', () => {
+		expect(niceDomain([6.2, 9.8, null], 1)).toEqual([6, 10]);
+		expect(niceDomain([0, 87.3], 10)).toEqual([0, 90]);
+	});
+	it('falls back to [0, step] without values', () => {
+		expect(niceDomain([], 5)).toEqual([0, 5]);
+	});
+});
+
+import { zeroShare } from './stats';
+
+describe('zeroShare', () => {
+	it('counts exact zeros among present values', () => {
+		expect(zeroShare([0, 0, 5, null, 3])).toEqual({ zeros: 2, total: 4, share: 0.5 });
+	});
+	it('returns share 0 without values', () => {
+		expect(zeroShare([null])).toEqual({ zeros: 0, total: 0, share: 0 });
+	});
+});
+
+import { mostCommon, splitsZeros, zeroAwareMedian } from './stats';
+
+describe('mostCommon', () => {
+	it('returns the most frequent label, ties by first appearance', () => {
+		expect(mostCommon(['mittel', 'gut', 'mittel', null])).toBe('mittel');
+		expect(mostCommon(['gut', 'mittel'])).toBe('gut');
+		expect(mostCommon([null])).toBeNull();
+	});
+});
+
+describe('zeroAwareMedian', () => {
+	it('leaves out a large zero pile and reports how many', () => {
+		const xs = [...Array(12).fill(0), 10, 20, 30];
+		expect(splitsZeros(xs)).toBe(true);
+		expect(zeroAwareMedian(xs)).toEqual({ value: 20, zerosLeftOut: 12 });
+	});
+	it('keeps zeros when they are few', () => {
+		expect(splitsZeros([0, 1, 2, 3])).toBe(false);
+		expect(zeroAwareMedian([0, 1, 2, 3])).toEqual({ value: 1.5, zerosLeftOut: 0 });
+	});
+});
