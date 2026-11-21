@@ -28,7 +28,11 @@ export function buildHoverTooltipContent(
 	const options = toAtlasMessageOptions(opts);
 	const layerName = getLayerDisplayName(slug, opts);
 	if (hasPinIcon(slug)) {
-		const summary = getPopoverSummary(slug, (value as Record<string, unknown> | null) ?? null);
+		const summary = getPopoverSummary(
+			slug,
+			(value as Record<string, unknown> | null) ?? null,
+			opts
+		);
 		return {
 			kind: 'poi',
 			slug,

@@ -264,5 +264,46 @@ describe('poi-summary-builder.getPopoverSummary', () => {
 				subtitle: 'Winter-Öffnung nicht geprüft'
 			});
 		});
+
+		describe('EN', () => {
+			const en = { locale: 'en' } as const;
+			it('lokalisiert Kategorie und „nicht geprüft“ (Mall of Berlin)', () => {
+				const summary = getPopoverSummary(
+					'waerme-orte',
+					{ name: 'Mall of Berlin', cat: 'Mall' },
+					en
+				);
+				expect(summary).toEqual({
+					title: 'Mall of Berlin',
+					subtitle: 'Shopping centre, winter opening not checked'
+				});
+			});
+			it('lokalisiert Winter-Status, Aufenthalt und Eintritt', () => {
+				expect(
+					getPopoverSummary(
+						'waerme-orte',
+						{
+							name: 'A',
+							cat: 'Bibliothek',
+							winter_open: 'yes',
+							stay_without_purchase: 'yes',
+							is_free: 'free'
+						},
+						en
+					).subtitle
+				).toBe('Library, open in winter, no purchase needed, free entry');
+				expect(
+					getPopoverSummary('waerme-orte', { name: 'A', cat: 'Museum', winter_open: 'limited' }, en)
+						.subtitle
+				).toBe('Museum, limited opening in winter');
+				expect(
+					getPopoverSummary('waerme-orte', { name: 'A', cat: 'Museum', winter_open: 'no' }, en)
+						.subtitle
+				).toBe('Museum, closed in winter');
+			});
+			it('fällt auf den englischen Layer-Namen zurück', () => {
+				expect(getPopoverSummary('waerme-orte', null, en).title).toBe('Warm places');
+			});
+		});
 	});
 });
