@@ -1,20 +1,20 @@
 <script lang="ts">
 	import { onMount, onDestroy } from 'svelte';
 	import type { ExpressionSpecification } from 'maplibre-gl';
-	import { parteiColor } from '$lib/data/partei-farben.js';
-	import { gruppeIdFromGeo } from '$lib/data/wahl-geo-mapping.js';
-	import { gruppenAnzeigeName } from '$lib/data/wahl-gruppe-label.js';
-	import { m } from '$lib/paraglide/messages.js';
+	import { parteiColor } from '#lib/data/partei-farben.js';
+	import { gruppeIdFromGeo } from '#lib/data/wahl-geo-mapping.js';
+	import { gruppenAnzeigeName } from '#lib/data/wahl-gruppe-label.js';
+	import { m } from '#lib/paraglide/messages.js';
 	import { COLORS } from './internal/colors.js';
-	import { formatPercent } from '$lib/i18n/format.js';
+	import { formatPercent } from '#lib/i18n/format.js';
 	import DataTableAlternative from './data-table-alternative.svelte';
-	import WinnerMapLegende from '$lib/components/wahl-portal/winner-map-legende.svelte';
-	import { buildWinnerTableColumns } from '$lib/components/wahl-portal/internal/winner-map-labels.js';
-	import { ANTEIL_OPACITY_RAMP } from '$lib/components/wahl-portal/internal/winner-map-data.js';
+	import WinnerMapLegende from '#lib/components/wahl-portal/winner-map-legende.svelte';
+	import { buildWinnerTableColumns } from '#lib/components/wahl-portal/internal/winner-map-labels.js';
+	import { ANTEIL_OPACITY_RAMP } from '#lib/components/wahl-portal/internal/winner-map-data.js';
 	import {
 		patternImageId,
 		registerPartyPatterns
-	} from '$lib/components/wahl-portal/internal/partei-pattern-images.js';
+	} from '#lib/components/wahl-portal/internal/partei-pattern-images.js';
 	import {
 		buildStimmbezirkZeilen,
 		stimmbezirkParteien,

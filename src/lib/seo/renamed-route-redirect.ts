@@ -1,5 +1,5 @@
-import { parseWahlSlug, buildWahlSlug } from '$lib/data/wahl-slug.js';
-import { locales, baseLocale } from '$lib/paraglide/runtime';
+import { parseWahlSlug, buildWahlSlug } from '#lib/data/wahl-slug.js';
+import { locales, baseLocale } from '#lib/paraglide/runtime.js';
 
 /**
  * Renamed-route redirect resolver.

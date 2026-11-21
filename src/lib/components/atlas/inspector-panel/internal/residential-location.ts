@@ -1,4 +1,4 @@
-import type { LayerHit } from '$lib/data';
+import type { LayerHit } from '#lib/data/index.ts';
 
 const BRW_SLUG = 'bodenrichtwerte';
 

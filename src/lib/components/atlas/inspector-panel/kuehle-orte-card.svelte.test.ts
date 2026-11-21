@@ -1,9 +1,9 @@
 import { afterEach, describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { page } from 'vitest/browser';
-import { overwriteGetLocale } from '$lib/paraglide/runtime';
+import { overwriteGetLocale } from '#lib/paraglide/runtime.js';
 import KuehleOrteCard from './kuehle-orte-card.svelte';
-import type { KuehleOrt } from '$lib/data/get-kuehle-orte-index.js';
+import type { KuehleOrt } from '#lib/data/get-kuehle-orte-index.js';
 
 afterEach(() => {
 	overwriteGetLocale(() => 'de');

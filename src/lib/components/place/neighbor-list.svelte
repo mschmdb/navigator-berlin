@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { localizedHref } from '$lib/i18n/localized-href.js';
-	import { m } from '$lib/paraglide/messages.js';
-	import { trackLanding, type LandingAction } from '$lib/utils/plausible.js';
+	import { localizedHref } from '#lib/i18n/localized-href.js';
+	import { m } from '#lib/paraglide/messages.js';
+	import { trackLanding, type LandingAction } from '#lib/utils/plausible.js';
 
 	interface Entry {
 		readonly slug: string;

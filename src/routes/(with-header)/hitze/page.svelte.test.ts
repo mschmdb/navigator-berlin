@@ -1,11 +1,11 @@
 import { afterEach, describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
-import { readDatasetJsonLd } from '$lib/seo/dataset-jsonld-test-utils.js';
+import { readDatasetJsonLd } from '#lib/seo/dataset-jsonld-test-utils.js';
 import { page } from 'vitest/browser';
-import { overwriteGetLocale } from '$lib/paraglide/runtime';
+import { overwriteGetLocale } from '#lib/paraglide/runtime.js';
 import { page as appPage } from '$app/state';
-import { canonicalOrigin } from '$lib/seo/canonical.js';
-import { getLayerMethodology } from '$lib/data/layer-methodology.js';
+import { canonicalOrigin } from '#lib/seo/canonical.js';
+import { getLayerMethodology } from '#lib/data/layer-methodology.js';
 import Page from './+page.svelte';
 import {
 	ariaLabels,

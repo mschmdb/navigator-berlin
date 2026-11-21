@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { loadRankingRegions } from '$lib/server/layer-kiez-ranking-loader.js';
-import { m } from '$lib/paraglide/messages.js';
+import { loadRankingRegions } from '#lib/server/layer-kiez-ranking-loader.js';
+import { m } from '#lib/paraglide/messages.js';
 import { BEZIRK_DESCRIPTION_MAX, buildBezirkMeta, buildKiezMeta } from './profile-meta.js';
 import { buildPageTitle, PAGE_TITLE_MAX } from './page-title.js';
 

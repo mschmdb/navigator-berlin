@@ -1,10 +1,10 @@
 import { error } from '@sveltejs/kit';
 import type { EntryGenerator, PageServerLoad } from './$types';
-import { loadUpdatesFromModules } from '$lib/content/updates/load-updates.js';
-import { localizeUpdateEntry } from '$lib/content/updates/localize-update-entry.js';
-import { renderMarkdownBody } from '$lib/content/updates/render-markdown.js';
-import { getLocale } from '$lib/paraglide/runtime.js';
-import type { UpdateEntry } from '$lib/content/updates/types.js';
+import { loadUpdatesFromModules } from '#lib/content/updates/load-updates.js';
+import { localizeUpdateEntry } from '#lib/content/updates/localize-update-entry.js';
+import { renderMarkdownBody } from '#lib/content/updates/render-markdown.js';
+import { getLocale } from '#lib/paraglide/runtime.js';
+import type { UpdateEntry } from '#lib/content/updates/types.js';
 
 export const prerender = true;
 

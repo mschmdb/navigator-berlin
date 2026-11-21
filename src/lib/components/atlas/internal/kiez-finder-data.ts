@@ -8,9 +8,9 @@
  */
 
 import type { FeatureCollection, Point, Position } from 'geojson';
-import { loadManifest } from '$lib/data/manifest.js';
-import { fetchLayer } from '$lib/data/internal/layer-fetch.js';
-import { walkingDistanceM, walkingTimeMin } from '$lib/utils/oepnv-walking.js';
+import { loadManifest } from '#lib/data/manifest.js';
+import { fetchLayer } from '#lib/data/internal/layer-fetch.js';
+import { walkingDistanceM, walkingTimeMin } from '#lib/utils/oepnv-walking.js';
 import { featureLabelPoints } from './feature-label-points.js';
 import {
 	buildFinderCollection,
@@ -19,10 +19,10 @@ import {
 	type FinderMetricInput,
 	type FinderMetricKey
 } from './kiez-finder-engine.js';
-import { m } from '$lib/paraglide/messages.js';
-import { formatWahlDate, type LocaleFormatOptions } from '$lib/i18n/format.js';
-import { sourceDisplayLabel } from '$lib/data/wahl-labels.js';
-import type { Locale } from '$lib/paraglide/runtime';
+import { m } from '#lib/paraglide/messages.js';
+import { formatWahlDate, type LocaleFormatOptions } from '#lib/i18n/format.js';
+import { sourceDisplayLabel } from '#lib/data/wahl-labels.js';
+import type { Locale } from '#lib/paraglide/runtime.js';
 
 /**
  * i18n Block B3c: Geteilter Helfer OHNE `opts.locale`: DE (Boundary, wie

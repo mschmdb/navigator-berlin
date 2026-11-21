@@ -1,6 +1,6 @@
-import { formatCount, formatDecimal, formatPercent, formatWithUnit } from '$lib/i18n/format.js';
-import { m } from '$lib/paraglide/messages.js';
-import type { Locale } from '$lib/paraglide/runtime.js';
+import { formatCount, formatDecimal, formatPercent, formatWithUnit } from '#lib/i18n/format.js';
+import { m } from '#lib/paraglide/messages.js';
+import type { Locale } from '#lib/paraglide/runtime.js';
 import { STORY_INK, STORY_SERIES } from '../tokens';
 import type { Kennzahlen } from './types';
 

@@ -67,9 +67,9 @@
   evidence: maybe-false (medium, unverifiziert). Weicht `argv[1]` vom realpath ab (Symlink, anderer Loader), endet `data:wahl-fetch` still mit Exit 0. Klärt: Spawn mit `--only=gibtsnicht` erwartet Exit 2.
 
 - source_spec: `docs/process/specs/spec-berlin-wahlen/stories/15-ingest-agh-bvv-2026.md`
-  summary: `sourceName` für Wahlquellen in ein geteiltes Modul unter `$lib/data/` ziehen statt vier Kopien.
+  summary: `sourceName` für Wahlquellen in ein geteiltes Modul unter `#lib/data//index.ts` ziehen statt vier Kopien.
   evidence: Kopien in `source-label.ts`, `get-election-result.ts`, `llm-export-builder.ts`, `wahl-section.svelte`; beim nächsten Quellwechsel driften die Labels.
-  resolved: Release-Aufräumen 15.10.2026, Helper unter `$lib/data/wahl-source-name.ts`; `wahl-section.svelte` bleibt (mappt über Message-Labels)
+  resolved: Release-Aufräumen 15.10.2026, Helper unter `#lib/data/wahl-source-name.ts`; `wahl-section.svelte` bleibt (mappt über Message-Labels)
 
 - source_spec: `docs/process/specs/spec-berlin-wahlen/stories/15-ingest-agh-bvv-2026.md`
   summary: Ingest-Gate, das bei einem Legendennamen über 3 % ohne Partei-Alias abbricht oder warnt.
@@ -140,7 +140,7 @@
   resolved: 30.09.2026 (D1). „Süden“ mit Umlaut, Palette-Leerzustand „Kein Layer passt zu …“.
 
 - source_spec: `docs/process/implementation-artifacts/spec-i18n-b3c-finder-compare-bookmarks.md`
-  summary: `/explore` in `$lib/seo/translation-register.ts` (`TRANSLATION_REGISTER`) eintragen, damit die `/en/explore`-Seite als echt übersetzt gilt (kein `TranslationDisclaimer`-Fallback-Hinweis, `hreflang`/Sitemap-Eintrag).
+  summary: `/explore` in `#lib/seo/translation-register.ts` (`TRANSLATION_REGISTER`) eintragen, damit die `/en/explore`-Seite als echt übersetzt gilt (kein `TranslationDisclaimer`-Fallback-Hinweis, `hreflang`/Sitemap-Eintrag).
   evidence: Koordinator-Entscheidung 27.09. (Matze AFK): Compare- und Inspector-`EditorialDisclaimer`-Varianten (Bodenrichtwerte, Milieuschutz, Stolperstein, Stigma-Footer, Kiez-Score-Explainer, Wahl-Stimmenanteile) bleiben bis Block C deutsch -- eine indexierte `/en/explore` waere damit editorial halb deutsch. Registrierung erst nach Block C (EditorialDisclaimer-Uebersetzung).
   resolved: 15.10.2026 geprüft. `{ pathname: '/explore', locale: 'en' }` steht in `src/lib/seo/translation-register.ts:112` (Block C1).
 
@@ -165,7 +165,7 @@
   resolved: 15.10.2026 geprüft. `layer/[slug]/+page.svelte` nutzt Messages (`layer_page_*`), `/layer` ist mit `prefix: true` registriert (D1), Dataset-JSON-LD trägt die Seiten-Locale.
 
 - source_spec: `docs/process/implementation-artifacts/spec-i18n-b4a-kiez-bezirk-rahmen.md`
-  summary: `/kiez` und `/bezirk` in `$lib/seo/translation-register.ts` (`TRANSLATION_REGISTER`) eintragen, damit die `/en/kiez/…`- und `/en/bezirk/…`-Seiten als echt übersetzt gelten (kein `TranslationDisclaimer`-Fallback-Hinweis, indexierbar).
+  summary: `/kiez` und `/bezirk` in `#lib/seo/translation-register.ts` (`TRANSLATION_REGISTER`) eintragen, damit die `/en/kiez/…`- und `/en/bezirk/…`-Seiten als echt übersetzt gelten (kein `TranslationDisclaimer`-Fallback-Hinweis, indexierbar).
   evidence: Koordinator-Entscheidung 27.09. (Matze AFK): Prosa (`profileProse`) und FAQ-Inhalte (`faq_qna`) bleiben bis Block C deutsch -- eine indexierte `/en/kiez/…`-Seite wäre editorial halb deutsch. Registrierung erst nach Block C (Prosa/FAQ-Übersetzung).
   resolved: 30.09.2026 (D1). `/kiez`, `/bezirk` und `/layer` stehen mit `prefix: true` im `TRANSLATION_REGISTER`, das Teil-Register ist leer (Spec `spec-i18n-d1-register-sitemap.md`).
 
@@ -193,7 +193,7 @@
   resolved: Release-Aufräumen 15.10.2026, `timeZone: 'Europe/Berlin'` ergänzt, Test mit TZ westlich UTC
 
 - source_spec: `docs/process/implementation-artifacts/spec-i18n-b4b-layer-rahmen.md`
-  summary: `/layer` in `$lib/seo/translation-register.ts` (`TRANSLATION_REGISTER`) eintragen, damit `/en/layer/…`-Seiten als echt übersetzt gelten (kein `TranslationDisclaimer`-Fallback-Hinweis, indexierbar).
+  summary: `/layer` in `#lib/seo/translation-register.ts` (`TRANSLATION_REGISTER`) eintragen, damit `/en/layer/…`-Seiten als echt übersetzt gelten (kein `TranslationDisclaimer`-Fallback-Hinweis, indexierbar).
   evidence: Koordinator-Entscheidung (Matze AFK): Layer-Explain-Fließtext (`explain.*`) und Methodik-Inhalte (`methodology.*`) bleiben bis Block C deutsch -- eine indexierte `/en/layer/…`-Seite wäre editorial halb deutsch. Registrierung erst nach Block C (Explain-/Methodik-Übersetzung).
   resolved: 15.10.2026 geprüft. `{ pathname: '/layer', locale: 'en', prefix: true }` in `translation-register.ts:125` (D1).
 

@@ -1,4 +1,4 @@
-import { localizeHref, type Locale } from '$lib/paraglide/runtime';
+import { localizeHref, type Locale } from '#lib/paraglide/runtime.js';
 
 /**
  * Build a canonical URL from an origin and pathname.

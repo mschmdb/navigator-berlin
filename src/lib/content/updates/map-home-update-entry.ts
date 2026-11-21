@@ -11,8 +11,8 @@
  * Export, ein zusätzlicher Named-Export lässt den Build fehlschlagen
  * ("Invalid export").
  */
-import { categoryLabel } from '$lib/components/updates/category-label.js';
-import type { Locale } from '$lib/paraglide/runtime';
+import { categoryLabel } from '#lib/components/updates/category-label.js';
+import type { Locale } from '#lib/paraglide/runtime.js';
 import type { UpdateEntry } from './types.js';
 
 export interface HomeUpdateTeaser {

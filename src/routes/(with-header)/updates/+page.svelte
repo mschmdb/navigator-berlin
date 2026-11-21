@@ -1,23 +1,23 @@
 <script lang="ts">
-	import { buildPageTitle } from '$lib/seo/page-title.js';
-	import { localizedPathname } from '$lib/seo/canonical.js';
+	import { buildPageTitle } from '#lib/seo/page-title.js';
+	import { localizedPathname } from '#lib/seo/canonical.js';
 	import { page } from '$app/state';
 	import { goto } from '$app/navigation';
-	import SeoHead from '$lib/components/atlas/seo-head.svelte';
-	import JsonLd from '$lib/components/atlas/json-ld.svelte';
-	import FeedDiscoveryLinks from '$lib/components/seo/feed-discovery-links.svelte';
-	import UpdatesFilter from '$lib/components/updates/updates-filter.svelte';
-	import UpdatesEntryCard from '$lib/components/updates/updates-entry-card.svelte';
+	import SeoHead from '#lib/components/atlas/seo-head.svelte';
+	import JsonLd from '#lib/components/atlas/json-ld.svelte';
+	import FeedDiscoveryLinks from '#lib/components/seo/feed-discovery-links.svelte';
+	import UpdatesFilter from '#lib/components/updates/updates-filter.svelte';
+	import UpdatesEntryCard from '#lib/components/updates/updates-entry-card.svelte';
 	import {
 		parseCategoryFilter,
 		serializeCategoryFilter,
 		applyCategoryFilter
-	} from '$lib/content/updates/parse-filter.js';
-	import { buildBlogIndex, buildBreadcrumbList } from '$lib/seo/index.js';
-	import { localizedHref } from '$lib/i18n/localized-href.js';
-	import { m } from '$lib/paraglide/messages.js';
-	import { getLocale } from '$lib/paraglide/runtime';
-	import type { UpdateCategory } from '$lib/content/updates/types.js';
+	} from '#lib/content/updates/parse-filter.js';
+	import { buildBlogIndex, buildBreadcrumbList } from '#lib/seo/index.js';
+	import { localizedHref } from '#lib/i18n/localized-href.js';
+	import { m } from '#lib/paraglide/messages.js';
+	import { getLocale } from '#lib/paraglide/runtime.js';
+	import type { UpdateCategory } from '#lib/content/updates/types.js';
 
 	type Props = { data: import('./$types').PageData };
 	let { data }: Props = $props();

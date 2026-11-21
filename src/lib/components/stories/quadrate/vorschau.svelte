@@ -4,8 +4,8 @@
 	den Namen.
 -->
 <script lang="ts">
-	import { colorsInOrder } from '$lib/stories/wahl-quadrate/farben';
-	import { layout, SIDE } from '$lib/stories/wahl-quadrate/layout';
+	import { colorsInOrder } from '#lib/stories/wahl-quadrate/farben.ts';
+	import { layout, SIDE } from '#lib/stories/wahl-quadrate/layout.ts';
 
 	interface Props {
 		readonly shares: readonly number[];

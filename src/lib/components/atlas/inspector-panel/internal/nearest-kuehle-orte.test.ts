@@ -5,7 +5,7 @@ import {
 	nearestFilteredKuehleOrte,
 	EMPTY_FILTERS
 } from './nearest-kuehle-orte.js';
-import type { KuehleOrt } from '$lib/data/get-kuehle-orte-index.js';
+import type { KuehleOrt } from '#lib/data/get-kuehle-orte-index.js';
 
 function ort(over: Partial<KuehleOrt> & Pick<KuehleOrt, 'id' | 'name'>): KuehleOrt {
 	return {

@@ -5,18 +5,18 @@
 -->
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import AddressSearch from '$lib/components/atlas/address-search.svelte';
-	import { geocodeAddress } from '$lib/data/geocode.remote.js';
-	import type { GeocodeSuggestion } from '$lib/data';
+	import AddressSearch from '#lib/components/atlas/address-search.svelte';
+	import { geocodeAddress } from '#lib/data/geocode.remote.js';
+	import type { GeocodeSuggestion } from '#lib/data/index.ts';
 	import {
 		HOME_SEARCH_EXAMPLES,
 		buildQuickLinkHref,
 		buildSearchTargetHref
-	} from '$lib/content/home-quick-links.js';
-	import { HOME_PREVIEWS } from '$lib/content/home-previews.js';
-	import { localizedHref } from '$lib/i18n/localized-href.js';
-	import { m } from '$lib/paraglide/messages.js';
-	import { trackLanding } from '$lib/utils/plausible.js';
+	} from '#lib/content/home-quick-links.js';
+	import { HOME_PREVIEWS } from '#lib/content/home-previews.js';
+	import { localizedHref } from '#lib/i18n/localized-href.js';
+	import { m } from '#lib/paraglide/messages.js';
+	import { trackLanding } from '#lib/utils/plausible.js';
 	import HomePreviewLink from './home-preview-link.svelte';
 
 	interface Props {

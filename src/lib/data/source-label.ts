@@ -1,5 +1,5 @@
-import { getLayerDisplayName } from '$lib/components/atlas/internal/layer-palette-filter.js';
-import type { LocaleOptions } from '$lib/components/atlas/internal/atlas-label-options.js';
+import { getLayerDisplayName } from '#lib/components/atlas/internal/layer-palette-filter.js';
+import type { LocaleOptions } from '#lib/components/atlas/internal/atlas-label-options.js';
 
 /**
  * Mappt einen technischen Layer-/Quellen-Slug auf einen lesbaren Namen

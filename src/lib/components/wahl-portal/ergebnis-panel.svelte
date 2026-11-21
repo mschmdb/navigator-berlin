@@ -2,19 +2,19 @@
 	import { untrack } from 'svelte';
 	import { Accordion } from 'bits-ui';
 	import { ChevronDown } from '@lucide/svelte';
-	import { m } from '$lib/paraglide/messages.js';
-	import { localizedHref } from '$lib/i18n/localized-href.js';
+	import { m } from '#lib/paraglide/messages.js';
+	import { localizedHref } from '#lib/i18n/localized-href.js';
 	import {
 		getWahlPortalState,
 		currentJahr,
 		vorlaeufigStatusFor
-	} from '$lib/state/wahl-portal-context.svelte.js';
-	import { stimmtypForReihe, type WahlPortalEbene } from '$lib/utils/wahl-portal-url-state.js';
+	} from '#lib/state/wahl-portal-context.svelte.js';
+	import { stimmtypForReihe, type WahlPortalEbene } from '#lib/utils/wahl-portal-url-state.js';
 	import {
 		wahlReiheLabel,
 		sourceDisplayLabel,
 		licenseDisplayLabel
-	} from '$lib/data/wahl-labels.js';
+	} from '#lib/data/wahl-labels.js';
 	import {
 		buildErgebnisPanelRows,
 		vorjahrLabel,

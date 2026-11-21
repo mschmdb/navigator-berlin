@@ -13,7 +13,7 @@ so that ich strukturierte JSON-Antworten mit Quellen-Attribution abrufen kann, o
 1. Kein WebMCP-Manifest existiert. `static/webmcp-manifest.json` fehlt; `routes/webmcp-manifest.json/+server.ts` ist nicht angelegt. LLM-Browser-Agents können die Site nicht als Tool-Provider erkennen (FR37 ungenutzt).
 2. `webmcp`-Package (`webmcp@^0.0.1`) ist in `package.json` deklariert, aber NPM-Paket ist ein Empty-Stub (nur README + package.json, kein Code). Tatsächlicher Polyfill-/Adapter-Pfad ist unklar.
 3. Spec-Status WebMCP ist Pre-1.0 mit Bewegung. Native `navigator.modelContext` ist in Chrome 146+ angedeutet, aber Adoption + API-Shape unsicher (Stand 2026-05-15). ADR-002 ist noch im Status `Proposed` und ungefüllt (`docs/adr/ADR-002-webmcp.md` ist Stub mit leeren Sektionen).
-4. Tools, Resources und Prompts brauchen klaren Datenpfad ins bestehende `$lib/data/`. Doppelte Datenpfade (eigener WebMCP-Datenpfad) sind per Architektur-MUST nicht erlaubt.
+4. Tools, Resources und Prompts brauchen klaren Datenpfad ins bestehende `#lib/data//index.ts`. Doppelte Datenpfade (eigener WebMCP-Datenpfad) sind per Architektur-MUST nicht erlaubt.
 5. FR40 (Quellen-Attribution pro Datenwert) ist auf Inspector-Layer-Hit erfüllt; WebMCP-Output muss diese Provenance auch in JSON-Antworten weiterreichen, sonst ist LLM-Zitation gebrochen.
 
 ## Quellen
@@ -21,7 +21,7 @@ so that ich strukturierte JSON-Antworten mit Quellen-Attribution abrufen kann, o
 - Epic-Block: `docs/process/planning-artifacts/epics.md` Zeile 1250-1286.
 - PRD: FR37-FR40 (`prd.md` Zeile 742-745).
 - ADR-002-Stub: `docs/adr/ADR-002-webmcp.md` (Status Proposed, leere Sektionen — diese Story füllt sie aus oder ergänzt ADR-013-WebMCP-Adapter falls Scope-Trennung sinnvoll)
-- Architecture: Phase-1-Adapter-Schicht in `$lib/webmcp/`, Spec-Version-Pin in `webmcp-manifest.json` (`architecture.md` Zeile 281-285, 1463, 1492, 1539, 1648).
+- Architecture: Phase-1-Adapter-Schicht in `#lib/webmcp/`, Spec-Version-Pin in `webmcp-manifest.json` (`architecture.md` Zeile 281-285, 1463, 1492, 1539, 1648).
 - WebMCP-Spec-Referenz: https://github.com/MiguelsPizza/WebMCP (Repo der Spezifikation, Status zum Story-Zeitpunkt prüfen)
 - `@mcp-b/global` als Polyfill-Kandidat per Epic-AC; aktuelle NPM-Existenz + Versions-Status zum Dev-Start verifizieren (Open-Question 1)
 - Bestehender Datenpfad:
@@ -38,7 +38,7 @@ so that ich strukturierte JSON-Antworten mit Quellen-Attribution abrufen kann, o
 
 1. **AC-1 (Adapter-Schicht mit Spec-Version-Pin):**
    **Given** dass WebMCP Pre-1.0 ist und Breaking-Changes erwartet werden
-   **When** ich `$lib/webmcp/adapter.ts` implementiere
+   **When** ich `#lib/webmcp/adapter.ts` implementiere
    **Then**:
    - Adapter exportiert `registerWebMcpServer(config: WebMcpServerConfig): void` (browser-only)
    - Conditional Polyfill-Load: prüft `'modelContext' in navigator` (native API ab Chrome 146+); falls fehlt, dynamic-import `@mcp-b/global` (oder das aktuell beste Polyfill-Package, siehe Open-Question 1)
@@ -49,8 +49,8 @@ so that ich strukturierte JSON-Antworten mit Quellen-Attribution abrufen kann, o
    - Test: Adapter mountet ohne Error, Spec-Version in Manifest übereinstimmend
 
 2. **AC-2 (5 Tools mit Datenpfad-Delegation):**
-   **Given** dass WebMCP-Tools KEINEN eigenen Datenpfad bauen sollen (Architecture-MUST), sondern bestehende `$lib/data/`-Funktionen wiederverwenden
-   **When** ich Tools in `$lib/webmcp/tools/` implementiere
+   **Given** dass WebMCP-Tools KEINEN eigenen Datenpfad bauen sollen (Architecture-MUST), sondern bestehende `#lib/data//index.ts`-Funktionen wiederverwenden
+   **When** ich Tools in `#lib/webmcp/tools//index.ts` implementiere
    **Then**:
    - 5 Tools mit JSON-Schema-strict Inputs (`snake_case`-Naming, Englisch-Beschreibungen):
      - **`address_lookup`** → delegiert an Geocode-Pfad (`geocode.remote.ts`); Input `{query: string, limit?: number}`; Output `Array<{display_name, lat, lng, bezirk?, kiez?, postcode?}>`
@@ -65,7 +65,7 @@ so that ich strukturierte JSON-Antworten mit Quellen-Attribution abrufen kann, o
 
 3. **AC-3 (Resources mit URI-Schema):**
    **Given** FR38 (URI-adressierbares Datenmodell)
-   **When** ich Resources in `$lib/webmcp/resources/` implementiere
+   **When** ich Resources in `#lib/webmcp/resources/` implementiere
    **Then**:
    - URI-Schema `navigator://...`:
      - `navigator://address/{slug-or-coords}` → aktive Adress-Info aus UI-Context
@@ -77,7 +77,7 @@ so that ich strukturierte JSON-Antworten mit Quellen-Attribution abrufen kann, o
 
 4. **AC-4 (3 Prompt-Templates):**
    **Given** FR39 (mindestens 3 Prompt-Templates)
-   **When** ich Prompts in `$lib/webmcp/prompts/` implementiere
+   **When** ich Prompts in `#lib/webmcp/prompts//index.ts` implementiere
    **Then**:
    - **`address-overview`** „Was ist an dieser Adresse besonders?" / „What's notable about this address?"
    - **`compare-kieze`** „Vergleiche diese zwei Kieze" / „Compare these two Kieze"
@@ -201,11 +201,11 @@ Empfehlung: Adapter-Schicht so abstrakt halten dass Polyfill austauschbar ist. W
 
 ### Datenpfad-Delegation strikt
 
-MUST: Tool-Implementation ruft `$lib/data/`-Funktionen, NICHT direkt `static/layers/`-Files oder Postgres. Vorteil: alle FR40-Provenance-Garantien aus `LayerHit` werden durch Tool-Output reichlich. Beispiel:
+MUST: Tool-Implementation ruft `#lib/data/`-Funktionen, NICHT direkt `static/layers/`-Files oder Postgres. Vorteil: alle FR40-Provenance-Garantien aus `LayerHit` werden durch Tool-Output reichlich. Beispiel:
 
 ```typescript
 // $lib/webmcp/tools/cross-layer-query.ts
-import { getLayersAtPoint } from '$lib/data/get-layers-at-point';
+import { getLayersAtPoint } from '#lib/data/get-layers-at-point.ts';
 import { CrossLayerQueryInput, CrossLayerQueryOutput } from './schemas';
 
 export const crossLayerQueryTool = {
@@ -256,7 +256,7 @@ Tools, Resources, Prompts müssen Locale (de|en) respektieren. Pattern: `locale`
 
 a) Stub belassen als Marker („wir nutzen WebMCP-Spec"), Doku im README
 b) Stub entfernen, ersetzen durch `@mcp-b/global` oder Alternative
-c) Stub entfernen + keine Polyfill-Dep, eigener Polyfill in `$lib/webmcp/`
+c) Stub entfernen + keine Polyfill-Dep, eigener Polyfill in `#lib/webmcp//index.ts`
 
 Empfehlung (b) wenn `@mcp-b/global` verfügbar, sonst (c).
 
@@ -274,7 +274,7 @@ Empfehlung: ADR-002 ausfüllen (single ADR pro Tech-Decision-Topic).
 - **#11 Kein US-Drittanbieter:** Polyfill darf KEIN US-CDN-Asset laden
 - **#14 i18n-First:** Locale-Param respektieren
 - **#19 Remote Functions vs. fetch:** Tools laufen client-side; bestehende `*.remote.ts`-Functions via Direct-Call OK
-- **MUST WebMCP-Tools ↛ Data-Layer:** Tools delegieren an `$lib/data/`, kein eigener Datenpfad (Architecture-Boundary)
+- **MUST WebMCP-Tools ↛ Data-Layer:** Tools delegieren an `#lib/data//index.ts`, kein eigener Datenpfad (Architecture-Boundary)
 
 ### Performance + Caching
 

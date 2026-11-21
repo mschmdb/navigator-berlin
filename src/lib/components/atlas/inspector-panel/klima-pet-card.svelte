@@ -1,12 +1,12 @@
 <script lang="ts">
-	import type { LayerHit } from '$lib/data';
-	import type { NumericMedianAggregate } from '$lib/data/layer-aggregates-types.js';
+	import type { LayerHit } from '#lib/data/index.ts';
+	import type { NumericMedianAggregate } from '#lib/data/layer-aggregates-types.js';
 	import type { Snippet } from 'svelte';
 	import { Eye, EyeOff } from '@lucide/svelte';
-	import { localizedHref } from '$lib/i18n/localized-href.js';
-	import { m } from '$lib/paraglide/messages.js';
-	import { getLocale, type Locale } from '$lib/paraglide/runtime';
-	import { formatDecimal, formatWithUnit } from '$lib/i18n/format.js';
+	import { localizedHref } from '#lib/i18n/localized-href.js';
+	import { m } from '#lib/paraglide/messages.js';
+	import { getLocale, type Locale } from '#lib/paraglide/runtime.js';
+	import { formatDecimal, formatWithUnit } from '#lib/i18n/format.js';
 	import { getValueSeverity } from './internal/value-severity-mapping.js';
 	import ScoreBar from '../charts/score-bar.svelte';
 

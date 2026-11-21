@@ -5,16 +5,16 @@
 -->
 <script lang="ts">
 	import { page } from '$app/state';
-	import SeoHead from '$lib/components/atlas/seo-head.svelte';
-	import JsonLd from '$lib/components/atlas/json-ld.svelte';
-	import Breadcrumb from '$lib/components/atlas/breadcrumb.svelte';
-	import { buildAdministrativeArea } from '$lib/seo/jsonld-administrative-area.js';
-	import { buildBreadcrumbList } from '$lib/seo/jsonld-breadcrumb.js';
-	import { buildBezirkMeta, buildKiezMeta } from '$lib/seo/profile-meta.js';
-	import { localizedPathname } from '$lib/seo/canonical.js';
-	import { bezirkSameAs } from '$lib/seo/sources/bezirk-sameas.js';
-	import { getLocale } from '$lib/paraglide/runtime';
-	import { m } from '$lib/paraglide/messages.js';
+	import SeoHead from '#lib/components/atlas/seo-head.svelte';
+	import JsonLd from '#lib/components/atlas/json-ld.svelte';
+	import Breadcrumb from '#lib/components/atlas/breadcrumb.svelte';
+	import { buildAdministrativeArea } from '#lib/seo/jsonld-administrative-area.js';
+	import { buildBreadcrumbList } from '#lib/seo/jsonld-breadcrumb.js';
+	import { buildBezirkMeta, buildKiezMeta } from '#lib/seo/profile-meta.js';
+	import { localizedPathname } from '#lib/seo/canonical.js';
+	import { bezirkSameAs } from '#lib/seo/sources/bezirk-sameas.js';
+	import { getLocale } from '#lib/paraglide/runtime.js';
+	import { m } from '#lib/paraglide/messages.js';
 
 	interface Props {
 		kind: 'kiez' | 'bezirk';

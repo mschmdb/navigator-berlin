@@ -1,6 +1,6 @@
-import type { OverviewBezirk } from '$lib/data/region-overview.js';
-import { readEinwohnerStichtag } from '$lib/server/profile/meta-sources.js';
-import { loadRegionOverview } from '$lib/server/profile/region-overview-loader.js';
+import type { OverviewBezirk } from '#lib/data/region-overview.js';
+import { readEinwohnerStichtag } from '#lib/server/profile/meta-sources.js';
+import { loadRegionOverview } from '#lib/server/profile/region-overview-loader.js';
 import type { PageServerLoad } from './$types';
 
 export const prerender = true;

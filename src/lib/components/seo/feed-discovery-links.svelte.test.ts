@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
-import { overwriteGetLocale, type Locale } from '$lib/paraglide/runtime';
+import { overwriteGetLocale, type Locale } from '#lib/paraglide/runtime.js';
 import FeedDiscoveryLinks from './feed-discovery-links.svelte';
 
 afterEach(() => {

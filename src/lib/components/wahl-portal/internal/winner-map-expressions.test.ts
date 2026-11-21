@@ -17,7 +17,7 @@ import {
 	winnerForJahrJs
 } from './winner-map-expressions.js';
 import { NEUTRAL_FARBE, NEUTRAL_OPACITY, type WinnerApiRow } from './winner-map-data.js';
-import { parteiColor } from '$lib/data/partei-farben.js';
+import { parteiColor } from '#lib/data/partei-farben.js';
 import { patternImageId } from './partei-pattern-images.js';
 
 function polygon() {

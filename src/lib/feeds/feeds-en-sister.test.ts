@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { loadUpdatesFromModules } from '$lib/content/updates/load-updates.js';
+import { loadUpdatesFromModules } from '#lib/content/updates/load-updates.js';
 import { buildAtomXml } from './build-atom.js';
 import { buildJsonFeed } from './build-json-feed.js';
 import { buildRssXml } from './build-rss.js';

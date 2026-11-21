@@ -262,7 +262,7 @@ Falls T8-Übersetzungs-Sprint nicht alle 42 Slugs schafft:
 
 - **#2 Files <500 Zeilen:** `LAYER_METHODOLOGY` mit 42 Slugs × 2 Locales könnte File überschreiten. Splitting in `layer-methodology-de.ts` + `layer-methodology-en.ts` als Sub-Module mit `index.ts`-Re-Export-Barrel.
 - **#3 Bestehende Funktionen prüfen:** `localizeHref`, `getLocale`, `loadManifest`, `buildLayerDetail`, `licenseToSchemaOrgUrl` (Story 2.2). Keine Re-Implementation.
-- **#7 TypeScript strict:** `Locale`-Type aus `$lib/data/types.ts` (aktuell 8-Werte-Union; reduzieren auf `'de' | 'en'` per Story 3.1, bis dahin alle 8 unterstützen oder hier vorab eng ziehen)
+- **#7 TypeScript strict:** `Locale`-Type aus `#lib/data/types.ts` (aktuell 8-Werte-Union; reduzieren auf `'de' | 'en'` per Story 3.1, bis dahin alle 8 unterstützen oder hier vorab eng ziehen)
 - **#14 i18n-First:** alle UI-Strings via Paraglide; Methodology-Content via lokalisierte Maps (kein hardcoded UI-Text)
 - **#21 prerender + entries:** AC-3 enforced
 
@@ -311,7 +311,7 @@ Claude Opus 4.7 (2026-05-16).
 ### Completion Notes List
 
 - **Scope-Reduktion auf Phase 1 DE-only Refactor + Authority-Zentralisierung.** EN-Coverage explizit auf Phase 3 verschoben per User-Lock + Memory `project_i18n_phase_1_de_only`. Story-Wortlaut „EN-Variante" wird ignoriert.
-- **AC-7 Authority-Mapping zentral umgesetzt** (Open-Question 5 = Variante zentral). 23 Authority-Keys typed in `$lib/data/authorities.ts`. Methodology-Specs referenzieren nur noch Keys + sprach-neutralen Suffix für Composites. Output-API (`LayerMethodology.authority: string`) bleibt rückwärtskompatibel — alle bestehenden Konsumer (page.svelte, Tests) brechen nicht.
+- **AC-7 Authority-Mapping zentral umgesetzt** (Open-Question 5 = Variante zentral). 23 Authority-Keys typed in `#lib/data/authorities.ts`. Methodology-Specs referenzieren nur noch Keys + sprach-neutralen Suffix für Composites. Output-API (`LayerMethodology.authority: string`) bleibt rückwärtskompatibel — alle bestehenden Konsumer (page.svelte, Tests) brechen nicht.
 - **Content-Architektur Variante A vorgehärtet** (Open-Question 1): Specs-Internals nutzen typed `authorityKey`, Resolver mappt zur Klartext-Locale-Variante. Phase 3 ergänzt EN-Werte in `AUTHORITIES[key].en` ohne Schema-Bruch.
 - **Translation-Disclaimer-Stub angelegt**, aber NICHT in Layer-Page eingebunden (Open-Question 4 = c, dezenter Banner — Platzierung in Phase 3). Phase-3-Sprint muss nur `<TranslationDisclaimer effectiveLocale=… pageLocale=… alternateLocaleHref=… />` direkt unter dem Page-Header einfügen.
 - **Dataset-JSON-LD (AC-4) bleibt Story-2.2-Verantwortung.** `buildDataset` ist auf main NICHT vorhanden (`src/lib/seo/` existiert nicht). Layer-Page rendert weiterhin nur `<title>` + `<meta description>` ohne JSON-LD. Phase-3-Reaktivierung kombiniert 2.2-Generator + 2.5a-Phase-3 EN-Locale-Einbindung.

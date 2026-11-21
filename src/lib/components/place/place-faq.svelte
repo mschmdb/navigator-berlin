@@ -3,9 +3,9 @@
 	Natives details/summary: Tastatur und Screenreader ohne Zusatzcode. JSON-LD wie heute.
 -->
 <script lang="ts">
-	import JsonLd from '$lib/components/atlas/json-ld.svelte';
-	import { m } from '$lib/paraglide/messages.js';
-	import { buildFaqPage } from '$lib/seo/jsonld-faqpage.js';
+	import JsonLd from '#lib/components/atlas/json-ld.svelte';
+	import { m } from '#lib/paraglide/messages.js';
+	import { buildFaqPage } from '#lib/seo/jsonld-faqpage.js';
 	interface FaqItemWithChapter {
 		readonly question: string;
 		readonly answer: string;

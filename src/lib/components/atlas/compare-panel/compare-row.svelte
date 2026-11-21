@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { ArrowUp, Minus } from '@lucide/svelte';
-	import type { LayerHit } from '$lib/data';
+	import type { LayerHit } from '#lib/data/index.ts';
 	import { getLayerHitDisplay } from '../inspector-panel/internal/layer-hit-display.js';
 	import {
 		getValueSeverity,
@@ -12,10 +12,10 @@
 		getCompareProfile,
 		type CompareProfile,
 		type CompareResult
-	} from '$lib/utils/layer-compare.js';
+	} from '#lib/utils/layer-compare.js';
 	import ValueChip from '../value-chip.svelte';
-	import { m } from '$lib/paraglide/messages.js';
-	import { getLocale } from '$lib/paraglide/runtime';
+	import { m } from '#lib/paraglide/messages.js';
+	import { getLocale } from '#lib/paraglide/runtime.js';
 
 	type Props = {
 		slug: string;

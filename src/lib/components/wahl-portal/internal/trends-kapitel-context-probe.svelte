@@ -4,8 +4,8 @@
 		createWahlPortalState,
 		applyWahlList,
 		type WahlPortalListEntry
-	} from '$lib/state/wahl-portal-context.svelte.js';
-	import type { WahlPortalReihe } from '$lib/utils/wahl-portal-url-state.js';
+	} from '#lib/state/wahl-portal-context.svelte.js';
+	import type { WahlPortalReihe } from '#lib/utils/wahl-portal-url-state.js';
 	import type { TrendsMapControllerOptions } from './trends-kapitel-maplibre.svelte.js';
 
 	type Props = {

@@ -3,9 +3,9 @@ import {
 	resolveSpatialLevel,
 	type SpatialContext,
 	type SpatialLevel
-} from '$lib/data/resolve-spatial-level.js';
+} from '#lib/data/resolve-spatial-level.js';
 
-export type { SpatialLevel } from '$lib/data/resolve-spatial-level.js';
+export type { SpatialLevel } from '#lib/data/resolve-spatial-level.js';
 
 const KEY = Symbol('inspector-level-state');
 

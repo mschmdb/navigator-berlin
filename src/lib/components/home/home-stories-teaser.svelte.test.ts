@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
-import { overwriteGetLocale } from '$lib/paraglide/runtime';
-import type { StoryEntry } from '$lib/content/stories/types.js';
+import { overwriteGetLocale } from '#lib/paraglide/runtime.js';
+import type { StoryEntry } from '#lib/content/stories/types.js';
 import HomeStoriesTeaser from './home-stories-teaser.svelte';
 
 const mk = (slug: string, date: string, title: string, withPreview = true): StoryEntry => ({

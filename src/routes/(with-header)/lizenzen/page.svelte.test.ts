@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { page } from 'vitest/browser';
-import { overwriteGetLocale } from '$lib/paraglide/runtime';
+import { overwriteGetLocale } from '#lib/paraglide/runtime.js';
 import Page from './+page.svelte';
 import {
 	ariaLabels,
@@ -9,8 +9,8 @@ import {
 	normalizedText,
 	textLines
 } from '../methodik/methodik-test-utils.js';
-import { getLayerDisplayName } from '$lib/components/atlas/internal/layer-palette-filter.js';
-import type { Manifest, LayerMetadata } from '$lib/data';
+import { getLayerDisplayName } from '#lib/components/atlas/internal/layer-palette-filter.js';
+import type { Manifest, LayerMetadata } from '#lib/data/index.ts';
 
 function meta(slug: string, license: LayerMetadata['license']): LayerMetadata {
 	return {

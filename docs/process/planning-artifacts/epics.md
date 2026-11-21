@@ -197,7 +197,7 @@ NFR-I3: Reprojektion EPSG:25833 → EPSG:4326 zur Build-Zeit; Spotcheck mit 5 Sa
 NFR-I4: Pro Layer Source-URL, Abruf-Datum, Lizenz, SHA-256 in `static/layers/MANIFEST.json`.
 NFR-I5: Lizenz-Hierarchie eingehalten und in `/lizenzen` und Footer ausgespielt.
 NFR-I6: Nominatim-Geocoding-Anfragen rate-limitiert auf 1 req/s; lokaler LRU-Cache für 1.000 häufigste Adressen.
-NFR-I7: WebMCP-Spec-Version in `webmcp-manifest.json`; Adapter-Schicht in `$lib/webmcp/` bei Breaking-Change aktualisierbar.
+NFR-I7: WebMCP-Spec-Version in `webmcp-manifest.json`; Adapter-Schicht in `#lib/webmcp//index.ts` bei Breaking-Change aktualisierbar.
 NFR-I8 (P2): Phase-2-Live-Endpunkte mit Health-Check pro Request; bei Ausfall Layer ausgegraut, kein Hängen.
 
 **Reliability**
@@ -431,7 +431,7 @@ UX-DR56: Architektur-Page (`/{locale}/architektur`) mit EU-FOSS-Hosting-Stack-Er
 
 **User Outcome:** Bürger (Anna), Wohnungssucher (Tobias), blinder Stadtforscher (Marek) tippt Berliner Adresse oder klickt Karten-Punkt → Inspektor-Panel zeigt alle Stadt-Layer (Boundaries, Wohn-Daten, Umwelt, Memorial, Klima-Heritage 1719+) im selben Surface mit Cross-Layer-Sicht. Tastatur- und Screenreader-vollständig, responsive über Mobile/Tablet/Desktop. Layer-Toggle-Palette via `/`-Shortcut (Desktop) bzw. Bottom-Sheet (Mobile). Editorial-Verantwortung für sensible Layer (Stolpersteine, Mauer/Sektoren).
 
-**Scope:** Includes Foundation (Repository-Init via `sv create`, Design-Token-Setup mit Cloud Dancer + Plex, Bits-UI-Wrapper, MetaFooter-Skeleton, SkipLink), Daten-Pipeline (FIS-Broker WFS + ODIS + DWD CDC + OSM Overpass + MANIFEST.json), Daten-Zugriffs-Abstraktion (`$lib/data/getLayersAtPoint`), MapLibre Plex-Cartography mit eigenem Style-JSON + Glyph-Pack + Map-A11y-Layer (parallele DOM-Liste), Inspektor-Panel mit ARIA-Live + LayerRow + DataStandBanner, Layer-Palette, Klima-Sparkline + Long-View, Daten-Tabellen-Alternative, Editorial-Pattern (Stolperstein-Quellen, Disclaimer, „Fehler im Eintrag?"-Mailto). Minimaler Coolify-Deploy für End-to-End-Validierung.
+**Scope:** Includes Foundation (Repository-Init via `sv create`, Design-Token-Setup mit Cloud Dancer + Plex, Bits-UI-Wrapper, MetaFooter-Skeleton, SkipLink), Daten-Pipeline (FIS-Broker WFS + ODIS + DWD CDC + OSM Overpass + MANIFEST.json), Daten-Zugriffs-Abstraktion (`#lib/data/getLayersAtPoint`), MapLibre Plex-Cartography mit eigenem Style-JSON + Glyph-Pack + Map-A11y-Layer (parallele DOM-Liste), Inspektor-Panel mit ARIA-Live + LayerRow + DataStandBanner, Layer-Palette, Klima-Sparkline + Long-View, Daten-Tabellen-Alternative, Editorial-Pattern (Stolperstein-Quellen, Disclaimer, „Fehler im Eintrag?"-Mailto). Minimaler Coolify-Deploy für End-to-End-Validierung.
 
 **FRs covered:** FR1–FR26, FR11a–FR11e, FR41–FR53, FR55. Performance-NFRs (NFR-P1–P10) und Accessibility-NFRs (NFR-A1–A10) Implementierungs-seitig. Integration-NFRs (NFR-I1–I7).
 
@@ -439,7 +439,7 @@ UX-DR56: Architektur-Page (`/{locale}/architektur`) mit EU-FOSS-Hosting-Stack-Er
 
 **User Outcome:** Datenjournalisten (Frieda) und Stadtforscher finden Site via Google/Perplexity und landen auf prerendered Bezirks-/Kiez-Pages mit Lead, Steckbrief, Karten-Embed, FAQ-Sektion (datengefüllte Q&As aus Templates) und JSON-LD Structured Data. Die bestehende Layer-Detail-Page (`/layer/[slug]`, Story 1.29) wird um englische Variante, Dataset-JSON-LD und FAQ-Section erweitert. Ein Cross-Layer-Score (Kiez-Score auf LOR-Ebene, Bezirks-Score auf 12-Bezirke-Ebene) wird Build-Zeit aggregiert und auf einer eigenen Ranking-Page „Wo lebt es sich gut?" als Top-N-View zugänglich. LLM-Agents (Claude-Browser-Extension, ChatGPT-Plugin) erkennen WebMCP-Manifest, rufen Tools (`address_lookup`, `cross_layer_query`, `get_kiez_profile`, `get_layer_metadata`, `list_layers_at_point`) direkt im Browser-Kontext auf und erhalten strukturierte JSON-Antworten mit Quellen-Attribution. `/llms.txt` + `/llms-full.txt` aggregieren alle Page-Inhalte als kondensierte LLM-Quelle.
 
-**Scope:** Postgres-Aggregat-Foundation als Build-Zeit-Cache (Drizzle-Schema + Migrations + `data:aggregate`-Build-Step, kein Source-of-Truth), SEO/AEO-Stack (`<svelte:head>` mit Title/Meta pro Route, JSON-LD-Generator-Bibliothek für `Place`/`AdministrativeArea`/`Dataset`/`FAQPage`/`WebSite`/`BreadcrumbList`, `llms.txt` + `llms-full.txt`, Sitemap-Index + Per-Sprache-Sitemaps de/en, robots.txt, Canonical-URLs), Bezirks-/Kiez-Page-Templates mit Long-Form-Reading-Layout, FaqSection als pures Template mit Daten-Slots (kein LLM-Polish zur Build-Zeit, Inhalte aus `faq_qna`-Aggregat), Layer-Page-Enhancement (EN-Variante via lokal vor-übersetzter Bundles + Dataset-JSON-LD + FAQ-Section), OG-Image-Pipeline für Bezirks-/Kiez-/Layer-Routes (Build-Zeit-Pre-Generation per Satori, Cache-Header `immutable`), WebMCP-Adapter-Schicht in `$lib/webmcp/` mit 5 Tools + Resources (`navigator://address/{slug}`, `navigator://layers/active`) + 3 Prompt-Templates, Kiez-Score- und Bezirks-Score-Aggregat-Berechnung mit Methodik-Disclosure, Ranking-Page „Wo lebt es sich gut?" als Top-N-View. i18n auf de/en beschränkt (User-Lock 2026-05-15: 8-Sprachen-Scope verworfen, RTL/Plex Sans Arabic verschoben in Future). Coolify-Postgres-Service-Setup + Backup wird parallel als Infra-Hand-Arbeit erledigt, nicht als Story getrackt.
+**Scope:** Postgres-Aggregat-Foundation als Build-Zeit-Cache (Drizzle-Schema + Migrations + `data:aggregate`-Build-Step, kein Source-of-Truth), SEO/AEO-Stack (`<svelte:head>` mit Title/Meta pro Route, JSON-LD-Generator-Bibliothek für `Place`/`AdministrativeArea`/`Dataset`/`FAQPage`/`WebSite`/`BreadcrumbList`, `llms.txt` + `llms-full.txt`, Sitemap-Index + Per-Sprache-Sitemaps de/en, robots.txt, Canonical-URLs), Bezirks-/Kiez-Page-Templates mit Long-Form-Reading-Layout, FaqSection als pures Template mit Daten-Slots (kein LLM-Polish zur Build-Zeit, Inhalte aus `faq_qna`-Aggregat), Layer-Page-Enhancement (EN-Variante via lokal vor-übersetzter Bundles + Dataset-JSON-LD + FAQ-Section), OG-Image-Pipeline für Bezirks-/Kiez-/Layer-Routes (Build-Zeit-Pre-Generation per Satori, Cache-Header `immutable`), WebMCP-Adapter-Schicht in `#lib/webmcp/` mit 5 Tools + Resources (`navigator://address/{slug}`, `navigator://layers/active`) + 3 Prompt-Templates, Kiez-Score- und Bezirks-Score-Aggregat-Berechnung mit Methodik-Disclosure, Ranking-Page „Wo lebt es sich gut?" als Top-N-View. i18n auf de/en beschränkt (User-Lock 2026-05-15: 8-Sprachen-Scope verworfen, RTL/Plex Sans Arabic verschoben in Future). Coolify-Postgres-Service-Setup + Backup wird parallel als Infra-Hand-Arbeit erledigt, nicht als Story getrackt.
 
 **FRs covered:** FR27–FR40, FR55a–FR55b (de/en-Subset). Phase-2-Scope-Cut: FR55c–FR55j (6 weitere Sprachen + RTL) verschoben.
 
@@ -613,17 +613,17 @@ So that die Site reproduzierbar mit aktuellen Berliner Geo-Daten gebaut werden k
 ### Story 1.4: Daten-Zugriffs-Abstraktion
 
 As a Komponenten-Entwickler,
-I want eine typesafe Daten-Zugriffs-Abstraktion in `$lib/data/`,
+I want eine typesafe Daten-Zugriffs-Abstraktion in `#lib/data//index.ts`,
 So that Komponenten Layer-Hits via einheitlichem Interface abrufen können — und Phase-2/3-SQL-Swap ohne Component-Code-Änderung möglich ist.
 
 **Acceptance Criteria:**
 
 **Given** `static/layers/MANIFEST.json` existiert
-**When** ich `$lib/data/types.ts` mit `LayerHit`, `KiezProfile`, `ClimateData`, `LayerMetadata`-Interfaces definiere
+**When** ich `#lib/data/types.ts` mit `LayerHit`, `KiezProfile`, `ClimateData`, `LayerMetadata`-Interfaces definiere
 **Then** alle Daten-Typen sind TypeScript-strict typed mit Source-Provenienz pro Wert (`{ layer, value, source, updatedAt, license, reason? }`)
 
 **Given** die Typen
-**When** ich `$lib/data/manifest.ts` als typed Loader für `MANIFEST.json` und `$lib/data/get-layers-at-point.ts` mit `@turf/boolean-point-in-polygon` + `rbush` R-Tree-Index implementiere
+**When** ich `#lib/data/manifest.ts` als typed Loader für `MANIFEST.json` und `$lib/data/get-layers-at-point.ts` mit `@turf/boolean-point-in-polygon` + `rbush` R-Tree-Index implementiere
 **Then** `getLayersAtPoint(lat, lng): Promise<LayerHit[]>` liefert alle Layer-Hits für einen Punkt
 **And** R-Tree wird einmal beim Hydrate-Time pro Layer gebaut, danach Punkt-in-Polygon-Lookup O(log n)
 **And** In-Process LRU-Cache (`lru-cache`, max 200 Einträge) cached Berechnungs-Outputs
@@ -633,13 +633,13 @@ So that Komponenten Layer-Hits via einheitlichem Interface abrufen können — u
 **Then** der Hit wird als `{ layer, value: null, reason: 'no-coverage' }` zurückgegeben statt als Error (FR20)
 
 **Given** die Daten-Abstraktion
-**When** ich Unit-Tests in `$lib/data/get-layers-at-point.test.ts` schreibe für 5 bekannte Berlin-Punkte mit erwarteten Layer-Hits
+**When** ich Unit-Tests in `#lib/data/get-layers-at-point.test.ts` schreibe für 5 bekannte Berlin-Punkte mit erwarteten Layer-Hits
 **Then** alle Tests laufen via `pnpm test` durch
-**And** Coverage für `$lib/data/`-Module liegt bei ≥ 80% (NFR-M5)
+**And** Coverage für `#lib/data//index.ts`-Module liegt bei ≥ 80% (NFR-M5)
 
 **Given** die Daten-Abstraktion
 **When** ich `getKiezProfile(lang, slug)`, `getBezirkProfile(lang, slug)`, `getLayerMetadata(layer)` als typed Reader implementiere
-**Then** alle Helper sind via `$lib/data/`-Index importierbar und Phase-2-SQL-Swap-fähig (Implementation hinter Interface austauschbar ohne Konsumenten-Code-Änderung)
+**Then** alle Helper sind via `#lib/data//index.ts`-Index importierbar und Phase-2-SQL-Swap-fähig (Implementation hinter Interface austauschbar ohne Konsumenten-Code-Änderung)
 
 ### Story 1.5: Adress-Suche mit Geocoding-Proxy
 
@@ -660,7 +660,7 @@ So that ich nach 2 Zeichen passende Treffer sehe und per Tastatur oder Maus sele
 **Then** keine personenbezogenen Daten (insb. Client-IP) verlassen den Server-Proxy (NFR-PR2, NFR-I6)
 
 **Given** der Geocoding-Proxy
-**When** ich `$lib/data/geocode.remote.ts` als SvelteKit `query()`-Remote-Function mit Valibot-Schema (`v.object({ q: v.pipe(v.string(), v.minLength(2)) })`) anlege
+**When** ich `#lib/data/geocode.remote.ts` als SvelteKit `query()`-Remote-Function mit Valibot-Schema (`v.object({ q: v.pipe(v.string(), v.minLength(2)) })`) anlege
 **Then** AddressSearch-Komponente nutzt Remote-Function statt direktem `fetch()`
 **And** Debounce 250ms zwischen Tippen und Geocoding-Aufruf
 
@@ -808,7 +808,7 @@ So that ich die Cross-Layer-Sicht für meine Adresse als gleichzeitige Antwort s
 **Then** Inhalt wird Slot-für-Slot via Svelte-5-Reaktivität ausgetauscht (kein Full-Re-Mount)
 **And** ARIA-Live announcet neue Adresse (FR43, UX-DR18)
 
-**Given** das `$lib/state/ui-context.ts`
+**Given** das `#lib/state/ui-context.ts`
 **When** ich Cross-Component-State (Inspektor-Open-State, ausgewählte Layer-Hits) via Context-API (`setContext`/`getContext`) verwalte und in `+layout.svelte` einmal per Request initialisiere
 **Then** kein SSR-State-Leak zwischen Requests (Architecture-Pattern)
 
@@ -856,11 +856,11 @@ So that ich den Klimawandel an meiner eigenen Adresse erkenne — der emotionale
 **Acceptance Criteria:**
 
 **Given** die DWD-CDC-Daten in `static/climate/`
-**When** ich `$lib/utils/nearest-station.ts` mit Haversine-Distanz und `$lib/data/get-climate-station.ts` implementiere
+**When** ich `#lib/utils/nearest-station.ts` mit Haversine-Distanz und `$lib/data/get-climate-station.ts` implementiere
 **Then** pro Adresse wird automatisch eine von Dahlem (00403, 1719+), Buch (00400, 1889+), Tempelhof (00433, 1919+), Brandenburg (00427, 1957+) als nächste Station ermittelt (FR22)
 
 **Given** die Klima-Bundles pro Station
-**When** ich `$lib/data/get-climate-series.ts` als typed Reader implementiere
+**When** ich `#lib/data/get-climate-series.ts` als typed Reader implementiere
 **Then** Klima-Daten werden statisch geladen, kein Runtime-API-Call
 
 **Given** die Daten
@@ -1109,7 +1109,7 @@ So that ich Site-Inhalte als strukturierte Quellen erkennen und zitieren kann.
 **Acceptance Criteria:**
 
 **Given** `schema-dts` installiert
-**When** ich `$lib/seo/`-Module für JSON-LD-Generation implementiere: `jsonld-place.ts`, `jsonld-administrative-area.ts`, `jsonld-dataset.ts`, `jsonld-faqpage.ts`, `jsonld-website.ts`, `jsonld-breadcrumb.ts`
+**When** ich `#lib/seo/`-Module für JSON-LD-Generation implementiere: `jsonld-place.ts`, `jsonld-administrative-area.ts`, `jsonld-dataset.ts`, `jsonld-faqpage.ts`, `jsonld-website.ts`, `jsonld-breadcrumb.ts`
 **Then** alle Generators sind typed via `schema-dts`, Zero-Runtime-Kosten (nur Types)
 
 **Given** die Generators
@@ -1270,19 +1270,19 @@ So that ich strukturierte JSON-Antworten mit Quellen-Attribution direkt im Brows
 **Acceptance Criteria:**
 
 **Given** `webmcp` und `@mcp-b/global` installiert
-**When** ich `$lib/webmcp/adapter.ts` als Adapter-Schicht mit Spec-Version-Pin implementiere und Conditional Polyfill-Load (`'modelContext' in navigator`-Check, Chrome 146+ native) in `+layout.svelte`
+**When** ich `#lib/webmcp/adapter.ts` als Adapter-Schicht mit Spec-Version-Pin implementiere und Conditional Polyfill-Load (`'modelContext' in navigator`-Check, Chrome 146+ native) in `+layout.svelte`
 **Then** WebMCP-Server ist im Browser registriert (FR37, NFR-I7)
 
 **Given** der Adapter
-**When** ich 5 Tools in `$lib/webmcp/tools/` implementiere: `address_lookup`, `cross_layer_query`, `get_kiez_profile`, `get_layer_metadata`, `list_layers_at_point` mit JSON-Schema-strict Inputs (`snake_case`-Naming, Englisch-Beschreibungen)
-**Then** Tools delegieren an `$lib/data/`-Functions, kein eigener Datenpfad (FR37)
+**When** ich 5 Tools in `#lib/webmcp/tools/` implementiere: `address_lookup`, `cross_layer_query`, `get_kiez_profile`, `get_layer_metadata`, `list_layers_at_point` mit JSON-Schema-strict Inputs (`snake_case`-Naming, Englisch-Beschreibungen)
+**Then** Tools delegieren an `#lib/data//index.ts`-Functions, kein eigener Datenpfad (FR37)
 
 **Given** die Tools
-**When** ich Resources in `$lib/webmcp/resources/` implementiere: `active-address.ts`, `loaded-layers.ts` mit URI-Schema `navigator://address/{slug}` und `navigator://layers/active`
+**When** ich Resources in `#lib/webmcp/resources/` implementiere: `active-address.ts`, `loaded-layers.ts` mit URI-Schema `navigator://address/{slug}` und `navigator://layers/active`
 **Then** Site exponiert URI-adressierbare Daten als Resources (FR38)
 
 **Given** die Resources
-**When** ich 3 Prompt-Templates in `$lib/webmcp/prompts/` implementiere: `address-overview` („Was ist an dieser Adresse besonders?"), `compare-kieze` („Vergleiche diese zwei Kieze"), `explain-layer` („Erkläre den Layer X")
+**When** ich 3 Prompt-Templates in `#lib/webmcp/prompts/` implementiere: `address-overview` („Was ist an dieser Adresse besonders?"), `compare-kieze` („Vergleiche diese zwei Kieze"), `explain-layer` („Erkläre den Layer X")
 **Then** Site bietet mindestens 3 Prompt-Templates (FR39)
 
 **Given** alle Layer-Hits im Inspektor-Panel
@@ -1315,7 +1315,7 @@ So that ich Site-Inhalt effizient als strukturierte Wissens-Quelle aufnehmen kan
 **Then** `/llms-full.txt` liefert vollständige Inhalte für LLM-Aufnahme (FR35)
 
 **Given** beide Endpoints
-**When** ich `$lib/seo/llms-builder.ts` als Builder-Bibliothek implementiere die aus dem gleichen Manifest wie super-sitemap zieht und Aggregat-Inhalte aus `llms_content`-Tabelle (Story 2.0) zieht
+**When** ich `#lib/seo/llms-builder.ts` als Builder-Bibliothek implementiere die aus dem gleichen Manifest wie super-sitemap zieht und Aggregat-Inhalte aus `llms_content`-Tabelle (Story 2.0) zieht
 **Then** Konsistenz zwischen Sitemap und llms.txt ist garantiert
 
 ### Story 2.9a: Kiez-Score + Bezirks-Score Aggregat-Berechnung
@@ -2689,7 +2689,7 @@ So that ich „Wie wählte Friedrichshain in der BTW 2025?" mit präzisen Daten 
 **Acceptance Criteria:**
 
 **Given** der WebMCP-Adapter (Story 2.7)
-**When** ich folgende Tools in `$lib/webmcp/tools/wahl/` ergänze:
+**When** ich folgende Tools in `#lib/webmcp/tools/wahl//index.ts` ergänze:
 - `get_election_result(address, election_slug, level)` → liefert Top-5-Parteien + Wahlbeteiligung + Quelle für den gewählten Level (stimmbezirk/kiez/bezirk/berlin)
 - `compare_elections(address, election_slugs[], level)` → liefert Sparkline-Daten für mehrere Wahlen auf demselben Level
 - `get_voting_district_geometry(district_id, year)` → liefert GeoJSON für Wahlbezirk (nur 2017+)

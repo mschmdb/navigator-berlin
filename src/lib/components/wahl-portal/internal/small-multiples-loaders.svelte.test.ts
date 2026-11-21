@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { SmallMultiplesLoaders } from './small-multiples-loaders.svelte.js';
 import { _resetWinnersCache } from './winner-map-winners.svelte.js';
-import { FINDER_PARTIES } from '$lib/components/atlas/internal/kiez-finder-engine.js';
+import { FINDER_PARTIES } from '#lib/components/atlas/internal/kiez-finder-engine.js';
 
 function fetchCounter() {
 	let count = 0;

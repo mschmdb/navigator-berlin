@@ -3,7 +3,7 @@
  * BVV nur als `{jahr}-bvv` (einstimme implizit).
  *
  * Story 16 (Detailseiten-Umzug): von `(with-header)/wahl/[slug]/slug-utils.ts`
- * nach `$lib/data` gezogen, damit Sitemap/llms/API-Konsumenten dieselbe
+ * nach `#lib/data/index.ts` gezogen, damit Sitemap/llms/API-Konsumenten dieselbe
  * Implementierung importieren statt sie zu duplizieren (Code Map: vormals
  * vierfach dupliziert in `wahl-detail-pages.ts`, `wahl-section.svelte`,
  * `api/wahl/list/+server.ts`, `llms/data-collector.ts#collectWahlen`).

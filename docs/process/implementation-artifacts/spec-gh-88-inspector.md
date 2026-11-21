@@ -22,7 +22,7 @@ Quelle: Issue #88, abgenommenes Mockup `design-proposals/inspector.html` (lokal,
 2. **Score-Zugehörigkeit nur über Gruppen.** Kontext-Datensätze tragen kein Label. Score-Inputs zeigen eine Textzeile „Im Kiez-Score: {Dimension}“ in Akzentfarbe unter dem Titel, ohne Box. Die Dimensionsliste im Score-Block hat zwei Gruppen: „Im Kiez-Score“ (Composite-Dimensionen) und „Zusätzlich, nicht im Score“ (Kultur, Kriminalität).
 3. **Quelle & Details einmal pro Gruppe.** Kein „Quelle & Details“ und kein Mehr-Info-Icon pro Datensatz. Der Datensatz-Titel verlinkt auf die Layer-Seite. Pro Sektion gibt es eine aufklappbare Liste „Quellen und Details“ mit Erklärung, externer Quelle, Datenstand, Lizenz und redaktionellen Hinweisen je Datensatz. Lizenz-Angaben bleiben damit im Inspector erreichbar.
 4. **Ring-Legende ordnet eindeutig zu.** Die Legende sagt sichtbar, in welcher Reihenfolge sie die Ringe beschreibt (von außen nach innen), statt das nur über die Reihenfolge zu implizieren.
-5. **Ein Zahlformat.** Prozent, Meter, Dezibel und Euro je Fläche laufen über `$lib/i18n/format.ts`: DE „53,1 %“, „293 m“, „57,4 dB“, „60.000 €/m²“. Zahl und Einheit trennt ein Leerzeichen im Text, nicht nur ein Rand.
+5. **Ein Zahlformat.** Prozent, Meter, Dezibel und Euro je Fläche laufen über `#lib/i18n/format.ts`: DE „53,1 %“, „293 m“, „57,4 dB“, „60.000 €/m²“. Zahl und Einheit trennt ein Leerzeichen im Text, nicht nur ein Rand.
 6. **Stufenfarben einheitlich.** „mittel“ ist bei Datensätzen neutral, wie bei den Dimensionen.
 7. **`inspector-panel.svelte` unter 500 Zeilen**, aufgeteilt per Komposition in `inspector-panel/`.
 

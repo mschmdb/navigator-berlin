@@ -5,8 +5,8 @@
 import { afterEach, describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { page } from 'vitest/browser';
-import { overwriteGetLocale } from '$lib/paraglide/runtime';
-import type { KiezScore, LayerHit } from '$lib/data';
+import { overwriteGetLocale } from '#lib/paraglide/runtime.js';
+import type { KiezScore, LayerHit } from '#lib/data/index.ts';
 import LayerCard from './layer-card.svelte';
 import LayerHitRow from './layer-hit-row.svelte';
 import ScoreMembershipBadge from './score-membership-badge.svelte';

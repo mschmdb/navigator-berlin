@@ -2,25 +2,25 @@
 	import { afterNavigate, goto } from '$app/navigation';
 	import { page } from '$app/state';
 	import { onMount } from 'svelte';
-	import PunktLinieKiezAuswahl from '$lib/components/stories/punkt-linie-kiez-auswahl.svelte';
-	import Handbuch from '$lib/components/stories/wahl-handbuch/handbuch.svelte';
-	import SeoHead from '$lib/components/atlas/seo-head.svelte';
-	import JsonLd from '$lib/components/atlas/json-ld.svelte';
-	import { formatUpdateDate } from '$lib/components/updates/category-label.js';
-	import { localizeStory } from '$lib/content/stories/localize-story.js';
-	import { localizedHref } from '$lib/i18n/localized-href.js';
-	import { m } from '$lib/paraglide/messages.js';
-	import { getLocale } from '$lib/paraglide/runtime';
-	import { buildBreadcrumbList } from '$lib/seo/jsonld-breadcrumb.js';
-	import { buildStoryPosting, storyImagePath } from '$lib/seo/jsonld-story.js';
-	import { canonicalOrigin, localizedPathname } from '$lib/seo/canonical.js';
-	import { buildPageTitle } from '$lib/seo/page-title.js';
+	import PunktLinieKiezAuswahl from '#lib/components/stories/punkt-linie-kiez-auswahl.svelte';
+	import Handbuch from '#lib/components/stories/wahl-handbuch/handbuch.svelte';
+	import SeoHead from '#lib/components/atlas/seo-head.svelte';
+	import JsonLd from '#lib/components/atlas/json-ld.svelte';
+	import { formatUpdateDate } from '#lib/components/updates/category-label.js';
+	import { localizeStory } from '#lib/content/stories/localize-story.js';
+	import { localizedHref } from '#lib/i18n/localized-href.js';
+	import { m } from '#lib/paraglide/messages.js';
+	import { getLocale } from '#lib/paraglide/runtime.js';
+	import { buildBreadcrumbList } from '#lib/seo/jsonld-breadcrumb.js';
+	import { buildStoryPosting, storyImagePath } from '#lib/seo/jsonld-story.js';
+	import { canonicalOrigin, localizedPathname } from '#lib/seo/canonical.js';
+	import { buildPageTitle } from '#lib/seo/page-title.js';
 	import {
 		DEFAULT_URL_STATE,
 		parseUrlState,
 		serializeUrlState,
 		type ZeitState
-	} from '$lib/stories/wahl-quadrate/url-state';
+	} from '#lib/stories/wahl-quadrate/url-state.ts';
 
 	type Props = { data: import('./$types').PageData };
 	let { data }: Props = $props();

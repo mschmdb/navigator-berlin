@@ -22,13 +22,13 @@
 import { json, error } from '@sveltejs/kit';
 import * as v from 'valibot';
 import type { RequestHandler } from './$types';
-import { getWahlList } from '$lib/server/db/queries/wahl/get-wahl-list.js';
+import { getWahlList } from '#lib/server/db/queries/wahl/get-wahl-list.js';
 import {
 	getSeriesForGebiet,
 	type GebietEbene
-} from '$lib/server/db/queries/wahl/get-series-for-gebiet.js';
-import { sourceName } from '$lib/data/wahl-source-name.js';
-import { wahlCacheHeaders } from '$lib/server/wahl/cache-control.js';
+} from '#lib/server/db/queries/wahl/get-series-for-gebiet.js';
+import { sourceName } from '#lib/data/wahl-source-name.js';
+import { wahlCacheHeaders } from '#lib/server/wahl/cache-control.js';
 
 const QuerySchema = v.object({
 	typ: v.picklist(['btw', 'agh', 'bvv']),

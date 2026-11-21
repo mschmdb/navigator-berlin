@@ -3,10 +3,10 @@
  *
  * Liefert das H1 + Blockquote-Summary nach llmstxt.org-Spec.
  *
- * Boundary: pure function, kein I/O. Liegt unter `$lib/server/` aus Symmetrie zu
+ * Boundary: pure function, kein I/O. Liegt unter `#lib/server/` aus Symmetrie zu
  * den anderen Renderern (Bezirk/Kiez/Layer brauchen DB-Access), nicht weil hier
  * Server-only-Code wäre. Falls die Symmetrie irrelevant wird, kann das File
- * problemlos nach `$lib/seo/` wandern.
+ * problemlos nach `#lib/seo//index.ts` wandern.
  */
 
 export interface SiteIntroInput {

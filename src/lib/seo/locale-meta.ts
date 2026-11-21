@@ -1,4 +1,4 @@
-import type { Locale } from '$lib/paraglide/runtime';
+import type { Locale } from '#lib/paraglide/runtime.js';
 
 /**
  * Region subtag per locale for BCP-47 / `og:locale` output. Centralizes the

@@ -8,7 +8,7 @@
 	SeoHead (siehe Story 2.1 AC-7).
 -->
 <script lang="ts">
-	import { serializeJsonLd } from '$lib/seo/serialize-jsonld.js';
+	import { serializeJsonLd } from '#lib/seo/serialize-jsonld.js';
 
 	/**
 	 * Minimal JSON-LD-Object-Constraint. Wir akzeptieren jedes Object mit

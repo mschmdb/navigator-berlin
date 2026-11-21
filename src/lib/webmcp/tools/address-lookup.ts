@@ -13,7 +13,7 @@ import {
 } from '../internal/schemas.js';
 import type { WebMcpToolDefinition } from '../internal/tool-types.js';
 import type { JsonObject } from '../internal/json-types.js';
-import type { GeocodeSuggestion } from '$lib/data';
+import type { GeocodeSuggestion } from '#lib/data/index.ts';
 
 export interface AddressLookupDeps {
 	/** Function liefert Adress-Vorschläge (mind. 1, max. n). */

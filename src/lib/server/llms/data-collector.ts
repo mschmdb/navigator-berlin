@@ -14,14 +14,14 @@
  * Stigma-Lint passiert in den Renderern selbst.
  */
 
-import type { Manifest } from '$lib/data/types.js';
-import { getBezirkStats } from '$lib/server/db/queries/get-bezirk-stats.js';
-import { getKiezStats } from '$lib/server/db/queries/get-kiez-stats.js';
-import { getBezirkScore } from '$lib/server/db/queries/get-bezirk-score.js';
-import { sourceName as wahlSourceName } from '$lib/data/wahl-source-name.js';
-import { buildWahlSlug } from '$lib/data/wahl-slug.js';
-import { getKiezScore } from '$lib/server/db/queries/get-kiez-score.js';
-import { readRegionDisplayNames, regionDisplayName } from '$lib/data/region-display-names.js';
+import type { Manifest } from '#lib/data/types.js';
+import { getBezirkStats } from '#lib/server/db/queries/get-bezirk-stats.js';
+import { getKiezStats } from '#lib/server/db/queries/get-kiez-stats.js';
+import { getBezirkScore } from '#lib/server/db/queries/get-bezirk-score.js';
+import { sourceName as wahlSourceName } from '#lib/data/wahl-source-name.js';
+import { buildWahlSlug } from '#lib/data/wahl-slug.js';
+import { getKiezScore } from '#lib/server/db/queries/get-kiez-score.js';
+import { readRegionDisplayNames, regionDisplayName } from '#lib/data/region-display-names.js';
 import { loadEinwohnerAggregates } from './internal/einwohner-aggregates.js';
 import { renderBezirkMarkdown } from './bezirk-renderer.js';
 import { renderKiezMarkdown } from './kiez-renderer.js';
@@ -31,13 +31,13 @@ import { buildWahlEntry } from './wahl-renderer.js';
 import {
 	getLayerExplainEntry,
 	type LayerExplain
-} from '$lib/components/atlas/inspector-panel/internal/layer-explain.js';
+} from '#lib/components/atlas/inspector-panel/internal/layer-explain.js';
 import type {
 	LlmsBezirkEntry,
 	LlmsKiezEntry,
 	LlmsLayerEntry,
 	LlmsWahlEntry
-} from '$lib/seo/llms-builder.js';
+} from '#lib/seo/llms-builder.js';
 
 export interface LlmsCollectedData {
 	readonly bezirke: readonly LlmsBezirkEntry[];
@@ -125,8 +125,8 @@ async function collectBezirke(origin: string): Promise<LlmsBezirkEntry[]> {
  * Bei fehlender DB = leere Liste (akzeptabel in CI).
  */
 async function collectKieze(origin: string): Promise<LlmsKiezEntry[]> {
-	const { getDb } = await import('$lib/server/db/index.js');
-	const { kiezStats } = await import('$lib/server/db/schema/index.js');
+	const { getDb } = await import('#lib/server/db/index.js');
+	const { kiezStats } = await import('#lib/server/db/schema/index.js');
 	let rows: { slug: string; bezirkSlug: string }[] = [];
 	try {
 		const all = await getDb()
@@ -218,8 +218,8 @@ async function collectWahlen(origin: string): Promise<LlmsWahlEntry[]> {
 	if (!process.env.DATABASE_URL) return [];
 	try {
 		const [{ getWahlList }, { getResultsForBerlin }] = await Promise.all([
-			import('$lib/server/db/queries/wahl/get-wahl-list.js'),
-			import('$lib/server/db/queries/wahl/get-results-for-berlin.js')
+			import('#lib/server/db/queries/wahl/get-wahl-list.js'),
+			import('#lib/server/db/queries/wahl/get-results-for-berlin.js')
 		]);
 		const wahlen = await getWahlList();
 		const out: LlmsWahlEntry[] = [];

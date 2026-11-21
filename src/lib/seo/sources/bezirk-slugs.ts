@@ -1,5 +1,5 @@
-import { normalizeSlug } from '$lib/data/internal/slug.js';
-import type { Manifest } from '$lib/data/types.js';
+import { normalizeSlug } from '#lib/data/internal/slug.js';
+import type { Manifest } from '#lib/data/types.js';
 
 /**
  * Story 2.3 Helper: liest die 12 Bezirks-Slugs aus dem `bezirke`-Layer-GeoJSON.

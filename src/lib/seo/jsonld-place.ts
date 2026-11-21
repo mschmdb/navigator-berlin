@@ -1,5 +1,5 @@
 import type { GeoCoordinates, PropertyValue, WithContext } from 'schema-dts';
-import type { Locale } from '$lib/paraglide/runtime';
+import type { Locale } from '#lib/paraglide/runtime.js';
 import { canonicalOrigin, localizedPathname } from './canonical.js';
 
 /**

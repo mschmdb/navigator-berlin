@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { HILFE_DIENSTE, type HilfeDienst, type HilfeDienstId } from '$lib/kaelte/hilfe-dienste.js';
+import { HILFE_DIENSTE, type HilfeDienst, type HilfeDienstId } from '#lib/kaelte/hilfe-dienste.js';
 import {
 	formatMonthDay,
 	getBerlinParts,

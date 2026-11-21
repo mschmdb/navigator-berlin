@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { BEZIRK_SAMEAS } from '$lib/seo/sources/bezirk-sameas.js';
+import { BEZIRK_SAMEAS } from '#lib/seo/sources/bezirk-sameas.js';
 import { HOME_BEZIRKE } from './home-bezirke.js';
 
 describe('HOME_BEZIRKE', () => {

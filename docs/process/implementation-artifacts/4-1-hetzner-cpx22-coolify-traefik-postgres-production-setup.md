@@ -128,7 +128,7 @@ so that Site mit 99% Uptime (NFR-R1) ohne SLA und ohne externes Monitoring betre
 **Then** Handler:
 ```ts
 import type { RequestHandler } from './$types';
-import { db } from '$lib/server/db';
+import { db } from '#lib/server/db/index.ts';
 import { sql } from 'drizzle-orm';
 
 export const GET: RequestHandler = async () => {

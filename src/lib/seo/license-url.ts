@@ -1,4 +1,4 @@
-import type { License } from '$lib/data/types.js';
+import type { License } from '#lib/data/types.js';
 
 /**
  * Story 2.2 T1.2: Mappt Manifest-License-Codes auf kanonische Schema.org-License-URLs.

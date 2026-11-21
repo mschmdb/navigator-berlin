@@ -3,7 +3,7 @@
 	// alte Inhalt stehen und wird nur leicht zurückgenommen (lc-stale), bis die
 	// neue Antwort da ist. Ohne alten Wert steht ein Platzhalter in Endhöhe.
 	import type { Snippet } from 'svelte';
-	import type { Locale } from '$lib/paraglide/runtime';
+	import type { Locale } from '#lib/paraglide/runtime.js';
 	import InspectorSkeleton, { type InspectorSkeletonShape } from './inspector-skeleton.svelte';
 
 	type Props = {

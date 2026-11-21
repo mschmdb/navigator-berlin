@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import type { YearValue } from '$lib/data';
+import type { YearValue } from '#lib/data/index.ts';
 import {
 	NORMAL_OLD,
 	NORMAL_NEW,

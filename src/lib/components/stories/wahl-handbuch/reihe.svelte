@@ -1,9 +1,9 @@
 <!-- Alle Wahlen eines Bezirks nebeneinander (Kapitel 5, #190), mit Jahr und Grau-Zeile. -->
 <script lang="ts">
-	import { Quadrat, greyNames } from '$lib/components/stories/quadrate';
-	import { derive, formatGreyLine } from '$lib/stories/wahl-quadrate/grau';
-	import type { HandbuchBezirk, HandbuchWahl } from '$lib/stories/wahl-quadrate/handbuch-daten';
-	import type { OrderMode } from '$lib/stories/wahl-quadrate/layout';
+	import { Quadrat, greyNames } from '#lib/components/stories/quadrate/index.ts';
+	import { derive, formatGreyLine } from '#lib/stories/wahl-quadrate/grau.ts';
+	import type { HandbuchBezirk, HandbuchWahl } from '#lib/stories/wahl-quadrate/handbuch-daten.ts';
+	import type { OrderMode } from '#lib/stories/wahl-quadrate/layout.ts';
 	import { lang, turnoutLine, typName } from './texte';
 
 	interface Props {

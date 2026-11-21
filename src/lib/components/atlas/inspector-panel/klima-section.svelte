@@ -1,9 +1,9 @@
 <script lang="ts">
-	import type { ClimateStation, ClimateData, LayerHit } from '$lib/data';
+	import type { ClimateStation, ClimateData, LayerHit } from '#lib/data/index.ts';
 	import type { Component } from 'svelte';
 	import DataStandBanner from './data-stand-banner.svelte';
-	import { m } from '$lib/paraglide/messages.js';
-	import { getLocale, type Locale } from '$lib/paraglide/runtime';
+	import { m } from '#lib/paraglide/messages.js';
+	import { getLocale, type Locale } from '#lib/paraglide/runtime.js';
 
 	type Props = {
 		station: ClimateStation | null;

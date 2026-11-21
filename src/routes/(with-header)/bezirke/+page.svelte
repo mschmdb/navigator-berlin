@@ -1,17 +1,17 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import SeoHead from '$lib/components/atlas/seo-head.svelte';
-	import JsonLd from '$lib/components/atlas/json-ld.svelte';
-	import Breadcrumb from '$lib/components/atlas/breadcrumb.svelte';
-	import { formatCount } from '$lib/i18n/format.js';
-	import { localizedHref } from '$lib/i18n/localized-href.js';
-	import { m } from '$lib/paraglide/messages.js';
-	import { getLocale } from '$lib/paraglide/runtime';
-	import { localizedPathname } from '$lib/seo/canonical.js';
-	import { buildBreadcrumbList } from '$lib/seo/jsonld-breadcrumb.js';
-	import { buildPageTitle } from '$lib/seo/page-title.js';
-	import { formatStichtag } from '$lib/seo/profile-meta.js';
-	import { DEFAULT_OG_IMAGE_PATH } from '$lib/utils/og-image-url.js';
+	import SeoHead from '#lib/components/atlas/seo-head.svelte';
+	import JsonLd from '#lib/components/atlas/json-ld.svelte';
+	import Breadcrumb from '#lib/components/atlas/breadcrumb.svelte';
+	import { formatCount } from '#lib/i18n/format.js';
+	import { localizedHref } from '#lib/i18n/localized-href.js';
+	import { m } from '#lib/paraglide/messages.js';
+	import { getLocale } from '#lib/paraglide/runtime.js';
+	import { localizedPathname } from '#lib/seo/canonical.js';
+	import { buildBreadcrumbList } from '#lib/seo/jsonld-breadcrumb.js';
+	import { buildPageTitle } from '#lib/seo/page-title.js';
+	import { formatStichtag } from '#lib/seo/profile-meta.js';
+	import { DEFAULT_OG_IMAGE_PATH } from '#lib/utils/og-image-url.js';
 	import type { PageData } from './$types';
 
 	interface Props {

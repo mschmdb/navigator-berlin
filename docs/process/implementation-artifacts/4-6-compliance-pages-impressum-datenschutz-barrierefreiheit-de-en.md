@@ -42,7 +42,7 @@ so that gesetzliche Pflichten (TMG, DSGVO, TDDDG, BFSG) erfüllt sind, der EU-FO
 **Then** Page enthält §5-TMG-Pflichtangaben:
   - **Diensteanbieter:** „Matze Schmidbauer" (natürliche Person, kein Unternehmen)
   - **Anschrift:** Postanschrift Berlin (Maintainer-Detail, ggf. Berufsanschrift mtc oder Privat-Anschrift — Open-Q1)
-  - **Kontakt:** `hey@navigator.berlin` (aus `$lib/utils/contact.ts`), telefonisch optional (Open-Q1)
+  - **Kontakt:** `hey@navigator.berlin` (aus `#lib/utils/contact.ts`), telefonisch optional (Open-Q1)
   - **Verantwortlich i.S.d. § 18 Abs. 2 MStV:** „Matze Schmidbauer, Anschrift wie oben" (Verantwortlich für journalistisch-redaktionelle Inhalte)
   - **Umsatzsteuer-ID:** entfällt (Privat-Projekt, keine USt-pflichtige Tätigkeit über die Site)
   - **Berufshaftpflichtversicherung:** entfällt (keine reglementierte Berufstätigkeit über die Site)
@@ -331,7 +331,7 @@ Compliance-Pages = überwiegend Content + minimaler Logik. ADR-012 sagt Setup-/C
 
 Compliance-Pages folgen `(with-header)`-Layout-Group (gleich wie Lizenzen + Methodik + Layer-Detail). Anchors im MetaFooter konsistent zur Sitemap-Hierarchie.
 
-`legal-contact.ts` in `$lib/data/` (Daten-Layer, kein Component-Layer). Single-Source verhindert Drift zwischen Impressum und Datenschutz.
+`legal-contact.ts` in `#lib/data//index.ts` (Daten-Layer, kein Component-Layer). Single-Source verhindert Drift zwischen Impressum und Datenschutz.
 
 ### References
 

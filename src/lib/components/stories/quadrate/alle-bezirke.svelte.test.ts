@@ -1,8 +1,8 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { page, userEvent } from 'vitest/browser';
 import { render } from 'vitest-browser-svelte';
-import { overwriteGetLocale } from '$lib/paraglide/runtime';
-import type { StoriesWahlData } from '$lib/stories/wahl-quadrate/types';
+import { overwriteGetLocale } from '#lib/paraglide/runtime.js';
+import type { StoriesWahlData } from '#lib/stories/wahl-quadrate/types.ts';
 import raw from '../../../../../static/data/stories-wahl.json';
 
 const nav = vi.hoisted(() => ({ after: [] as (() => void)[] }));

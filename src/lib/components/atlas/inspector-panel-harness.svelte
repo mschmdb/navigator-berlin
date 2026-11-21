@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { createUiState } from '$lib/state/ui-context.svelte.js';
+	import { createUiState } from '#lib/state/ui-context.svelte.js';
 	import type {
 		LayerHit,
 		GeocodeSuggestion,
@@ -8,11 +8,11 @@
 		ClimateData,
 		OepnvStopIndex,
 		KiezScore
-	} from '$lib/data';
-	import type { WahlResultsAtPoint } from '$lib/data/get-wahl-results-at-point.js';
-	import { IDLE_PENDING, type InspectorPending } from '$lib/state/inspector-loads.js';
+	} from '#lib/data/index.ts';
+	import type { WahlResultsAtPoint } from '#lib/data/get-wahl-results-at-point.js';
+	import { IDLE_PENDING, type InspectorPending } from '#lib/state/inspector-loads.js';
 	import InspectorPanel from './inspector-panel.svelte';
-	import type { Locale } from '$lib/paraglide/runtime';
+	import type { Locale } from '#lib/paraglide/runtime.js';
 
 	type Props = {
 		open?: boolean;

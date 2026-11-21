@@ -1,4 +1,4 @@
-import { BERLIN_BBOX_ARRAY } from '$lib/data/constants.js';
+import { BERLIN_BBOX_ARRAY } from '#lib/data/constants.js';
 
 export interface MapHandle {
 	panBy(offset: [number, number], options?: { animate?: boolean }): void;

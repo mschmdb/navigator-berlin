@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { untrack } from 'svelte';
-	import { createUiState } from '$lib/state/ui-context.svelte.js';
-	import { provideAddressSelection } from '$lib/state/address-selection.svelte.js';
-	import type { Bookmark } from '$lib/state/bookmark-schema.js';
-	import type { GeocodeSuggestion } from '$lib/data';
-	import type { Breakpoint } from '$lib/utils/use-viewport.svelte.js';
+	import { createUiState } from '#lib/state/ui-context.svelte.js';
+	import { provideAddressSelection } from '#lib/state/address-selection.svelte.js';
+	import type { Bookmark } from '#lib/state/bookmark-schema.js';
+	import type { GeocodeSuggestion } from '#lib/data/index.ts';
+	import type { Breakpoint } from '#lib/utils/use-viewport.svelte.js';
 	import BookmarkDialog from './bookmark-dialog.svelte';
 
 	type Props = {

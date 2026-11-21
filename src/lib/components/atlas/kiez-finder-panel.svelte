@@ -2,8 +2,8 @@
 	import { untrack } from 'svelte';
 	import { X, RotateCcw, SlidersHorizontal } from '@lucide/svelte';
 	import type { FeatureCollection, MultiPolygon, Polygon } from 'geojson';
-	import type { ParteiKurzname } from '$lib/data/partei-farben.js';
-	import { trackEvent } from '$lib/utils/plausible.js';
+	import type { ParteiKurzname } from '#lib/data/partei-farben.js';
+	import { trackEvent } from '#lib/utils/plausible.js';
 	import { COLORS } from './internal/colors.js';
 	import {
 		publishUserFinderState,
@@ -11,7 +11,7 @@
 		consumePendingAgentWeights,
 		setFinderPanelActive,
 		type FinderTopMatch
-	} from '$lib/state/finder-bridge.svelte.js';
+	} from '#lib/state/finder-bridge.svelte.js';
 	import {
 		buildFinderCollection,
 		buildParteiMetric,
@@ -36,8 +36,8 @@
 		type FinderResult,
 		type FinderWeights
 	} from './internal/kiez-finder-engine.js';
-	import { m } from '$lib/paraglide/messages.js';
-	import { getLocale } from '$lib/paraglide/runtime';
+	import { m } from '#lib/paraglide/messages.js';
+	import { getLocale } from '#lib/paraglide/runtime.js';
 
 	/** Minimaler Map-Ausschnitt, den das Panel braucht (testbar ohne MapLibre). */
 	export interface FinderMapApi {
@@ -89,7 +89,7 @@
 	type StufeFamily = 'wenigViel' | 'dichte' | 'sbahn' | 'partei';
 	type MessageFn = (
 		params?: undefined,
-		options?: { locale: import('$lib/paraglide/runtime').Locale }
+		options?: { locale: import('#lib/paraglide/runtime.js').Locale }
 	) => string;
 	const BIPOLAR: readonly {
 		key: keyof FinderWeights;

@@ -14,7 +14,7 @@ import {
 } from '../internal/schemas.js';
 import type { WebMcpToolDefinition } from '../internal/tool-types.js';
 import type { JsonObject, JsonValue } from '../internal/json-types.js';
-import type { LayerHit } from '$lib/data';
+import type { LayerHit } from '#lib/data/index.ts';
 
 export interface CrossLayerQueryDeps {
 	readonly getLayersAtPoint: (lat: number, lng: number) => Promise<LayerHit[]>;

@@ -6,10 +6,10 @@
 -->
 <script lang="ts">
 	import { X } from '@lucide/svelte';
-	import { m } from '$lib/paraglide/messages.js';
-	import { getLocale } from '$lib/paraglide/runtime';
-	import { localizedHref } from '$lib/i18n/localized-href.js';
-	import type { RegionFocusKind } from '$lib/utils/url-state.js';
+	import { m } from '#lib/paraglide/messages.js';
+	import { getLocale } from '#lib/paraglide/runtime.js';
+	import { localizedHref } from '#lib/i18n/localized-href.js';
+	import type { RegionFocusKind } from '#lib/utils/url-state.js';
 
 	interface Props {
 		readonly kind: RegionFocusKind;

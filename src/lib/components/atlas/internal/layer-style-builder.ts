@@ -2,12 +2,12 @@ import { COLORS } from './colors.js';
 import { KALTLUFT_HIGHLIGHT, rampForSlug, type Ramp } from './dimension-ramps.js';
 import { hasPinIcon } from './pin-icon-mapping.js';
 import { pinImageId } from './pin-sprite-renderer.js';
-import { m } from '$lib/paraglide/messages.js';
-import { formatCount, formatDecimal } from '$lib/i18n/format.js';
+import { m } from '#lib/paraglide/messages.js';
+import { formatCount, formatDecimal } from '#lib/i18n/format.js';
 import { ALTBAU_STOPS } from './altbau-stops.js';
 import { MIETE_STOPS } from './miete-stops.js';
 import { assertUnreachable, type LocaleOptions } from './atlas-label-options.js';
-import type { Locale } from '$lib/paraglide/runtime';
+import type { Locale } from '#lib/paraglide/runtime.js';
 import { kiezScoreScaleLabel } from '../inspector-panel/internal/kiez-score-display.js';
 import { scoreClassStops } from './score-class-color.js';
 

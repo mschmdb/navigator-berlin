@@ -1,4 +1,4 @@
-import { buildWebMcpManifest } from '$lib/webmcp';
+import { buildWebMcpManifest } from '#lib/webmcp/index.ts';
 import type { RequestHandler } from './$types';
 
 export const prerender = true;

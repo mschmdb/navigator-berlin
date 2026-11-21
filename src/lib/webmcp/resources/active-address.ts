@@ -5,7 +5,7 @@
 
 import type { WebMcpResourceRead } from './resource-types.js';
 import type { JsonObject } from '../internal/json-types.js';
-import type { GeocodeSuggestion } from '$lib/data';
+import type { GeocodeSuggestion } from '#lib/data/index.ts';
 
 export interface ActiveAddressReadInput {
 	readonly uri: string;

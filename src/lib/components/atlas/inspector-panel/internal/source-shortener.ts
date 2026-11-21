@@ -1,4 +1,4 @@
-import type { License } from '$lib/data';
+import type { License } from '#lib/data/index.ts';
 
 const SOURCE_SHORT_BY_PREFIX: ReadonlyArray<readonly [string, string]> = [
 	['https://fbinter.stadt-berlin.de', 'FIS-Broker'],

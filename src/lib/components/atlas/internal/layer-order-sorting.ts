@@ -1,4 +1,4 @@
-import type { Bundle } from '$lib/data';
+import type { Bundle } from '#lib/data/index.ts';
 
 export interface LayerBundleLookup {
 	readonly slug: string;

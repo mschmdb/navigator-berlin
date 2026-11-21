@@ -37,7 +37,7 @@ import {
 	type AnteilSpanne
 } from './winner-map-expressions.js';
 import type { WinnerTooltipData } from '../winner-map-tooltip.svelte';
-import { prefersReducedMotion } from '$lib/utils/reduced-motion.js';
+import { prefersReducedMotion } from '#lib/utils/reduced-motion.js';
 
 interface GeoJsonSourceLike {
 	setData: (data: GeoJSON.FeatureCollection) => void;

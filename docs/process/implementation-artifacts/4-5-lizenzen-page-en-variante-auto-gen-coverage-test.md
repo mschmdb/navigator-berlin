@@ -46,7 +46,7 @@ so that die License-Hierarchie konsistent bleibt sobald neue Datenquellen oder L
 
 **Given** `LICENSE_INFO` aktuell inline in `+page.svelte` (Zeilen 26–59) hardcoded
 **When** ich `src/lib/data/license-info.ts` (NEU) extrahiere und `LICENSE_INFO` + `infoFor()`-Helper + `LicenseInfo`-Type exportiere
-**Then** `+page.svelte` importiert via `import { LICENSE_INFO, infoFor } from '$lib/data/license-info.js'`
+**Then** `+page.svelte` importiert via `import { LICENSE_INFO, infoFor } from '#lib/data/license-info.js'`
 **And** Coverage-Test (AC-1) liest `LICENSE_INFO` direkt aus dem Lib-File (kein Component-Render-Mock nötig)
 **And** Re-use-Pfad: andere Komponenten (z.B. Layer-Detail-Page Story 2.5a, Bezirks-Page Story 2.3) können `infoFor(layer.license)` konsumieren ohne Duplikat-Hardcoding
 **And** Files <500 Zeilen (MUST-Rule #2)
@@ -56,7 +56,7 @@ so that die License-Hierarchie konsistent bleibt sobald neue Datenquellen oder L
 **Given** das `MANIFEST.json` enthält pro Layer: `slug`, `sourceUrl`, `license`, `sourceUpdatedAt`, `fetchedAt`, `bundleGroup`
 **When** ich `+page.svelte` und `license-info.ts` auditiere
 **Then** **KEINE** hardcoded Layer-Slug-spezifischen Attribution-Strings im Komponenten-Code (z.B. NICHT `if (layer.slug === 'stolpersteine') return '© OpenStreetMap-Mitwirkende'`)
-**And** Layer-Display-Name kommt via `getLayerDisplayName(slug)` aus `$lib/components/atlas/internal/layer-palette-filter.js` (existierender Helper, MUST-Rule #3)
+**And** Layer-Display-Name kommt via `getLayerDisplayName(slug)` aus `#lib/components/atlas/internal/layer-palette-filter.js` (existierender Helper, MUST-Rule #3)
 **And** Layer-Source-URL kommt aus `layer.sourceUrl` (MANIFEST)
 **And** Layer-License kommt aus `layer.license` (MANIFEST) → `LICENSE_INFO.label` für menschlich-lesbares Label
 **And** Hardcoded-Drift-Audit-Script `scripts/check-lizenzen-hardcoded.ts` (NEU): scannt `+page.svelte` für regex-Matches `/(['"`]).+stolperstein|laerm|kitas-2024.+\1/i` und failt falls Layer-Slugs in Komponenten-Body auftauchen
@@ -80,7 +80,7 @@ so that die License-Hierarchie konsistent bleibt sobald neue Datenquellen oder L
 **Given** `docs/i18n-reactivation.md` aus Story 3.1
 **When** ich Lizenzen-Page-EN-Reaktivierung als zusätzlichen Sub-Step ergänze
 **Then** Doc enthält neuen Bullet:
-  - „**Lizenzen-Page EN-Variante:** Lizenzen-Strings (UI-Headings, Section-Labels, License-Summaries) zu Paraglide-Messages migrieren via `messages/en.json` + `$lib/data/license-info.ts` um `Record<Locale, LicenseInfo>`-Pattern erweitern. `/en/lizenzen`-Route ist automatisch über Paraglide-URL-Pattern erreichbar nach Phase-3-Reaktivierung."
+  - „**Lizenzen-Page EN-Variante:** Lizenzen-Strings (UI-Headings, Section-Labels, License-Summaries) zu Paraglide-Messages migrieren via `messages/en.json` + `#lib/data/license-info.ts` um `Record<Locale, LicenseInfo>`-Pattern erweitern. `/en/lizenzen`-Route ist automatisch über Paraglide-URL-Pattern erreichbar nach Phase-3-Reaktivierung."
 **And** Verweist auf `src/lib/data/license-info.ts` (aus Story 4.5 AC-2) als Migration-Anker
 
 **AC-6 (license-footer-Pattern verifiziert):**
@@ -103,7 +103,7 @@ so that die License-Hierarchie konsistent bleibt sobald neue Datenquellen oder L
 
 ## Tasks / Subtasks
 
-- [ ] **Task 1: `LICENSE_INFO`-Extraktion nach `$lib/data/license-info.ts` (AC: #2)**
+- [ ] **Task 1: `LICENSE_INFO`-Extraktion nach `#lib/data/license-info.ts` (AC: #2)**
   - [ ] Neue Datei `src/lib/data/license-info.ts` mit `LICENSE_INFO`-Constant + `LicenseInfo`-Type + `infoFor()`-Helper
   - [ ] Re-Export via `src/lib/data/index.ts` (falls Barrel-File Pattern aktiv)
   - [ ] `+page.svelte` Import auf neuen Lib-Pfad umstellen
@@ -244,7 +244,7 @@ Story 4.5 ist **Refactor + Test-Add**. ADR-012 sagt Test-First für Daten-Transf
 
 ### Project Structure Notes
 
-`license-info.ts` co-located mit anderen `$lib/data/`-Helpers (manifest, types, get-bezirk-profile etc.). Konsistent mit MUST-Rule #3 (Re-use-Pfad für andere Pages).
+`license-info.ts` co-located mit anderen `#lib/data//index.ts`-Helpers (manifest, types, get-bezirk-profile etc.). Konsistent mit MUST-Rule #3 (Re-use-Pfad für andere Pages).
 
 Page-Server-Test `page.server.test.ts` ist Vitest-Server-Project-Convention (siehe `vite.config.ts` Zeilen 56–68 — alle `*.test.ts` außer `*.svelte.test.ts` laufen in Server-Project).
 

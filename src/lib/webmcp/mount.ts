@@ -1,11 +1,11 @@
 /**
  * Browser-only Mount-Helper: wird in `+layout.svelte` aufgerufen.
  *
- * Wires `$lib/data/`-Functions in den Adapter, ohne dass die Adapter-
- * oder Tool-Module selbst direkte Imports auf `$lib/data/` halten. So
+ * Wires `#lib/data//index.ts`-Functions in den Adapter, ohne dass die Adapter-
+ * oder Tool-Module selbst direkte Imports auf `#lib/data//index.ts` halten. So
  * bleibt die Architecture-Boundary `webmcp/ ↛ data/` (architecture.md
  * Z. 1463) im engeren Sinn intakt: `webmcp/tools/*` + `webmcp/adapter.ts`
- * kennen `$lib/data` nur als Type-Import, nicht als Runtime-Import.
+ * kennen `#lib/data/index.ts` nur als Type-Import, nicht als Runtime-Import.
  *
  * Erst der Mount-Layer (Composition-Root) verbindet beide Welten. Dieser
  * File ist explizit „Composition over isolation" und gehört konzeptionell
@@ -16,7 +16,7 @@ import { browser } from '$app/env';
 import { registerWebMcpServer, loadMcpBGlobalPolyfill } from './adapter.js';
 import type { WebMcpServerHandle, NavigatorWithModelContext } from './adapter.js';
 import type { ElectionListEntry } from './tools/index.js';
-import type { WahlResultsAtPoint } from '$lib/data/get-wahl-results-at-point.js';
+import type { WahlResultsAtPoint } from '#lib/data/get-wahl-results-at-point.js';
 import type { JsonObject } from './internal/json-types.js';
 
 async function fetchElectionsFromApi(): Promise<readonly ElectionListEntry[]> {
@@ -58,7 +58,7 @@ let activeMount: Promise<WebMcpServerHandle | null> | null = null;
  * Promise, nicht das fertige Handle. Sonst passieren Layout-$effect und
  * /webmcp-Diagnose beide den Guard und der Verlierer bekommt vom Browser
  * „Duplicate tool name" (Race vom 04.09.2026). Muster wie in
- * `$lib/data/manifest.ts`; bei Reject wird das Promise zurückgesetzt,
+ * `#lib/data/manifest.ts`; bei Reject wird das Promise zurückgesetzt,
  * damit ein späterer Aufruf neu mounten kann.
  */
 export async function mountWebMcpServer(): Promise<WebMcpServerHandle | null> {
@@ -90,14 +90,14 @@ async function doMount(): Promise<WebMcpServerHandle | null> {
 		{ getLocale },
 		finderBridge
 	] = await Promise.all([
-		import('$lib/data/geocode.remote'),
-		import('$lib/data/get-layers-at-point'),
-		import('$lib/data/get-kiez-profile'),
-		import('$lib/data/get-layer-metadata'),
-		import('$lib/data/layer-methodology'),
-		import('$lib/data/manifest'),
-		import('$lib/paraglide/runtime'),
-		import('$lib/state/finder-bridge.svelte')
+		import('#lib/data/geocode.remote.ts'),
+		import('#lib/data/get-layers-at-point.ts'),
+		import('#lib/data/get-kiez-profile.ts'),
+		import('#lib/data/get-layer-metadata.ts'),
+		import('#lib/data/layer-methodology.ts'),
+		import('#lib/data/manifest.ts'),
+		import('#lib/paraglide/runtime.js'),
+		import('#lib/state/finder-bridge.svelte.ts')
 	]);
 
 	return await registerWebMcpServer({

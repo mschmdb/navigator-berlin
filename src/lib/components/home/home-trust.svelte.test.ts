@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
-import { overwriteGetLocale } from '$lib/paraglide/runtime';
-import { HOME_DATA_SOURCES } from '$lib/content/home-data-sources.js';
+import { overwriteGetLocale } from '#lib/paraglide/runtime.js';
+import { HOME_DATA_SOURCES } from '#lib/content/home-data-sources.js';
 import HomeTrust from './home-trust.svelte';
 
 afterEach(() => overwriteGetLocale(() => 'de'));

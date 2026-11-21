@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import type { Bundle } from '$lib/data';
+import type { Bundle } from '#lib/data/index.ts';
 import { sortSlugsByBundleStable, type LayerBundleLookup } from './layer-order-sorting.js';
 
 const META: readonly LayerBundleLookup[] = [

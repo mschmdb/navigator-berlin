@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import Page from './+page.svelte';
-import { overwriteGetLocale } from '$lib/paraglide/runtime';
+import { overwriteGetLocale } from '#lib/paraglide/runtime.js';
 import { internalHrefs, textLines } from '../methodik-test-utils.js';
 
 describe('methodik/wahldaten +page.svelte (Story 17: Briefwahl-Gruppen)', () => {

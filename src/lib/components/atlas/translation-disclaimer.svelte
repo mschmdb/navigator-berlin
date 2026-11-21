@@ -33,14 +33,14 @@
 	review, 2026-09-26).
 -->
 <script lang="ts" module>
-	import type { Locale } from '$lib/paraglide/runtime';
+	import type { Locale } from '#lib/paraglide/runtime.js';
 
 	export type TranslationDisclaimerVariant = 'fallback-to-base' | 'partial';
 </script>
 
 <script lang="ts">
-	import { baseLocale } from '$lib/paraglide/runtime';
-	import { m } from '$lib/paraglide/messages.js';
+	import { baseLocale } from '#lib/paraglide/runtime.js';
+	import { m } from '#lib/paraglide/messages.js';
 
 	type Props = {
 		/** Locale, die tatsächlich Content liefert (siehe `resolveEffectiveLocale`). */

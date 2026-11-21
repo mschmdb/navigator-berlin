@@ -3,7 +3,7 @@
  * `runde-20-ux/src/wall.js`: ein- und ausblenden, sortieren, Rastermaße und
  * die Grau-Tabelle unter der Ansicht. Der Zustand ist `GesamtState` aus `url-state.ts`.
  */
-import { HOME_BEZIRKE } from '$lib/content/home-bezirke';
+import { HOME_BEZIRKE } from '#lib/content/home-bezirke.ts';
 import { toElectionShares } from './eingabe';
 import { derive, type SmallParty } from './grau';
 import { JAHRE, WAHL_TYPEN, wahlSlug, type NamedParty, type WahlTyp } from './parteien';

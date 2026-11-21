@@ -300,7 +300,7 @@ Claude Opus 4.7 (`claude-opus-4-7`) via Claude Agent SDK in isoliertem Git-Workt
 - **Layer-Detail-Dataset-JSON-LD jetzt (DE-Variante):** `inLanguage: 'de-DE'` per Default in `buildDataset`. Story 2.5a kann EN via `inLanguage: 'en-US'` ergaenzen.
 - **`distribution.contentUrl`:** zeigt auf hashed-Filename `${origin}/layers/${meta.filename}` per User-Decision. `encodingFormat` differenziert `application/geo+json` vs. `application/vnd.pmtiles`.
 - **`creator`-Fallback:** wenn `methodology.authority` leer ist, fallback auf `Organization { name: 'navigator.berlin', url: origin }`. Layer wird NICHT geskippt.
-- **Hard-Refactor erledigt:** `$lib/seo/json-ld-updates.ts` (Story 2.13 Inline-Build, TODO-markiert) ist entfernt und durch `$lib/seo/jsonld-blog-posting.ts` in der zentralen Generator-Lib ersetzt. Konsumenten `updates/+page.svelte` und `updates/[slug]/+page.svelte` nutzen jetzt `buildBlogPosting` / `buildBlogIndex` aus `$lib/seo/index.js` und rendern via `<JsonLd>`-Komponente.
+- **Hard-Refactor erledigt:** `#lib/seo/json-ld-updates.ts` (Story 2.13 Inline-Build, TODO-markiert) ist entfernt und durch `$lib/seo/jsonld-blog-posting.ts` in der zentralen Generator-Lib ersetzt. Konsumenten `updates/+page.svelte` und `updates/[slug]/+page.svelte` nutzen jetzt `buildBlogPosting` / `buildBlogIndex` aus `$lib/seo/index.js` und rendern via `<JsonLd>`-Komponente.
 - **XSS-Hardening:** Inline-`{@html JSON.stringify(...)}`-Pattern aus 4 Stellen entfernt (`methodik`, `updates/+page`, `updates/[slug]/+page`, neu eingebautes Layer-Detail). Alle JSON-LD-Blocks laufen jetzt durch `serializeJsonLd` (`</` → `<\/`).
 
 ### Test-Strategie

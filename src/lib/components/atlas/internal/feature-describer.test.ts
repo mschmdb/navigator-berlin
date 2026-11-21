@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { describeFeature, type AccessibleFeatureInput } from './feature-describer.js';
-import type { LayerMetadata } from '$lib/data/types.js';
+import type { LayerMetadata } from '#lib/data/types.js';
 
 const baseLayer: LayerMetadata = {
 	slug: 'bezirke',

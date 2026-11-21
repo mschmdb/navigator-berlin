@@ -1,13 +1,13 @@
 import { afterEach, describe, expect, it } from 'vitest';
-import { __setEmbeddedForTests } from '$lib/utils/plausible.js';
+import { __setEmbeddedForTests } from '#lib/utils/plausible.js';
 import { render } from 'vitest-browser-svelte';
 import { page } from 'vitest/browser';
-import { overwriteGetLocale } from '$lib/paraglide/runtime';
+import { overwriteGetLocale } from '#lib/paraglide/runtime.js';
 import Page from './+page.svelte';
-import { bundleLabel } from '$lib/components/atlas/internal/layer-palette-filter.js';
-import type { LayerDetail } from '$lib/data/get-layer-detail.js';
-import type { LayerMetadata } from '$lib/data';
-import type { LayerMethodology } from '$lib/data/layer-methodology.js';
+import { bundleLabel } from '#lib/components/atlas/internal/layer-palette-filter.js';
+import type { LayerDetail } from '#lib/data/get-layer-detail.js';
+import type { LayerMetadata } from '#lib/data/index.ts';
+import type { LayerMethodology } from '#lib/data/layer-methodology.js';
 
 afterEach(() => {
 	overwriteGetLocale(() => 'de');

@@ -1,18 +1,18 @@
 <script lang="ts">
-	import { buildPageTitle } from '$lib/seo/page-title.js';
+	import { buildPageTitle } from '#lib/seo/page-title.js';
 	import { onMount, untrack } from 'svelte';
 	import { page } from '$app/state';
 	import { goto } from '$app/navigation';
-	import { m } from '$lib/paraglide/messages.js';
-	import SeoHead from '$lib/components/atlas/seo-head.svelte';
-	import JsonLd from '$lib/components/atlas/json-ld.svelte';
-	import { buildDataCatalog } from '$lib/seo/jsonld-datacatalog.js';
-	import { localeToBcp47 } from '$lib/seo/index.js';
-	import { localizedPathname } from '$lib/seo/canonical.js';
-	import { getLocale } from '$lib/paraglide/runtime';
-	import { buildBreadcrumbList } from '$lib/seo/jsonld-breadcrumb.js';
-	import { featureFlags } from '$lib/data/feature-flags.js';
-	import { wahlReiheLabel, wahlEbeneLabel } from '$lib/data/wahl-labels.js';
+	import { m } from '#lib/paraglide/messages.js';
+	import SeoHead from '#lib/components/atlas/seo-head.svelte';
+	import JsonLd from '#lib/components/atlas/json-ld.svelte';
+	import { buildDataCatalog } from '#lib/seo/jsonld-datacatalog.js';
+	import { localeToBcp47 } from '#lib/seo/index.js';
+	import { localizedPathname } from '#lib/seo/canonical.js';
+	import { getLocale } from '#lib/paraglide/runtime.js';
+	import { buildBreadcrumbList } from '#lib/seo/jsonld-breadcrumb.js';
+	import { featureFlags } from '#lib/data/feature-flags.js';
+	import { wahlReiheLabel, wahlEbeneLabel } from '#lib/data/wahl-labels.js';
 	import {
 		parsePortalState,
 		serializePortalState,
@@ -20,7 +20,7 @@
 		DEFAULT_EBENE,
 		type WahlPortalReihe,
 		type WahlPortalEbene
-	} from '$lib/utils/wahl-portal-url-state.js';
+	} from '#lib/utils/wahl-portal-url-state.js';
 	import {
 		createWahlPortalState,
 		setReihe,
@@ -29,23 +29,23 @@
 		currentJahr,
 		jahreForReihe,
 		loadWahlList
-	} from '$lib/state/wahl-portal-context.svelte.js';
-	import { deriveQuellen } from '$lib/utils/wahl-portal-quellen.js';
-	import EditorialDisclaimer from '$lib/components/atlas/editorial-disclaimer.svelte';
-	import ReihenLeiste from '$lib/components/wahl-portal/reihen-leiste.svelte';
-	import KartenSteuerung from '$lib/components/wahl-portal/karten-steuerung.svelte';
-	import KapitelKontextBadge from '$lib/components/wahl-portal/kapitel-kontext-badge.svelte';
-	import KapitelNav from '$lib/components/wahl-portal/kapitel-nav.svelte';
-	import KapitelSection from '$lib/components/wahl-portal/kapitel-section.svelte';
-	import PortalDatenstand from '$lib/components/wahl-portal/portal-datenstand.svelte';
-	import PortalQuellen from '$lib/components/wahl-portal/portal-quellen.svelte';
-	import AlleWahlenBlock from '$lib/components/wahl-portal/alle-wahlen-block.svelte';
+	} from '#lib/state/wahl-portal-context.svelte.js';
+	import { deriveQuellen } from '#lib/utils/wahl-portal-quellen.js';
+	import EditorialDisclaimer from '#lib/components/atlas/editorial-disclaimer.svelte';
+	import ReihenLeiste from '#lib/components/wahl-portal/reihen-leiste.svelte';
+	import KartenSteuerung from '#lib/components/wahl-portal/karten-steuerung.svelte';
+	import KapitelKontextBadge from '#lib/components/wahl-portal/kapitel-kontext-badge.svelte';
+	import KapitelNav from '#lib/components/wahl-portal/kapitel-nav.svelte';
+	import KapitelSection from '#lib/components/wahl-portal/kapitel-section.svelte';
+	import PortalDatenstand from '#lib/components/wahl-portal/portal-datenstand.svelte';
+	import PortalQuellen from '#lib/components/wahl-portal/portal-quellen.svelte';
+	import AlleWahlenBlock from '#lib/components/wahl-portal/alle-wahlen-block.svelte';
 	import type { PageData } from './$types';
-	import WinnerMap from '$lib/components/wahl-portal/winner-map.svelte';
-	import WechselKapitel from '$lib/components/wahl-portal/wechsel-kapitel.svelte';
-	import TrendsKapitel from '$lib/components/wahl-portal/trends-kapitel.svelte';
-	import SankeyWahljahre from '$lib/components/wahl-portal/sankey-wahljahre.svelte';
-	import SmallMultiples from '$lib/components/wahl-portal/small-multiples.svelte';
+	import WinnerMap from '#lib/components/wahl-portal/winner-map.svelte';
+	import WechselKapitel from '#lib/components/wahl-portal/wechsel-kapitel.svelte';
+	import TrendsKapitel from '#lib/components/wahl-portal/trends-kapitel.svelte';
+	import SankeyWahljahre from '#lib/components/wahl-portal/sankey-wahljahre.svelte';
+	import SmallMultiples from '#lib/components/wahl-portal/small-multiples.svelte';
 
 	let { data }: { data: PageData } = $props();
 

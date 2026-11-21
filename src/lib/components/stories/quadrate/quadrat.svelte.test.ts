@@ -1,10 +1,10 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
-import { overwriteGetLocale } from '$lib/paraglide/runtime';
-import type { ElectionShares } from '$lib/stories/wahl-quadrate/types';
-import { PARTY_COLORS } from '$lib/stories/wahl-quadrate/farben';
-import { ORDER } from '$lib/stories/wahl-quadrate/parteien';
-import fixtures from '$lib/stories/wahl-quadrate/fixtures/wahlen.json';
+import { overwriteGetLocale } from '#lib/paraglide/runtime.js';
+import type { ElectionShares } from '#lib/stories/wahl-quadrate/types.ts';
+import { PARTY_COLORS } from '#lib/stories/wahl-quadrate/farben.ts';
+import { ORDER } from '#lib/stories/wahl-quadrate/parteien.ts';
+import fixtures from '#lib/stories/wahl-quadrate/fixtures/wahlen.json';
 import Quadrat from './quadrat.svelte';
 
 type Fixture = ElectionShares & { bezirk: string; wahl: string; jahr: number; turnout: number };

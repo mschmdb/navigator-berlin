@@ -17,7 +17,7 @@
 import type { KiezBezirkWinnersLoader } from './winner-map-winners.svelte.js';
 import { rowsMatchAktivePartei } from './winner-map-partei-mode.svelte.js';
 import type { WinnerApiRow } from './winner-map-data.js';
-import type { WahlPortalEbene } from '$lib/utils/wahl-portal-url-state.js';
+import type { WahlPortalEbene } from '#lib/utils/wahl-portal-url-state.js';
 
 export interface KbWinnersGateDeps {
 	readonly loader: KiezBezirkWinnersLoader;

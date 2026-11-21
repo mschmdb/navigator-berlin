@@ -1,7 +1,7 @@
 import {
 	NO_SCORE_FILL,
 	scoreClassIndex
-} from '$lib/components/atlas/internal/score-class-color.js';
+} from '#lib/components/atlas/internal/score-class-color.js';
 
 /**
  * Score-Klassen der Karte auf den Kiez- und Bezirksseiten: dieselben Schwellen wie der

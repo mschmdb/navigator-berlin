@@ -2,9 +2,9 @@
 	import { ArcChart, Tooltip } from 'layerchart';
 	import { DIMENSION_LABELS_DE, scaleFor } from '../inspector-panel/internal/kiez-score-display.js';
 	import { severityColor } from './internal/chart-palette.js';
-	import { COMPOSITE_DIMENSIONS } from '$lib/data';
-	import { m } from '$lib/paraglide/messages.js';
-	import type { KiezScore, KiezScoreDimension } from '$lib/data';
+	import { COMPOSITE_DIMENSIONS } from '#lib/data/index.ts';
+	import { m } from '#lib/paraglide/messages.js';
+	import type { KiezScore, KiezScoreDimension } from '#lib/data/index.ts';
 
 	type Props = {
 		score: KiezScore;

@@ -1,11 +1,11 @@
 import { readFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import { describe, expect, it, vi } from 'vitest';
-import { readKiezSlugsFromGeoJson } from '$lib/seo/sources/kiez-slugs.js';
-import { readBezirkSlugsFromGeoJson } from '$lib/seo/sources/bezirk-slugs.js';
-import { getKiezProfile } from '$lib/data/get-kiez-profile.js';
-import { bezirkSlugFromName } from '$lib/data/region-display-names.js';
-import { bezirkAnchorId } from '$lib/data/region-overview.js';
+import { readKiezSlugsFromGeoJson } from '#lib/seo/sources/kiez-slugs.js';
+import { readBezirkSlugsFromGeoJson } from '#lib/seo/sources/bezirk-slugs.js';
+import { getKiezProfile } from '#lib/data/get-kiez-profile.js';
+import { bezirkSlugFromName } from '#lib/data/region-display-names.js';
+import { bezirkAnchorId } from '#lib/data/region-overview.js';
 import { loadRegionOverview } from './region-overview-loader.js';
 
 const staticFetch: typeof fetch = async (input) => {

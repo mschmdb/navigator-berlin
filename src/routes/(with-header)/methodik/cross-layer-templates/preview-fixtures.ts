@@ -1,6 +1,6 @@
-import { m } from '$lib/paraglide/messages.js';
-import type { Locale } from '$lib/paraglide/runtime.js';
-import type { TemplateContext } from '$lib/data/cross-layer-templates/index.js';
+import { m } from '#lib/paraglide/messages.js';
+import type { Locale } from '#lib/paraglide/runtime.js';
+import type { TemplateContext } from '#lib/data/cross-layer-templates/index.js';
 
 export interface PreviewFixture {
 	readonly contextLabel: string;

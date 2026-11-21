@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 	import { ChevronUp, ChevronDown } from '@lucide/svelte';
-	import type { SheetSnapVh } from '$lib/state/ui-context.svelte.js';
+	import type { SheetSnapVh } from '#lib/state/ui-context.svelte.js';
 
 	type Props = {
 		open: boolean;

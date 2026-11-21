@@ -6,10 +6,10 @@
 <script lang="ts">
 	import { Eye, EyeOff, Droplet, Navigation } from '@lucide/svelte';
 	import { getLayerExplainEntry } from './internal/layer-explain.js';
-	import { findNearestTrinkbrunnen, type Trinkbrunnen } from '$lib/data/get-trinkbrunnen-index.js';
+	import { findNearestTrinkbrunnen, type Trinkbrunnen } from '#lib/data/get-trinkbrunnen-index.js';
 	import { formatDistance } from './internal/format-distance.js';
-	import { m } from '$lib/paraglide/messages.js';
-	import { getLocale, type Locale } from '$lib/paraglide/runtime';
+	import { m } from '#lib/paraglide/messages.js';
+	import { getLocale, type Locale } from '#lib/paraglide/runtime.js';
 
 	const SLUG = 'trinkbrunnen';
 

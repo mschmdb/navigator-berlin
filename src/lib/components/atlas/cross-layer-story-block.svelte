@@ -1,8 +1,8 @@
 <script lang="ts">
 	import EditorialDisclaimer from './editorial-disclaimer.svelte';
-	import type { RenderedTemplate } from '$lib/data/cross-layer-templates/index.js';
-	import { localizedHref } from '$lib/i18n/localized-href.js';
-	import { m } from '$lib/paraglide/messages.js';
+	import type { RenderedTemplate } from '#lib/data/cross-layer-templates/index.js';
+	import { localizedHref } from '#lib/i18n/localized-href.js';
+	import { m } from '#lib/paraglide/messages.js';
 
 	type SourceRef = {
 		readonly label: string;

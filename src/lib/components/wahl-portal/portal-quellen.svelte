@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { Accordion } from 'bits-ui';
-	import { m } from '$lib/paraglide/messages.js';
-	import { localizedHref } from '$lib/i18n/localized-href.js';
-	import { sourceDisplayLabel, licenseDisplayLabel } from '$lib/data/wahl-labels.js';
-	import type { WahlPortalQuelle } from '$lib/utils/wahl-portal-quellen.js';
+	import { m } from '#lib/paraglide/messages.js';
+	import { localizedHref } from '#lib/i18n/localized-href.js';
+	import { sourceDisplayLabel, licenseDisplayLabel } from '#lib/data/wahl-labels.js';
+	import type { WahlPortalQuelle } from '#lib/utils/wahl-portal-quellen.js';
 
 	type Props = {
 		quellen: readonly WahlPortalQuelle[];

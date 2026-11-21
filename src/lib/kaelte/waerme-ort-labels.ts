@@ -1,9 +1,9 @@
-import type { WaermeOrt } from '$lib/data/get-waerme-orte-index.js';
-import type { WaermeOrtStatus } from '$lib/kaelte/nearest-waerme-orte.js';
-import { categoryLabel } from '$lib/components/kuehle-orte/category-label.js';
-import { buildErrorReportMailto } from '$lib/utils/contact.js';
-import { m } from '$lib/paraglide/messages.js';
-import { getLocale, type Locale } from '$lib/paraglide/runtime';
+import type { WaermeOrt } from '#lib/data/get-waerme-orte-index.js';
+import type { WaermeOrtStatus } from '#lib/kaelte/nearest-waerme-orte.js';
+import { categoryLabel } from '#lib/components/kuehle-orte/category-label.js';
+import { buildErrorReportMailto } from '#lib/utils/contact.js';
+import { m } from '#lib/paraglide/messages.js';
+import { getLocale, type Locale } from '#lib/paraglide/runtime.js';
 
 /** Gemeinsame Textbausteine der Warme-Orte-Liste (/kaelte und Inspector-Karte). */
 

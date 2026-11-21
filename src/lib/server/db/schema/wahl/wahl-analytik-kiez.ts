@@ -4,7 +4,7 @@ import { wahlTypEnum, wahlStimmtypEnum } from './wahl.js';
 /**
  * Build-Zeit-Aggregat (ADR-013): Wechsel + Volatilität pro Kiez und
  * Wahl-Reihe (typ × stimmtyp), berechnet vom pure Rechenkern in
- * `$lib/server/wahl/analytik.ts` (siehe `scripts/build-wahl-analytik.ts`).
+ * `#lib/server/wahl/analytik.ts` (siehe `scripts/build-wahl-analytik.ts`).
  * Wiederholungswahlen bereits in `wechsel_count`/`wechsel_jahre` gemergt
  * (letztgültiger Stand pro Legislatur).
  */

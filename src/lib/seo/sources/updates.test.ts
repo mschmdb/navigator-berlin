@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { buildUpdatesSitemapEntries } from './updates.js';
-import type { UpdateEntry } from '$lib/content/updates/types.js';
+import type { UpdateEntry } from '#lib/content/updates/types.js';
 
 const fixtureEntry = (slug: string, date: string): UpdateEntry => ({
 	slug,

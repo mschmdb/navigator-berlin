@@ -1,5 +1,5 @@
 import { LRUCache } from 'lru-cache';
-import type { ColdEvent, ColdLevel, ColdWarning } from '$lib/data/dwd-warnung.types.js';
+import type { ColdEvent, ColdLevel, ColdWarning } from '#lib/data/dwd-warnung.types.js';
 import {
 	SOURCE,
 	SOURCE_URL,

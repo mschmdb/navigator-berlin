@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import type { Manifest } from '$lib/data/types.js';
+import type { Manifest } from '#lib/data/types.js';
 
 const fixtureManifest: Manifest = {
 	schemaVersion: 1,
@@ -44,7 +44,7 @@ const fixtureManifest: Manifest = {
 	]
 };
 
-vi.mock('$lib/data/manifest.js', () => ({
+vi.mock('#lib/data/manifest.js', () => ({
 	loadManifest: vi.fn(async () => fixtureManifest)
 }));
 
@@ -196,7 +196,7 @@ describe('routes/sitemap-de.xml/+server.ts (DE)', () => {
 	// (aktuell true) -- hier beide Zustände am echten Handler, gemockt statt
 	// vom aktuellen `featureFlags.wahlPortal`-Wert abhängig zu sein.
 	it('enthält /berlin-wahlen wenn featureFlags.wahlPortal=true', { timeout: 20_000 }, async () => {
-		vi.doMock('$lib/data/feature-flags.js', () => ({ featureFlags: { wahlPortal: true } }));
+		vi.doMock('#lib/data/feature-flags.js', () => ({ featureFlags: { wahlPortal: true } }));
 		const mod = await import('../../routes/sitemap-de.xml/+server.js');
 		const response = await mod.GET(
 			makeEvent('https://navigator.berlin/sitemap-de.xml') as Parameters<typeof mod.GET>[0]
@@ -211,7 +211,7 @@ describe('routes/sitemap-de.xml/+server.ts (DE)', () => {
 			timeout: 20_000
 		},
 		async () => {
-			vi.doMock('$lib/data/feature-flags.js', () => ({ featureFlags: { wahlPortal: false } }));
+			vi.doMock('#lib/data/feature-flags.js', () => ({ featureFlags: { wahlPortal: false } }));
 			const mod = await import('../../routes/sitemap-de.xml/+server.js');
 			const response = await mod.GET(
 				makeEvent('https://navigator.berlin/sitemap-de.xml') as Parameters<typeof mod.GET>[0]
@@ -234,7 +234,7 @@ describe('routes/sitemap-de.xml/+server.ts (DE)', () => {
 		async () => {
 			const originalDatabaseUrl = process.env.DATABASE_URL;
 			process.env.DATABASE_URL = 'postgres://test/test';
-			vi.doMock('$lib/server/db/queries/wahl/get-wahl-list.js', () => ({
+			vi.doMock('#lib/server/db/queries/wahl/get-wahl-list.js', () => ({
 				getWahlList: vi.fn(async () => [
 					{
 						id: 1,
@@ -281,8 +281,8 @@ describe('routes/sitemap-en.xml/+server.ts (EN)', () => {
 			// eine 2026-bvv-Wahlen-Fixture) bleibt sonst über `vi.resetModules()`
 			// hinweg registriert und sickert in diesen Test durch (Review-Fund,
 			// Muster wie die bestehenden sitemap-de.xml-Tests in dieser Datei).
-			vi.doMock('$lib/data/feature-flags.js', () => ({ featureFlags: { wahlPortal: true } }));
-			vi.doMock('$lib/server/db/queries/wahl/get-wahl-list.js', () => ({
+			vi.doMock('#lib/data/feature-flags.js', () => ({ featureFlags: { wahlPortal: true } }));
+			vi.doMock('#lib/server/db/queries/wahl/get-wahl-list.js', () => ({
 				getWahlList: vi.fn(async () => [])
 			}));
 			const mod = await import('../../routes/sitemap-en.xml/+server.js');
@@ -310,8 +310,8 @@ describe('routes/sitemap-en.xml/+server.ts (EN)', () => {
 		async () => {
 			const originalDatabaseUrl = process.env.DATABASE_URL;
 			process.env.DATABASE_URL = 'postgres://test/test';
-			vi.doMock('$lib/data/feature-flags.js', () => ({ featureFlags: { wahlPortal: true } }));
-			vi.doMock('$lib/server/db/queries/wahl/get-wahl-list.js', () => ({
+			vi.doMock('#lib/data/feature-flags.js', () => ({ featureFlags: { wahlPortal: true } }));
+			vi.doMock('#lib/server/db/queries/wahl/get-wahl-list.js', () => ({
 				getWahlList: vi.fn(async () => [
 					{
 						id: 1,

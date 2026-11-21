@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
-import { overwriteGetLocale } from '$lib/paraglide/runtime';
-import type { UpdateEntry } from '$lib/content/updates/types.js';
+import { overwriteGetLocale } from '#lib/paraglide/runtime.js';
+import type { UpdateEntry } from '#lib/content/updates/types.js';
 
 // `page.url` ist im Test-Browser nicht steuerbar, daher ein kontrollierter Stub.
 // Der Filter-Toggle-Klick ist nicht Teil dieses Tests (vorbestehender Bug).

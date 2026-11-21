@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it } from 'vitest';
-import { overwriteGetLocale } from '$lib/paraglide/runtime';
-import type { LayerMetadata, License } from '$lib/data';
+import { overwriteGetLocale } from '#lib/paraglide/runtime.js';
+import type { LayerMetadata, License } from '#lib/data/index.ts';
 import {
 	getLicenseInfo,
 	getRuntimeSoftware,

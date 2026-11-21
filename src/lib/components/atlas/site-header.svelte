@@ -4,12 +4,12 @@
 	import AddressSearch from './address-search.svelte';
 	import AddressSearchOverlay from './address-search-overlay.svelte';
 	import SiteMenu from './site-menu.svelte';
-	import { PixelLogo } from '$lib/components/ui';
+	import { PixelLogo } from '#lib/components/ui/index.ts';
 	import { SlidersHorizontal } from '@lucide/svelte';
-	import { featureFlags } from '$lib/data/feature-flags.js';
-	import type { GeocodeSuggestion } from '$lib/data';
-	import { m } from '$lib/paraglide/messages.js';
-	import { localizedHref } from '$lib/i18n/localized-href.js';
+	import { featureFlags } from '#lib/data/feature-flags.js';
+	import type { GeocodeSuggestion } from '#lib/data/index.ts';
+	import { m } from '#lib/paraglide/messages.js';
+	import { localizedHref } from '#lib/i18n/localized-href.js';
 
 	type Props = {
 		geocode: (q: string) => Promise<GeocodeSuggestion[]>;

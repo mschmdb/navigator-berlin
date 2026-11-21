@@ -1,22 +1,22 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import SeoHead from '$lib/components/atlas/seo-head.svelte';
-	import JsonLd from '$lib/components/atlas/json-ld.svelte';
-	import EditorialDisclaimer from '$lib/components/atlas/editorial-disclaimer.svelte';
-	import WahlBezirkChoropleth from '$lib/components/atlas/wahl-bezirk-choropleth.svelte';
-	import WahlStimmbezirkChoropleth from '$lib/components/atlas/wahl-stimmbezirk-choropleth.svelte';
-	import { parteiColor, parteiPattern } from '$lib/data/partei-farben.js';
-	import { buildBreadcrumbList } from '$lib/seo/jsonld-breadcrumb.js';
-	import { buildDataset } from '$lib/seo/jsonld-dataset.js';
-	import { buildWahlMeta } from '$lib/seo/wahl-meta.js';
-	import { localeToBcp47, resolveEffectiveLocale } from '$lib/seo/index.js';
-	import { canonicalOrigin, localizedPathname } from '$lib/seo/canonical.js';
-	import { deriveTemporalCoverage, originOfUrl } from '$lib/seo/dataset-helpers.js';
-	import { getLocale } from '$lib/paraglide/runtime';
-	import { m } from '$lib/paraglide/messages.js';
-	import { BEZIRKE_BBOX } from '$lib/data/berlin-bbox.generated.js';
-	import { localizedHref } from '$lib/i18n/localized-href.js';
-	import { formatPercent, formatCount, formatWahlDate } from '$lib/i18n/format.js';
+	import SeoHead from '#lib/components/atlas/seo-head.svelte';
+	import JsonLd from '#lib/components/atlas/json-ld.svelte';
+	import EditorialDisclaimer from '#lib/components/atlas/editorial-disclaimer.svelte';
+	import WahlBezirkChoropleth from '#lib/components/atlas/wahl-bezirk-choropleth.svelte';
+	import WahlStimmbezirkChoropleth from '#lib/components/atlas/wahl-stimmbezirk-choropleth.svelte';
+	import { parteiColor, parteiPattern } from '#lib/data/partei-farben.js';
+	import { buildBreadcrumbList } from '#lib/seo/jsonld-breadcrumb.js';
+	import { buildDataset } from '#lib/seo/jsonld-dataset.js';
+	import { buildWahlMeta } from '#lib/seo/wahl-meta.js';
+	import { localeToBcp47, resolveEffectiveLocale } from '#lib/seo/index.js';
+	import { canonicalOrigin, localizedPathname } from '#lib/seo/canonical.js';
+	import { deriveTemporalCoverage, originOfUrl } from '#lib/seo/dataset-helpers.js';
+	import { getLocale } from '#lib/paraglide/runtime.js';
+	import { m } from '#lib/paraglide/messages.js';
+	import { BEZIRKE_BBOX } from '#lib/data/berlin-bbox.generated.js';
+	import { localizedHref } from '#lib/i18n/localized-href.js';
+	import { formatPercent, formatCount, formatWahlDate } from '#lib/i18n/format.js';
 	import {
 		wahlTypLabel,
 		wahlStimmtypLabel,
@@ -24,11 +24,11 @@
 		wahlWiederholungLabel,
 		sourceDisplayLabel,
 		licenseDisplayLabel
-	} from '$lib/data/wahl-labels.js';
-	import { parteiDisplayName } from '$lib/components/wahl-portal/internal/winner-map-data.js';
-	import VorlaeufigBadge from '$lib/components/wahl-portal/vorlaeufig-badge.svelte';
-	import KapitelSection from '$lib/components/wahl-portal/kapitel-section.svelte';
-	import { serializePortalState, DEFAULT_EBENE } from '$lib/utils/wahl-portal-url-state.js';
+	} from '#lib/data/wahl-labels.js';
+	import { parteiDisplayName } from '#lib/components/wahl-portal/internal/winner-map-data.js';
+	import VorlaeufigBadge from '#lib/components/wahl-portal/vorlaeufig-badge.svelte';
+	import KapitelSection from '#lib/components/wahl-portal/kapitel-section.svelte';
+	import { serializePortalState, DEFAULT_EBENE } from '#lib/utils/wahl-portal-url-state.js';
 	import type { PageData } from './$types';
 
 	let { data }: { data: PageData } = $props();

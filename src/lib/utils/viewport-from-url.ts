@@ -1,4 +1,4 @@
-import { BERLIN_BBOX_ARRAY, BERLIN_CENTER, DEFAULT_ZOOM } from '$lib/data/constants.js';
+import { BERLIN_BBOX_ARRAY, BERLIN_CENTER, DEFAULT_ZOOM } from '#lib/data/constants.js';
 import { parseViewport } from './url-state.js';
 
 export interface InitialViewport {

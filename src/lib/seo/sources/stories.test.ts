@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { buildStoriesSitemapEntries, STORIES_PAGES_SOURCE } from './stories.js';
-import type { StoryEntry } from '$lib/content/stories/types.js';
+import type { StoryEntry } from '#lib/content/stories/types.js';
 
 const story = (slug: string, date: string): StoryEntry => ({
 	slug,

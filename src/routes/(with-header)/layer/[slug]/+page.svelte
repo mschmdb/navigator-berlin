@@ -4,44 +4,44 @@
 		shortenSource,
 		shortenLicense,
 		formatYearMonth
-	} from '$lib/components/atlas/inspector-panel/internal/source-shortener.js';
-	import EditorialDisclaimer from '$lib/components/atlas/editorial-disclaimer.svelte';
-	import ErrorFeedbackMailto from '$lib/components/atlas/error-feedback-mailto.svelte';
-	import SeoHead from '$lib/components/atlas/seo-head.svelte';
-	import JsonLd from '$lib/components/atlas/json-ld.svelte';
-	import FaqSection from '$lib/components/atlas/faq-section.svelte';
-	import LayerKiezRanking from '$lib/components/atlas/layer-kiez-ranking.svelte';
+	} from '#lib/components/atlas/inspector-panel/internal/source-shortener.js';
+	import EditorialDisclaimer from '#lib/components/atlas/editorial-disclaimer.svelte';
+	import ErrorFeedbackMailto from '#lib/components/atlas/error-feedback-mailto.svelte';
+	import SeoHead from '#lib/components/atlas/seo-head.svelte';
+	import JsonLd from '#lib/components/atlas/json-ld.svelte';
+	import FaqSection from '#lib/components/atlas/faq-section.svelte';
+	import LayerKiezRanking from '#lib/components/atlas/layer-kiez-ranking.svelte';
 	import {
 		buildDataset,
 		buildBreadcrumbList,
 		localeToBcp47,
 		pickDatasetDescription
-	} from '$lib/seo/index.js';
-	import { canonicalOrigin, localizedPathname } from '$lib/seo/canonical.js';
-	import { modeForLayer } from '$lib/app-mode.js';
-	import { buildExplorerDeepLink } from '$lib/utils/url-state.js';
-	import { buildLayerMeta, layerBenefit } from '$lib/seo/layer-meta.js';
+	} from '#lib/seo/index.js';
+	import { canonicalOrigin, localizedPathname } from '#lib/seo/canonical.js';
+	import { modeForLayer } from '#lib/app-mode.js';
+	import { buildExplorerDeepLink } from '#lib/utils/url-state.js';
+	import { buildLayerMeta, layerBenefit } from '#lib/seo/layer-meta.js';
 	import {
 		deriveTemporalCoverage,
 		originOfUrl,
 		stableDownloadPath
-	} from '$lib/seo/dataset-helpers.js';
+	} from '#lib/seo/dataset-helpers.js';
 	import {
 		getLayerDisplayName,
 		bundleLabel,
 		BUNDLE_LABEL_DE
-	} from '$lib/components/atlas/internal/layer-palette-filter.js';
+	} from '#lib/components/atlas/internal/layer-palette-filter.js';
 	import {
 		aggregationLevelLabel,
 		isKnownAggregationLevel
-	} from '$lib/data/aggregation-level-label.js';
-	import { isKiezScoreLayer } from '$lib/data/kiez-score-layer.js';
-	import { getLocale } from '$lib/paraglide/runtime';
-	import { m } from '$lib/paraglide/messages.js';
-	import { BEZIRKE_BBOX } from '$lib/data/berlin-bbox.generated.js';
-	import { localizedHref } from '$lib/i18n/localized-href.js';
-	import { trackLanding } from '$lib/utils/plausible.js';
-	import { formatCount } from '$lib/i18n/format.js';
+	} from '#lib/data/aggregation-level-label.js';
+	import { isKiezScoreLayer } from '#lib/data/kiez-score-layer.js';
+	import { getLocale } from '#lib/paraglide/runtime.js';
+	import { m } from '#lib/paraglide/messages.js';
+	import { BEZIRKE_BBOX } from '#lib/data/berlin-bbox.generated.js';
+	import { localizedHref } from '#lib/i18n/localized-href.js';
+	import { trackLanding } from '#lib/utils/plausible.js';
+	import { formatCount } from '#lib/i18n/format.js';
 
 	type Props = { data: import('./$types').PageData };
 	let { data }: Props = $props();

@@ -1,8 +1,8 @@
 import { afterEach, describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
-import { overwriteGetLocale } from '$lib/paraglide/runtime';
+import { overwriteGetLocale } from '#lib/paraglide/runtime.js';
 import ClimateLongView from './climate-long-view.svelte';
-import type { YearValue } from '$lib/data';
+import type { YearValue } from '#lib/data/index.ts';
 
 afterEach(() => {
 	overwriteGetLocale(() => 'de');

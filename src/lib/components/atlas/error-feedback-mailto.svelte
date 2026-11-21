@@ -10,8 +10,8 @@
 -->
 <script lang="ts">
 	import { Mail } from '@lucide/svelte';
-	import { buildErrorReportMailto } from '$lib/utils/contact.js';
-	import { m } from '$lib/paraglide/messages.js';
+	import { buildErrorReportMailto } from '#lib/utils/contact.js';
+	import { m } from '#lib/paraglide/messages.js';
 
 	type Props = {
 		layerSlug: string;

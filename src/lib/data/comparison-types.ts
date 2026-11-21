@@ -1,4 +1,4 @@
-import type { KiezScoreDimension } from '$lib/data';
+import type { KiezScoreDimension } from '#lib/data/index.ts';
 
 /**
  * Geteilter Typ für die Score-Vergleichs-Zeile (Story 11.4). Genutzt von

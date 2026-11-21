@@ -18,8 +18,8 @@
  * `wahlReiheLabel` liefert das kurze Institutions-Label ohne "-wahl"-Suffix
  * (Reihen-Leiste-Tabs, Gruppen-Ueberschriften in `alle-wahlen-block.svelte`).
  */
-import { m } from '$lib/paraglide/messages.js';
-import type { Locale } from '$lib/paraglide/runtime';
+import { m } from '#lib/paraglide/messages.js';
+import type { Locale } from '#lib/paraglide/runtime.js';
 
 export type WahlTyp = 'btw' | 'agh' | 'bvv';
 export type WahlStimmtyp = 'erststimme' | 'zweitstimme' | 'einstimme';

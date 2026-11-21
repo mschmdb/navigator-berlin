@@ -1,7 +1,7 @@
-import type { UpdateCategory } from '$lib/content/updates/types.js';
-import { m } from '$lib/paraglide/messages.js';
-import { formatLongDate } from '$lib/i18n/format.js';
-import type { Locale } from '$lib/paraglide/runtime';
+import type { UpdateCategory } from '#lib/content/updates/types.js';
+import { m } from '#lib/paraglide/messages.js';
+import { formatLongDate } from '#lib/i18n/format.js';
+import type { Locale } from '#lib/paraglide/runtime.js';
 
 /**
  * Anzeige-Label je Kategorie in der Seiten-Locale (Paraglide-Messages

@@ -1,13 +1,13 @@
-import { m } from '$lib/paraglide/messages.js';
-import type { Locale } from '$lib/paraglide/runtime';
-import { formatPercent } from '$lib/i18n/format.js';
+import { m } from '#lib/paraglide/messages.js';
+import type { Locale } from '#lib/paraglide/runtime.js';
+import { formatPercent } from '#lib/i18n/format.js';
 import {
 	wahlReiheLabel,
 	wahlStimmtypLabel,
 	wahlWiederholungLabel,
 	type WahlStimmtyp,
 	type WahlTyp
-} from '$lib/data/wahl-labels.js';
+} from '#lib/data/wahl-labels.js';
 import { composeDescription } from './profile-meta.js';
 import { BRAND, firstFitting, PAGE_TITLE_MAX } from './page-title.js';
 

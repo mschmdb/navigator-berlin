@@ -1,6 +1,6 @@
 import type { RequestHandler } from './$types';
-import { loadUpdatesFromModules } from '$lib/content/updates/load-updates.js';
-import { buildJsonFeed } from '$lib/feeds/build-json-feed.js';
+import { loadUpdatesFromModules } from '#lib/content/updates/load-updates.js';
+import { buildJsonFeed } from '#lib/feeds/build-json-feed.js';
 
 export const prerender = true;
 

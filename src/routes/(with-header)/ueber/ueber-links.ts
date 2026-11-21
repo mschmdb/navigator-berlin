@@ -1,6 +1,6 @@
-import { FEEDBACK_EMAIL } from '$lib/utils/contact.js';
-import { REPO_URL } from '$lib/seo/jsonld-organization.js';
-import { FOUNDER_PROFILE_URLS, FOUNDER_URL } from '$lib/seo/jsonld-person.js';
+import { FEEDBACK_EMAIL } from '#lib/utils/contact.js';
+import { REPO_URL } from '#lib/seo/jsonld-organization.js';
+import { FOUNDER_PROFILE_URLS, FOUNDER_URL } from '#lib/seo/jsonld-person.js';
 
 export interface InternalLink {
 	readonly kind: 'internal';

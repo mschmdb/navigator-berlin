@@ -1,7 +1,7 @@
 <!-- Kapitel 3 (#190): feste Plätze oder nach Größe, 2016 neben 2026. -->
 <script lang="ts">
-	import type { HandbuchBezirk } from '$lib/stories/wahl-quadrate/handbuch-daten';
-	import type { OrderMode } from '$lib/stories/wahl-quadrate/layout';
+	import type { HandbuchBezirk } from '#lib/stories/wahl-quadrate/handbuch-daten.ts';
+	import type { OrderMode } from '#lib/stories/wahl-quadrate/layout.ts';
 	import Karte from './karte.svelte';
 	import Reihenfolge from './reihenfolge.svelte';
 

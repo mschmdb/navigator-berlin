@@ -1,16 +1,16 @@
 <script lang="ts">
-	import type { LayerMetadata } from '$lib/data';
+	import type { LayerMetadata } from '#lib/data/index.ts';
 	import {
 		formatYearMonth,
 		shortenLicense
-	} from '$lib/components/atlas/inspector-panel/internal/source-shortener.js';
+	} from '#lib/components/atlas/inspector-panel/internal/source-shortener.js';
 	import {
 		bundleLabel,
 		getLayerDisplayName
-	} from '$lib/components/atlas/internal/layer-palette-filter.js';
-	import { localizedHref } from '$lib/i18n/localized-href.js';
-	import { m } from '$lib/paraglide/messages.js';
-	import { getLocale } from '$lib/paraglide/runtime.js';
+	} from '#lib/components/atlas/internal/layer-palette-filter.js';
+	import { localizedHref } from '#lib/i18n/localized-href.js';
+	import { m } from '#lib/paraglide/messages.js';
+	import { getLocale } from '#lib/paraglide/runtime.js';
 
 	type Props = { layers: readonly LayerMetadata[] };
 	let { layers }: Props = $props();

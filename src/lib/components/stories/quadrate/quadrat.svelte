@@ -1,6 +1,6 @@
 <!--
 	Ein Quadrat aus „Berlin in Quadraten“ (#200): eine Wahl in einem Gebiet als Treemap.
-	Geometrie, Grau und Zahlen kommen aus `$lib/stories/wahl-quadrate` (`layout`, `derive`,
+	Geometrie, Grau und Zahlen kommen aus `#lib/stories/wahl-quadrate` (`layout`, `derive`,
 	`placeLabels`). Die Zahlen brauchen die echte Breite und Jost 900, darum erscheinen sie
 	erst im Browser. Außenbeschriftungen ragen unter und rechts über das Quadrat hinaus: Wer
 	sie zeigt, lässt dort Platz (rund 3 em).
@@ -8,28 +8,28 @@
 -->
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { m } from '$lib/paraglide/messages.js';
-	import { getLocale } from '$lib/paraglide/runtime';
-	import { colorsInOrder } from '$lib/stories/wahl-quadrate/farben';
+	import { m } from '#lib/paraglide/messages.js';
+	import { getLocale } from '#lib/paraglide/runtime.js';
+	import { colorsInOrder } from '#lib/stories/wahl-quadrate/farben.ts';
 	import {
 		DEFAULT_THRESHOLD,
 		derive,
 		formatShare,
 		sharesOf,
 		type Lang
-	} from '$lib/stories/wahl-quadrate/grau';
-	import { placeLabels, shareTexts, type Labels } from '$lib/stories/wahl-quadrate/labels';
+	} from '#lib/stories/wahl-quadrate/grau.ts';
+	import { placeLabels, shareTexts, type Labels } from '#lib/stories/wahl-quadrate/labels.ts';
 	import {
 		layout,
 		orderOf,
 		SIDE,
 		type Block,
 		type OrderMode
-	} from '$lib/stories/wahl-quadrate/layout';
-	import { ORDER, type PartyKey } from '$lib/stories/wahl-quadrate/parteien';
-	import { CORNERS, fillsFor } from '$lib/stories/wahl-quadrate/svg';
-	import { STORY_FONT, STORY_INK } from '$lib/stories/tokens';
-	import type { ElectionShares } from '$lib/stories/wahl-quadrate/types';
+	} from '#lib/stories/wahl-quadrate/layout.ts';
+	import { ORDER, type PartyKey } from '#lib/stories/wahl-quadrate/parteien.ts';
+	import { CORNERS, fillsFor } from '#lib/stories/wahl-quadrate/svg.ts';
+	import { STORY_FONT, STORY_INK } from '#lib/stories/tokens.ts';
+	import type { ElectionShares } from '#lib/stories/wahl-quadrate/types.ts';
 	import { sharedMeasure, SQUARE_FONT } from './messen';
 	import { partyName } from './namen';
 

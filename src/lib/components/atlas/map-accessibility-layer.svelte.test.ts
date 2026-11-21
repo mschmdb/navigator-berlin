@@ -1,9 +1,9 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { page } from 'vitest/browser';
 import { render } from 'vitest-browser-svelte';
-import { overwriteGetLocale } from '$lib/paraglide/runtime';
+import { overwriteGetLocale } from '#lib/paraglide/runtime.js';
 import MapAccessibilityLayer from './map-accessibility-layer.svelte';
-import type { LayerMetadata } from '$lib/data/types.js';
+import type { LayerMetadata } from '#lib/data/types.js';
 
 afterEach(() => {
 	overwriteGetLocale(() => 'de');

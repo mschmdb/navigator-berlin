@@ -1,14 +1,14 @@
 import { afterEach, describe, expect, it } from 'vitest';
 import { page } from 'vitest/browser';
 import { render } from 'vitest-browser-svelte';
-import { overwriteGetLocale } from '$lib/paraglide/runtime';
+import { overwriteGetLocale } from '#lib/paraglide/runtime.js';
 import KlimaPetCard from './klima-pet-card.svelte';
 
 afterEach(() => {
 	overwriteGetLocale(() => 'de');
 });
-import type { LayerHit } from '$lib/data';
-import type { NumericMedianAggregate } from '$lib/data/layer-aggregates-types.js';
+import type { LayerHit } from '#lib/data/index.ts';
+import type { NumericMedianAggregate } from '#lib/data/layer-aggregates-types.js';
 
 const hit: LayerHit = {
 	layer: 'klima-pet-2022',

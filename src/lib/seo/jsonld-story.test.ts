@@ -5,7 +5,7 @@ import {
 	storiesImagePath,
 	storyImagePath
 } from './jsonld-story.js';
-import type { StoryEntry } from '$lib/content/stories/types.js';
+import type { StoryEntry } from '#lib/content/stories/types.js';
 
 const ORIGIN = 'https://navigator.berlin';
 

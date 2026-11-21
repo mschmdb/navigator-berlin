@@ -1,4 +1,4 @@
-import type { Bbox } from '$lib/utils/url-state.js';
+import type { Bbox } from '#lib/utils/url-state.js';
 import { COLORS } from './colors.js';
 import type { RegionFeature } from './region-focus.js';
 

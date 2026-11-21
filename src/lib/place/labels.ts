@@ -1,6 +1,6 @@
-import { m } from '$lib/paraglide/messages.js';
-import { dimensionLabel } from '$lib/components/atlas/inspector-panel/internal/kiez-score-display.js';
-import { SCORE_DIMENSION_KEYS } from '$lib/data/comparison-types.js';
+import { m } from '#lib/paraglide/messages.js';
+import { dimensionLabel } from '#lib/components/atlas/inspector-panel/internal/kiez-score-display.js';
+import { SCORE_DIMENSION_KEYS } from '#lib/data/comparison-types.js';
 import { msgOpts, numberFormat, type LocaleOpts } from './locale';
 import type { Dim } from './types';
 

@@ -4,7 +4,7 @@
 // i18n C4c: Die Texte kommen aus Paraglide-Messages und folgen der Seiten-Locale,
 // deshalb Funktionen statt Konstanten.
 
-import { m } from '$lib/paraglide/messages.js';
+import { m } from '#lib/paraglide/messages.js';
 
 export interface TransparenzQuelle {
 	/** Anzeigename des Quellen-Strangs. */

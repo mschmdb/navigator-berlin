@@ -18,9 +18,9 @@
  * `topRank`, Rest nur als URL-Referenz am Ende.
  */
 
-import type { Manifest } from '$lib/data/types.js';
-import { hasLayerDetailPage } from '$lib/data/layer-visibility.js';
-import { baseLocale, type Locale } from '$lib/paraglide/runtime';
+import type { Manifest } from '#lib/data/types.js';
+import { hasLayerDetailPage } from '#lib/data/layer-visibility.js';
+import { baseLocale, type Locale } from '#lib/paraglide/runtime.js';
 
 export const KIEZ_FULL_TXT_CAP = 50;
 

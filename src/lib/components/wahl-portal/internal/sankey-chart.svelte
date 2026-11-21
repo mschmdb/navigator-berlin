@@ -11,8 +11,8 @@
 	 * Cast auf `SankeyLaidOutLink`.
 	 */
 	import { Chart, Svg, Sankey, Link } from 'layerchart/svg';
-	import { m } from '$lib/paraglide/messages.js';
-	import { parteiColor } from '$lib/data/partei-farben.js';
+	import { m } from '#lib/paraglide/messages.js';
+	import { parteiColor } from '#lib/data/partei-farben.js';
 	import { parteiDisplayName } from './winner-map-data.js';
 	import type { SankeyGraph } from './sankey-graph.js';
 	import {

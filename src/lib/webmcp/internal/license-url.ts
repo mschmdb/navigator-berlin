@@ -8,7 +8,7 @@
  * Wenn 2.2 fertig ist, dieser Helper auf den zentralen umgestellt werden.
  */
 
-import type { License } from '$lib/data';
+import type { License } from '#lib/data/index.ts';
 
 const LICENSE_URLS: Record<License, string> = {
 	'dl-de/zero-2-0': 'https://www.govdata.de/dl-de/zero-2-0',

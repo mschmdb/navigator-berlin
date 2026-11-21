@@ -1,6 +1,6 @@
-import type { Bundle, LayerMetadata } from '$lib/data';
+import type { Bundle, LayerMetadata } from '#lib/data/index.ts';
 import { matchSynonyms, normalizeQueryNfd } from './layer-synonyms.js';
-import { m } from '$lib/paraglide/messages.js';
+import { m } from '#lib/paraglide/messages.js';
 import { toAtlasMessageOptions, type LocaleOptions } from './atlas-label-options.js';
 
 /**
@@ -141,7 +141,7 @@ export interface LayerGroup {
 
 type MessageFn = (
 	params?: undefined,
-	options?: { locale: import('$lib/paraglide/runtime').Locale }
+	options?: { locale: import('#lib/paraglide/runtime.js').Locale }
 ) => string;
 
 // Story i18n B3a: Layer-Namen sind Code-Labels (Boundary: "sind Code-Labels

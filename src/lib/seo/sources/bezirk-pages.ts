@@ -1,6 +1,6 @@
 import type { SitemapEntry, SitemapSource } from '../sitemap-builder.js';
 import { localizedPathname } from '../canonical.js';
-import type { Locale } from '$lib/paraglide/runtime';
+import type { Locale } from '#lib/paraglide/runtime.js';
 import { profileLastmod } from '../lastmod.js';
 
 /**

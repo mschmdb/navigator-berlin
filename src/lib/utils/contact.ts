@@ -1,4 +1,4 @@
-import { m } from '$lib/paraglide/messages.js';
+import { m } from '#lib/paraglide/messages.js';
 
 export const FEEDBACK_EMAIL = 'hey@navigator.berlin';
 

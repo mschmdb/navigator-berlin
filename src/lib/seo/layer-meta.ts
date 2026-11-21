@@ -1,6 +1,6 @@
-import { m } from '$lib/paraglide/messages.js';
-import type { Locale } from '$lib/paraglide/runtime';
-import type { Bundle, LayerMetadata } from '$lib/data/types.js';
+import { m } from '#lib/paraglide/messages.js';
+import type { Locale } from '#lib/paraglide/runtime.js';
+import type { Bundle, LayerMetadata } from '#lib/data/types.js';
 import { composeDescription, DESCRIPTION_MAX } from './profile-meta.js';
 import { buildPageTitle } from './page-title.js';
 

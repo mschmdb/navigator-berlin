@@ -1,6 +1,6 @@
 import type { SeverityLevel } from './value-severity-mapping.js';
-import type { KiezScoreDimension } from '$lib/data';
-import { m } from '$lib/paraglide/messages.js';
+import type { KiezScoreDimension } from '#lib/data/index.ts';
+import { m } from '#lib/paraglide/messages.js';
 import {
 	assertUnreachable,
 	toAtlasMessageOptions,

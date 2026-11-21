@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { BERLIN_BBOX_ARRAY, BERLIN_CENTER, DEFAULT_ZOOM } from '$lib/data/constants.js';
-	import { PixelLogo } from '$lib/components/ui';
+	import { BERLIN_BBOX_ARRAY, BERLIN_CENTER, DEFAULT_ZOOM } from '#lib/data/constants.js';
+	import { PixelLogo } from '#lib/components/ui/index.ts';
 	import { handleMapKeydown, type MapHandle } from './internal/map-keyboard.js';
 	import { PIN_ICON_MAP } from './internal/pin-icon-mapping.js';
 	import { DOT_CAPABLE_SLUGS } from './internal/choropleth-dots.js';
@@ -12,7 +12,7 @@
 		type PinAddImageMap
 	} from './internal/pin-sprite-renderer.js';
 	import { COLORS } from './internal/colors.js';
-	import { m } from '$lib/paraglide/messages.js';
+	import { m } from '#lib/paraglide/messages.js';
 
 	type Viewport = {
 		center: [number, number];

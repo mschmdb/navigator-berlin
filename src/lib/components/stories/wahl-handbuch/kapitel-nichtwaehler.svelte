@@ -1,8 +1,8 @@
 <!-- Kapitel 4 (#190): Nichtwähler mitzählen, startet eingeschaltet (Runde 20c). -->
 <script lang="ts">
-	import { Schalter } from '$lib/components/stories/quadrate';
-	import { m } from '$lib/paraglide/messages.js';
-	import type { HandbuchBezirk } from '$lib/stories/wahl-quadrate/handbuch-daten';
+	import { Schalter } from '#lib/components/stories/quadrate/index.ts';
+	import { m } from '#lib/paraglide/messages.js';
+	import type { HandbuchBezirk } from '#lib/stories/wahl-quadrate/handbuch-daten.ts';
 	import Karte from './karte.svelte';
 
 	interface Props {

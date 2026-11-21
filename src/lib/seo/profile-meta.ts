@@ -1,7 +1,7 @@
-import { m } from '$lib/paraglide/messages.js';
-import type { Locale } from '$lib/paraglide/runtime';
+import { m } from '#lib/paraglide/messages.js';
+import type { Locale } from '#lib/paraglide/runtime.js';
 import { firstFitting, PAGE_TITLE_MAX } from './page-title.js';
-import { formatCount, formatDate, formatDecimal } from '$lib/i18n/format.js';
+import { formatCount, formatDate, formatDecimal } from '#lib/i18n/format.js';
 
 const BRAND = 'navigator.berlin';
 export const DESCRIPTION_MAX = 160;

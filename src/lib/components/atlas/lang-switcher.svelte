@@ -36,10 +36,10 @@
 	import { onMount } from 'svelte';
 	import { DropdownMenu as BitsDropdownMenu } from 'bits-ui';
 	import { Languages, Check } from '@lucide/svelte';
-	import { locales, getLocale, type Locale } from '$lib/paraglide/runtime';
-	import { localizedHref } from '$lib/i18n/localized-href.js';
-	import { m } from '$lib/paraglide/messages.js';
-	import { DropdownMenu } from '$lib/components/ui';
+	import { locales, getLocale, type Locale } from '#lib/paraglide/runtime.js';
+	import { localizedHref } from '#lib/i18n/localized-href.js';
+	import { m } from '#lib/paraglide/messages.js';
+	import { DropdownMenu } from '#lib/components/ui/index.ts';
 
 	/** Snippet-Prop-Typ, den bits-ui für `DropdownMenu.Item`/`.Trigger`s `child`
 	 *  Render-Prop exportiert -- direkt von bits-ui abgeleitet statt von Hand

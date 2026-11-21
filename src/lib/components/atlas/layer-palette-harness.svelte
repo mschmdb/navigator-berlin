@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { untrack } from 'svelte';
-	import { createUiState } from '$lib/state/ui-context.svelte.js';
-	import type { Breakpoint } from '$lib/utils/use-viewport.svelte.js';
-	import type { LayerMetadata } from '$lib/data';
+	import { createUiState } from '#lib/state/ui-context.svelte.js';
+	import type { Breakpoint } from '#lib/utils/use-viewport.svelte.js';
+	import type { LayerMetadata } from '#lib/data/index.ts';
 	import LayerPalette from './layer-palette.svelte';
 
 	type Props = {

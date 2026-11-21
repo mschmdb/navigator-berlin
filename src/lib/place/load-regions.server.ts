@@ -1,4 +1,4 @@
-import { readRegionDisplayNames, regionDisplayName } from '$lib/data/region-display-names.js';
+import { readRegionDisplayNames, regionDisplayName } from '#lib/data/region-display-names.js';
 import { loadTopicData } from './topics.server';
 import { LABELS, METRICS, type LabelValues, type MetricValues } from './topics';
 import type { DimValues, RegionSnapshot } from './types';
@@ -27,8 +27,8 @@ function dimsOf(row: ScoreRow): DimValues {
 export async function loadKiezRegions(): Promise<RegionSnapshot[]> {
 	if (!process.env.DATABASE_URL) return [];
 	const [{ getDb }, { kiezScore }, names, topics] = await Promise.all([
-		import('$lib/server/db/index.js'),
-		import('$lib/server/db/schema/index.js'),
+		import('#lib/server/db/index.js'),
+		import('#lib/server/db/schema/index.js'),
 		readRegionDisplayNames(),
 		loadTopicData()
 	]);
@@ -47,8 +47,8 @@ export async function loadKiezRegions(): Promise<RegionSnapshot[]> {
 export async function loadBezirkRegions(): Promise<RegionSnapshot[]> {
 	if (!process.env.DATABASE_URL) return [];
 	const [{ getDb }, { bezirkScore }, names, topics] = await Promise.all([
-		import('$lib/server/db/index.js'),
-		import('$lib/server/db/schema/index.js'),
+		import('#lib/server/db/index.js'),
+		import('#lib/server/db/schema/index.js'),
 		readRegionDisplayNames(),
 		loadTopicData()
 	]);

@@ -1,5 +1,5 @@
-import { getLocale } from '$lib/paraglide/runtime';
-import type { Lang } from '$lib/stories/wahl-quadrate/grau';
+import { getLocale } from '#lib/paraglide/runtime.js';
+import type { Lang } from '#lib/stories/wahl-quadrate/grau.ts';
 
 /** Sprache der Quadrate: Englisch auf `/en`, sonst Deutsch. */
 export function aktuelleSprache(): Lang {

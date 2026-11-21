@@ -3,7 +3,7 @@
 // Story 1.22: Grünversorgung als Versorgungs-Skala invertiert (siehe severityFromGruenversorgung).
 
 import { mapGruenversorgungKategorie } from './gruenversorgung-kategorie.js';
-import { m } from '$lib/paraglide/messages.js';
+import { m } from '#lib/paraglide/messages.js';
 import { toAtlasMessageOptions, type LocaleOptions } from '../../internal/atlas-label-options.js';
 
 export type SeverityLevel = 'success' | 'success-soft' | 'neutral' | 'warning' | 'danger';

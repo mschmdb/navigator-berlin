@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { SvelteMap } from 'svelte/reactivity';
 	import { ChevronDown } from '@lucide/svelte';
-	import { m } from '$lib/paraglide/messages.js';
-	import type { ReferenceChoice, ReferenceKind } from '$lib/place/types';
+	import { m } from '#lib/paraglide/messages.js';
+	import type { ReferenceChoice, ReferenceKind } from '#lib/place/types.ts';
 
 	export interface RefOption {
 		readonly slug: string;

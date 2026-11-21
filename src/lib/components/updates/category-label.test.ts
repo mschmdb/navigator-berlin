@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { categoryLabel, formatUpdateDate } from './category-label.js';
-import { UPDATE_CATEGORIES } from '$lib/content/updates/frontmatter-schema.js';
+import { UPDATE_CATEGORIES } from '#lib/content/updates/frontmatter-schema.js';
 
 describe('categoryLabel', () => {
 	it('liefert DE-Labels wie vor der Übersetzung', () => {

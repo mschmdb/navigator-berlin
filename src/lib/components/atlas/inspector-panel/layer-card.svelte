@@ -3,12 +3,12 @@
 </script>
 
 <script lang="ts">
-	import type { LayerHit } from '$lib/data';
+	import type { LayerHit } from '#lib/data/index.ts';
 	import type { Snippet } from 'svelte';
 	import { Eye, EyeOff } from '@lucide/svelte';
-	import { localizedHref } from '$lib/i18n/localized-href.js';
-	import { m } from '$lib/paraglide/messages.js';
-	import { getLocale, type Locale } from '$lib/paraglide/runtime';
+	import { localizedHref } from '#lib/i18n/localized-href.js';
+	import { m } from '#lib/paraglide/messages.js';
+	import { getLocale, type Locale } from '#lib/paraglide/runtime.js';
 	import { getLayerHitDisplay } from './internal/layer-hit-display.js';
 	import { glueShare } from './internal/context-rows.js';
 	import { getValueSeverity, severityDescriptions } from './internal/value-severity-mapping.js';

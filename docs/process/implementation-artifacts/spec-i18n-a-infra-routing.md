@@ -25,7 +25,7 @@ context:
 
 - Entscheidungen Matze 26.09.2026: Infra für N Locales (später es/tr), keine `'de'|'en'`-Hartverdrahtung; „Kiez“/„Bezirk“ bleiben in EN deutsch; EN-Updates als Frontmatter-Felder; v1-Scope Infra + Karte/Kernrouten + Wahlportal.
 - DE bleibt Master ohne Präfix; keine bestehende DE-URL ändert sich, kein Auto-Redirect nach Cookie/Accept-Language (Paraglide-Strategy `['url', 'baseLocale']`, cookieless nach Architektur-MUST #10).
-- Ein gemeinsamer `Locale`-Typ aus `$lib/paraglide/runtime` statt `SupportedLocale`, `SitemapLocale`, `authorities.Locale`.
+- Ein gemeinsamer `Locale`-Typ aus `#lib/paraglide/runtime` statt `SupportedLocale`, `SitemapLocale`, `authorities.Locale`.
 - Sprachumschalter führt auf dieselbe Seite in der anderen Sprache, voller Reload, zugänglich (Linktext in der Zielsprache mit `lang`-Attribut, aktuelle Sprache als `aria-current`).
 - TDD pro AC; alle bestehenden DE-Tests bleiben grün.
 - Entscheidung Matze 26.09. 17:10 (A): `/en`-Seiten sind `noindex` und fehlen in Sitemap und hreflang, bis eine Seite im Übersetzungs-Register (je Route/Seitentyp, eine Quelle für SeoHead, Sitemap und hreflang) als übersetzt markiert ist. In Block A ist noch keine Seite markiert; `sitemap-en.xml` existiert, ist aber leer.
@@ -94,7 +94,7 @@ context:
 - 26.09. 17:03 Start Planung (Step 1). 17:10 Checkpoint 1 freigegeben (Matze). 17:03 Paraglide 2.18.0 → 2.25.4 (`1678f59`). 17:04-17:07 Recherche (2 Subagenten).
 - 26.09. Start Implementierung (Step 2, dispatch-Route). Kontext geladen: Plan, `architecture.md`, gesamter Code-Map-Filesatz (Paraglide-Compiler-Quellen, hooks, seo-Layer, Komponenten).
   - Paraglide-Config (`project.inlang/settings.json` → `["de","en"]`, `vite.config.ts` → `strategy: ['url','baseLocale']`), `messages/en.json` (leer), Compiler-Regenerierung via `@inlang/paraglide-js` `compile()` verifiziert (`urlPatterns`: `en` → `/en/...`, `de` unpräfixiert).
-  - `Locale`-Typ konsolidiert: `authorities.ts`, `hreflang.ts` (vormals `SupportedLocale`), `sitemap-builder.ts`/`llms-builder.ts` (vormals `SitemapLocale`) importieren jetzt `Locale` aus `$lib/paraglide/runtime`. `$lib/data/types.ts`s eigener `Locale`-Typ (WebMCP/Geocoding, 8-Sprachen-vorbereitet) bewusst unangetastet (Boundary "Nicht ändern: WebMCP").
+  - `Locale`-Typ konsolidiert: `authorities.ts`, `hreflang.ts` (vormals `SupportedLocale`), `sitemap-builder.ts`/`llms-builder.ts` (vormals `SitemapLocale`) importieren jetzt `Locale` aus `#lib/paraglide/runtime`. `$lib/data/types.ts`s eigener `Locale`-Typ (WebMCP/Geocoding, 8-Sprachen-vorbereitet) bewusst unangetastet (Boundary "Nicht ändern: WebMCP").
   - `translation-register.ts` (neu) als eine Quelle für SeoHead-noindex/hreflang, Sitemap-Sources (zentraler Gate in `collectPrerenderedUrls`) und `llms-builder` -- Block A: leer.
   - `stale-locale-redirect.ts`: Stale-Präfix-Menge jetzt `HISTORICAL_LOCALE_PREFIXES \ (aktive Nicht-Basis-Locales)`, `en` verlässt die Stale-Menge, `de` bleibt für immer stale (kein URL-Präfix unter `baseLocale`). Test verschob den Open-Redirect-Fall von `/en/` auf `/es/`.
   - `renamed-route-redirect.ts`: zieht einen aktiven Locale-Präfix vor dem Lookup ab, hängt ihn ans Ziel wieder an (`/en/wo-lebt-es-sich-gut` → `/en/umwelt-infrastruktur-score`).

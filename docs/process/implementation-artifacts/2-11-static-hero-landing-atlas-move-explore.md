@@ -408,14 +408,14 @@ export function assertPhaseAllows(route: GuardedRoute): void {
 
 ```ts
 // src/routes/(with-header)/+page.server.ts
-import { getPhase } from '$lib/config/phase.js';
+import { getPhase } from '#lib/config/phase.js';
 export const prerender = true;
 export const load = () => ({ phase: getPhase() });
 ```
 
 ```ts
 // src/routes/(with-header)/explore/+page.server.ts
-import { assertPhaseAllows } from '$lib/config/phase.js';
+import { assertPhaseAllows } from '#lib/config/phase.js';
 export const load = () => {
   assertPhaseAllows('explore');
 };

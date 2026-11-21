@@ -1,9 +1,9 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { page } from 'vitest/browser';
-import { overwriteGetLocale } from '$lib/paraglide/runtime';
+import { overwriteGetLocale } from '#lib/paraglide/runtime.js';
 import BookmarkRow from './bookmark-row.svelte';
-import type { Bookmark } from '$lib/state/bookmark-schema.js';
+import type { Bookmark } from '#lib/state/bookmark-schema.js';
 
 afterEach(() => {
 	overwriteGetLocale(() => 'de');

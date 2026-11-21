@@ -1,7 +1,7 @@
 <script lang="ts">
-	import { m } from '$lib/paraglide/messages.js';
-	import { getLocale } from '$lib/paraglide/runtime';
-	import { wahlArtTexts, type WahlArt } from '$lib/place/wahl-types';
+	import { m } from '#lib/paraglide/messages.js';
+	import { getLocale } from '#lib/paraglide/runtime.js';
+	import { wahlArtTexts, type WahlArt } from '#lib/place/wahl-types.ts';
 	let { value = $bindable() }: { value: WahlArt } = $props();
 	const arten = $derived(wahlArtTexts({ locale: getLocale() }));
 </script>

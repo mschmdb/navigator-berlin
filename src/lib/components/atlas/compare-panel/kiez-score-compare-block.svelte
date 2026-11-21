@@ -7,10 +7,10 @@
 		scaleForOverall
 	} from '../inspector-panel/internal/kiez-score-display.js';
 	import { severityDescriptions } from '../inspector-panel/internal/value-severity-mapping.js';
-	import type { KiezScore, KiezScoreDimension } from '$lib/data';
-	import { m } from '$lib/paraglide/messages.js';
-	import { getLocale } from '$lib/paraglide/runtime';
-	import { localizedHref } from '$lib/i18n/localized-href.js';
+	import type { KiezScore, KiezScoreDimension } from '#lib/data/index.ts';
+	import { m } from '#lib/paraglide/messages.js';
+	import { getLocale } from '#lib/paraglide/runtime.js';
+	import { localizedHref } from '#lib/i18n/localized-href.js';
 
 	type Props = {
 		scoreA: KiezScore | null;

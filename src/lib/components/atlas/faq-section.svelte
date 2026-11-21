@@ -19,11 +19,11 @@
 <script lang="ts">
 	import { Accordion } from 'bits-ui';
 	import JsonLd from './json-ld.svelte';
-	import { buildFaqPage } from '$lib/seo/jsonld-faqpage.js';
-	import { m } from '$lib/paraglide/messages.js';
-	import { getLocale, type Locale } from '$lib/paraglide/runtime';
-	import { localizedHref } from '$lib/i18n/localized-href.js';
-	import type { FaqEntry } from '$lib/data/types.js';
+	import { buildFaqPage } from '#lib/seo/jsonld-faqpage.js';
+	import { m } from '#lib/paraglide/messages.js';
+	import { getLocale, type Locale } from '#lib/paraglide/runtime.js';
+	import { localizedHref } from '#lib/i18n/localized-href.js';
+	import type { FaqEntry } from '#lib/data/types.js';
 
 	type PageType = 'bezirk' | 'kiez' | 'layer' | 'landing';
 

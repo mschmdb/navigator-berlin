@@ -13,7 +13,7 @@ import {
 } from '../internal/schemas.js';
 import type { WebMcpToolDefinition } from '../internal/tool-types.js';
 import type { JsonObject } from '../internal/json-types.js';
-import type { LayerHit } from '$lib/data';
+import type { LayerHit } from '#lib/data/index.ts';
 
 export interface ListLayersAtPointDeps {
 	readonly getLayersAtPoint: (lat: number, lng: number) => Promise<LayerHit[]>;

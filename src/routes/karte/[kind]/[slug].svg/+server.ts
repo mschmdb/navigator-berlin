@@ -1,7 +1,7 @@
 import { error } from '@sveltejs/kit';
-import { readBezirkSlugsFromGeoJson } from '$lib/seo/sources/bezirk-slugs.js';
-import { readKiezSlugsFromGeoJson } from '$lib/seo/sources/kiez-slugs.js';
-import { mapSvg, type MapKind } from '$lib/place/maps.server';
+import { readBezirkSlugsFromGeoJson } from '#lib/seo/sources/bezirk-slugs.js';
+import { readKiezSlugsFromGeoJson } from '#lib/seo/sources/kiez-slugs.js';
+import { mapSvg, type MapKind } from '#lib/place/maps.server.ts';
 import type { EntryGenerator, RequestHandler } from './$types';
 
 export const prerender = true;

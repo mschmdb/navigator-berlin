@@ -1,8 +1,8 @@
 import { afterEach, describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
-import { overwriteGetLocale } from '$lib/paraglide/runtime';
+import { overwriteGetLocale } from '#lib/paraglide/runtime.js';
 import KlimaSection from './klima-section.svelte';
-import type { ClimateStation, ClimateData, YearValue } from '$lib/data';
+import type { ClimateStation, ClimateData, YearValue } from '#lib/data/index.ts';
 
 afterEach(() => {
 	overwriteGetLocale(() => 'de');

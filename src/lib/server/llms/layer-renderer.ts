@@ -13,8 +13,8 @@
  * Stigma-Lint applied (Memory `feedback_no_lebenswert`).
  */
 
-import { lintForBannedWords } from '$lib/seo/banned-words.js';
-import { bundleDisplayName } from '$lib/data/bundle-display-name.js';
+import { lintForBannedWords } from '#lib/seo/banned-words.js';
+import { bundleDisplayName } from '#lib/data/bundle-display-name.js';
 
 export interface LayerRenderInput {
 	readonly slug: string;

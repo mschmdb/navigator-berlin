@@ -1,10 +1,10 @@
 import booleanPointInPolygon from '@turf/boolean-point-in-polygon';
 import bbox from '@turf/bbox';
 import type { Feature, MultiPolygon, Polygon } from 'geojson';
-import { buildKiezSlugs, type KiezNameRef } from '$lib/data/internal/kiez-slug.js';
-import { bezirkSlugFromName, cleanName } from '$lib/data/region-display-names.js';
-import type { LayerAggregate, LayerAggregatesFile } from '$lib/data/layer-aggregates-types.js';
-import { readLayerAggregatesFile } from '$lib/server/profile/meta-sources.js';
+import { buildKiezSlugs, type KiezNameRef } from '#lib/data/internal/kiez-slug.js';
+import { bezirkSlugFromName, cleanName } from '#lib/data/region-display-names.js';
+import type { LayerAggregate, LayerAggregatesFile } from '#lib/data/layer-aggregates-types.js';
+import { readLayerAggregatesFile } from '#lib/server/profile/meta-sources.js';
 import { LABELS, METRICS, compactMetrics, type LabelValues, type MetricValues } from './topics';
 
 /**
@@ -114,8 +114,8 @@ function statValue(group: unknown, key: string): number | null {
 
 async function loadStats(): Promise<{ kiez: StatsRow[]; bezirk: StatsRow[] }> {
 	if (!process.env.DATABASE_URL) return { kiez: [], bezirk: [] };
-	const { getDb } = await import('$lib/server/db/index.js');
-	const { kiezStats, bezirkStats } = await import('$lib/server/db/schema/index.js');
+	const { getDb } = await import('#lib/server/db/index.js');
+	const { kiezStats, bezirkStats } = await import('#lib/server/db/schema/index.js');
 	const db = getDb();
 	const [kiez, bezirk] = await Promise.all([
 		db

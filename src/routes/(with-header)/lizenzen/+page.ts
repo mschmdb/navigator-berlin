@@ -1,10 +1,10 @@
-import { loadManifest } from '$lib/data/manifest.js';
-import { buildLayerDetail } from '$lib/data/get-layer-detail.js';
-import { pickDatasetDescription } from '$lib/seo/dataset-description.js';
-import type { DataCatalogDatasetRef } from '$lib/seo/jsonld-datacatalog.js';
-import { localizedPathname } from '$lib/seo/canonical.js';
-import { getLocale } from '$lib/paraglide/runtime';
-import { m } from '$lib/paraglide/messages.js';
+import { loadManifest } from '#lib/data/manifest.js';
+import { buildLayerDetail } from '#lib/data/get-layer-detail.js';
+import { pickDatasetDescription } from '#lib/seo/dataset-description.js';
+import type { DataCatalogDatasetRef } from '#lib/seo/jsonld-datacatalog.js';
+import { localizedPathname } from '#lib/seo/canonical.js';
+import { getLocale } from '#lib/paraglide/runtime.js';
+import { m } from '#lib/paraglide/messages.js';
 import type { PageLoad } from './$types';
 
 export const prerender = true;

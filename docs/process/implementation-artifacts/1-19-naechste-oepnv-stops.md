@@ -146,7 +146,7 @@ so that ich die ÖPNV-Anbindung einer Adresse konkret beurteilen kann statt nur 
 - [x] **Task 3: Stop-Index-Loader + UI-State** (AC: #4)
   - [x] 3.1 `src/lib/data/get-oepnv-stop-index.ts`:
     - `getOepnvStopIndex(): Promise<OepnvStopIndex>` mit Module-Cache + Inflight-Promise-Sharing
-    - `OepnvStopIndex` + `OepnvStop` Type-Export via `$lib/data` index
+    - `OepnvStopIndex` + `OepnvStop` Type-Export via `#lib/data/index.ts` index
   - [x] 3.2 `ui-context.svelte.ts`: `oepnvStopIndex: OepnvStopIndex | null` field
   - [ ] 3.3 Auto-Load bei erster Inspector-Open (Card-internal `$effect`, siehe Task 5)
   - [x] 3.4 Tests (4 Loader-Tests grün)

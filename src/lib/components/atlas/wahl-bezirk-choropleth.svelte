@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { onMount, onDestroy } from 'svelte';
-	import { parteiColor } from '$lib/data/partei-farben.js';
-	import { normalizeSlug } from '$lib/data/internal/slug.js';
-	import { m } from '$lib/paraglide/messages.js';
+	import { parteiColor } from '#lib/data/partei-farben.js';
+	import { normalizeSlug } from '#lib/data/internal/slug.js';
+	import { m } from '#lib/paraglide/messages.js';
 	import { COLORS } from './internal/colors.js';
-	import { formatPercent } from '$lib/i18n/format.js';
+	import { formatPercent } from '#lib/i18n/format.js';
 
 	export type BezirkSummary = {
 		readonly slug: string;

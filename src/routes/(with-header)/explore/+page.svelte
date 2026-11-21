@@ -1,32 +1,32 @@
 <script lang="ts">
-	import { buildPageTitle } from '$lib/seo/page-title.js';
+	import { buildPageTitle } from '#lib/seo/page-title.js';
 	import { onDestroy, onMount, untrack } from 'svelte';
 	import { afterNavigate, goto } from '$app/navigation';
-	import MapLibreCanvas from '$lib/components/atlas/map-libre-canvas.svelte';
-	import MapControls from '$lib/components/atlas/map-controls.svelte';
-	import MapAttribution from '$lib/components/atlas/map-attribution.svelte';
-	import MapAccessibilityLayer from '$lib/components/atlas/map-accessibility-layer.svelte';
-	import MapLegend from '$lib/components/atlas/map-legend.svelte';
+	import MapLibreCanvas from '#lib/components/atlas/map-libre-canvas.svelte';
+	import MapControls from '#lib/components/atlas/map-controls.svelte';
+	import MapAttribution from '#lib/components/atlas/map-attribution.svelte';
+	import MapAccessibilityLayer from '#lib/components/atlas/map-accessibility-layer.svelte';
+	import MapLegend from '#lib/components/atlas/map-legend.svelte';
 	import KiezFinderPanel, {
 		type FinderMapApi
-	} from '$lib/components/atlas/kiez-finder-panel.svelte';
+	} from '#lib/components/atlas/kiez-finder-panel.svelte';
 	import {
 		encodeFinderUrlState,
 		FINDER_URL_KEYS
-	} from '$lib/components/atlas/internal/finder-url-state.js';
-	import type { FinderWeights } from '$lib/components/atlas/internal/kiez-finder-engine.js';
-	import { readFinderBridge, readFinderPublishSeq } from '$lib/state/finder-bridge.svelte.js';
-	import { featureFlags } from '$lib/data/feature-flags.js';
+	} from '#lib/components/atlas/internal/finder-url-state.js';
+	import type { FinderWeights } from '#lib/components/atlas/internal/kiez-finder-engine.js';
+	import { readFinderBridge, readFinderPublishSeq } from '#lib/state/finder-bridge.svelte.js';
+	import { featureFlags } from '#lib/data/feature-flags.js';
 	import MapHoverTooltip, {
 		type MapHoverApi
-	} from '$lib/components/atlas/map-hover-tooltip.svelte';
-	import InspectorPanel from '$lib/components/atlas/inspector-panel.svelte';
-	import RegionFocusCard from '$lib/components/atlas/region-focus-card.svelte';
+	} from '#lib/components/atlas/map-hover-tooltip.svelte';
+	import InspectorPanel from '#lib/components/atlas/inspector-panel.svelte';
+	import RegionFocusCard from '#lib/components/atlas/region-focus-card.svelte';
 	import {
 		compositeRank,
 		resolveRegionFocus,
 		type RegionFocusTarget
-	} from '$lib/components/atlas/internal/region-focus.js';
+	} from '#lib/components/atlas/internal/region-focus.js';
 
 	import {
 		fitRegionFocus,
@@ -34,109 +34,109 @@
 		removeRegionFocusOutline,
 		showRegionFocusOutline,
 		type RegionFocusMapLike
-	} from '$lib/components/atlas/internal/region-focus-map.js';
-	import { loadRegionComposites } from '$lib/data/get-region-composites.js';
-	import ComparePanel from '$lib/components/atlas/compare-panel/compare-panel.svelte';
-	import BottomSheet from '$lib/components/atlas/inspector-panel/bottom-sheet.svelte';
-	import type { MapHandle } from '$lib/components/atlas/internal/map-keyboard.js';
-	import { createPinMarkerElement } from '$lib/components/atlas/internal/map-markers.js';
+	} from '#lib/components/atlas/internal/region-focus-map.js';
+	import { loadRegionComposites } from '#lib/data/get-region-composites.js';
+	import ComparePanel from '#lib/components/atlas/compare-panel/compare-panel.svelte';
+	import BottomSheet from '#lib/components/atlas/inspector-panel/bottom-sheet.svelte';
+	import type { MapHandle } from '#lib/components/atlas/internal/map-keyboard.js';
+	import { createPinMarkerElement } from '#lib/components/atlas/internal/map-markers.js';
 	import {
 		buildAddressNavigation,
 		createAddressHistoryWriter,
 		normalizeAddressParam,
 		resolvePopstateSelection,
 		type AddressHistoryIntent
-	} from '$lib/components/atlas/internal/address-history.js';
-	import { COLORS } from '$lib/components/atlas/internal/colors.js';
-	import { announceGlobal } from '$lib/utils/aria-live.js';
-	import { trackEvent } from '$lib/utils/plausible.js';
+	} from '#lib/components/atlas/internal/address-history.js';
+	import { COLORS } from '#lib/components/atlas/internal/colors.js';
+	import { announceGlobal } from '#lib/utils/aria-live.js';
+	import { trackEvent } from '#lib/utils/plausible.js';
 	import {
 		serializeViewport,
 		serializeLayers,
 		type RegionFocusRequest
-	} from '$lib/utils/url-state.js';
-	import { debounce } from '$lib/utils/debounce.js';
-	import { prefersReducedMotion, scrollBehavior } from '$lib/utils/reduced-motion.js';
-	import { matchZoomForType } from '$lib/utils/zoom-mapping.js';
-	import { reverseGeocodeAddress } from '$lib/data/geocode.remote.js';
-	import { useAddressSelection } from '$lib/state/address-selection.svelte.js';
-	import { getUiState, type SheetSnapVh } from '$lib/state/ui-context.svelte.js';
-	import { loadManifest, getLayerEntry } from '$lib/data/manifest.js';
-	import { getLayersAtPoint } from '$lib/data/get-layers-at-point.js';
-	import { hasBerlinBezirkHit } from '$lib/data/has-berlin-bezirk-hit.js';
-	import { isInBerlin } from '$lib/data/constants.js';
-	import { getNearestClimateStation } from '$lib/data/get-climate-station.js';
-	import { getClimateSeries } from '$lib/data/get-climate-series.js';
-	import { getOepnvStopIndex } from '$lib/data/get-oepnv-stop-index.js';
-	import { getKuehleOrteIndex } from '$lib/data/get-kuehle-orte-index.js';
+	} from '#lib/utils/url-state.js';
+	import { debounce } from '#lib/utils/debounce.js';
+	import { prefersReducedMotion, scrollBehavior } from '#lib/utils/reduced-motion.js';
+	import { matchZoomForType } from '#lib/utils/zoom-mapping.js';
+	import { reverseGeocodeAddress } from '#lib/data/geocode.remote.js';
+	import { useAddressSelection } from '#lib/state/address-selection.svelte.js';
+	import { getUiState, type SheetSnapVh } from '#lib/state/ui-context.svelte.js';
+	import { loadManifest, getLayerEntry } from '#lib/data/manifest.js';
+	import { getLayersAtPoint } from '#lib/data/get-layers-at-point.js';
+	import { hasBerlinBezirkHit } from '#lib/data/has-berlin-bezirk-hit.js';
+	import { isInBerlin } from '#lib/data/constants.js';
+	import { getNearestClimateStation } from '#lib/data/get-climate-station.js';
+	import { getClimateSeries } from '#lib/data/get-climate-series.js';
+	import { getOepnvStopIndex } from '#lib/data/get-oepnv-stop-index.js';
+	import { getKuehleOrteIndex } from '#lib/data/get-kuehle-orte-index.js';
 	import {
 		resolveAppMode,
 		isLayerAvailableInMode,
 		resolveExplorerEntry,
 		type AppMode
-	} from '$lib/app-mode';
-	import { getWaermeOrteIndex } from '$lib/data/get-waerme-orte-index.js';
-	import { getTrinkbrunnenIndex } from '$lib/data/get-trinkbrunnen-index.js';
-	import { getKiezScore } from '$lib/data/get-kiez-score.js';
-	import { getLaermDbAt } from '$lib/data/get-kiez-laerm-db.js';
-	import { getWahlResultsAtPoint } from '$lib/data/get-wahl-results-at-point.js';
-	import { findAllNearestStops } from '$lib/components/atlas/inspector-panel/internal/nearest-oepnv-stop.js';
-	import { fetchLayer } from '$lib/data/internal/layer-fetch.js';
+	} from '#lib/app-mode.ts';
+	import { getWaermeOrteIndex } from '#lib/data/get-waerme-orte-index.js';
+	import { getTrinkbrunnenIndex } from '#lib/data/get-trinkbrunnen-index.js';
+	import { getKiezScore } from '#lib/data/get-kiez-score.js';
+	import { getLaermDbAt } from '#lib/data/get-kiez-laerm-db.js';
+	import { getWahlResultsAtPoint } from '#lib/data/get-wahl-results-at-point.js';
+	import { findAllNearestStops } from '#lib/components/atlas/inspector-panel/internal/nearest-oepnv-stop.js';
+	import { fetchLayer } from '#lib/data/internal/layer-fetch.js';
 	import booleanPointInPolygon from '@turf/boolean-point-in-polygon';
 	import { point } from '@turf/helpers';
 	import type { Feature, Polygon, MultiPolygon } from 'geojson';
-	import type { DemografieScope } from '$lib/components/atlas/inspector-panel/internal/demografie-types.js';
-	import { queryPmtilesAt, type MapLibreLike } from '$lib/data/internal/pmtiles-query.js';
-	import type { GeocodeSuggestion, LayerMetadata } from '$lib/data/types.js';
-	import { useViewport } from '$lib/utils/use-viewport.svelte.js';
+	import type { DemografieScope } from '#lib/components/atlas/inspector-panel/internal/demografie-types.js';
+	import { queryPmtilesAt, type MapLibreLike } from '#lib/data/internal/pmtiles-query.js';
+	import type { GeocodeSuggestion, LayerMetadata } from '#lib/data/types.js';
+	import { useViewport } from '#lib/utils/use-viewport.svelte.js';
 	import { SvelteSet } from 'svelte/reactivity';
-	import LayerPalette from '$lib/components/atlas/layer-palette.svelte';
+	import LayerPalette from '#lib/components/atlas/layer-palette.svelte';
 	import { page } from '$app/state';
 	import {
 		buildOgDescription,
 		buildOgImageUrl,
 		type OgImageInput
-	} from '$lib/utils/og-image-url.js';
-	import SeoHead from '$lib/components/atlas/seo-head.svelte';
-	import { formatLayerValue } from '$lib/components/atlas/inspector-panel/internal/value-formatters.js';
-	import { getLayerDisplayName } from '$lib/components/atlas/internal/layer-palette-filter.js';
-	import { m } from '$lib/paraglide/messages.js';
-	import { getLocale } from '$lib/paraglide/runtime';
+	} from '#lib/utils/og-image-url.js';
+	import SeoHead from '#lib/components/atlas/seo-head.svelte';
+	import { formatLayerValue } from '#lib/components/atlas/inspector-panel/internal/value-formatters.js';
+	import { getLayerDisplayName } from '#lib/components/atlas/internal/layer-palette-filter.js';
+	import { m } from '#lib/paraglide/messages.js';
+	import { getLocale } from '#lib/paraglide/runtime.js';
 	import {
 		buildLayerSpec,
 		type MapLibreLayerSpec
-	} from '$lib/components/atlas/internal/layer-style-builder.js';
+	} from '#lib/components/atlas/internal/layer-style-builder.js';
 
 	import {
 		buildLayerSpecCascade,
 		computeCascadeVariants,
 		isChoroplethSlug
-	} from '$lib/components/atlas/internal/layer-style-cascade.js';
-	import { sortSlugsByBundleStable } from '$lib/components/atlas/internal/layer-order-sorting.js';
+	} from '#lib/components/atlas/internal/layer-style-cascade.js';
+	import { sortSlugsByBundleStable } from '#lib/components/atlas/internal/layer-order-sorting.js';
 	import {
 		applyHiddenSlugs,
 		exceedsPolygonLimit,
 		capPolygonSlugs,
 		orderChoropleths
-	} from '$lib/components/atlas/internal/layer-visibility.js';
+	} from '#lib/components/atlas/internal/layer-visibility.js';
 	import {
 		toggleLayerHidden,
 		removeLayer as removeUiLayer,
 		setComparisonAddress,
 		exitCompareMode
-	} from '$lib/state/ui-context.svelte.js';
-	import { geocodeAddress } from '$lib/data/geocode.remote.js';
+	} from '#lib/state/ui-context.svelte.js';
+	import { geocodeAddress } from '#lib/data/geocode.remote.js';
 	import {
 		diffLayerSlugs,
 		dotsSourceIdFor,
 		sourceIdFor,
 		layerIdFor,
 		outlineLayerIdFor
-	} from '$lib/components/atlas/internal/layer-diff.js';
-	import { featureLabelPoints } from '$lib/components/atlas/internal/feature-label-points.js';
-	import { dotSpecForSlug } from '$lib/components/atlas/internal/choropleth-dots.js';
-	import { PIN_LAYER_SLUGS } from '$lib/components/atlas/internal/pin-icon-mapping.js';
-	import { createInspectorLoads } from '$lib/state/inspector-loads.js';
+	} from '#lib/components/atlas/internal/layer-diff.js';
+	import { featureLabelPoints } from '#lib/components/atlas/internal/feature-label-points.js';
+	import { dotSpecForSlug } from '#lib/components/atlas/internal/choropleth-dots.js';
+	import { PIN_LAYER_SLUGS } from '#lib/components/atlas/internal/pin-icon-mapping.js';
+	import { createInspectorLoads } from '#lib/state/inspector-loads.js';
 
 	type Viewport = {
 		center: [number, number];

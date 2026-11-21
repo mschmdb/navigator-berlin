@@ -4,8 +4,8 @@ import {
 	MAX_WALKING_DISTANCE_M,
 	EXTENDED_WALKING_DISTANCE_M,
 	DETOUR_FACTOR
-} from '$lib/utils/oepnv-walking.js';
-import type { OepnvStop, OepnvStopIndex } from '$lib/data';
+} from '#lib/utils/oepnv-walking.js';
+import type { OepnvStop, OepnvStopIndex } from '#lib/data/index.ts';
 
 export interface AddressPoint {
 	lat: number;

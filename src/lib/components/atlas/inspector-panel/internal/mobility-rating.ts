@@ -1,6 +1,6 @@
 import type { NearestStop, Modus } from './nearest-oepnv-stop.js';
 import type { SeverityLevel } from './value-severity-mapping.js';
-import { m } from '$lib/paraglide/messages.js';
+import { m } from '#lib/paraglide/messages.js';
 import {
 	assertUnreachable,
 	toAtlasMessageOptions,

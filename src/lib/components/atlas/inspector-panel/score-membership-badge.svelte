@@ -4,8 +4,8 @@
 	Score stehen, sagt schon die Gruppe „Zusätzlich, nicht im Score" im Score-Block (Regel 2).
 -->
 <script lang="ts">
-	import { m } from '$lib/paraglide/messages.js';
-	import { getLocale, type Locale } from '$lib/paraglide/runtime';
+	import { m } from '#lib/paraglide/messages.js';
+	import { getLocale, type Locale } from '#lib/paraglide/runtime.js';
 	import {
 		scoreDimensionFor,
 		scoreDimensionLabelFor,

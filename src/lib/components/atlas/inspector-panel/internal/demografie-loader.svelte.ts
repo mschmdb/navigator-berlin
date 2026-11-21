@@ -1,5 +1,5 @@
-import type { UiState } from '$lib/state/ui-context.svelte.js';
-import { getDemografieByScopeAt } from '$lib/data/get-kiez-demografie.js';
+import type { UiState } from '#lib/state/ui-context.svelte.js';
+import { getDemografieByScopeAt } from '#lib/data/get-kiez-demografie.js';
 import type { DemografieByScope, KiezDemografieData } from './demografie-types.js';
 
 type LevelSlugs = { readonly kiezSlug: string | null; readonly bezirkSlug: string | null };

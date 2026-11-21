@@ -6,8 +6,8 @@
 -->
 <script lang="ts">
 	import { Axis, Text, getChartContext } from 'layerchart';
-	import { getLocale } from '$lib/paraglide/runtime';
-	import { layoutAxisLabels, trimZeroDecimals } from '$lib/place/axis';
+	import { getLocale } from '#lib/paraglide/runtime.js';
+	import { layoutAxisLabels, trimZeroDecimals } from '#lib/place/axis.ts';
 
 	interface Props {
 		ticks: readonly number[];

@@ -13,11 +13,11 @@
 		Schalter,
 		Segmente,
 		greyNames
-	} from '$lib/components/stories/quadrate';
-	import { toElectionShares } from '$lib/stories/wahl-quadrate/eingabe';
-	import { derive, formatGreyLine } from '$lib/stories/wahl-quadrate/grau';
-	import type { OrderMode } from '$lib/stories/wahl-quadrate/layout';
-	import type { WahlTyp } from '$lib/stories/wahl-quadrate/parteien';
+	} from '#lib/components/stories/quadrate/index.ts';
+	import { toElectionShares } from '#lib/stories/wahl-quadrate/eingabe.ts';
+	import { derive, formatGreyLine } from '#lib/stories/wahl-quadrate/grau.ts';
+	import type { OrderMode } from '#lib/stories/wahl-quadrate/layout.ts';
+	import type { WahlTyp } from '#lib/stories/wahl-quadrate/parteien.ts';
 	import type { PageProps } from './$types';
 
 	let { data }: PageProps = $props();

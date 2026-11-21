@@ -4,18 +4,18 @@
 	unten. Ausgeblendete Wahlen behalten eine schmale Spalte, ausgeblendete Bezirke ihren Namen.
 -->
 <script lang="ts">
-	import { m } from '$lib/paraglide/messages.js';
-	import { toElectionShares } from '$lib/stories/wahl-quadrate/eingabe';
+	import { m } from '#lib/paraglide/messages.js';
+	import { toElectionShares } from '#lib/stories/wahl-quadrate/eingabe.ts';
 	import {
 		bezirkAn,
 		jahrAn,
 		sichtbareJahre,
 		toggleBezirk,
 		toggleJahr
-	} from '$lib/stories/wahl-quadrate/gesamt';
-	import { JAHRE, wahlSlug, type WahlTyp } from '$lib/stories/wahl-quadrate/parteien';
-	import type { BezirkWahlen } from '$lib/stories/wahl-quadrate/types';
-	import type { GesamtState } from '$lib/stories/wahl-quadrate/url-state';
+	} from '#lib/stories/wahl-quadrate/gesamt.ts';
+	import { JAHRE, wahlSlug, type WahlTyp } from '#lib/stories/wahl-quadrate/parteien.ts';
+	import type { BezirkWahlen } from '#lib/stories/wahl-quadrate/types.ts';
+	import type { GesamtState } from '#lib/stories/wahl-quadrate/url-state.ts';
 	import Hinweis from './hinweis.svelte';
 	import Quadrat from './quadrat.svelte';
 

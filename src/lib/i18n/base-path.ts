@@ -1,4 +1,4 @@
-import { deLocalizeUrl } from '$lib/paraglide/runtime';
+import { deLocalizeUrl } from '#lib/paraglide/runtime.js';
 
 /**
  * The pathname with any locale prefix stripped, e.g. `/en/explore` -> `/explore`,

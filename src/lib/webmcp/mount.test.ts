@@ -21,14 +21,14 @@ vi.mock('./adapter.js', () => ({
 	loadMcpBGlobalPolyfill: vi.fn()
 }));
 
-vi.mock('$lib/data/geocode.remote', () => ({ geocodeAddress: vi.fn() }));
-vi.mock('$lib/data/get-layers-at-point', () => ({ getLayersAtPoint: vi.fn() }));
-vi.mock('$lib/data/get-kiez-profile', () => ({ getKiezProfile: vi.fn() }));
-vi.mock('$lib/data/get-layer-metadata', () => ({ getLayerMetadata: vi.fn() }));
-vi.mock('$lib/data/layer-methodology', () => ({ getLayerMethodology: vi.fn() }));
-vi.mock('$lib/data/manifest', () => ({ loadManifest: vi.fn() }));
-vi.mock('$lib/paraglide/runtime', () => ({ getLocale: () => 'de' }));
-vi.mock('$lib/state/finder-bridge.svelte', () => ({
+vi.mock('#lib/data/geocode.remote.ts', () => ({ geocodeAddress: vi.fn() }));
+vi.mock('#lib/data/get-layers-at-point.ts', () => ({ getLayersAtPoint: vi.fn() }));
+vi.mock('#lib/data/get-kiez-profile.ts', () => ({ getKiezProfile: vi.fn() }));
+vi.mock('#lib/data/get-layer-metadata.ts', () => ({ getLayerMetadata: vi.fn() }));
+vi.mock('#lib/data/layer-methodology.ts', () => ({ getLayerMethodology: vi.fn() }));
+vi.mock('#lib/data/manifest.ts', () => ({ loadManifest: vi.fn() }));
+vi.mock('#lib/paraglide/runtime', () => ({ getLocale: () => 'de' }));
+vi.mock('#lib/state/finder-bridge.svelte.ts', () => ({
 	readFinderPublishSeq: vi.fn(() => 0),
 	requestAgentWeights: vi.fn(),
 	readFinderBridge: vi.fn(() => ({ panelActive: false, party: null })),
@@ -104,8 +104,8 @@ describe('mountWebMcpServer', () => {
 });
 
 // i18n Block C2 (spec-i18n-c2-layer-methodik.md, Boundary "WebMCP bleibt
-// DE"): dieser Test verdrahtet die ECHTE `$lib/data/layer-methodology` und
-// die ECHTE `$lib/paraglide/runtime` statt der oben gemockten Stand-ins --
+// DE"): dieser Test verdrahtet die ECHTE `#lib/data/layer-methodology.ts` und
+// die ECHTE `#lib/paraglide/runtime.js` statt der oben gemockten Stand-ins --
 // nur so lässt sich zeigen, dass `deps.getLayerMethodology`, das `mount.ts`
 // tatsächlich an `registerWebMcpServer` übergibt, unter einer EN-Seiten-
 // Locale DE bleibt. Die anderen Tests in dieser Datei mocken
@@ -113,8 +113,8 @@ describe('mountWebMcpServer', () => {
 // versehentliches Locale-Durchreichen deshalb nicht bemerken.
 describe('mountWebMcpServer · getLayerMethodology bleibt DE (Boundary i18n Block C2)', () => {
 	it('deps.getLayerMethodology liefert DE, auch wenn die Seiten-Locale "en" ist', async () => {
-		vi.doUnmock('$lib/data/layer-methodology');
-		vi.doUnmock('$lib/paraglide/runtime');
+		vi.doUnmock('#lib/data/layer-methodology.ts');
+		vi.doUnmock('#lib/paraglide/runtime.js');
 		vi.resetModules();
 		hoisted.registerWebMcpServer.mockReset();
 
@@ -126,7 +126,7 @@ describe('mountWebMcpServer · getLayerMethodology bleibt DE (Boundary i18n Bloc
 		});
 
 		try {
-			const { overwriteGetLocale } = await import('$lib/paraglide/runtime');
+			const { overwriteGetLocale } = await import('#lib/paraglide/runtime.js');
 			overwriteGetLocale(() => 'en');
 
 			const { mountWebMcpServer } = await importMount();
@@ -142,8 +142,8 @@ describe('mountWebMcpServer · getLayerMethodology bleibt DE (Boundary i18n Bloc
 
 			overwriteGetLocale(() => 'de');
 		} finally {
-			vi.doMock('$lib/data/layer-methodology', () => ({ getLayerMethodology: vi.fn() }));
-			vi.doMock('$lib/paraglide/runtime', () => ({ getLocale: () => 'de' }));
+			vi.doMock('#lib/data/layer-methodology.ts', () => ({ getLayerMethodology: vi.fn() }));
+			vi.doMock('#lib/paraglide/runtime', () => ({ getLocale: () => 'de' }));
 			vi.resetModules();
 		}
 	});

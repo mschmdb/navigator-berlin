@@ -1,7 +1,7 @@
-import type { UpdateEntry } from '$lib/content/updates/types.js';
-import { entryModifiedDate } from '$lib/content/updates/modified-date.js';
-import { sortByDateDesc } from '$lib/content/updates/load-updates.js';
-import { renderMarkdownBody } from '$lib/content/updates/render-markdown.js';
+import type { UpdateEntry } from '#lib/content/updates/types.js';
+import { entryModifiedDate } from '#lib/content/updates/modified-date.js';
+import { sortByDateDesc } from '#lib/content/updates/load-updates.js';
+import { renderMarkdownBody } from '#lib/content/updates/render-markdown.js';
 
 /**
  * Story 2.13 AC-7: JSON Feed 1.1 Builder.

@@ -44,7 +44,7 @@ describe('TranslationDisclaimer', () => {
 		// !== pageLocale einen anderen Nicht-Basis-Fall simulieren ist hier
 		// nicht nötig -- die Locale-Fähigkeit wird stattdessen direkt an der
 		// Message-Funktion geprüft.
-		const { m } = await import('$lib/paraglide/messages.js');
+		const { m } = await import('#lib/paraglide/messages.js');
 		expect(m.disclaimer_fallback_to_base(undefined, { locale: 'de' })).toBe(
 			'Diese Seite wird auf Deutsch angezeigt, weil die englische Übersetzung noch nicht verfügbar ist.'
 		);
@@ -123,7 +123,7 @@ describe('TranslationDisclaimer', () => {
 		});
 
 		it('die DE-Fassung von disclaimer_partial_translation existiert', async () => {
-			const { m } = await import('$lib/paraglide/messages.js');
+			const { m } = await import('#lib/paraglide/messages.js');
 			expect(m.disclaimer_partial_translation(undefined, { locale: 'de' })).toBe(
 				'Einzelne Inhalte auf dieser Seite sind nur auf Deutsch verfügbar.'
 			);

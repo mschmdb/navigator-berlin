@@ -9,11 +9,11 @@
 	import DataTable from './data-table.svelte';
 	import SideTable from './side-table.svelte';
 	import Hint from './reading-hint.svelte';
-	import { splitForTint } from '$lib/place/tint';
-	import { trackLanding } from '$lib/utils/plausible.js';
-	import { m } from '$lib/paraglide/messages.js';
-	import { getLocale } from '$lib/paraglide/runtime';
-	import { mostCommon, niceDomain, spread, zeroAwareMedian } from '$lib/place/stats';
+	import { splitForTint } from '#lib/place/tint.ts';
+	import { trackLanding } from '#lib/utils/plausible.js';
+	import { m } from '#lib/paraglide/messages.js';
+	import { getLocale } from '#lib/paraglide/runtime.js';
+	import { mostCommon, niceDomain, spread, zeroAwareMedian } from '#lib/place/stats.ts';
 	import {
 		METRIC_SPECS,
 		chapterText,
@@ -28,8 +28,8 @@
 		zeroPileGroup,
 		type ChapterSpec,
 		type MetricId
-	} from '$lib/place/topics';
-	import type { ReferenceProfile, RegionSnapshot } from '$lib/place/types';
+	} from '#lib/place/topics.ts';
+	import type { ReferenceProfile, RegionSnapshot } from '#lib/place/types.ts';
 
 	interface Props {
 		spec: ChapterSpec;

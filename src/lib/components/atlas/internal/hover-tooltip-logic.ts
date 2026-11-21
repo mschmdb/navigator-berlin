@@ -3,7 +3,7 @@ import { getLayerDisplayName } from './layer-palette-filter.js';
 import { formatLayerValue } from '../inspector-panel/internal/value-formatters.js';
 import { hasPinIcon } from './pin-icon-mapping.js';
 import { getPopoverSummary } from './poi-summary-builder.js';
-import { m } from '$lib/paraglide/messages.js';
+import { m } from '#lib/paraglide/messages.js';
 import { toAtlasMessageOptions, type LocaleOptions } from './atlas-label-options.js';
 
 export type HoverTooltipKind = 'polygon' | 'poi';

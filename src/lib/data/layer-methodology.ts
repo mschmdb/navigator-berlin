@@ -15,7 +15,7 @@
 // ueber `Record<LayerMethodologySlug, ...>` getypt, nicht `Partial`).
 //
 // Authority-Strings loesen ueber `resolveAuthority(key, locale)` auf
-// (`$lib/data/authorities.ts`), das `en`-Feld ist seit C2 befuellt.
+// (`#lib/data/authorities.ts`), das `en`-Feld ist seit C2 befuellt.
 // Composites (z.B. BVG-Stops aus OSM) werden via `authoritySuffix`
 // zusammengesetzt -- der Suffix ist seit C2 selbst locale-faehig
 // (`AUTHORITY_SUFFIX_OSM_ODBL: Record<Locale, string>`), vormals ein fixer,
@@ -26,7 +26,7 @@
 // `aggregationLevel` (Enum) und `relatedLayers` (Slugs) bleiben unuebersetzt
 // (Boundary).
 
-import type { LocaleOptions } from '$lib/i18n/message-options.js';
+import type { LocaleOptions } from '#lib/i18n/message-options.js';
 import {
 	AUTHORITY_SUFFIX_OSM_ODBL,
 	resolveAuthority,

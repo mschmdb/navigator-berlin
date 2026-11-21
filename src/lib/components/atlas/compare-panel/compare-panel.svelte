@@ -1,11 +1,11 @@
 <script lang="ts">
 	import { X, ArrowLeftRight, Search, Bookmark } from '@lucide/svelte';
-	import type { GeocodeSuggestion, LayerMetadata } from '$lib/data';
+	import type { GeocodeSuggestion, LayerMetadata } from '#lib/data/index.ts';
 	import {
 		getUiState,
 		exitCompareMode,
 		setComparisonAddress
-	} from '$lib/state/ui-context.svelte.js';
+	} from '#lib/state/ui-context.svelte.js';
 	import { mergeCompareSections, type CompareSection } from './internal/merge-sections.js';
 	import { getLayerDisplayName } from '../internal/layer-palette-filter.js';
 	import CompareRow from './compare-row.svelte';
@@ -13,10 +13,10 @@
 	import WahlCompareBlock from './wahl-compare-block.svelte';
 	import AddressSearch from '../address-search.svelte';
 	import EditorialDisclaimer from '../editorial-disclaimer.svelte';
-	import { featureFlags } from '$lib/data/feature-flags.js';
+	import { featureFlags } from '#lib/data/feature-flags.js';
 	import type { DisclaimerVariant } from '../internal/editorial-types.js';
-	import { m } from '$lib/paraglide/messages.js';
-	import { getLocale } from '$lib/paraglide/runtime';
+	import { m } from '#lib/paraglide/messages.js';
+	import { getLocale } from '#lib/paraglide/runtime.js';
 
 	type GeocodeFn = (q: string) => Promise<GeocodeSuggestion[]>;
 

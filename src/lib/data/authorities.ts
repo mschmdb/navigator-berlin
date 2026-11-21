@@ -12,12 +12,12 @@
  * fixer, als "sprachneutral" behandelter String -- der DE-Suffix schrieb
  * "OpenStreetMap-Contributors", was auf EN falsch ist).
  *
- * i18n Block A: `Locale` kommt aus `$lib/paraglide/runtime` statt einem
+ * i18n Block A: `Locale` kommt aus `#lib/paraglide/runtime.js` statt einem
  * eigenen `'de' | 'en'`-Union-Type, damit weitere Locales (es/tr) nur an
  * einer Stelle ergänzt werden müssen (Entscheidung Matze 26.09.2026).
  */
 
-import type { Locale } from '$lib/paraglide/runtime';
+import type { Locale } from '#lib/paraglide/runtime.js';
 
 export type { Locale };
 

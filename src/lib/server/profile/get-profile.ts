@@ -2,7 +2,7 @@ import { readFile } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import { resolve } from 'node:path';
 import matter from 'gray-matter';
-import type { Locale } from '$lib/paraglide/runtime.js';
+import type { Locale } from '#lib/paraglide/runtime.js';
 import { hashProfileParagraphs, splitParagraphs } from './source-text-hash.js';
 
 export interface LocalizedProfile {

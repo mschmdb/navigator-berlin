@@ -2,8 +2,8 @@
  * Anzeige-Texte für das Header-Menü (#138), locale-abhängig über Paraglide.
  * Wo der Footer schon denselben Namen führt, nutzt das Menü dessen Message.
  */
-import { m } from '$lib/paraglide/messages.js';
-import { assertUnreachable } from '$lib/i18n/message-options.js';
+import { m } from '#lib/paraglide/messages.js';
+import { assertUnreachable } from '#lib/i18n/message-options.js';
 import type { SiteMenuGroupId, SiteMenuItemId } from './site-menu.js';
 
 export function siteMenuGroupTitle(id: SiteMenuGroupId): string {

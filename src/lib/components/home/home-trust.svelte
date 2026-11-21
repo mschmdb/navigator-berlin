@@ -2,9 +2,9 @@
 	Vertrauensfuß: Quellen, keine Cookies, Links zu Methodik, Daten, Lizenzen, Über.
 -->
 <script lang="ts">
-	import { HOME_DATA_SOURCES } from '$lib/content/home-data-sources.js';
-	import { localizedHref } from '$lib/i18n/localized-href.js';
-	import { m } from '$lib/paraglide/messages.js';
+	import { HOME_DATA_SOURCES } from '#lib/content/home-data-sources.js';
+	import { localizedHref } from '#lib/i18n/localized-href.js';
+	import { m } from '#lib/paraglide/messages.js';
 
 	const sources = $derived(HOME_DATA_SOURCES.map((s) => s.name).join('; '));
 

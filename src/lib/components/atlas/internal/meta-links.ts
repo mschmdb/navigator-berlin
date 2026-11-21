@@ -13,12 +13,12 @@
  * `metaLinkGroupTitle()` lösen den Anzeige-Text locale-abhängig über
  * Paraglide-Messages auf, ausgewertet beim Aufruf statt beim Modul-Import.
  */
-import { m } from '$lib/paraglide/messages.js';
+import { m } from '#lib/paraglide/messages.js';
 import {
 	toMessageOptions,
 	assertUnreachable,
 	type LocaleOptions
-} from '$lib/i18n/message-options.js';
+} from '#lib/i18n/message-options.js';
 
 export const META_LINK_IDS = [
 	'atlas',

@@ -5,12 +5,12 @@
 	nennt Quellen mit Stand, Lizenzen und den OSM-Hinweis.
 -->
 <script lang="ts">
-	import { localizedHref } from '$lib/i18n/localized-href.js';
-	import { m } from '$lib/paraglide/messages.js';
-	import { getLocale } from '$lib/paraglide/runtime';
-	import { trackEvent } from '$lib/utils/plausible.js';
-	import type { BezirkItem, KennzahlenQuelle } from '$lib/stories/punkt-linie-kiez/types.js';
-	import { STORY_FONT, STORY_INK, STORY_PAPER } from '$lib/stories/tokens.js';
+	import { localizedHref } from '#lib/i18n/localized-href.js';
+	import { m } from '#lib/paraglide/messages.js';
+	import { getLocale } from '#lib/paraglide/runtime.js';
+	import { trackEvent } from '#lib/utils/plausible.js';
+	import type { BezirkItem, KennzahlenQuelle } from '#lib/stories/punkt-linie-kiez/types.js';
+	import { STORY_FONT, STORY_INK, STORY_PAPER } from '#lib/stories/tokens.js';
 	import PunktLinieKiez from './punkt-linie-kiez.svelte';
 
 	interface Props {

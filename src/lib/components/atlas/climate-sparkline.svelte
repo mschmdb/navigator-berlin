@@ -3,15 +3,15 @@
 </script>
 
 <script lang="ts">
-	import type { YearValue } from '$lib/data';
+	import type { YearValue } from '#lib/data/index.ts';
 	import { LineChart, Tooltip } from 'layerchart';
 	import DataTableAlternative, { type TableColumn } from './data-table-alternative.svelte';
-	import { linearRegression } from '$lib/utils/regression.js';
-	import { announceGlobal } from '$lib/utils/aria-live.js';
-	import { NORMAL_OLD, NORMAL_NEW, getNormalperiodMean } from '$lib/utils/normalperiod.js';
-	import { m } from '$lib/paraglide/messages.js';
-	import { getLocale, type Locale } from '$lib/paraglide/runtime';
-	import { formatDecimal } from '$lib/i18n/format.js';
+	import { linearRegression } from '#lib/utils/regression.js';
+	import { announceGlobal } from '#lib/utils/aria-live.js';
+	import { NORMAL_OLD, NORMAL_NEW, getNormalperiodMean } from '#lib/utils/normalperiod.js';
+	import { m } from '#lib/paraglide/messages.js';
+	import { getLocale, type Locale } from '#lib/paraglide/runtime.js';
+	import { formatDecimal } from '#lib/i18n/format.js';
 
 	type Props = {
 		series: readonly YearValue[];

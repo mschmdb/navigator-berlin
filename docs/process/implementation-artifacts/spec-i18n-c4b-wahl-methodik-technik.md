@@ -26,7 +26,7 @@ context:
 - Links auf maschinenlesbare Dateien (`/llms.txt`, `/llms-full.txt`, `/webmcp-manifest.json`, `/.well-known/webmcp.json`) bleiben unlokalisiert.
 - WebMCP-Tool-Namen, Tool-Beschreibungen und Manifest bleiben DE (Boundary C1/C2). Nur sichtbarer Seitentext wird übersetzt.
 - Wahl-Begriffe wie im Wahlportal (`messages/en.json`). „vorläufig“ bleibt als Message, damit der Endergebnis-Re-Ingest DE und EN gemeinsam ändert.
-- Rich-Text über `src/lib/i18n/rich-text.ts` (C4a), Zahlen über `$lib/i18n/format.ts`, JSON-LD in der Seiten-Locale.
+- Rich-Text über `src/lib/i18n/rich-text.ts` (C4a), Zahlen über `#lib/i18n/format.ts`, JSON-LD in der Seiten-Locale.
 - Register: vier exakte Einträge. Grep-Audit vorher, `lang="de"` nur an echten DE-Resten.
 - TDD pro AC.
 

@@ -1,5 +1,5 @@
-import { getWahlList } from '$lib/server/db/queries/wahl/get-wahl-list.js';
-import { buildWahlSlug, buildWahlFallbackList } from '$lib/data/wahl-slug.js';
+import { getWahlList } from '#lib/server/db/queries/wahl/get-wahl-list.js';
+import { buildWahlSlug, buildWahlFallbackList } from '#lib/data/wahl-slug.js';
 import type { PageServerLoad } from './$types';
 
 export const prerender = true;

@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import { createGetKiezProfileTool } from './get-kiez-profile.js';
-import type { KiezProfile } from '$lib/data';
+import type { KiezProfile } from '#lib/data/index.ts';
 
 const FIXTURE_PROFILE: KiezProfile = {
 	slug: 'regierungsviertel',

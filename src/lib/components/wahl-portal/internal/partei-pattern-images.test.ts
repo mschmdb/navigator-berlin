@@ -4,7 +4,7 @@ import {
 	patternImageId,
 	PATTERN_TILE_SIZE
 } from './partei-pattern-images.js';
-import { parteiColor, parteiPattern } from '$lib/data/partei-farben.js';
+import { parteiColor, parteiPattern } from '#lib/data/partei-farben.js';
 
 function pixelAlpha(data: Uint8ClampedArray, width: number, x: number, y: number): number {
 	return data[(y * width + x) * 4 + 3];

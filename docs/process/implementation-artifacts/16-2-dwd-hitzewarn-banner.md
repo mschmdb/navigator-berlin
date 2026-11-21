@@ -58,7 +58,7 @@ Anders als die Karten-Layer (Build-Zeit, gehasht, MANIFEST) ist dies ein **Laufz
 - [ ] **Task 2: Remote-Query-Boundary** (AC: #1, #3, #4)
   - [ ] 2.1 (RED) Test, dass die Remote-Query `getBerlinHeatWarning` ein `HeatWarning | null` zurückgibt und Fehler nicht propagiert (degradiert zu `null`).
   - [ ] 2.2 (GREEN) `src/lib/data/dwd-warnung.remote.ts`: `export const getBerlinHeatWarning = query(async (): Promise<HeatWarning | null> => fetchBerlinHeatWarning());` (ADR-009-Muster, analog `geocode.remote.ts`, keine Eingabe-Args, daher Schema optional/leer).
-  - [ ] 2.3 Typen `HeatWarning`, `HeatLevel` in `src/lib/data/types.ts` (oder co-located `dwd-warnung.types.ts`) ergänzen, exportiert über `$lib/data`.
+  - [ ] 2.3 Typen `HeatWarning`, `HeatLevel` in `src/lib/data/types.ts` (oder co-located `dwd-warnung.types.ts`) ergänzen, exportiert über `#lib/data/index.ts`.
 
 - [ ] **Task 3: Banner-Komponente** (AC: #1, #2, #5, #4)
   - [ ] 3.1 (RED) `src/lib/components/kuehle-orte/dwd-hitzewarn-banner.svelte.test.ts` (Muster: `vitest-browser-svelte` + `vitest/browser`, analog `data-stand-banner.svelte.test.ts`): Render mit `warning=stark` → Stufentext „Starke Hitze" + DWD-Quelle sichtbar; `warning=extrem` → „Extreme Hitze"; `warning=null` → Komponente rendert leer (kein DOM-Knoten, kein reservierter Platzhalter); `role="status"` + `aria-live="polite"` gesetzt; Icon `aria-hidden`.

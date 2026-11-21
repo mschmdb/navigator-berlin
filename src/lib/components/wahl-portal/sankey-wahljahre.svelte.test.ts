@@ -1,10 +1,10 @@
 import { page } from 'vitest/browser';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
-import { overwriteGetLocale } from '$lib/paraglide/runtime';
+import { overwriteGetLocale } from '#lib/paraglide/runtime.js';
 import SankeyWahljahreContextProbe from './internal/sankey-wahljahre-context-probe.svelte';
 import { _resetWinnersCache } from './internal/winner-map-winners.svelte.js';
-import type { WahlPortalListEntry } from '$lib/state/wahl-portal-context.svelte.js';
+import type { WahlPortalListEntry } from '#lib/state/wahl-portal-context.svelte.js';
 
 const WAHLEN: WahlPortalListEntry[] = [
 	{

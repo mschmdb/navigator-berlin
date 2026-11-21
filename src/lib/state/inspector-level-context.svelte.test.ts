@@ -9,7 +9,7 @@ import {
 	canResolveLevel,
 	type InspectorLevelState
 } from './inspector-level-context.svelte.js';
-import type { SpatialContext } from '$lib/data/resolve-spatial-level.js';
+import type { SpatialContext } from '#lib/data/resolve-spatial-level.js';
 
 function makeState(): InspectorLevelState {
 	return {

@@ -4,10 +4,10 @@ import {
 	bezCodeToBezirkName,
 	bezirkSlugsForFeatures,
 	buildKiezSlugsForFeatures
-} from '$lib/components/wahl-portal/internal/winner-map-data.js';
-import { normalizeSlug } from '$lib/data/internal/slug.js';
-import type { RegionComposites } from '$lib/data/get-region-composites.js';
-import type { Bbox, RegionFocusKind, RegionFocusRequest } from '$lib/utils/url-state.js';
+} from '#lib/components/wahl-portal/internal/winner-map-data.js';
+import { normalizeSlug } from '#lib/data/internal/slug.js';
+import type { RegionComposites } from '#lib/data/get-region-composites.js';
+import type { Bbox, RegionFocusKind, RegionFocusRequest } from '#lib/utils/url-state.js';
 
 export type RegionFeature = Feature<Polygon | MultiPolygon>;
 

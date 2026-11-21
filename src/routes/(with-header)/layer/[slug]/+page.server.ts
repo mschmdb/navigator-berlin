@@ -1,14 +1,14 @@
 import { error } from '@sveltejs/kit';
-import { loadManifest } from '$lib/data/manifest.js';
-import { buildLayerDetail, type LayerDetail } from '$lib/data/get-layer-detail.js';
-import { hasLayerDetailPage } from '$lib/data/layer-visibility.js';
-import { getLocale, type Locale } from '$lib/paraglide/runtime.js';
-import { m } from '$lib/paraglide/messages.js';
-import { loadLayerKiezRanking } from '$lib/server/layer-kiez-ranking-loader.js';
-import { readLayerAggregatesFile } from '$lib/server/profile/meta-sources.js';
-import type { LayerKiezRanking } from '$lib/data/layer-kiez-ranking.js';
-import { getFaqForPage } from '$lib/server/db/queries/get-faq-qna.js';
-import type { FaqEntry } from '$lib/data/types.js';
+import { loadManifest } from '#lib/data/manifest.js';
+import { buildLayerDetail, type LayerDetail } from '#lib/data/get-layer-detail.js';
+import { hasLayerDetailPage } from '#lib/data/layer-visibility.js';
+import { getLocale, type Locale } from '#lib/paraglide/runtime.js';
+import { m } from '#lib/paraglide/messages.js';
+import { loadLayerKiezRanking } from '#lib/server/layer-kiez-ranking-loader.js';
+import { readLayerAggregatesFile } from '#lib/server/profile/meta-sources.js';
+import type { LayerKiezRanking } from '#lib/data/layer-kiez-ranking.js';
+import { getFaqForPage } from '#lib/server/db/queries/get-faq-qna.js';
+import type { FaqEntry } from '#lib/data/types.js';
 import type { EntryGenerator, PageServerLoad } from './$types';
 
 export const prerender = true;

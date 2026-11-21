@@ -6,14 +6,14 @@
  * für das Ergebnis-Panel (Story 6: NUR kiez/bezirk, das Panel hat keinen
  * Stimmbezirks-Zweig -- Series-API kennt diese Ebene nicht).
  */
-import { m } from '$lib/paraglide/messages.js';
-import type { Locale } from '$lib/paraglide/runtime';
-import { resolveSpatialLevel } from '$lib/data/resolve-spatial-level.js';
-import type { GeocodeSuggestion } from '$lib/data';
+import { m } from '#lib/paraglide/messages.js';
+import type { Locale } from '#lib/paraglide/runtime.js';
+import { resolveSpatialLevel } from '#lib/data/resolve-spatial-level.js';
+import type { GeocodeSuggestion } from '#lib/data/index.ts';
 import type { GebietFeatureCollection } from './winner-map-data.js';
 import type { WinnerMapController } from './winner-map-maplibre.svelte.js';
 import type { StimmbezirkLoader } from './winner-map-stimmbezirk.svelte.js';
-import type { WahlPortalEbene } from '$lib/utils/wahl-portal-url-state.js';
+import type { WahlPortalEbene } from '#lib/utils/wahl-portal-url-state.js';
 
 export interface AddressHighlightDeps {
 	readonly getAnzeigeEbene: () => WahlPortalEbene;

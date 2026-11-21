@@ -10,9 +10,9 @@
  * `compare-row.svelte` ist der einzige Aufrufer und uebergibt `{ locale:
  * getLocale() }` explizit.
  */
-import { m } from '$lib/paraglide/messages.js';
-import { formatCount, formatDecimal } from '$lib/i18n/format.js';
-import type { Locale } from '$lib/paraglide/runtime';
+import { m } from '#lib/paraglide/messages.js';
+import { formatCount, formatDecimal } from '#lib/i18n/format.js';
+import type { Locale } from '#lib/paraglide/runtime.js';
 
 export interface CompareLocaleOptions {
 	readonly locale?: Locale;

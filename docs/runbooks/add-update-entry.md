@@ -72,7 +72,7 @@ Lokales Git-Checkout, `pnpm install` einmalig gelaufen. Keine Datenbank, kein Ad
 
 ## Sanitization-Hinweis
 
-Der Markdown-Renderer pipe `marked` → Custom-Regex-Sanitizer (`$lib/seo/markdown-sanitizer.ts`). Strippt `<script>`, `<iframe>`, `on*=`-Attribute, `javascript:`/`data:`-URLs.
+Der Markdown-Renderer pipe `marked` → Custom-Regex-Sanitizer (`#lib/seo/markdown-sanitizer.ts`). Strippt `<script>`, `<iframe>`, `on*=`-Attribute, `javascript:`/`data:`-URLs.
 
 Inline-HTML im Body ist erlaubt, aber Block-Liste greift. Kein externes JS, kein `<iframe>`.
 

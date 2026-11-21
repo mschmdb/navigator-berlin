@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
-import { overwriteGetLocale } from '$lib/paraglide/runtime';
-import type { TranslationRegisterEntry } from '$lib/seo/translation-register.js';
+import { overwriteGetLocale } from '#lib/paraglide/runtime.js';
+import type { TranslationRegisterEntry } from '#lib/seo/translation-register.js';
 import SeoHead from './seo-head.svelte';
 
 /**

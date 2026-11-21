@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import { createAddressLookupTool } from './address-lookup.js';
-import type { GeocodeSuggestion } from '$lib/data';
+import type { GeocodeSuggestion } from '#lib/data/index.ts';
 
 const FIXTURE_SUGGESTIONS: GeocodeSuggestion[] = [
 	{

@@ -5,7 +5,7 @@ import { execSync } from 'node:child_process';
 /**
  * Architecture-Boundary-Test (Story 2.0 AC-3, AC-7-A3):
  * Kein Client-Code (`src/lib/components/**`, `src/lib/data/**`, `+page.svelte`)
- * darf aus `$lib/server/**` importieren. SvelteKit erzwingt das zur Build-Zeit,
+ * darf aus `#lib/server/**` importieren. SvelteKit erzwingt das zur Build-Zeit,
  * dieser Test fängt Verletzungen schon im Unit-Test ab.
  */
 describe('Architecture boundary: $lib/server/** not imported from client code', () => {

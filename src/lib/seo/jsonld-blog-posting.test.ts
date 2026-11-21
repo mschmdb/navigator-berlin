@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { buildBlogPosting, buildBlogIndex } from './jsonld-blog-posting.js';
-import type { UpdateEntry } from '$lib/content/updates/types.js';
+import type { UpdateEntry } from '#lib/content/updates/types.js';
 
 const entry: UpdateEntry = {
 	slug: 'launch',

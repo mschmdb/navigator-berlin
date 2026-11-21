@@ -1,5 +1,5 @@
-import { buildKiezSlugs, type KiezNameRef } from '$lib/data/internal/kiez-slug.js';
-import type { Manifest } from '$lib/data/types.js';
+import { buildKiezSlugs, type KiezNameRef } from '#lib/data/internal/kiez-slug.js';
+import type { Manifest } from '#lib/data/types.js';
 
 /**
  * Story 2.4 Helper: liest die 143 Kiez-Slugs (LOR-Bezirksregionen 2021) aus

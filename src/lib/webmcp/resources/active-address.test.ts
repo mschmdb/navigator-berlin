@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { readActiveAddressResource } from './active-address.js';
-import type { GeocodeSuggestion } from '$lib/data';
+import type { GeocodeSuggestion } from '#lib/data/index.ts';
 
 const SUGGESTION: GeocodeSuggestion = {
 	id: 'x',

@@ -10,7 +10,7 @@ import { parteiAnteilSpanne, type AnteilSpanne } from './winner-map-expressions.
 import { buildParteiViewTexts, type ParteiViewTexts } from './winner-map-partei-text.js';
 import { filterWinnersByJahr, type WinnerApiRow } from './winner-map-data.js';
 import { zusatzParteiTabs, type ParteiAnteil } from './zusatz-partei-tabs.js';
-import { FINDER_PARTIES } from '$lib/components/atlas/internal/kiez-finder-engine.js';
+import { FINDER_PARTIES } from '#lib/components/atlas/internal/kiez-finder-engine.js';
 
 /**
  * Review-Fund #7: ob eine geladene Winners-Response zur aktuell aktiven

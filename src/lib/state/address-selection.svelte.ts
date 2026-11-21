@@ -1,5 +1,5 @@
 import { getContext, setContext } from 'svelte';
-import type { GeocodeSuggestion } from '$lib/data';
+import type { GeocodeSuggestion } from '#lib/data/index.ts';
 
 const KEY = Symbol('address-selection');
 

@@ -6,22 +6,22 @@
 		addBookmark,
 		removeBookmark,
 		clearBookmarks
-	} from '$lib/state/ui-context.svelte.js';
-	import { useAddressSelection } from '$lib/state/address-selection.svelte.js';
+	} from '#lib/state/ui-context.svelte.js';
+	import { useAddressSelection } from '#lib/state/address-selection.svelte.js';
 	import {
 		MAX_BOOKMARKS,
 		createBookmark,
 		isBookmarked,
 		persistBookmarks,
 		bookmarkToSuggestion
-	} from '$lib/state/bookmark-store.js';
-	import type { Bookmark } from '$lib/state/bookmark-schema.js';
+	} from '#lib/state/bookmark-store.js';
+	import type { Bookmark } from '#lib/state/bookmark-schema.js';
 	import BottomSheet from './inspector-panel/bottom-sheet.svelte';
 	import BookmarkRow from './bookmark-row.svelte';
-	import { classifyViewportWidth, type Breakpoint } from '$lib/utils/use-viewport.svelte.js';
-	import { createFocusTrap } from '$lib/utils/focus-trap.js';
-	import { m } from '$lib/paraglide/messages.js';
-	import { localizedHref } from '$lib/i18n/localized-href.js';
+	import { classifyViewportWidth, type Breakpoint } from '#lib/utils/use-viewport.svelte.js';
+	import { createFocusTrap } from '#lib/utils/focus-trap.js';
+	import { m } from '#lib/paraglide/messages.js';
+	import { localizedHref } from '#lib/i18n/localized-href.js';
 
 	type Props = {
 		showCompareAction?: boolean;

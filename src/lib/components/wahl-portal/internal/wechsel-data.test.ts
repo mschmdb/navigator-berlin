@@ -353,5 +353,5 @@ describe('parteiAnzahlProJahrFromRows', () => {
 
 // Klammer-Test (Client-Zwilling <-> Server-Semantik `analytik.ts`): liegt in
 // `src/lib/server/wahl/wechsel-client-parity.test.ts`, NICHT hier -- ein
-// Import von `$lib/server` aus `src/lib/components/**` verletzt die
+// Import von `#lib/server` aus `src/lib/components/**` verletzt die
 // Architektur-Boundary (`src/lib/server/db/boundary.test.ts`), auch in Tests.

@@ -12,7 +12,7 @@
  * (winner-map-data.ts) mit generischen `farbe`/`anteil`/`has_winner`-Keys.
  */
 import type { Feature, FeatureCollection, Geometry } from 'geojson';
-import { parteiColor } from '$lib/data/partei-farben.js';
+import { parteiColor } from '#lib/data/partei-farben.js';
 import { patternImageId } from './partei-pattern-images.js';
 import { wechselJahreSetByGebiet } from './wechsel-data.js';
 import {

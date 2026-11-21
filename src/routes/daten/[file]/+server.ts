@@ -1,4 +1,4 @@
-import { loadManifest } from '$lib/data/manifest.js';
+import { loadManifest } from '#lib/data/manifest.js';
 import type { RequestHandler } from './$types';
 
 /**

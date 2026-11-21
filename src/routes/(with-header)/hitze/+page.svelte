@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { buildPageTitle } from '$lib/seo/page-title.js';
+	import { buildPageTitle } from '#lib/seo/page-title.js';
 	import { page } from '$app/state';
 	import {
 		Search,
@@ -13,23 +13,23 @@
 		Droplet,
 		ExternalLink
 	} from '@lucide/svelte';
-	import SeoHead from '$lib/components/atlas/seo-head.svelte';
-	import JsonLd from '$lib/components/atlas/json-ld.svelte';
-	import FaqSection from '$lib/components/atlas/faq-section.svelte';
-	import DwdHitzewarnBanner from '$lib/components/kuehle-orte/dwd-hitzewarn-banner.svelte';
-	import InDeinerNaehe from '$lib/components/kuehle-orte/in-deiner-naehe.svelte';
-	import KuehleOrteTransparenz from '$lib/components/kuehle-orte/kuehle-orte-transparenz.svelte';
-	import { buildDataset } from '$lib/seo/jsonld-dataset.js';
-	import { originOfUrl, stableDownloadPath } from '$lib/seo/dataset-helpers.js';
-	import { buildBreadcrumbList } from '$lib/seo/jsonld-breadcrumb.js';
-	import { getHitzeFaq } from '$lib/content/hitze-faq.js';
-	import { buildCanonical, canonicalOrigin, localizedPathname } from '$lib/seo/canonical.js';
-	import { getLocale } from '$lib/paraglide/runtime';
-	import { localizedHref } from '$lib/i18n/localized-href.js';
-	import { m } from '$lib/paraglide/messages.js';
-	import { BEZIRKE_BBOX } from '$lib/data/berlin-bbox.generated.js';
-	import { getLayerMethodology } from '$lib/data/layer-methodology.js';
-	import { buildExplorerDeepLink } from '$lib/utils/url-state.js';
+	import SeoHead from '#lib/components/atlas/seo-head.svelte';
+	import JsonLd from '#lib/components/atlas/json-ld.svelte';
+	import FaqSection from '#lib/components/atlas/faq-section.svelte';
+	import DwdHitzewarnBanner from '#lib/components/kuehle-orte/dwd-hitzewarn-banner.svelte';
+	import InDeinerNaehe from '#lib/components/kuehle-orte/in-deiner-naehe.svelte';
+	import KuehleOrteTransparenz from '#lib/components/kuehle-orte/kuehle-orte-transparenz.svelte';
+	import { buildDataset } from '#lib/seo/jsonld-dataset.js';
+	import { originOfUrl, stableDownloadPath } from '#lib/seo/dataset-helpers.js';
+	import { buildBreadcrumbList } from '#lib/seo/jsonld-breadcrumb.js';
+	import { getHitzeFaq } from '#lib/content/hitze-faq.js';
+	import { buildCanonical, canonicalOrigin, localizedPathname } from '#lib/seo/canonical.js';
+	import { getLocale } from '#lib/paraglide/runtime.js';
+	import { localizedHref } from '#lib/i18n/localized-href.js';
+	import { m } from '#lib/paraglide/messages.js';
+	import { BEZIRKE_BBOX } from '#lib/data/berlin-bbox.generated.js';
+	import { getLayerMethodology } from '#lib/data/layer-methodology.js';
+	import { buildExplorerDeepLink } from '#lib/utils/url-state.js';
 	import type { PageData } from './$types';
 
 	let { data }: { data: PageData } = $props();
@@ -38,7 +38,7 @@
 	// Diese Route entspricht IMMER dem LOGISCHEN Pfad `/hitze` -- unabhängig
 	// davon, ob sie über `/hitze` direkt oder über den Host-Reroute auf der
 	// Hitze-Subdomain-Wurzel erreicht wird (dort bleibt `page.url.pathname`
-	// bewusst `/`, siehe `hitzeReroute` in `$lib/app-mode.ts`). Fix (i18n
+	// bewusst `/`, siehe `hitzeReroute` in `#lib/app-mode.ts`). Fix (i18n
 	// Block B2 Review): SeoHead braucht diesen LOGISCHEN Pfad für
 	// Register-Lookup/hreflang -- mit dem rohen `page.url.pathname` würde die
 	// Subdomain-Wurzel fälschlich die Home-Registrierung übernehmen (`/` ist

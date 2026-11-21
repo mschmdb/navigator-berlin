@@ -16,8 +16,8 @@ import {
 } from '../../internal/finder-schemas.js';
 import type { WebMcpToolDefinition } from '../../internal/tool-types.js';
 import type { JsonObject } from '../../internal/json-types.js';
-import type { FinderWeights } from '$lib/components/atlas/internal/kiez-finder-engine.js';
-import type { FinderTopMatch } from '$lib/state/finder-bridge.svelte.js';
+import type { FinderWeights } from '#lib/components/atlas/internal/kiez-finder-engine.js';
+import type { FinderTopMatch } from '#lib/state/finder-bridge.svelte.js';
 
 export interface ApplyFinderWeightsResult {
 	readonly weights: FinderWeights;

@@ -1,11 +1,11 @@
 <script lang="ts">
-	import type { WaermeOrt } from '$lib/data/get-waerme-orte-index.js';
+	import type { WaermeOrt } from '#lib/data/get-waerme-orte-index.js';
 	import { Eye, EyeOff, ExternalLink, ChevronDown, Navigation, Flame, Mail } from '@lucide/svelte';
-	import { buildOptOutMailto } from '$lib/utils/contact.js';
-	import { announceGlobal } from '$lib/utils/aria-live.js';
-	import { nearestWaermeOrte, waermeKategorien } from '$lib/kaelte/nearest-waerme-orte.js';
-	import type { WaermeOrtMitDistanz } from '$lib/kaelte/nearest-waerme-orte.js';
-	import { categoryLabel } from '$lib/components/kuehle-orte/category-label.js';
+	import { buildOptOutMailto } from '#lib/utils/contact.js';
+	import { announceGlobal } from '#lib/utils/aria-live.js';
+	import { nearestWaermeOrte, waermeKategorien } from '#lib/kaelte/nearest-waerme-orte.js';
+	import type { WaermeOrtMitDistanz } from '#lib/kaelte/nearest-waerme-orte.js';
+	import { categoryLabel } from '#lib/components/kuehle-orte/category-label.js';
 	import {
 		checkedText,
 		counterText,
@@ -16,13 +16,13 @@
 		statusText,
 		stayText,
 		winterText
-	} from '$lib/kaelte/waerme-ort-labels.js';
+	} from '#lib/kaelte/waerme-ort-labels.js';
 	import { getEditorialConfig } from '../internal/editorial-config.js';
 	import { getLayerExplainEntry } from './internal/layer-explain.js';
 	import { formatDistance } from './internal/format-distance.js';
 	import EditorialDisclaimer from '../editorial-disclaimer.svelte';
-	import { m } from '$lib/paraglide/messages.js';
-	import { getLocale, type Locale } from '$lib/paraglide/runtime';
+	import { m } from '#lib/paraglide/messages.js';
+	import { getLocale, type Locale } from '#lib/paraglide/runtime.js';
 
 	const SLUG = 'waerme-orte';
 	const LIMIT = 5;

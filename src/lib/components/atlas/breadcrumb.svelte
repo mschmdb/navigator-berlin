@@ -5,8 +5,8 @@
 	aus derselben Quelle speisen.
 -->
 <script lang="ts">
-	import { m } from '$lib/paraglide/messages.js';
-	import { localizedHref } from '$lib/i18n/localized-href.js';
+	import { m } from '#lib/paraglide/messages.js';
+	import { localizedHref } from '#lib/i18n/localized-href.js';
 
 	interface BreadcrumbItem {
 		readonly name: string;

@@ -1,8 +1,8 @@
 import type { RequestHandler } from './$types';
-import { getWahlList } from '$lib/server/db/queries/wahl/get-wahl-list.js';
-import { hasGeometry, wahlSlugFromTypJahr } from '$lib/data/wahl-geo-mapping.js';
-import { buildWahlSlug } from '$lib/data/wahl-slug.js';
-import { sourceName } from '$lib/data/wahl-source-name.js';
+import { getWahlList } from '#lib/server/db/queries/wahl/get-wahl-list.js';
+import { hasGeometry, wahlSlugFromTypJahr } from '#lib/data/wahl-geo-mapping.js';
+import { buildWahlSlug } from '#lib/data/wahl-slug.js';
+import { sourceName } from '#lib/data/wahl-source-name.js';
 
 export const GET: RequestHandler = async () => {
 	const list = await getWahlList();

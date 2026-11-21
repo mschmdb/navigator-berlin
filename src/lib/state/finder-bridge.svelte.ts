@@ -13,7 +13,7 @@ import { untrack } from 'svelte';
 import {
 	neutralWeights,
 	type FinderWeights
-} from '$lib/components/atlas/internal/kiez-finder-engine.js';
+} from '#lib/components/atlas/internal/kiez-finder-engine.js';
 
 export interface FinderTopMatch {
 	readonly plrId: string;

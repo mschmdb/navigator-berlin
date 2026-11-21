@@ -1,10 +1,10 @@
 <!-- Legende der Quadratfarben (#190), Grau mit Schwelle. -->
 <script lang="ts">
-	import { partyName } from '$lib/components/stories/quadrate';
-	import { m } from '$lib/paraglide/messages.js';
-	import { PARTY_COLORS } from '$lib/stories/wahl-quadrate/farben';
-	import { DEFAULT_THRESHOLD } from '$lib/stories/wahl-quadrate/grau';
-	import { ORDER } from '$lib/stories/wahl-quadrate/parteien';
+	import { partyName } from '#lib/components/stories/quadrate/index.ts';
+	import { m } from '#lib/paraglide/messages.js';
+	import { PARTY_COLORS } from '#lib/stories/wahl-quadrate/farben.ts';
+	import { DEFAULT_THRESHOLD } from '#lib/stories/wahl-quadrate/grau.ts';
+	import { ORDER } from '#lib/stories/wahl-quadrate/parteien.ts';
 	import { percent } from './texte';
 
 	const grey = m.bq_hb_legend_grey({ threshold: percent(Math.round(DEFAULT_THRESHOLD * 100)) });

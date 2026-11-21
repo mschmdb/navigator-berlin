@@ -1,6 +1,6 @@
 import raw from '../../../../static/data/stories-wahl.json';
-import { JAHRE, WAHL_TYPEN, wahlSlug } from '$lib/stories/wahl-quadrate/parteien';
-import type { StoriesWahlData, WahlSlug } from '$lib/stories/wahl-quadrate/types';
+import { JAHRE, WAHL_TYPEN, wahlSlug } from '#lib/stories/wahl-quadrate/parteien.ts';
+import type { StoriesWahlData, WahlSlug } from '#lib/stories/wahl-quadrate/types.ts';
 
 const SLUGS: WahlSlug[] = WAHL_TYPEN.flatMap((t) => JAHRE[t].map((j) => wahlSlug(t, j)!));
 

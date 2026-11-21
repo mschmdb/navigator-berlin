@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { buildJsonFeed } from './build-json-feed.js';
-import type { UpdateEntry } from '$lib/content/updates/types.js';
+import type { UpdateEntry } from '#lib/content/updates/types.js';
 
 const entry: UpdateEntry = {
 	slug: 'launch',

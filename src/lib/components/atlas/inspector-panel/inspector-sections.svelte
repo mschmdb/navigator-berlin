@@ -2,12 +2,12 @@
      `inspector-panel.svelte` herausgelöst (GH-88). Datensätze stehen als Zeilen mit Linie,
      Quellen und Details einmal am Ende jeder Sektion. -->
 <script lang="ts">
-	import type { LayerHit } from '$lib/data';
-	import type { NumericMedianAggregate } from '$lib/data/layer-aggregates-types.js';
-	import { getUiState, toggleLayer } from '$lib/state/ui-context.svelte.js';
-	import { localizedHref } from '$lib/i18n/localized-href.js';
-	import { m } from '$lib/paraglide/messages.js';
-	import type { Locale } from '$lib/paraglide/runtime';
+	import type { LayerHit } from '#lib/data/index.ts';
+	import type { NumericMedianAggregate } from '#lib/data/layer-aggregates-types.js';
+	import { getUiState, toggleLayer } from '#lib/state/ui-context.svelte.js';
+	import { localizedHref } from '#lib/i18n/localized-href.js';
+	import { m } from '#lib/paraglide/messages.js';
+	import type { Locale } from '#lib/paraglide/runtime.js';
 	import { getLayerDisplayName } from '../internal/layer-palette-filter.js';
 	import { CARD_SLUGS } from './internal/card-slugs.js';
 	import type { InspectorSection } from './internal/sections.js';

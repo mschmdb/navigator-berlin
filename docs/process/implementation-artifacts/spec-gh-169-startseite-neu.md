@@ -50,7 +50,7 @@ context: ['{project-root}/CLAUDE.md']
 - `src/routes/(with-header)/+page.server.ts` -- `load` (L169-181) liefert topKieze, updates, layerCount, featured, wahlCount; nicht mehr benötigte Felder entfernen, `layerCount`/`wahlCount` für Texte weiter nutzen.
 - `src/lib/components/home/` -- vorhandene Teile: `home-hero`, `home-featured-score`, `home-finder-teaser`, `home-hook`, `home-steps`, `home-quick-links`, `home-wahl-teaser`, `home-saison-teasers`, `home-hitze-teaser`, `home-kaelte-teaser`, `home-featured-bezirke`, `home-top-kieze`, `home-layer-teasers`, `home-updates-teaser`, `home-open-block`; `internal/cta.ts` für Button-Klassen wiederverwenden.
 - `src/lib/components/atlas/address-search.svelte` -- Suchfeld (`variant: 'hero'`, `geocode`, `onSelect`); feuert `Search` selbst; bereits außerhalb des Atlas genutzt in `wahl-portal/winner-map.svelte`.
-- `src/routes/(with-header)/+layout.svelte:42` -- Geocoder `geocodeAddress` aus `$lib/data/geocode.remote.js`.
+- `src/routes/(with-header)/+layout.svelte:42` -- Geocoder `geocodeAddress` aus `#lib/data/geocode.remote.js`.
 - `src/lib/content/home-quick-links.ts` -- `buildQuickLinkHref` (L105) für Beispiel-Links unter dem Suchfeld (Hermannplatz, Prenzlauer Berg, Frohnau) wiederverwenden.
 - `src/lib/utils/berlin-time.ts:126` -- `isKaelteSaison(now)`.
 - `src/lib/utils/plausible.ts:87-105` -- `trackLanding`, `LandingPageType` um `'home'` erweitern, Aktionen der Aufgaben-Links ohne Slugs.

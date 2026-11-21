@@ -1,6 +1,6 @@
-import { ogSvg, OG_SIZE, socialSvg, SOCIAL_SIZE } from '$lib/stories/wahl-quadrate/bilder-svg.js';
-import type { Lang } from '$lib/stories/wahl-quadrate/grau.js';
-import { WAHL_TYPEN } from '$lib/stories/wahl-quadrate/parteien.js';
+import { ogSvg, OG_SIZE, socialSvg, SOCIAL_SIZE } from '#lib/stories/wahl-quadrate/bilder-svg.js';
+import type { Lang } from '#lib/stories/wahl-quadrate/grau.js';
+import { WAHL_TYPEN } from '#lib/stories/wahl-quadrate/parteien.js';
 import { jostMeasure } from './jost.js';
 import { svgToPng } from './raster.js';
 import { loadStoriesWahl } from './wahl-daten.js';

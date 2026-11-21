@@ -2,22 +2,22 @@
 	import { onMount } from 'svelte';
 	import { afterNavigate, goto } from '$app/navigation';
 	import { page } from '$app/state';
-	import { m } from '$lib/paraglide/messages.js';
+	import { m } from '#lib/paraglide/messages.js';
 	import {
 		bezirkAn,
 		sichtbareJahre,
 		sortiereBezirke,
 		wahlTypen,
 		wandMasse
-	} from '$lib/stories/wahl-quadrate/gesamt';
-	import type { WahlTyp } from '$lib/stories/wahl-quadrate/parteien';
-	import type { StoriesWahlData } from '$lib/stories/wahl-quadrate/types';
+	} from '#lib/stories/wahl-quadrate/gesamt.ts';
+	import type { WahlTyp } from '#lib/stories/wahl-quadrate/parteien.ts';
+	import type { StoriesWahlData } from '#lib/stories/wahl-quadrate/types.ts';
 	import {
 		DEFAULT_URL_STATE,
 		parseUrlState,
 		serializeUrlState,
 		type GesamtState
-	} from '$lib/stories/wahl-quadrate/url-state';
+	} from '#lib/stories/wahl-quadrate/url-state.ts';
 	import Grau from './alle-bezirke-grau.svelte';
 	import Raster from './alle-bezirke-raster.svelte';
 	import Steuerung from './alle-bezirke-steuerung.svelte';

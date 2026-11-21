@@ -20,7 +20,7 @@ import {
 	closeOverlays,
 	type UiState
 } from './ui-context.svelte.js';
-import type { GeocodeSuggestion, LayerHit, ClimateStation, ClimateData } from '$lib/data';
+import type { GeocodeSuggestion, LayerHit, ClimateStation, ClimateData } from '#lib/data/index.ts';
 import type { Bookmark } from './bookmark-schema.js';
 import { IDLE_PENDING } from './inspector-loads.js';
 

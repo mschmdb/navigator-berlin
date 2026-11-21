@@ -1,4 +1,4 @@
-import { buildKiezSlugs } from '$lib/data/internal/kiez-slug.js';
+import { buildKiezSlugs } from '#lib/data/internal/kiez-slug.js';
 
 /** LOR-Bezirkscode (`BEZ`, zweistellig) → Bezirksname, wie im Bezirke-Layer. */
 const BEZIRK_NAMES: Readonly<Record<string, string>> = {

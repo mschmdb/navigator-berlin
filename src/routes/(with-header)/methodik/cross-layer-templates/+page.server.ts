@@ -1,14 +1,14 @@
 import { error } from '@sveltejs/kit';
 import { dev } from '$app/env';
 import type { PageServerLoad } from './$types';
-import { loadCrossLayerTemplates } from '$lib/server/cross-layer-templates-loader.js';
+import { loadCrossLayerTemplates } from '#lib/server/cross-layer-templates-loader.js';
 import {
 	findTemplatesForScope,
 	renderTemplate,
 	type RenderedTemplate,
 	type TemplateScope
-} from '$lib/data/cross-layer-templates/index.js';
-import { getLocale } from '$lib/paraglide/runtime.js';
+} from '#lib/data/cross-layer-templates/index.js';
+import { getLocale } from '#lib/paraglide/runtime.js';
 import { buildBezirkFixture, buildKiezFixture } from './preview-fixtures.js';
 
 export interface PreviewEntry {

@@ -4,10 +4,10 @@
  * Texte sind Paraglide-Messages und folgen der Seiten-Locale. Kennungen, Software-Namen
  * und URLs bleiben unverändert.
  */
-import type { LayerMetadata, License } from '$lib/data';
-import { getLayerDisplayName } from '$lib/components/atlas/internal/layer-palette-filter.js';
-import { m } from '$lib/paraglide/messages.js';
-import { getLocale, type Locale } from '$lib/paraglide/runtime';
+import type { LayerMetadata, License } from '#lib/data/index.ts';
+import { getLayerDisplayName } from '#lib/components/atlas/internal/layer-palette-filter.js';
+import { m } from '#lib/paraglide/messages.js';
+import { getLocale, type Locale } from '#lib/paraglide/runtime.js';
 
 export interface LizenzSection {
 	readonly id: string;

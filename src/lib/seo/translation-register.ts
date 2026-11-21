@@ -1,5 +1,5 @@
-import { baseLocale, deLocalizeHref, type Locale } from '$lib/paraglide/runtime';
-import { classifyUpdateFilename, filenameOf } from '$lib/content/updates/update-filename.js';
+import { baseLocale, deLocalizeHref, type Locale } from '#lib/paraglide/runtime.js';
+import { classifyUpdateFilename, filenameOf } from '#lib/content/updates/update-filename.js';
 
 /**
  * One (pathname, locale) pair -- or, with `prefix: true`, a whole subtree --

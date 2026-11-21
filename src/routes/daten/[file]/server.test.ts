@@ -1,6 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { loadManifest } from '$lib/data/manifest.js';
-import type { Manifest } from '$lib/data/types.js';
+import { loadManifest } from '#lib/data/manifest.js';
+import type { Manifest } from '#lib/data/types.js';
 
 const manifest: Manifest = {
 	schemaVersion: 1,
@@ -34,7 +34,7 @@ const manifest: Manifest = {
 	]
 };
 
-vi.mock('$lib/data/manifest.js', () => ({
+vi.mock('#lib/data/manifest.js', () => ({
 	loadManifest: vi.fn(async () => manifest)
 }));
 

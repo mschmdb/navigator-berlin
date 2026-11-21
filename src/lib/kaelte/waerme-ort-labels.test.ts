@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it } from 'vitest';
-import { overwriteGetLocale } from '$lib/paraglide/runtime';
-import type { WaermeOrt } from '$lib/data/get-waerme-orte-index.js';
+import { overwriteGetLocale } from '#lib/paraglide/runtime.js';
+import type { WaermeOrt } from '#lib/data/get-waerme-orte-index.js';
 import {
 	checkedText,
 	counterText,

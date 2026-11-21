@@ -16,7 +16,7 @@ import {
 } from '../../internal/schemas.js';
 import type { WebMcpToolDefinition } from '../../internal/tool-types.js';
 import type { JsonObject } from '../../internal/json-types.js';
-import type { WahlResultsAtPoint, WahlResultBundle } from '$lib/data/get-wahl-results-at-point.js';
+import type { WahlResultsAtPoint, WahlResultBundle } from '#lib/data/get-wahl-results-at-point.js';
 
 export interface CompareElectionsDeps {
 	readonly fetchResultsAtPoint: (lat: number, lng: number) => Promise<WahlResultsAtPoint | null>;

@@ -7,14 +7,14 @@ import type {
 	OepnvStopIndex,
 	KuehleOrt,
 	KiezScore
-} from '$lib/data';
-import type { WaermeOrt } from '$lib/data/get-waerme-orte-index.js';
-import type { Trinkbrunnen } from '$lib/data/get-trinkbrunnen-index.js';
-import type { WahlResultsAtPoint } from '$lib/data/get-wahl-results-at-point.js';
-import type { DemografieScope } from '$lib/components/atlas/inspector-panel/internal/demografie-types.js';
+} from '#lib/data/index.ts';
+import type { WaermeOrt } from '#lib/data/get-waerme-orte-index.js';
+import type { Trinkbrunnen } from '#lib/data/get-trinkbrunnen-index.js';
+import type { WahlResultsAtPoint } from '#lib/data/get-wahl-results-at-point.js';
+import type { DemografieScope } from '#lib/components/atlas/inspector-panel/internal/demografie-types.js';
 import type { Bookmark } from './bookmark-schema.js';
 import { IDLE_PENDING, type InspectorPending } from './inspector-loads.js';
-import { capPolygonSlugs } from '$lib/components/atlas/internal/layer-visibility.js';
+import { capPolygonSlugs } from '#lib/components/atlas/internal/layer-visibility.js';
 import {
 	saveBookmark,
 	removeBookmark as removeBookmarkFromStore,

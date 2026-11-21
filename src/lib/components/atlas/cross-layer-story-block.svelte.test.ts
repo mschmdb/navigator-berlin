@@ -1,9 +1,9 @@
 import { afterEach, describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { page } from 'vitest/browser';
-import { overwriteGetLocale } from '$lib/paraglide/runtime';
+import { overwriteGetLocale } from '#lib/paraglide/runtime.js';
 import CrossLayerStoryBlock from './cross-layer-story-block.svelte';
-import type { RenderedTemplate } from '$lib/data/cross-layer-templates/index.js';
+import type { RenderedTemplate } from '#lib/data/cross-layer-templates/index.js';
 
 afterEach(() => {
 	overwriteGetLocale(() => 'de');

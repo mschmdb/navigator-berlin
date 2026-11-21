@@ -1,25 +1,25 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import SeoHead from '$lib/components/atlas/seo-head.svelte';
-	import JsonLd from '$lib/components/atlas/json-ld.svelte';
-	import NotfallBlock from '$lib/components/kaelte/notfall-block.svelte';
-	import WarmeOrteNaehe from '$lib/components/kaelte/warme-orte-naehe.svelte';
-	import WarmeOrteTransparenz from '$lib/components/kaelte/warme-orte-transparenz.svelte';
-	import DwdKaeltewarnBanner from '$lib/components/kaelte/dwd-kaeltewarn-banner.svelte';
+	import SeoHead from '#lib/components/atlas/seo-head.svelte';
+	import JsonLd from '#lib/components/atlas/json-ld.svelte';
+	import NotfallBlock from '#lib/components/kaelte/notfall-block.svelte';
+	import WarmeOrteNaehe from '#lib/components/kaelte/warme-orte-naehe.svelte';
+	import WarmeOrteTransparenz from '#lib/components/kaelte/warme-orte-transparenz.svelte';
+	import DwdKaeltewarnBanner from '#lib/components/kaelte/dwd-kaeltewarn-banner.svelte';
 	import type { PageData } from './$types';
-	import { buildPageTitle } from '$lib/seo/page-title.js';
-	import { buildBreadcrumbList } from '$lib/seo/jsonld-breadcrumb.js';
-	import { canonicalOrigin, localizedPathname } from '$lib/seo/canonical.js';
-	import { getLocale } from '$lib/paraglide/runtime';
-	import { m } from '$lib/paraglide/messages.js';
-	import { localizedHref } from '$lib/i18n/localized-href.js';
-	import { buildExplorerDeepLink } from '$lib/utils/url-state.js';
+	import { buildPageTitle } from '#lib/seo/page-title.js';
+	import { buildBreadcrumbList } from '#lib/seo/jsonld-breadcrumb.js';
+	import { canonicalOrigin, localizedPathname } from '#lib/seo/canonical.js';
+	import { getLocale } from '#lib/paraglide/runtime.js';
+	import { m } from '#lib/paraglide/messages.js';
+	import { localizedHref } from '#lib/i18n/localized-href.js';
+	import { buildExplorerDeepLink } from '#lib/utils/url-state.js';
 
 	let { data }: { data: PageData } = $props();
 
 	const origin = $derived(page.url.origin);
 	// Logischer Pfad: auch über den Host-Reroute der Subdomain-Wurzel ist das /kaelte
-	// (siehe `kaelteReroute` in `$lib/app-mode.ts`), page.url.pathname wäre dort `/`.
+	// (siehe `kaelteReroute` in `#lib/app-mode.ts`), page.url.pathname wäre dort `/`.
 	const pathname = '/kaelte';
 	const primaryOrigin = $derived(canonicalOrigin(origin));
 

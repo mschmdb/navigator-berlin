@@ -1,8 +1,8 @@
 import type { RequestHandler } from './$types';
-import { loadManifest } from '$lib/data/manifest.js';
-import { buildLlmsTxt } from '$lib/seo/llms-builder.js';
-import { collectLlmsData } from '$lib/server/llms/data-collector.js';
-import { featureFlags } from '$lib/data/feature-flags.js';
+import { loadManifest } from '#lib/data/manifest.js';
+import { buildLlmsTxt } from '#lib/seo/llms-builder.js';
+import { collectLlmsData } from '#lib/server/llms/data-collector.js';
+import { featureFlags } from '#lib/data/feature-flags.js';
 
 export const prerender = true;
 

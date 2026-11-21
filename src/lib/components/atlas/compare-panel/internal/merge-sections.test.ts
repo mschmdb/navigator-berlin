@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { mergeCompareSections } from './merge-sections.js';
-import type { LayerHit, LayerMetadata } from '$lib/data';
+import type { LayerHit, LayerMetadata } from '#lib/data/index.ts';
 
 function meta(slug: string, bundle: LayerMetadata['bundleGroup']): LayerMetadata {
 	return {

@@ -6,8 +6,8 @@
  * unit-testbar; die reaktive Hover-/Fokus-Ablage (`$state`) bleibt in
  * `sankey-wahljahre.svelte` (Muster: dünne reaktive Hülle um reine Logik).
  */
-import { m } from '$lib/paraglide/messages.js';
-import type { LocaleFormatOptions } from '$lib/i18n/format.js';
+import { m } from '#lib/paraglide/messages.js';
+import type { LocaleFormatOptions } from '#lib/i18n/format.js';
 import type { SankeyPositionedLink, SankeyPositionedNode } from './sankey-layout.js';
 import type { SankeyTooltipContent } from './sankey-tooltip.svelte';
 import { parteiDisplayName } from './winner-map-data.js';

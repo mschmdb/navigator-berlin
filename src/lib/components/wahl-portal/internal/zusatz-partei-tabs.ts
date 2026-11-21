@@ -4,8 +4,8 @@
  * die in der gewählten Wahl berlinweit die Schwelle erreicht und ein Farb-Token
  * hat (ohne Token lehnt `/api/wahl/winners` die Partei ab).
  */
-import { FINDER_PARTIES } from '$lib/components/atlas/internal/kiez-finder-engine.js';
-import { TOKEN_PARTEIEN } from '$lib/data/partei-farben.js';
+import { FINDER_PARTIES } from '#lib/components/atlas/internal/kiez-finder-engine.js';
+import { TOKEN_PARTEIEN } from '#lib/data/partei-farben.js';
 
 export const ZUSATZ_TAB_SCHWELLE = 0.05;
 

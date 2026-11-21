@@ -1,8 +1,8 @@
 <!-- Umschalter „Parteien: Feste Plätze / Nach Größe“ für Kapitel 3 und 5 (#190). -->
 <script lang="ts">
-	import { Segmente } from '$lib/components/stories/quadrate';
-	import { m } from '$lib/paraglide/messages.js';
-	import type { OrderMode } from '$lib/stories/wahl-quadrate/layout';
+	import { Segmente } from '#lib/components/stories/quadrate/index.ts';
+	import { m } from '#lib/paraglide/messages.js';
+	import type { OrderMode } from '#lib/stories/wahl-quadrate/layout.ts';
 
 	interface Props {
 		value: OrderMode;

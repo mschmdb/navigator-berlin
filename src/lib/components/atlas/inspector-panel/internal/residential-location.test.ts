@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { isResidentialLocation } from './residential-location.js';
-import type { LayerHit } from '$lib/data';
+import type { LayerHit } from '#lib/data/index.ts';
 
 function brwHit(nutzung: string | undefined): LayerHit {
 	return {

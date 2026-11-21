@@ -6,7 +6,7 @@
 		PALETTE,
 		PRESET,
 		seededRandom
-	} from '$lib/data/pixel-logo-geometry';
+	} from '#lib/data/pixel-logo-geometry.ts';
 
 	type Props = {
 		/** one-shot: Raster steht, Farben wechseln im Takt. loop: Zellen bauen sich auf und wieder ab. */

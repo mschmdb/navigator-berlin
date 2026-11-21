@@ -10,14 +10,14 @@
  * (Boundary: „Rampen-Konstanten in einem internal/-Modul, geteilt").
  */
 import type { Feature, FeatureCollection, Geometry } from 'geojson';
-import { m } from '$lib/paraglide/messages.js';
-import { formatPercent, type LocaleFormatOptions } from '$lib/i18n/format.js';
-import { parteiColor, parteiPattern, type Pattern } from '$lib/data/partei-farben.js';
-import { normalizeSlug } from '$lib/data/internal/slug.js';
-import { buildKiezSlugs, type KiezNameRef } from '$lib/data/internal/kiez-slug.js';
-import { gruppeIdFromGeo, type GeoUwbProps } from '$lib/data/wahl-geo-mapping.js';
-import { gruppenAnzeigeName } from '$lib/data/wahl-gruppe-label.js';
-import type { WahlPortalEbene } from '$lib/utils/wahl-portal-url-state.js';
+import { m } from '#lib/paraglide/messages.js';
+import { formatPercent, type LocaleFormatOptions } from '#lib/i18n/format.js';
+import { parteiColor, parteiPattern, type Pattern } from '#lib/data/partei-farben.js';
+import { normalizeSlug } from '#lib/data/internal/slug.js';
+import { buildKiezSlugs, type KiezNameRef } from '#lib/data/internal/kiez-slug.js';
+import { gruppeIdFromGeo, type GeoUwbProps } from '#lib/data/wahl-geo-mapping.js';
+import { gruppenAnzeigeName } from '#lib/data/wahl-gruppe-label.js';
+import type { WahlPortalEbene } from '#lib/utils/wahl-portal-url-state.js';
 import { patternImageId } from './partei-pattern-images.js';
 
 /** Eine Winners-Row aus `GET /api/wahl/winners` (Response-Shape der Story-2-API). */
@@ -239,11 +239,11 @@ export function joinWinnersToFeatures(
 }
 
 // `gruppenAnzeigeName` (+ `briefCodeFromGruppeId`) lebt in
-// `$lib/data/wahl-gruppe-label.ts` -- geteiltes Modul für Winner-Map und
+// `#lib/data/wahl-gruppe-label.ts` -- geteiltes Modul für Winner-Map und
 // Detailseiten-Choropleth (Review-Fund: zwei divergierende Kopien mit
 // unterschiedlichen Bugs, u.a. falscher Briefwahl-Code bei BTW-Gruppen-IDs
 // und ein doppeltes "und" bei genau zwei Mitgliedern).
-export { gruppenAnzeigeName } from '$lib/data/wahl-gruppe-label.js';
+export { gruppenAnzeigeName } from '#lib/data/wahl-gruppe-label.js';
 
 /**
  * Story 5, ab Story 17 auf Briefwahl-Gruppen umgestellt: Join für die

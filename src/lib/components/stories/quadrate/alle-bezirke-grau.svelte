@@ -3,12 +3,12 @@
 	Wahlart eine Tabelle mit Wahl, Grauanteil in ganz Berlin und den Parteien darin.
 -->
 <script lang="ts">
-	import { m } from '$lib/paraglide/messages.js';
-	import { grauSpanne, grauTabelle, wahlTypen } from '$lib/stories/wahl-quadrate/gesamt';
-	import { formatShare, type SmallParty } from '$lib/stories/wahl-quadrate/grau';
-	import type { WahlTyp } from '$lib/stories/wahl-quadrate/parteien';
-	import type { StoriesWahlData } from '$lib/stories/wahl-quadrate/types';
-	import type { GesamtState } from '$lib/stories/wahl-quadrate/url-state';
+	import { m } from '#lib/paraglide/messages.js';
+	import { grauSpanne, grauTabelle, wahlTypen } from '#lib/stories/wahl-quadrate/gesamt.ts';
+	import { formatShare, type SmallParty } from '#lib/stories/wahl-quadrate/grau.ts';
+	import type { WahlTyp } from '#lib/stories/wahl-quadrate/parteien.ts';
+	import type { StoriesWahlData } from '#lib/stories/wahl-quadrate/types.ts';
+	import type { GesamtState } from '#lib/stories/wahl-quadrate/url-state.ts';
 	import { aktuelleSprache, ganzeProzent } from './format';
 	import { partyName } from './namen';
 

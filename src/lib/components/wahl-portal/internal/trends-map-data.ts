@@ -14,12 +14,12 @@
  *   Richtungen hängt an „gut/schlecht"-Rampen (`scaleGut`/`scaleLast`).
  */
 import type { Feature, FeatureCollection, Geometry } from 'geojson';
-import { m } from '$lib/paraglide/messages.js';
+import { m } from '#lib/paraglide/messages.js';
 import {
 	formatPercent,
 	formatPercentagePointsDelta,
 	type LocaleFormatOptions
-} from '$lib/i18n/format.js';
+} from '#lib/i18n/format.js';
 import { formatDeltaLabel } from './ergebnis-panel-data.js';
 import type { PatternImageSpec } from './partei-pattern-images.js';
 import {

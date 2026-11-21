@@ -1,4 +1,4 @@
-import { locales, baseLocale } from '$lib/paraglide/runtime';
+import { locales, baseLocale } from '#lib/paraglide/runtime.js';
 
 /**
  * Stale locale-prefix redirect resolver.
@@ -21,7 +21,7 @@ import { locales, baseLocale } from '$lib/paraglide/runtime';
  * the hook becomes an open redirect off navigator.berlin.
  *
  * i18n Block A: `en` went live as a real `/en/…` route (`locales` in
- * `$lib/paraglide/runtime` now includes it), so it must NOT collapse onto DE
+ * `#lib/paraglide/runtime.js` now includes it), so it must NOT collapse onto DE
  * anymore. The stale-prefix set is derived as "every locale prefix this site
  * has ever exposed, minus every locale that is currently active with its own
  * URL prefix" (decision Matze 26.09.2026) -- `de` stays stale forever because
@@ -32,7 +32,7 @@ import { locales, baseLocale } from '$lib/paraglide/runtime';
 /**
  * Every locale prefix this site has ever exposed under the old multi-locale
  * scheme. Extend when retiring a locale, never when activating one (that's
- * what `locales` in `$lib/paraglide/runtime` is for).
+ * what `locales` in `#lib/paraglide/runtime.js` is for).
  */
 const HISTORICAL_LOCALE_PREFIXES: ReadonlySet<string> = new Set([
 	'de',

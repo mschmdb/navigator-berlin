@@ -10,7 +10,7 @@ export async function loadWahlSeries(
 	if (!process.env.DATABASE_URL) return [];
 	try {
 		const { getSeriesForGebiet } =
-			await import('$lib/server/db/queries/wahl/get-series-for-gebiet.js');
+			await import('#lib/server/db/queries/wahl/get-series-for-gebiet.js');
 		const rows = await getSeriesForGebiet(slug, ebene, typ, WAHL_STIMMTYP[typ], 6);
 		return rows.map((r) => ({
 			jahr: r.jahr,

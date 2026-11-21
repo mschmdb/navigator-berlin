@@ -1,7 +1,7 @@
 import { readFileSync, readdirSync, statSync } from 'node:fs';
 import { join, relative } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { COLORS } from '$lib/components/atlas/internal/colors.js';
+import { COLORS } from '#lib/components/atlas/internal/colors.js';
 
 /*
  * Wächter für das Design-Fundament (GH-86). Tailwind-Klassen stehen in Strings,

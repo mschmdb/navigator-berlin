@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import type { GeocodeSuggestion } from '$lib/data';
+import type { GeocodeSuggestion } from '#lib/data/index.ts';
 import { extractPrimaryName, extractStreetName, formatAddressSubline } from './address-subline.js';
 
 function makeAddr(overrides: Partial<GeocodeSuggestion> = {}): GeocodeSuggestion {

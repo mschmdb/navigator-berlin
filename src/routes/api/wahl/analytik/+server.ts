@@ -12,13 +12,13 @@
 import { json, error } from '@sveltejs/kit';
 import * as v from 'valibot';
 import type { RequestHandler } from './$types';
-import { getWahlList } from '$lib/server/db/queries/wahl/get-wahl-list.js';
+import { getWahlList } from '#lib/server/db/queries/wahl/get-wahl-list.js';
 import {
 	getAnalytikForReihe,
 	getTrendForReihe
-} from '$lib/server/db/queries/wahl/get-analytik-for-reihe.js';
-import { sourceName } from '$lib/data/wahl-source-name.js';
-import { wahlCacheHeaders } from '$lib/server/wahl/cache-control.js';
+} from '#lib/server/db/queries/wahl/get-analytik-for-reihe.js';
+import { sourceName } from '#lib/data/wahl-source-name.js';
+import { wahlCacheHeaders } from '#lib/server/wahl/cache-control.js';
 
 const QuerySchema = v.object({
 	ebene: v.literal('kiez'),

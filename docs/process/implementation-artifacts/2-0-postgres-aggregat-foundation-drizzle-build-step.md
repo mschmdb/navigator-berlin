@@ -104,7 +104,7 @@ so that Bezirks-/Kiez-/Score-/FAQ-Pages (Stories 2.3, 2.4, 2.5b, 2.9a, 2.9b) auf
    - `prebuild`-Script in `package.json` ruft mindestens `pnpm db:migrate` auf, damit `pnpm build` keine DB-Schema-Drift hat
    - `pnpm data:aggregate` wird NICHT automatisch in `prebuild` aufgerufen (zu teuer für Dev-HMR-Builds); stattdessen Dokumentation im Story-Output, dass CI explizit beide Schritte ausführen muss
    - Runtime liest die Aggregat-Daten via Server-Loader-Pattern (Story 2.3+), die Page-Output ist statisch geprerendert: am End-User-Browser wird KEIN Postgres-Connection-Roundtrip benötigt (NFR-P1, NFR-P4)
-   - SvelteKit-Build-Output (`build/`) enthält keinen `postgres`- oder `drizzle-orm`-Bundle-Eintrag im Client-Bundle (Tree-Shaking via `$lib/server/`-Boundary, MUST-Rule via Architecture-Boundary)
+   - SvelteKit-Build-Output (`build/`) enthält keinen `postgres`- oder `drizzle-orm`-Bundle-Eintrag im Client-Bundle (Tree-Shaking via `#lib/server/`-Boundary, MUST-Rule via Architecture-Boundary)
 
 7. **AC-7 (TDD-Mandat):**
    **Given** ADR-012 Pragmatic-TDD-Mandate
@@ -204,7 +204,7 @@ Epic-2-Block in `epics.md` Zeile 1057 schreibt `pnpm fetch && pnpm data:aggregat
 
 ### Pfad-Korrektur DB-Client (server-only)
 
-Epic schreibt `src/lib/db/index.ts`. Architecture-Boundary in `architecture.md` Zeile 1462 verbietet aber Client-Imports von `$lib/server/`-Code. Drizzle + Postgres-Connection sind hart Server-only (Connection-String in env, Postgres-Driver kann nicht im Browser laufen). Korrekter Pfad ist deshalb `src/lib/server/db/`. SvelteKit verifiziert den `$lib/server/`-Boundary zur Build-Zeit; Versuch eines Client-Imports schlägt mit klarer Build-Fehler-Meldung fehl. Diese Korrektur in Dev-Notes dokumentieren, sonst missverstehen Folge-Stories die Pfad-Konvention.
+Epic schreibt `src/lib/db/index.ts`. Architecture-Boundary in `architecture.md` Zeile 1462 verbietet aber Client-Imports von `#lib/server/`-Code. Drizzle + Postgres-Connection sind hart Server-only (Connection-String in env, Postgres-Driver kann nicht im Browser laufen). Korrekter Pfad ist deshalb `src/lib/server/db/`. SvelteKit verifiziert den `$lib/server/`-Boundary zur Build-Zeit; Versuch eines Client-Imports schlägt mit klarer Build-Fehler-Meldung fehl. Diese Korrektur in Dev-Notes dokumentieren, sonst missverstehen Folge-Stories die Pfad-Konvention.
 
 ### MUST-Rules-Anwendung
 
@@ -258,7 +258,7 @@ So kann Story 2.3 (Bezirks-Page) pro Wert das `data-stand-banner`-Pattern aus St
 
 - **Pure-Function-Tests:** Aggregat-Submodule (T4.3-T4.9) gegen vorhandene Mini-Fixtures (`src/lib/data/__fixtures__/mini-bezirke.geojson` etc.). Eine Mini-Fixture pro Aggregat-Typ ist OK (Phase-1-MVP-Scope).
 - **DB-Tests:** Optional gegen pg-mem (falls trivial einrichtbar) oder gegen lokale Postgres in einem dedizierten `_test`-Schema. Wenn pg-mem Stress macht: Snapshot-Tests gegen mock-Drizzle reichen für AC-5.
-- **Server-only-Boundary-Test:** Vitest-Test der versucht `$lib/server/db/index.ts` aus einem Client-Kontext zu importieren und prüft dass SvelteKit-Vite-Plugin den Import blockt. Falls zu komplex einzurichten: ESLint-Rule `no-restricted-imports` für `$lib/server/**` aus `$lib/components/**` als Approximation.
+- **Server-only-Boundary-Test:** Vitest-Test der versucht `#lib/server/db/index.ts` aus einem Client-Kontext zu importieren und prüft dass SvelteKit-Vite-Plugin den Import blockt. Falls zu komplex einzurichten: ESLint-Rule `no-restricted-imports` für `$lib/server/**` aus `$lib/components/**` als Approximation.
 - **Vitest-Browser-Konflikt:** `feedback_browser_test_fetch_spy.md` warnt vor `vi.spyOn(globalThis, 'fetch')` in `*.svelte.test.ts`. Trifft 2.0 nicht (alle Tests sind reine Node-Unit-Tests), aber zur Sicherheit: keine Komponenten-Tests in dieser Story.
 
 ### Production-Postgres-Setup (out of scope)
@@ -323,7 +323,7 @@ Claude Opus 4.7 (claude-opus-4-7), bmad-dev-story Skill, TDD-first per ADR-012.
 
 **Architektur-Korrekturen vs. Epic-Wortlaut (begründet, in Schema-Code dokumentiert):**
 
-1. **DB-Pfad `src/lib/server/db/` statt Epic-`src/lib/db/`** — SvelteKit-Server-only-Boundary erzwingt das (architecture.md Zeile 1462). Boundary-Test in `boundary.test.ts` verifiziert kein Client-Code (`$lib/components/`, `$lib/data/`, `+page.svelte`) den Pfad importiert.
+1. **DB-Pfad `src/lib/server/db/` statt Epic-`src/lib/db/`** — SvelteKit-Server-only-Boundary erzwingt das (architecture.md Zeile 1462). Boundary-Test in `boundary.test.ts` verifiziert kein Client-Code (`#lib/components/`, `$lib/data/`, `+page.svelte`) den Pfad importiert.
 2. **143 BZR statt Spec-Wert 138** — ODIS-Dataset 2021 hat 143 LOR-Bezirksregionen (inkl. Sub-Klassifikationen). Spec aus Epic-Beschreibung outdated. Konsumenten-Stories (2.4) brauchen Update auf 143.
 3. **JSONB pro Cluster statt flacher Spalten** — User-Lock 2026-05-16. Trade-off akzeptiert: JSONB-Range-Queries teurer als Spalten-Indexes, aber Phase-1-MVP-Konsum (`get-bezirk-stats(slug)`) ist PK-Lookup-dominiert. Range-Queries für Score (`ORDER BY composite DESC`) leben in dedizierten Number-Spalten in `bezirk_score`/`kiez_score`.
 4. **8 Cluster statt 7 (MVP + Heritage)** — User-Lock 2026-05-16. denkmal-2024 Pipeline neu eingerichtet, heritage.ts aggregiert denkmal/km² + stolpersteine/km².

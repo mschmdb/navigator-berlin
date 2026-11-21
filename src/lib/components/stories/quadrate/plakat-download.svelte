@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { resolve } from '$app/paths';
-	import { getLocale } from '$lib/paraglide/runtime';
-	import { trackEvent } from '$lib/utils/plausible.js';
-	import type { WahlTyp } from '$lib/stories/wahl-quadrate/parteien.js';
-	import { TEXTE } from '$lib/stories/wahl-quadrate/texte.js';
-	import { STORY_INK } from '$lib/stories/tokens.js';
+	import { getLocale } from '#lib/paraglide/runtime.js';
+	import { trackEvent } from '#lib/utils/plausible.js';
+	import type { WahlTyp } from '#lib/stories/wahl-quadrate/parteien.js';
+	import { TEXTE } from '#lib/stories/wahl-quadrate/texte.js';
+	import { STORY_INK } from '#lib/stories/tokens.js';
 
 	interface Props {
 		readonly typ: WahlTyp;

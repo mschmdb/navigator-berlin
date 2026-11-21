@@ -1,6 +1,6 @@
-import { m } from '$lib/paraglide/messages.js';
-import { formatDecimal } from '$lib/i18n/format.js';
-import type { WeightedMeanAggregate } from '$lib/data/layer-aggregates-types.js';
+import { m } from '#lib/paraglide/messages.js';
+import { formatDecimal } from '#lib/i18n/format.js';
+import type { WeightedMeanAggregate } from '#lib/data/layer-aggregates-types.js';
 import { toAtlasMessageOptions, type LocaleOptions } from '../../internal/atlas-label-options.js';
 
 /**

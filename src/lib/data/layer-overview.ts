@@ -1,10 +1,10 @@
 import {
 	BUNDLE_ORDER,
 	getLayerDisplayName
-} from '$lib/components/atlas/internal/layer-palette-filter.js';
-import { explainLayer } from '$lib/components/atlas/inspector-panel/internal/layer-explain.js';
-import type { Locale } from '$lib/paraglide/runtime';
-import { themeLabel } from '$lib/seo/layer-meta.js';
+} from '#lib/components/atlas/internal/layer-palette-filter.js';
+import { explainLayer } from '#lib/components/atlas/inspector-panel/internal/layer-explain.js';
+import type { Locale } from '#lib/paraglide/runtime.js';
+import { themeLabel } from '#lib/seo/layer-meta.js';
 import { hasLayerDetailPage } from './layer-visibility.js';
 import type { Bundle, LayerMetadata } from './types.js';
 

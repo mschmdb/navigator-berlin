@@ -8,8 +8,8 @@
  * Browser getestet werden kann; nur `toImageData`/`registerPartyPatterns`
  * fassen den `ImageData`-Constructor an (browser-only, aus onMount gerufen).
  */
-import { parteiColor, parteiPattern, type Pattern } from '$lib/data/partei-farben.js';
-import { normalizeSlug } from '$lib/data/internal/slug.js';
+import { parteiColor, parteiPattern, type Pattern } from '#lib/data/partei-farben.js';
+import { normalizeSlug } from '#lib/data/internal/slug.js';
 
 export const PATTERN_TILE_SIZE = 16;
 

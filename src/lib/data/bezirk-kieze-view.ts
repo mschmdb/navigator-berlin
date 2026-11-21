@@ -9,7 +9,7 @@ import {
 	buildRegionOutline,
 	type OutlineRegion,
 	type RegionOutline
-} from '$lib/seo/region-outline-svg.js';
+} from '#lib/seo/region-outline-svg.js';
 
 export interface KiezRankInfo {
 	readonly rang: number | null;

@@ -1,9 +1,9 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { page } from 'vitest/browser';
-import { overwriteGetLocale } from '$lib/paraglide/runtime';
+import { overwriteGetLocale } from '#lib/paraglide/runtime.js';
 import Harness from './compare-panel-harness.svelte';
-import type { GeocodeSuggestion, LayerHit, LayerMetadata } from '$lib/data';
+import type { GeocodeSuggestion, LayerHit, LayerMetadata } from '#lib/data/index.ts';
 
 afterEach(() => {
 	overwriteGetLocale(() => 'de');

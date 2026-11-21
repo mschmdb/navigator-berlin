@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { createGetFinderStateTool } from './get-finder-state.js';
-import { neutralWeights } from '$lib/components/atlas/internal/kiez-finder-engine.js';
+import { neutralWeights } from '#lib/components/atlas/internal/kiez-finder-engine.js';
 
 describe('get_finder_state', () => {
 	it('liefert Zustand englisch: Gewichte, Quelle, ISO-Zeit, Top-Treffer', async () => {

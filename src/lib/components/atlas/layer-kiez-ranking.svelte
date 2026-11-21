@@ -1,10 +1,10 @@
 <script lang="ts">
-	import type { LayerKiezRanking, RankingList } from '$lib/data/layer-kiez-ranking.js';
-	import { getLocale } from '$lib/paraglide/runtime';
-	import { m } from '$lib/paraglide/messages.js';
-	import { localizedHref } from '$lib/i18n/localized-href.js';
-	import { trackLanding } from '$lib/utils/plausible.js';
-	import { formatDecimal } from '$lib/i18n/format.js';
+	import type { LayerKiezRanking, RankingList } from '#lib/data/layer-kiez-ranking.js';
+	import { getLocale } from '#lib/paraglide/runtime.js';
+	import { m } from '#lib/paraglide/messages.js';
+	import { localizedHref } from '#lib/i18n/localized-href.js';
+	import { trackLanding } from '#lib/utils/plausible.js';
+	import { formatDecimal } from '#lib/i18n/format.js';
 
 	interface Props {
 		readonly ranking: LayerKiezRanking;

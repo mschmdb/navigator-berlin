@@ -3,8 +3,8 @@
 // `LAYER_NAME_MESSAGE` in `internal/layer-palette-filter.ts`. `LAYER_EXPLAIN_DE`
 // bleibt als DE-Referenz-Export für Tests und DE-only-Direktimporter erhalten
 // (Boundary: "Nicht-UI-Konsumenten bleiben unveraendert").
-import { m } from '$lib/paraglide/messages.js';
-import type { Locale } from '$lib/paraglide/runtime';
+import { m } from '#lib/paraglide/messages.js';
+import type { Locale } from '#lib/paraglide/runtime.js';
 import { toAtlasMessageOptions, type LocaleOptions } from '../../internal/atlas-label-options.js';
 
 export interface LayerExplain {

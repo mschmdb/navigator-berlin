@@ -13,8 +13,8 @@
 // optional, weil ihre Laenge pro Slug variiert -- eine fehlende Feld-
 // Zuordnung faellt zur Laufzeit auf DE zurueck (siehe
 // `layer-methodology.ts#resolveMethodologyForLocale`), kein Compile-Fehler.
-import { m } from '$lib/paraglide/messages.js';
-import type { Locale } from '$lib/paraglide/runtime';
+import { m } from '#lib/paraglide/messages.js';
+import type { Locale } from '#lib/paraglide/runtime.js';
 import type { LayerMethodologySlug } from './layer-methodology.js';
 
 type MessageFn = (params?: undefined, options?: { locale: Locale }) => string;

@@ -1,4 +1,4 @@
-import { m } from '$lib/paraglide/messages.js';
+import { m } from '#lib/paraglide/messages.js';
 import { toAtlasMessageOptions, type LocaleOptions } from '../../internal/atlas-label-options.js';
 
 /**

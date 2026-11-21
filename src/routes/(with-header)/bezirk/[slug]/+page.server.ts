@@ -1,18 +1,18 @@
 import { error } from '@sveltejs/kit';
-import { getBezirkProfile } from '$lib/data/get-bezirk-profile.js';
-import { getLocale, type Locale } from '$lib/paraglide/runtime.js';
-import { m } from '$lib/paraglide/messages.js';
-import { readBezirkSlugsFromGeoJson } from '$lib/seo/sources/bezirk-slugs.js';
-import { readBezirkComposite, readEinwohnerStichtag } from '$lib/server/profile/meta-sources.js';
-import { toCompositeRank, type CompositeRank } from '$lib/server/profile/composite-rank.js';
-import { loadBezirkRegions, loadKiezRegions } from '$lib/place/load-regions.server';
-import { loadNeighborBezirkSlugs } from '$lib/place/bezirk-context.server';
-import { loadWahlBundle } from '$lib/place/wahl.server';
-import { loadPageFaq } from '$lib/place/faq.server';
-import type { PageFaqItem } from '$lib/place/faq-items';
-import { mapImage } from '$lib/place/maps.server';
-import type { MapImage } from '$lib/place/types';
-import { packRegions, packWahl, type PackedRegions, type PackedWahl } from '$lib/place/pack';
+import { getBezirkProfile } from '#lib/data/get-bezirk-profile.js';
+import { getLocale, type Locale } from '#lib/paraglide/runtime.js';
+import { m } from '#lib/paraglide/messages.js';
+import { readBezirkSlugsFromGeoJson } from '#lib/seo/sources/bezirk-slugs.js';
+import { readBezirkComposite, readEinwohnerStichtag } from '#lib/server/profile/meta-sources.js';
+import { toCompositeRank, type CompositeRank } from '#lib/server/profile/composite-rank.js';
+import { loadBezirkRegions, loadKiezRegions } from '#lib/place/load-regions.server.ts';
+import { loadNeighborBezirkSlugs } from '#lib/place/bezirk-context.server.ts';
+import { loadWahlBundle } from '#lib/place/wahl.server.ts';
+import { loadPageFaq } from '#lib/place/faq.server.ts';
+import type { PageFaqItem } from '#lib/place/faq-items.ts';
+import { mapImage } from '#lib/place/maps.server.ts';
+import type { MapImage } from '#lib/place/types.ts';
+import { packRegions, packWahl, type PackedRegions, type PackedWahl } from '#lib/place/pack.ts';
 import type { EntryGenerator, PageServerLoad } from './$types';
 
 export const prerender = true;
@@ -29,7 +29,7 @@ export const entries: EntryGenerator = async () => {
 async function tryLoadBezirkRank(slug: string) {
 	if (!process.env.DATABASE_URL) return null;
 	try {
-		const { getBezirkRank } = await import('$lib/server/db/queries/get-bezirk-rank.js');
+		const { getBezirkRank } = await import('#lib/server/db/queries/get-bezirk-rank.js');
 		return await getBezirkRank(slug);
 	} catch (err) {
 		const msg = err instanceof Error ? err.message : String(err);
@@ -72,7 +72,7 @@ export const load: PageServerLoad = async ({ params, fetch }): Promise<BezirkPag
 	} catch {
 		throw error(404, m.bezirk_page_not_found({ slug }, { locale: getLocale() }));
 	}
-	const { getLocalizedProfile } = await import('$lib/server/profile/get-profile.js');
+	const { getLocalizedProfile } = await import('#lib/server/profile/get-profile.js');
 	const [
 		rank,
 		prose,

@@ -5,7 +5,7 @@ import {
 	type LayerKiezRanking,
 	type RankingLorCollection,
 	type RankingRegion
-} from '$lib/data/layer-kiez-ranking.js';
+} from '#lib/data/layer-kiez-ranking.js';
 import { readLayer } from './kiez-neighbors-index.js';
 import { readLayerAggregatesFile } from './profile/meta-sources.js';
 

@@ -4,22 +4,22 @@
 	„Zurücksetzen“ rechts und „Alles einblenden“ nur bei ausgeblendeten Bezirken oder Wahlen.
 -->
 <script lang="ts">
-	import { m } from '$lib/paraglide/messages.js';
-	import { PARTY_COLORS } from '$lib/stories/wahl-quadrate/farben';
+	import { m } from '#lib/paraglide/messages.js';
+	import { PARTY_COLORS } from '#lib/stories/wahl-quadrate/farben.ts';
 	import {
 		alleEinblenden,
 		hatAusgeblendet,
 		statusZahlen,
 		toggleHervorheben
-	} from '$lib/stories/wahl-quadrate/gesamt';
-	import { ORDER, type PartyKey } from '$lib/stories/wahl-quadrate/parteien';
+	} from '#lib/stories/wahl-quadrate/gesamt.ts';
+	import { ORDER, type PartyKey } from '#lib/stories/wahl-quadrate/parteien.ts';
 	import {
 		DEFAULT_URL_STATE,
 		type GesamtSort,
 		type GesamtState,
 		type GesamtWahl,
 		type Reihenfolge
-	} from '$lib/stories/wahl-quadrate/url-state';
+	} from '#lib/stories/wahl-quadrate/url-state.ts';
 	import Auswahl from './auswahl.svelte';
 	import { ganzeProzent } from './format';
 	import Knopf from './knopf.svelte';

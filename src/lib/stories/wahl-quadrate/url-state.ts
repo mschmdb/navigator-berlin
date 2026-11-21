@@ -5,7 +5,7 @@
  * Links aus der Skizzenphase weiter funktionieren. Kapitel 5 bekommt eigene
  * Parameter (`bezirk`, `wahl5`), weil `wahl` dort nur AGH oder BTW kennt.
  */
-import { HOME_BEZIRKE } from '$lib/content/home-bezirke';
+import { HOME_BEZIRKE } from '#lib/content/home-bezirke.ts';
 import { JAHRE, NAMED_PARTIES, WAHL_TYPEN, type NamedParty, type WahlTyp } from './parteien';
 
 export type { WahlTyp };

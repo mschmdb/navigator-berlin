@@ -198,7 +198,7 @@ so that Karte und UI als visuelles Stück erscheinen und nicht wie „schicke We
     - SiteHeader (aus Story 1.5)
     - Main-Content: Karte (volle Breite, ~70vh) + InspectorPanel-Placeholder (Story 1.9 füllt)
     - MetaFooter (aus Story 1.2)
-  - [ ] 5.3 Karten-Default-Viewport (BERLIN_BBOX-Konstante aus `$lib/data/constants.ts` — zentralisieren aus Story 1.4/1.5)
+  - [ ] 5.3 Karten-Default-Viewport (BERLIN_BBOX-Konstante aus `#lib/data/constants.ts` — zentralisieren aus Story 1.4/1.5)
   - [ ] 5.4 Smoke: `pnpm dev` → `http://localhost:5173/de/` zeigt Header + Karte + Footer
 
 - [ ] **Task 6: Style-Side-by-Side-Showcase** (AC: #5)
@@ -511,7 +511,7 @@ Auszug für Plex-Cartography (vollständige Datei beim Implement aus UX-Spec + R
 
 - **Story 1.2:** Plex Variable Fonts + Sans Arabic Static in `static/fonts/`, Cloud Dancer Token + `--accent`-Hex-Werte für Style-JSON
 - **Story 1.3:** `MANIFEST.json` enthält Layer-Zoom-Schwellen — Map-Style Layer-Visibility kann darauf basierend gefiltert werden (Story 1.7 macht das vollständig mit Bbox-Sync)
-- **Story 1.4:** `BERLIN_BBOX`-Konstante existiert in `get-layers-at-point.ts` ODER `get-climate-station.ts`. Story 1.6 zentralisiert in `$lib/data/constants.ts`
+- **Story 1.4:** `BERLIN_BBOX`-Konstante existiert in `get-layers-at-point.ts` ODER `get-climate-station.ts`. Story 1.6 zentralisiert in `#lib/data/constants.ts`
 - **Story 1.5:** `(with-header)/`-Group-Layout, `SiteHeader`-Komponente, AddressSearch — Story 1.6 ergänzt Karte unter Header
 
 ### Git Intelligence

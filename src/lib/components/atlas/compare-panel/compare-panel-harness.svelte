@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { createUiState } from '$lib/state/ui-context.svelte.js';
-	import type { GeocodeSuggestion, LayerHit, LayerMetadata } from '$lib/data';
+	import { createUiState } from '#lib/state/ui-context.svelte.js';
+	import type { GeocodeSuggestion, LayerHit, LayerMetadata } from '#lib/data/index.ts';
 	import ComparePanel from './compare-panel.svelte';
 
 	type Props = {

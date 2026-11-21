@@ -11,12 +11,12 @@
 	 * Wechsel brauchen eine über alle Jahre stabile Geometrie, die nur
 	 * Kiez/Bezirk haben -- Task-Vorgabe ist Kiez.
 	 */
-	import { getWahlPortalState } from '$lib/state/wahl-portal-context.svelte.js';
-	import { stimmtypForReihe } from '$lib/utils/wahl-portal-url-state.js';
-	import { m } from '$lib/paraglide/messages.js';
+	import { getWahlPortalState } from '#lib/state/wahl-portal-context.svelte.js';
+	import { stimmtypForReihe } from '#lib/utils/wahl-portal-url-state.js';
+	import { m } from '#lib/paraglide/messages.js';
 	import DataTableAlternative, {
 		type TableColumn
-	} from '$lib/components/atlas/data-table-alternative.svelte';
+	} from '#lib/components/atlas/data-table-alternative.svelte';
 	import { KiezBezirkWinnersLoader } from './internal/winner-map-winners.svelte.js';
 	import { KiezBezirkGeometryLoader } from './internal/winner-map-geometry.svelte.js';
 	import { WechselMapController } from './internal/wechsel-kapitel-maplibre.svelte.js';

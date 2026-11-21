@@ -25,7 +25,7 @@
 		type MultiHoverContent
 	} from './internal/hover-tooltip-logic.js';
 	import { layerIdFor } from './internal/layer-diff.js';
-	import { getLocale } from '$lib/paraglide/runtime';
+	import { getLocale } from '#lib/paraglide/runtime.js';
 
 	type Props = {
 		map: MapHoverApi | null;

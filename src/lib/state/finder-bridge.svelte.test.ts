@@ -9,7 +9,7 @@ import {
 	readFinderBridge,
 	resetFinderBridgeForTests
 } from './finder-bridge.svelte.js';
-import { neutralWeights } from '$lib/components/atlas/internal/kiez-finder-engine.js';
+import { neutralWeights } from '#lib/components/atlas/internal/kiez-finder-engine.js';
 
 beforeEach(() => resetFinderBridgeForTests());
 

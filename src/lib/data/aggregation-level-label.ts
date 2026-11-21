@@ -10,13 +10,13 @@
  * "Baublock"/"city block" für die beiden neuen Begriffe, die übrigen Ebenen
  * aus dem bestehenden LOR-Glossar (`layer_explain_lor_*_short`).
  */
-import { m } from '$lib/paraglide/messages.js';
-import { toMessageOptions, type LocaleOptions } from '$lib/i18n/message-options.js';
+import { m } from '#lib/paraglide/messages.js';
+import { toMessageOptions, type LocaleOptions } from '#lib/i18n/message-options.js';
 import type { AggregationLevel } from './layer-methodology.js';
 
 type MessageFn = (
 	params?: undefined,
-	options?: { locale: import('$lib/paraglide/runtime').Locale }
+	options?: { locale: import('#lib/paraglide/runtime.js').Locale }
 ) => string;
 
 const AGGREGATION_LEVEL_LABEL_MESSAGE: Record<AggregationLevel, MessageFn> = {

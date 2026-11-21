@@ -7,7 +7,7 @@
  * Kürzung — Page-Loader muss alle requires-Werte vor Render bereitstellen.
  */
 
-import type { Locale } from '$lib/paraglide/runtime';
+import type { Locale } from '#lib/paraglide/runtime.js';
 import type { Template } from './schema.js';
 
 export type TemplateContext = Readonly<Record<string, string | number | null | undefined>>;

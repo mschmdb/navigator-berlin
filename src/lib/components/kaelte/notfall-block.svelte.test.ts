@@ -2,7 +2,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { flushSync } from 'svelte';
 import { render } from 'vitest-browser-svelte';
 import { page } from 'vitest/browser';
-import { overwriteGetLocale } from '$lib/paraglide/runtime';
+import { overwriteGetLocale } from '#lib/paraglide/runtime.js';
 import NotfallBlock from './notfall-block.svelte';
 
 const ABEND_NOVEMBER = new Date('2026-11-16T20:30:00Z'); // Mo 21:30 Berlin

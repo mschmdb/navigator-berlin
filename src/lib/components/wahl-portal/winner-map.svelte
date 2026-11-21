@@ -5,16 +5,16 @@
 		jahreForReihe,
 		setJahr,
 		setEbene
-	} from '$lib/state/wahl-portal-context.svelte.js';
-	import { stimmtypForReihe } from '$lib/utils/wahl-portal-url-state.js';
-	import { m } from '$lib/paraglide/messages.js';
-	import { wahlEbeneLabel, wahlWiederholungLabel } from '$lib/data/wahl-labels.js';
-	import { localizedHref } from '$lib/i18n/localized-href.js';
-	import { geocodeAddress } from '$lib/data/geocode.remote.js';
-	import { wahlSlugFromTypJahr, geoSlugForWahl } from '$lib/data/wahl-geo-mapping.js';
-	import type { GeocodeSuggestion } from '$lib/data';
-	import AddressSearch from '$lib/components/atlas/address-search.svelte';
-	import DataTableAlternative from '$lib/components/atlas/data-table-alternative.svelte';
+	} from '#lib/state/wahl-portal-context.svelte.js';
+	import { stimmtypForReihe } from '#lib/utils/wahl-portal-url-state.js';
+	import { m } from '#lib/paraglide/messages.js';
+	import { wahlEbeneLabel, wahlWiederholungLabel } from '#lib/data/wahl-labels.js';
+	import { localizedHref } from '#lib/i18n/localized-href.js';
+	import { geocodeAddress } from '#lib/data/geocode.remote.js';
+	import { wahlSlugFromTypJahr, geoSlugForWahl } from '#lib/data/wahl-geo-mapping.js';
+	import type { GeocodeSuggestion } from '#lib/data/index.ts';
+	import AddressSearch from '#lib/components/atlas/address-search.svelte';
+	import DataTableAlternative from '#lib/components/atlas/data-table-alternative.svelte';
 	import WinnerMapLegende from './winner-map-legende.svelte';
 	import WinnerMapTooltip from './winner-map-tooltip.svelte';
 	import WinnerMapParteiTabs from './winner-map-partei-tabs.svelte';

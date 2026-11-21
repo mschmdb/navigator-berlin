@@ -7,9 +7,9 @@
 	 * karten-lokal, kein Umbau der Portal-Steuerleiste), Muster
 	 * `trends-kapitel.svelte` Partei-Chips (`nextRadioIndex`-Tastatursteuerung).
 	 */
-	import { FINDER_PARTIES } from '$lib/components/atlas/internal/kiez-finder-engine.js';
-	import { parteiColor } from '$lib/data/partei-farben.js';
-	import { m } from '$lib/paraglide/messages.js';
+	import { FINDER_PARTIES } from '#lib/components/atlas/internal/kiez-finder-engine.js';
+	import { parteiColor } from '#lib/data/partei-farben.js';
+	import { m } from '#lib/paraglide/messages.js';
 	import { nextRadioIndex } from './internal/radiogroup-keyboard.js';
 
 	type Props = {

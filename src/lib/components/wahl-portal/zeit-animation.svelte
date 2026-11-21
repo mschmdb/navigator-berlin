@@ -11,9 +11,9 @@
 	 */
 	import { untrack } from 'svelte';
 	import { Play, Pause, StepForward } from '@lucide/svelte';
-	import type { WahlPortalEbene } from '$lib/utils/wahl-portal-url-state.js';
-	import { m } from '$lib/paraglide/messages.js';
-	import { wahlWiederholungLabel } from '$lib/data/wahl-labels.js';
+	import type { WahlPortalEbene } from '#lib/utils/wahl-portal-url-state.js';
+	import { m } from '#lib/paraglide/messages.js';
+	import { wahlWiederholungLabel } from '#lib/data/wahl-labels.js';
 	import { ZeitAnimationController } from './internal/zeit-animation.svelte.js';
 
 	export interface ZeitAnimationJahrOption {

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import type { Manifest } from '$lib/data/types.js';
+import type { Manifest } from '#lib/data/types.js';
 import {
 	buildLlmsTxt,
 	buildLlmsFullTxt,

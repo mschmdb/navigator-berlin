@@ -417,7 +417,7 @@ Bewusste Nicht-Validierung über quantitative Metriken — das Projekt installie
 
 Innovations-Risiken mit konkreten Fallbacks:
 
-- **WebMCP-Spec ist Pre-1.0 und ändert sich.** WebMCP-Setup hinter eigener Adapter-Schicht in `$lib/webmcp/`. Spec-Version im Manifest dokumentiert. Bei Breaking-Change: Adapter aktualisieren, Tools/Resources/Prompts bleiben semantisch stabil. Wenn WebMCP sich nicht durchsetzt: `llms.txt` + JSON-LD bleiben als stabile GEO/AEO-Schicht bestehen.
+- **WebMCP-Spec ist Pre-1.0 und ändert sich.** WebMCP-Setup hinter eigener Adapter-Schicht in `#lib/webmcp/`. Spec-Version im Manifest dokumentiert. Bei Breaking-Change: Adapter aktualisieren, Tools/Resources/Prompts bleiben semantisch stabil. Wenn WebMCP sich nicht durchsetzt: `llms.txt` + JSON-LD bleiben als stabile GEO/AEO-Schicht bestehen.
 - **LLM-Crawler ignorieren `llms.txt`/JSON-LD.** SEO-Long-Tail trägt durch klassische Suche (Google, Bing) auch ohne LLM-Aufnahme. Die ~1.600 prerenderten URLs (8 Sprachen × ~200 Basisrouten) + ~8.000 FAQ-Q&As sind in jedem Fall durchsuchbar.
 - **Cross-Layer-USP wird kopiert (CityLAB baut nach).** Realistisch erst nach 6–12 Monaten — falls überhaupt. Differenzierung verflacht, aber das Tool steht weiter. Personal-Brand-Hebel #1 (Sichtbarkeit) ist zu diesem Zeitpunkt bereits realisiert.
 - **Klima-Long-View wird datenjournalistisch nicht aufgegriffen.** Bleibt als Inspektor-Panel-Detail bestehen und liefert weiterhin Aha-Momente für individuelle Nutzer.
@@ -548,8 +548,8 @@ Health-Check pro externem Endpunkt mit graceful Skip im Inspektor-Panel: API-Aus
 - **Framework:** SvelteKit v2.x mit Svelte 5 Runes (siehe Design-Direktive). Kein `@sveltejs/adapter-static` — `@sveltejs/adapter-node` mit pro-Route-Prerendering.
 - **Build-Pipeline:** `pnpm` als Package-Manager, Vite als Bundler, mapshaper für GeoJSON-Simplifizierung zur Build-Zeit, `fontnik` für MapLibre-Glyph-Pack-Generierung (einmalig).
 - **Datenpipeline:** `scripts/fetch-static.ts` ruft FIS-Broker-WFS, ODIS-GeoJSON, DWD-CDC, OSM-Overpass ab. Reprojiziert nach EPSG:4326. Simplifiziert. Hasht. Schreibt nach `static/layers/{name}.{sha}.geojson` plus `static/layers/MANIFEST.json` mit Metadaten.
-- **Datenzugriffs-Abstraktion:** `$lib/data/` mit typesafem Interface `getLayersAtPoint(lat, lng): Promise<LayerHits>`. Phase 1 Turf.js auf GeoJSON, Phase 2/3 SQL-Swap ohne Component-Code-Änderung.
-- **WebMCP-Adapter:** `$lib/webmcp/` mit `registerTool()`-Wrappern, Spec-Version im Manifest. Bei Pre-1.0-Breaking-Change einmalig Adapter aktualisieren.
+- **Datenzugriffs-Abstraktion:** `#lib/data/` mit typesafem Interface `getLayersAtPoint(lat, lng): Promise<LayerHits>`. Phase 1 Turf.js auf GeoJSON, Phase 2/3 SQL-Swap ohne Component-Code-Änderung.
+- **WebMCP-Adapter:** `#lib/webmcp/` mit `registerTool()`-Wrappern, Spec-Version im Manifest. Bei Pre-1.0-Breaking-Change einmalig Adapter aktualisieren.
 - **Chart-Library:** LayerChart v2 (`layerchart@next`), Svelte-5-runes-nativ, Plex-Tokens als CSS-Variablen.
 - **Map-Style:** eigener MapLibre-Style-JSON in `static/map-style.json`, Plex-Beschriftungen via selbst gebautem Glyph-Pack in `static/glyphs/`. Tile-Provider-URL via Env-Var (OpenFreeMap Phase 1, Protomaps + R2 als gehedgter Fallback).
 - **CI/CD:** GitHub Actions oder Forgejo-Actions mit Lint, Type-Check, axe-core-Audit, Lighthouse-Gate, Build, Deploy auf Hetzner-Coolify.
@@ -645,7 +645,7 @@ Diese Sektion vertieft die Phase-Boundary aus [Product Scope](#product-scope) um
 Bereits ausführlich in der **Domain-Sektion** dokumentiert. Hier nur die scope-relevanten Strang-Mitigationen:
 
 - **Technische Risiken:**
-  - WebMCP-Spec-Volatilität → Adapter-Schicht in `$lib/webmcp/`, Spec-Version im Manifest
+  - WebMCP-Spec-Volatilität → Adapter-Schicht in `#lib/webmcp//index.ts`, Spec-Version im Manifest
   - OpenFreeMap Bus-Faktor → Tile-Provider-Config-Variable, Protomaps-Fallback einmalig vorab getestet, Switch-Runbook dokumentiert
   - `query.live` experimental → in Phase 1 ausgeschlossen, in Phase 2 mit Polling-Fallback
   - Performance-Drift → CI-Gate für Lighthouse + Bundle-Size, PR-Build schlägt fehl bei Überschreitung
@@ -856,7 +856,7 @@ Diese NFRs definieren *wie gut* das System arbeiten muss — testbare Schwellen,
 - **NFR-I4:** Pro Layer wird Source-URL, Abruf-Datum, Lizenz und SHA-256 in `static/layers/MANIFEST.json` festgehalten.
 - **NFR-I5:** Lizenz-Hierarchie wird eingehalten und automatisch in `/lizenzen` und im Footer ausgespielt: `dl-de/zero-2-0`, `dl-de/by-2-0`, CC BY 3.0 DE / 4.0, ODbL 1.0, CC-BY-SA.
 - **NFR-I6:** Nominatim-Geocoding-Anfragen werden auf maximal 1 Request pro Sekunde rate-limitiert (OSM-Public-Instance-Compliance); lokaler LRU-Cache hält die häufigsten 1.000 Adress-Anfragen.
-- **NFR-I7:** WebMCP-Spec-Version wird in einer `webmcp-manifest.json` dokumentiert; bei Breaking-Change wird die Adapter-Schicht in `$lib/webmcp/` aktualisiert, Tools/Resources/Prompts bleiben semantisch stabil.
+- **NFR-I7:** WebMCP-Spec-Version wird in einer `webmcp-manifest.json` dokumentiert; bei Breaking-Change wird die Adapter-Schicht in `#lib/webmcp//index.ts` aktualisiert, Tools/Resources/Prompts bleiben semantisch stabil.
 - **NFR-I8 (P2):** Phase-2-Live-Endpunkte (BVG, BLUME, Bright Sky) werden mit Health-Check pro Request abgesichert; bei Endpunkt-Ausfall wird der entsprechende Layer im Inspektor-Panel ausgegraut, kein Hängen des Panels.
 
 ### Reliability

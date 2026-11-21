@@ -3,7 +3,7 @@
  * als Bild ein. So stehen die Pfade weder im HTML noch in den Seitendaten, und der Browser
  * cacht die Karte getrennt.
  */
-import type { RegionOutline } from '$lib/seo/region-outline-svg.js';
+import type { RegionOutline } from '#lib/seo/region-outline-svg.js';
 import { placeMapFill } from './map-classes';
 
 const INK = '#141414';

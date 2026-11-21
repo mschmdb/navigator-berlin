@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { ExternalLink, TriangleAlert } from '@lucide/svelte';
 	import { Phone } from '@lucide/svelte';
-	import RichText from '$lib/components/rich-text.svelte';
-	import { richSegments } from '$lib/i18n/rich-text.js';
-	import { KAELTEHILFE_WEGWEISER_URL } from '$lib/kaelte/hilfe-dienste.js';
-	import { m } from '$lib/paraglide/messages.js';
+	import RichText from '#lib/components/rich-text.svelte';
+	import { richSegments } from '#lib/i18n/rich-text.js';
+	import { KAELTEHILFE_WEGWEISER_URL } from '#lib/kaelte/hilfe-dienste.js';
+	import { m } from '#lib/paraglide/messages.js';
 
 	const OSM_COPYRIGHT_URL = 'https://www.openstreetmap.org/copyright';
 

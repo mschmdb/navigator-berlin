@@ -3,8 +3,8 @@
 // und Editorial-Layer ohne semantische Severity.
 
 import { mapGruenversorgungKategorie } from './gruenversorgung-kategorie.js';
-import { m } from '$lib/paraglide/messages.js';
-import { formatCount, formatDecimal } from '$lib/i18n/format.js';
+import { m } from '#lib/paraglide/messages.js';
+import { formatCount, formatDecimal } from '#lib/i18n/format.js';
 import { toAtlasMessageOptions, type LocaleOptions } from '../../internal/atlas-label-options.js';
 import { translateClosedCategory } from './value-formatters.js';
 

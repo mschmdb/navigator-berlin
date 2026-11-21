@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { Snowflake, ExternalLink } from '@lucide/svelte';
-	import type { ColdEvent, ColdLevel, ColdWarning } from '$lib/data/dwd-warnung.types.js';
-	import { m } from '$lib/paraglide/messages.js';
-	import { getLocale } from '$lib/paraglide/runtime';
+	import type { ColdEvent, ColdLevel, ColdWarning } from '#lib/data/dwd-warnung.types.js';
+	import { m } from '#lib/paraglide/messages.js';
+	import { getLocale } from '#lib/paraglide/runtime.js';
 
 	// Issue #60: Live-DWD-Kältewarnungen. Ganzes Banner in {#if} → kein Layout-Sprung bei
 	// Normallage. Stufe als Text (nicht nur Farbe), DWD-Quelle immer sichtbar (GeoNutzV).

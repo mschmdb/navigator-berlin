@@ -21,7 +21,7 @@ so that ich „Wie wählte Friedrichshain in der BTW 2025?" mit präzisen Daten 
 **AC-1 (4 Tools):**
 
 **Given** der WebMCP-Adapter
-**When** ich folgende Tools in `$lib/webmcp/tools/wahl/` ergänze:
+**When** ich folgende Tools in `#lib/webmcp/tools/wahl//index.ts` ergänze:
 - `get_election_result(address, election_slug, level)` → Top-5-Parteien + Wahlbeteiligung + Quelle für den gewählten Level (stimmbezirk/kiez/bezirk/berlin)
 - `compare_elections(address, election_slugs[], level)` → Sparkline-Daten für mehrere Wahlen auf demselben Level
 - `get_voting_district_geometry(district_id, year)` → GeoJSON für Wahlbezirk (nur 2017+)
@@ -55,7 +55,7 @@ so that ich „Wie wählte Friedrichshain in der BTW 2025?" mit präzisen Daten 
 
 ## Tasks/Subtasks
 
-- [ ] T1: 4 Tool-Files unter `$lib/webmcp/tools/wahl/`
+- [ ] T1: 4 Tool-Files unter `#lib/webmcp/tools/wahl//index.ts`
 - [ ] T2: Mount-Wiring in `mount.ts` (Memory `project_webmcp_mount_run` beachten)
 - [ ] T3: Tests pro Tool
 - [ ] T4: Manifest-Update via `pnpm webmcp:manifest`

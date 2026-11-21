@@ -5,9 +5,9 @@
 	Kapiteln fluchten). Mobil gestapelt statt gequetscht. Große Nullstapel lässt der Median aus.
 -->
 <script lang="ts">
-	import { m } from '$lib/paraglide/messages.js';
-	import { getLocale } from '$lib/paraglide/runtime';
-	import { mostCommon, zeroAwareMedian } from '$lib/place/stats';
+	import { m } from '#lib/paraglide/messages.js';
+	import { getLocale } from '#lib/paraglide/runtime.js';
+	import { mostCommon, zeroAwareMedian } from '#lib/place/stats.ts';
 	import {
 		METRIC_SPECS,
 		formatMetricValue,
@@ -19,8 +19,8 @@
 		type Hint as HintData,
 		type LabelId,
 		type MetricId
-	} from '$lib/place/topics';
-	import type { ReferenceProfile, RegionSnapshot } from '$lib/place/types';
+	} from '#lib/place/topics.ts';
+	import type { ReferenceProfile, RegionSnapshot } from '#lib/place/types.ts';
 	import Hint from './reading-hint.svelte';
 
 	interface Props {

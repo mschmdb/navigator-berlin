@@ -4,7 +4,7 @@ import type {
 	WahlResultsAtPoint,
 	WahlResultBundle,
 	LevelKey
-} from '$lib/data/get-wahl-results-at-point.js';
+} from '#lib/data/get-wahl-results-at-point.js';
 
 function makeBundle(
 	jahr: number,

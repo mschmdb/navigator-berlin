@@ -1,9 +1,9 @@
 <script lang="ts">
 	import EditorialDisclaimer from '../editorial-disclaimer.svelte';
 	import BriefwahlMarker from '../briefwahl-marker.svelte';
-	import { featureFlags } from '$lib/data/feature-flags.js';
-	import { parteiColor, parteiPattern } from '$lib/data/partei-farben.js';
-	import { buildWahlSlug } from '$lib/data/wahl-slug.js';
+	import { featureFlags } from '#lib/data/feature-flags.js';
+	import { parteiColor, parteiPattern } from '#lib/data/partei-farben.js';
+	import { buildWahlSlug } from '#lib/data/wahl-slug.js';
 	import {
 		wahlReiheLabel,
 		wahlEbeneLabel,
@@ -12,23 +12,23 @@
 		wahlVorlaeufigLabel,
 		sourceDisplayLabel,
 		type WahlTyp as Wahltyp
-	} from '$lib/data/wahl-labels.js';
+	} from '#lib/data/wahl-labels.js';
 	import {
 		formatPercent,
 		formatCount,
 		formatWahlDate,
 		formatPercentagePointsDelta
-	} from '$lib/i18n/format.js';
-	import { localizedHref } from '$lib/i18n/localized-href.js';
-	import { m } from '$lib/paraglide/messages.js';
-	import { getLocale, type Locale } from '$lib/paraglide/runtime';
+	} from '#lib/i18n/format.js';
+	import { localizedHref } from '#lib/i18n/localized-href.js';
+	import { m } from '#lib/paraglide/messages.js';
+	import { getLocale, type Locale } from '#lib/paraglide/runtime.js';
 	import type {
 		WahlResultsAtPoint,
 		WahlResultBundle,
 		LevelKey,
 		Top5Entry,
 		SparklineSeries
-	} from '$lib/data/get-wahl-results-at-point.js';
+	} from '#lib/data/get-wahl-results-at-point.js';
 
 	type Props = {
 		results: WahlResultsAtPoint | null;

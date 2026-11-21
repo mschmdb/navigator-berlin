@@ -1,6 +1,6 @@
 <script lang="ts">
-	import type { WahlPortalListStatus } from '$lib/state/wahl-portal-context.svelte.js';
-	import { m } from '$lib/paraglide/messages.js';
+	import type { WahlPortalListStatus } from '#lib/state/wahl-portal-context.svelte.js';
+	import { m } from '#lib/paraglide/messages.js';
 
 	type Props = {
 		minJahr: number | null;

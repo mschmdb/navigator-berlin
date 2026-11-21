@@ -6,9 +6,9 @@
 	// Platzhalter in der ungefähren Endhöhe eines Inspector-Blocks: Zeilen mit
 	// Linien wie im Inspector-Muster, damit beim ersten Laden nichts nachspringt.
 	// Das Pulsieren läuft nur ohne reduced-motion (motion-safe in Skeleton).
-	import Skeleton from '$lib/components/ui/skeleton.svelte';
-	import { m } from '$lib/paraglide/messages.js';
-	import { getLocale, type Locale } from '$lib/paraglide/runtime';
+	import Skeleton from '#lib/components/ui/skeleton.svelte';
+	import { m } from '#lib/paraglide/messages.js';
+	import { getLocale, type Locale } from '#lib/paraglide/runtime.js';
 
 	type Props = { shape: InspectorSkeletonShape; lang?: Locale };
 	let { shape, lang }: Props = $props();

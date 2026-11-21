@@ -510,7 +510,7 @@ Nach Recherche der Svelte-5-Ökosystem-Reife Mai 2026: existierende Packages dec
 | **MapLibre RTL** | `maplibre-gl-rtl-text` (offizielles Plugin) | Conditional Load bei `locale === 'ar'`. Pflicht für korrekte Arabic-Label-Shaping. |
 | **i18n** | `paraglide-js` v2 (inlang) | SvelteKit-empfohlen, compile-time tree-shaken (kritisch für 200-KB-Budget × 8 Sprachen), Built-in Pluralregeln für Arabisch, `%paraglide.textDirection%` für RTL-Attribut. v2 ist framework-agnostisches Vite-Plugin. + native `Intl.*` APIs für Daten/Zahlen/Listen (Zero-Bytes). |
 | **OG-Images** | `@ethercorps/sveltekit-og` v4 (oder direkt `satori` + `resvg-js`) | März-2026-Release, Svelte-5-only. Wrapt Satori + resvg, kein Headless-Browser. Für 1.600 prerendered Images <1 Min auf commodity CI. Direkt-API als Alternative falls Wrapper-Overhead ungenießbar. |
-| **WebMCP** | `@mcp-b/global` (Polyfill) + `@mcp-b/webmcp-ts-sdk` | Conditional Polyfill-Load (`'modelContext' in navigator`-Check, Chrome 146+ hat es native). Eigene ~50-LOC `useWebMCPTool()`-Helper in `$lib/webmcp/` für `$effect`-Cleanup-Pattern. |
+| **WebMCP** | `@mcp-b/global` (Polyfill) + `@mcp-b/webmcp-ts-sdk` | Conditional Polyfill-Load (`'modelContext' in navigator`-Check, Chrome 146+ hat es native). Eigene ~50-LOC `useWebMCPTool()`-Helper in `#lib/webmcp/` für `$effect`-Cleanup-Pattern. |
 | **JSON-LD / Schema.org** | `schema-dts` (Google) + eigener 30-LOC `<JsonLd>`-Wrapper | Typesafe `Place` / `AdministrativeArea` / `Dataset` / `FAQPage` / `WebSite` / `BreadcrumbList`. Zero-Runtime-Kosten (nur Types). |
 | **Sitemap** | `super-sitemap` (jasongitmail) | Mature, SvelteKit-spezifisch, prerender-aware, parametrisierte Routen, `priority`/`changefreq`. Best fit für Navigators Mix prerendered + dynamisch. |
 | **llms.txt** | Eigener ~40-LOC `+server.ts`-Endpoint | Kein dedizierter SvelteKit-Package mid-2026. Trivial: Markdown-Index der prerendered Routes aus dem gleichen Manifest wie super-sitemap. |
@@ -663,7 +663,7 @@ src/lib/
 ```svelte
 <script lang="ts">
   import { onMount } from 'svelte';
-  import { initWebMCP } from '$lib/webmcp/client';
+  import { initWebMCP } from '#lib/webmcp/client';
 
   onMount(async () => {
     if (!('modelContext' in navigator)) {
@@ -1239,7 +1239,7 @@ Warum diese Direction über die Alternativen:
 6. **`AccessibleChart`** + **`ClimateSparkline`** / **`ClimateLongView`** — Klima-Hook als emotionale Schicht.
 7. **Prerendered Bezirks-/Kiez-/Layer-Pages** mit FAQ-Sektion + JSON-LD + OG-Bild.
 8. **i18n-Routing** + **`LanguageSwitcher`** + paraglide-v2-Integration + Plex Sans Arabic Conditional Load.
-9. **`WebMcpProvider`** im Root-Layout + Tools/Resources/Prompts in `$lib/webmcp/`.
+9. **`WebMcpProvider`** im Root-Layout + Tools/Resources/Prompts in `#lib/webmcp//index.ts`.
 10. **`llms.txt` / `llms-full.txt`** + JSON-LD-Konfiguration für AEO/GEO-Stack.
 
 Reihenfolge nicht zwingend, aber Komponenten-Bottom-up reduziert späteres Refactoring.
@@ -1469,7 +1469,7 @@ flowchart TD
 
 **Optimierungen:**
 
-- *WebMCP-Spec-Stabilität*: alle Tool-Calls hinter Adapter-Schicht in `$lib/webmcp/`. Spec-Änderungen werden zentral migriert.
+- *WebMCP-Spec-Stabilität*: alle Tool-Calls hinter Adapter-Schicht in `#lib/webmcp//index.ts`. Spec-Änderungen werden zentral migriert.
 - *Resource-URIs* sind stabil und discoverable: `navigator://address/{slug}`, `navigator://layers/active`.
 - *Quellen-Attribution* in jeder JSON-Response: Schema, Lizenz, Stand, Source-URL pro Datenwert.
 - *Error-Messages mit Schema-Hinweis*: wenn Agent ein Tool fehlerhaft aufruft, bekommt er strukturierte Fehler-Antwort mit JSON-Schema-Path.
@@ -1688,7 +1688,7 @@ Foundation aus bits-ui + Tailwind v4 + LayerChart v2 + svelte-maplibre-gl + para
 
 1. Token-Layer in `src/app.css` mit Cloud-Dancer + Plex
 2. Tailwind v4 Config mit Token-Mapping
-3. bits-ui Primitives-Wrapper in `$lib/ui/primitives/` mit Theming
+3. bits-ui Primitives-Wrapper in `#lib/ui/primitives/` mit Theming
 4. `SkipLink` + `MetaFooter` + `LanguageSwitcher` als Layout-Basis in `+layout.svelte`
 
 **Defining-Experience-Layer (Tag 2–3):**
@@ -1719,7 +1719,7 @@ Foundation aus bits-ui + Tailwind v4 + LayerChart v2 + svelte-maplibre-gl + para
 
 **Agent-Layer (Tag 7):**
 
-19. WebMCP-Setup in `$lib/webmcp/`
+19. WebMCP-Setup in `#lib/webmcp//index.ts`
 20. `useWebMCPTool`-Helper
 21. Tool-Registrierungen für 5 Tools
 

@@ -1,5 +1,5 @@
 <script lang="ts" module>
-	import type { Pattern } from '$lib/data/partei-farben.js';
+	import type { Pattern } from '#lib/data/partei-farben.js';
 
 	/** CSS-Approximation der MapLibre-Fill-Patterns für die Legenden-Vorschau. */
 	export function patternPreviewStyle(pattern: Pattern, hex: string): string {
@@ -28,8 +28,8 @@
 </script>
 
 <script lang="ts">
-	import { parteiColor, parteiPattern } from '$lib/data/partei-farben.js';
-	import { m } from '$lib/paraglide/messages.js';
+	import { parteiColor, parteiPattern } from '#lib/data/partei-farben.js';
+	import { m } from '#lib/paraglide/messages.js';
 	import {
 		ANTEIL_OPACITY_RAMP,
 		formatAnteilPct,

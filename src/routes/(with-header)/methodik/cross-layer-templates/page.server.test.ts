@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it } from 'vitest';
-import { overwriteGetLocale } from '$lib/paraglide/runtime.js';
+import { overwriteGetLocale } from '#lib/paraglide/runtime.js';
 import { load, type PreviewEntry } from './+page.server';
 
 interface LoadData {

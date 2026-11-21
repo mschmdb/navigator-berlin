@@ -1,8 +1,8 @@
 import { describe, expect, it, vi } from 'vitest';
-import type { ColdWarning } from '$lib/data/dwd-warnung.types.js';
+import type { ColdWarning } from '#lib/data/dwd-warnung.types.js';
 
 const fetchMock = vi.fn<() => Promise<ColdWarning[]>>();
-vi.mock('$lib/server/dwd-kaelte-warnings.js', () => ({
+vi.mock('#lib/server/dwd-kaelte-warnings.js', () => ({
 	fetchBerlinColdWarnings: () => fetchMock()
 }));
 

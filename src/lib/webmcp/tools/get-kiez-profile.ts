@@ -1,6 +1,6 @@
 /**
  * Tool `get_kiez_profile`: gibt das öffentliche Kiez-Profil (LOR-Bezirksregion)
- * für einen Slug zurück. Delegiert an `getKiezProfile` aus `$lib/data`.
+ * für einen Slug zurück. Delegiert an `getKiezProfile` aus `#lib/data/index.ts`.
  *
  * Geometrie wird absichtlich NICHT exportiert (zu schwergewichtig für LLM).
  * Stattdessen wird `centroid` + `data_sources` mit Provenance geliefert.
@@ -19,7 +19,7 @@ import {
 } from '../internal/schemas.js';
 import type { WebMcpToolDefinition } from '../internal/tool-types.js';
 import type { JsonObject } from '../internal/json-types.js';
-import type { KiezProfile, Locale } from '$lib/data';
+import type { KiezProfile, Locale } from '#lib/data/index.ts';
 
 export interface GetKiezProfileDeps {
 	readonly getKiezProfile: (locale: Locale, slug: string) => Promise<KiezProfile>;

@@ -1,4 +1,4 @@
-import type { LayerHit } from '$lib/data';
+import type { LayerHit } from '#lib/data/index.ts';
 
 /**
  * Story 1.23: Pro Layer der konzeptuell nur in bestimmten Lagen anwendbar ist,

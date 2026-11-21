@@ -4,7 +4,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import PixelLogo from './pixel-logo.svelte';
 import css from './pixel-logo.css?raw';
-import { buildGeometry, initialFills, PALETTE, PRESET } from '$lib/data/pixel-logo-geometry';
+import { buildGeometry, initialFills, PALETTE, PRESET } from '#lib/data/pixel-logo-geometry.ts';
 
 async function svgOf(): Promise<SVGSVGElement> {
 	return (await page.getByTestId('pixel-logo').element()) as unknown as SVGSVGElement;

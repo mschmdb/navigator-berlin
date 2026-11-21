@@ -24,7 +24,7 @@ context:
 **Always:**
 - Übersetzung: `docs/process/implementation-artifacts/c4a-uebersetzung.json` (DE wörtlich, EN abgenommen), Entscheidungen in `c4a-uebersetzung-review.md`.
 - DE-Ausgabe Zeichen für Zeichen gleich. Parity-Test: jede DE-Message gleich der DE-Spalte der Übersetzung.
-- Zahlen und Daten aus dem Manifest (`layerCount`, `generatedAt`) als Message-Parameter, Formatierung über `$lib/i18n/format.ts`.
+- Zahlen und Daten aus dem Manifest (`layerCount`, `generatedAt`) als Message-Parameter, Formatierung über `#lib/i18n/format.ts`.
 - Cross-Layer-Template: optionales Feld `body_en` im selben YAML, der Renderer wählt nach Locale. Ein Test erzwingt `body_en` für jedes Template. Fixture-Labels der Vorschauseite je Locale.
 - JSON-LD der drei Seiten folgt der Seiten-Locale (wie `/` und `/berlin-wahlen` nach Registrierung).
 - Register: `/methodik`, `/methodik/kiez-score`, `/methodik/cross-layer-templates` exakt, ohne `prefix` (`/methodik/wahldaten` folgt in C4b). Vorher Grep-Audit: kein DE-Rest in den gerenderten Komponenten, `lang="de"` nur, wo Inhalt deutsch bleibt.

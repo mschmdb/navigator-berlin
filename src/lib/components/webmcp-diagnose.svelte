@@ -7,8 +7,8 @@
 -->
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { m } from '$lib/paraglide/messages.js';
-	import type { WebMcpServerHandle } from '$lib/webmcp/adapter.js';
+	import { m } from '#lib/paraglide/messages.js';
+	import type { WebMcpServerHandle } from '#lib/webmcp/adapter.js';
 
 	let handle = $state<WebMcpServerHandle | null>(null);
 	let fehler = $state<string | null>(null);
@@ -17,7 +17,7 @@
 
 	onMount(async () => {
 		try {
-			const { mountWebMcpServer } = await import('$lib/webmcp/mount.js');
+			const { mountWebMcpServer } = await import('#lib/webmcp/mount.js');
 			handle = await mountWebMcpServer();
 		} catch (e) {
 			if (e instanceof Error) {

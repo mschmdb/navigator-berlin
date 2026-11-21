@@ -1,11 +1,11 @@
 <script lang="ts">
-	import { m } from '$lib/paraglide/messages.js';
-	import AlleBezirke from '$lib/components/stories/quadrate/alle-bezirke.svelte';
-	import PlakatDownload from '$lib/components/stories/quadrate/plakat-download.svelte';
-	import { toHandbuchDaten } from '$lib/stories/wahl-quadrate/handbuch-daten';
-	import type { StoriesWahlData } from '$lib/stories/wahl-quadrate/types';
-	import { DEFAULT_URL_STATE, type ZeitState } from '$lib/stories/wahl-quadrate/url-state';
-	import { STORY_FONT } from '$lib/stories/tokens';
+	import { m } from '#lib/paraglide/messages.js';
+	import AlleBezirke from '#lib/components/stories/quadrate/alle-bezirke.svelte';
+	import PlakatDownload from '#lib/components/stories/quadrate/plakat-download.svelte';
+	import { toHandbuchDaten } from '#lib/stories/wahl-quadrate/handbuch-daten.ts';
+	import type { StoriesWahlData } from '#lib/stories/wahl-quadrate/types.ts';
+	import { DEFAULT_URL_STATE, type ZeitState } from '#lib/stories/wahl-quadrate/url-state.ts';
+	import { STORY_FONT } from '#lib/stories/tokens.ts';
 	import KapitelNichtwaehler from './kapitel-nichtwaehler.svelte';
 	import KapitelReihenfolge from './kapitel-reihenfolge.svelte';
 	import KapitelSchwelle from './kapitel-schwelle.svelte';

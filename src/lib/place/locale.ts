@@ -1,4 +1,4 @@
-import type { Locale } from '$lib/paraglide/runtime';
+import type { Locale } from '#lib/paraglide/runtime.js';
 
 /** Ohne Angabe gilt DE, wie bei den geteilten Atlas-Resolvern. Seiten übergeben `getLocale()`. */
 export interface LocaleOpts {

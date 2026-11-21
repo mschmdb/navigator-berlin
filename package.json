@@ -168,5 +168,9 @@
 			"devalue@>=5.6.3 <5.8.1": ">=5.8.1",
 			"cookie@<0.7.0": ">=0.7.0"
 		}
+	},
+	"imports": {
+		"#lib": "./src/lib/index.js",
+		"#lib/*": "./src/lib/*"
 	}
 }

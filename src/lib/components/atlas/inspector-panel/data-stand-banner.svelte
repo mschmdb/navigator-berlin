@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { LayerHit } from '$lib/data';
+	import type { LayerHit } from '#lib/data/index.ts';
 	import { Info } from '@lucide/svelte';
 	import {
 		shortenSourceCompact,
@@ -7,8 +7,8 @@
 		isOutdated,
 		formatYearMonth
 	} from './internal/source-shortener.js';
-	import { m } from '$lib/paraglide/messages.js';
-	import { getLocale, type Locale } from '$lib/paraglide/runtime';
+	import { m } from '#lib/paraglide/messages.js';
+	import { getLocale, type Locale } from '#lib/paraglide/runtime.js';
 
 	type Props = { hit: LayerHit; lang?: Locale };
 	let { hit, lang }: Props = $props();

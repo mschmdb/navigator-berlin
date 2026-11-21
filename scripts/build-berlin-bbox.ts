@@ -26,7 +26,7 @@ const bbox = computeGeoJsonBbox(fc);
 if (!bbox) throw new Error('bezirke-Layer ohne Koordinaten');
 
 const out = `// Generiert von scripts/build-berlin-bbox.ts, nicht von Hand ändern.
-import type { BboxTuple } from '$lib/seo/dataset-helpers.js';
+import type { BboxTuple } from '#lib/seo/dataset-helpers.js';
 
 /** Bounding Box der Bezirksgrenzen: [minLng, minLat, maxLng, maxLat]. */
 export const BEZIRKE_BBOX: BboxTuple = [${bbox.join(', ')}];

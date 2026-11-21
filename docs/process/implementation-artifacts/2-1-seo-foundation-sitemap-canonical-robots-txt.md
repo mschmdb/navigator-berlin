@@ -60,7 +60,7 @@ so that ich alle prerendered Pages effizient indexieren kann ohne Duplicate-Cont
    - `<link rel="alternate" hreflang="de" href="${origin}${dePath}">`
    - `<link rel="alternate" hreflang="en" href="${origin}${enPath}">` (ab Story 3.2 EN-Coverage; bis dahin Self-Referenz akzeptabel mit Dev-Note)
    - `<link rel="alternate" hreflang="x-default" href="${origin}${dePath}">` (DE als Default)
-   - Path-Berechnung via `localizeHref()` aus `$lib/paraglide/runtime`
+   - Path-Berechnung via `localizeHref()` aus `#lib/paraglide/runtime.js`
    - Cluster ist auf allen 4+1 Routen (Root, Methodik, Lizenzen, Layer-Detail, plus später Bezirk/Kiez/Ranking) identisch implementiert (DRY via Komponente, siehe AC-7)
 
 4. **AC-4 (sitemap.xml als Index + Per-Sprache-Sitemaps):**
@@ -71,7 +71,7 @@ so that ich alle prerendered Pages effizient indexieren kann ohne Duplicate-Cont
    - `/sitemap-de.xml` enthält alle DE-prerendered URLs (initial: `/`, `/methodik`, `/lizenzen`, `/layer/[slug]`-Liste aus Manifest)
    - `/sitemap-en.xml` enthält alle EN-prerendered URLs (`/en`, `/en/methodik`, `/en/lizenzen`, `/en/layer/[slug]`-Liste); falls EN-Variante einer Page noch nicht existiert (Story 3.2 + 4.5/4.6 sind future), Sitemap überspringt diese URL und dokumentiert das in Build-Output
    - Beide Per-Sprache-Sitemaps werden Build-Time (`prerender = true` im Endpoint) generiert; keine Runtime-Generation
-   - URL-Quellen werden zentral aus `$lib/seo/sitemap-builder.ts` gelesen, das aus `MANIFEST.json` (für Layer-Slugs) und später aus `bezirk_stats`/`kiez_stats` (Story 2.0) Slugs holt. Der Builder hat eine offene Schnittstelle damit Stories 2.3/2.4/2.9b ihre Routes ohne Sitemap-Edit registrieren können
+   - URL-Quellen werden zentral aus `#lib/seo/sitemap-builder.ts` gelesen, das aus `MANIFEST.json` (für Layer-Slugs) und später aus `bezirk_stats`/`kiez_stats` (Story 2.0) Slugs holt. Der Builder hat eine offene Schnittstelle damit Stories 2.3/2.4/2.9b ihre Routes ohne Sitemap-Edit registrieren können
    - `<lastmod>` pro URL: für Layer-Detail aus `MANIFEST.layers[].fetchedAt` oder `sourceUpdatedAt`; für Methodik/Lizenzen aus `git log -1 --format=%cI <file>` zur Build-Time (akzeptable Granularität); für Root statisch aus dem Build-Timestamp
    - Schema-Validierung: Sitemap entspricht Sitemap-Protokoll 0.9 (XML-namespace `http://www.sitemaps.org/schemas/sitemap/0.9`)
    - Test: Snapshot-Test pro Sitemap, plus XML-Schema-Validierung gegen Sitemap-Schema (oder mindestens valides XML-Parsing)
@@ -279,7 +279,7 @@ SvelteKit-Default: kein Trailing-Slash. `kit.trailingSlash` ist nicht in `svelte
 - Builder-Module in `src/lib/seo/` (Verzeichnis existiert noch nicht — anlegen).
 - Endpoints in `src/routes/sitemap.xml/+server.ts`, `src/routes/sitemap-[lang]/+server.ts`, `src/routes/robots.txt/+server.ts` (Top-Level, NICHT in `(with-header)`-Group, damit kein Layout-Wrap).
 - Bestehende Pages werden migriert; Head-Code-Duplikate entfernt.
-- KEIN neuer Pfad in `$lib/server/` (alle SEO-Builder sind Pure-Functions ohne DB-Zugriff). Postgres-Read für Bezirks-/Kiez-Slugs ist OUT-OF-SCOPE bis Story 2.3/2.4 die Routes existieren.
+- KEIN neuer Pfad in `#lib/server/` (alle SEO-Builder sind Pure-Functions ohne DB-Zugriff). Postgres-Read für Bezirks-/Kiez-Slugs ist OUT-OF-SCOPE bis Story 2.3/2.4 die Routes existieren.
 
 ### References
 

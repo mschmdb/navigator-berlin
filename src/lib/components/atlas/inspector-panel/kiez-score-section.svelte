@@ -1,15 +1,15 @@
 <script lang="ts">
 	import { Eye, EyeOff, ExternalLink } from '@lucide/svelte';
-	import { localizedHref } from '$lib/i18n/localized-href.js';
-	import { m } from '$lib/paraglide/messages.js';
-	import { getLocale, type Locale } from '$lib/paraglide/runtime';
+	import { localizedHref } from '#lib/i18n/localized-href.js';
+	import { m } from '#lib/paraglide/messages.js';
+	import { getLocale, type Locale } from '#lib/paraglide/runtime.js';
 	import EditorialDisclaimer from '../editorial-disclaimer.svelte';
 	import KiezScoreDimensionRow from './kiez-score-dimension-row.svelte';
 	import { dimensionLabel } from './internal/kiez-score-display.js';
 	import KiezScoreRing from '../charts/kiez-score-ring.svelte';
-	import { featureFlags } from '$lib/data/feature-flags.js';
-	import { COMPOSITE_DIMENSIONS } from '$lib/data';
-	import type { KiezScore, KiezScoreDimension } from '$lib/data';
+	import { featureFlags } from '#lib/data/feature-flags.js';
+	import { COMPOSITE_DIMENSIONS } from '#lib/data/index.ts';
+	import type { KiezScore, KiezScoreDimension } from '#lib/data/index.ts';
 
 	const GESAMT_SLUG = 'kiez-score-gesamt';
 

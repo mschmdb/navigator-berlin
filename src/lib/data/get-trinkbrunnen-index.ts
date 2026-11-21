@@ -1,7 +1,7 @@
 import type { Feature, FeatureCollection, Point } from 'geojson';
 import distance from '@turf/distance';
 import { point } from '@turf/helpers';
-import { buildNaviLinks } from '$lib/utils/navi-links.js';
+import { buildNaviLinks } from '#lib/utils/navi-links.js';
 
 /**
  * Client-Index der Trinkbrunnen für die Hitze-Inspector-Card (nächster Brunnen + Navi).

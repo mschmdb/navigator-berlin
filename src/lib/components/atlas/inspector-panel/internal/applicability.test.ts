@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import type { LayerHit } from '$lib/data';
+import type { LayerHit } from '#lib/data/index.ts';
 import { applyApplicabilityReasons, isLayerApplicable } from './applicability.js';
 
 const sourceUrl = 'https://example.com/wfs';

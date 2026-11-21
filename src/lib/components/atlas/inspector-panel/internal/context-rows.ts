@@ -1,16 +1,16 @@
 /**
  * GH-88: Umfeld-Zeilen (Kiez, Bezirk, Berlin) für die Inspector-Datensätze, aus
- * `inspector-panel.svelte` herausgelöst. Zahlen laufen über `$lib/i18n/format.ts`,
+ * `inspector-panel.svelte` herausgelöst. Zahlen laufen über `#lib/i18n/format.ts`,
  * damit Prozent und Dezibel überall gleich aussehen („66,7 %", „42,7 dB").
  */
-import { m } from '$lib/paraglide/messages.js';
-import { formatPercentValue, formatWithUnit } from '$lib/i18n/format.js';
+import { m } from '#lib/paraglide/messages.js';
+import { formatPercentValue, formatWithUnit } from '#lib/i18n/format.js';
 import type {
 	LayerAggregate,
 	LayerAggregatesFile,
 	NumericMedianAggregate
-} from '$lib/data/layer-aggregates-types.js';
-import type { Locale } from '$lib/paraglide/runtime';
+} from '#lib/data/layer-aggregates-types.js';
+import type { Locale } from '#lib/paraglide/runtime.js';
 import { getLayerDisplayName } from '../../internal/layer-palette-filter.js';
 import { formatWeightedMeanContext } from './weighted-mean-context.js';
 import {

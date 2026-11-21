@@ -3,7 +3,7 @@
  *
  * Klick führt auf `/explore?address=lng,lat&q=…`, damit die Karte mit
  * gewählter Adresse und geöffnetem Inspector startet (`parseAddress` in
- * `$lib/utils/url-state.ts`). Koordinaten sind eingefroren. `label` ist ein
+ * `#lib/utils/url-state.ts`). Koordinaten sind eingefroren. `label` ist ein
  * Eigenname und bleibt in allen Sprachen gleich. `query` ist der deutsche
  * Geocoding-Suchstring.
  */
@@ -42,7 +42,7 @@ export const HOME_SEARCH_EXAMPLES: readonly HomeQuickLink[] = [
 	}
 ];
 
-/** Baut den Deeplink-URL-Pfad analog `$lib/utils/url-state.ts`. */
+/** Baut den Deeplink-URL-Pfad analog `#lib/utils/url-state.ts`. */
 export function buildQuickLinkHref(link: Pick<HomeQuickLink, 'query' | 'lng' | 'lat'>): string {
 	const params = new URLSearchParams();
 	params.set('address', `${link.lng},${link.lat}`);

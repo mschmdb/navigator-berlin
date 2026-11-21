@@ -4,12 +4,12 @@
 	Der Titel ist der einzige Link-Name, die Miniatur wiederholt ihn nicht.
 -->
 <script lang="ts">
-	import { formatUpdateDate } from '$lib/components/updates/category-label.js';
-	import { localizeStory } from '$lib/content/stories/localize-story.js';
-	import type { StoryEntry } from '$lib/content/stories/types.js';
-	import { localizedHref } from '$lib/i18n/localized-href.js';
-	import { getLocale } from '$lib/paraglide/runtime';
-	import type { BezirkItem } from '$lib/stories/punkt-linie-kiez/types.js';
+	import { formatUpdateDate } from '#lib/components/updates/category-label.js';
+	import { localizeStory } from '#lib/content/stories/localize-story.js';
+	import type { StoryEntry } from '#lib/content/stories/types.js';
+	import { localizedHref } from '#lib/i18n/localized-href.js';
+	import { getLocale } from '#lib/paraglide/runtime.js';
+	import type { BezirkItem } from '#lib/stories/punkt-linie-kiez/types.js';
 	import PunktLinieKiez from './punkt-linie-kiez.svelte';
 	import QuadrateVorschau from './quadrate/vorschau.svelte';
 

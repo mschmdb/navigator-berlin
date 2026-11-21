@@ -3,8 +3,8 @@ import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 import type { Feature, FeatureCollection, Polygon, MultiPolygon } from 'geojson';
 import type { RequestHandler } from './$types';
-import { wahlCacheHeaders } from '$lib/server/wahl/cache-control.js';
-import { geoSlugForYear, candidateDbUwbIds, UWB_FORMAT_HINT } from '$lib/data/wahl-geo-mapping.js';
+import { wahlCacheHeaders } from '#lib/server/wahl/cache-control.js';
+import { geoSlugForYear, candidateDbUwbIds, UWB_FORMAT_HINT } from '#lib/data/wahl-geo-mapping.js';
 
 const STATIC_LAYERS_DIR = join(process.cwd(), 'static', 'layers');
 const MANIFEST_PATH = join(STATIC_LAYERS_DIR, 'MANIFEST.json');

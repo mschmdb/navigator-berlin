@@ -1,5 +1,5 @@
-import type { KiezScoreDimension } from '$lib/data';
-import { m } from '$lib/paraglide/messages.js';
+import type { KiezScoreDimension } from '#lib/data/index.ts';
+import { m } from '#lib/paraglide/messages.js';
 import { toAtlasMessageOptions, type LocaleOptions } from '../../internal/atlas-label-options.js';
 import { dimensionLabel } from './kiez-score-display.js';
 

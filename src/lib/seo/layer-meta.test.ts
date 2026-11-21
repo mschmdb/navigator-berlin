@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { buildLayerMeta, layerBenefit, themeLabel, type LayerMetaInput } from './layer-meta.js';
-import type { Bundle } from '$lib/data/types.js';
+import type { Bundle } from '#lib/data/types.js';
 
 const kino: LayerMetaInput = {
 	layerName: 'Kino',

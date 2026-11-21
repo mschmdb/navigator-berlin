@@ -83,7 +83,7 @@ so that erinnerungspolitisch sensible Inhalte mit Würde behandelt werden und ic
    **When** Inspector-Panel rendert
    **Then** Bei `inSeason` (Mai–Oktober): Status „aktiv (Mai–Oktober)" mit `--state-success`-Pille
    **And** Bei `outOfSeason` (November–April): Status „außerhalb der Saison" mit `--state-warning`-Pille + Disclaimer-Variant `seasonal`
-   **And** Saison-Check zentral via `$lib/utils/seasonality.ts.isInSeason(seasonality, now)` (Story 1.4-Helper falls vorhanden, sonst neu)
+   **And** Saison-Check zentral via `#lib/utils/seasonality.ts.isInSeason(seasonality, now)` (Story 1.4-Helper falls vorhanden, sonst neu)
    **And** Erfüllt FR21.
 
 7. **AC-7 (Mauer/Sektoren-Layer — Vorbereitung):**
@@ -467,8 +467,8 @@ claude-opus-4-7[1m] (Claude Code dev-story session, 2026-05-13)
 1. **Editorial-Konfig zentralisiert:** `internal/editorial-config.ts` als Single-Source-of-Truth. LayerHitRow konsultiert Konfig
 2. **NIE LLM-generierte Personen-Hintergründe:** FR51 verbindlich. Stolperstein-Detail nutzt OSM-Properties oder Quellen-Link, kein generierter Text
 3. **Mailto-Pattern:** Pre-filled Subject + Body mit Layer-Identifier, Adresse, Lat/Lng, Datenstand, Quelle. URL-encoded
-4. **Saisonalität-Helper:** `$lib/utils/seasonality.ts` zentral, MM-DD-Range-Check
+4. **Saisonalität-Helper:** `#lib/utils/seasonality.ts` zentral, MM-DD-Range-Check
 5. **Mauer/Sektoren-Layer:** Foundation in 1.12, Layer-Daten in Phase 2. Stub-Komponente vorhanden
 6. **Never-Machine-Translate-Flag:** Editorial-Konfig signalisiert sensible Inhalte. Translation-Pipeline (Story 3.3) konsumiert
-7. **FEEDBACK_EMAIL-Konstante:** in `$lib/utils/contact.ts` zentralisiert. MetaFooter umgestellt
+7. **FEEDBACK_EMAIL-Konstante:** in `#lib/utils/contact.ts` zentralisiert. MetaFooter umgestellt
 8. **Manuelle Editorial-Review pre-Launch:** Checkliste in `docs/editorial-review.md`, Pflicht-Schritt

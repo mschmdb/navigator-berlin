@@ -1,19 +1,19 @@
 <script lang="ts">
-	import { prefersReducedMotion, scrollBehavior } from '$lib/utils/reduced-motion.js';
-	import type { LayerMetadata } from '$lib/data';
-	import { getUiState, toggleLayer } from '$lib/state/ui-context.svelte.js';
+	import { prefersReducedMotion, scrollBehavior } from '#lib/utils/reduced-motion.js';
+	import type { LayerMetadata } from '#lib/data/index.ts';
+	import { getUiState, toggleLayer } from '#lib/state/ui-context.svelte.js';
 	import {
 		createInspectorLevelState,
 		resolveSpatialContext,
 		applySpatialContext
-	} from '$lib/state/inspector-level-context.svelte.js';
-	import { loadLayerAggregates } from '$lib/data/get-layer-aggregates.js';
+	} from '#lib/state/inspector-level-context.svelte.js';
+	import { loadLayerAggregates } from '#lib/data/get-layer-aggregates.js';
 	import {
 		loadRegionComposites,
 		regionComposite,
 		type RegionComposites
-	} from '$lib/data/get-region-composites.js';
-	import type { LayerAggregatesFile } from '$lib/data/layer-aggregates-types.js';
+	} from '#lib/data/get-region-composites.js';
+	import type { LayerAggregatesFile } from '#lib/data/layer-aggregates-types.js';
 	import InspectorHeader from './inspector-panel/inspector-header.svelte';
 	import InspectorProfileLinks from './inspector-panel/inspector-profile-links.svelte';
 	import InspectorSections from './inspector-panel/inspector-sections.svelte';
@@ -26,8 +26,8 @@
 		type DemografieScope
 	} from './inspector-panel/internal/demografie-types.js';
 	import InspectorAsyncBlock from './inspector-panel/inspector-async-block.svelte';
-	import { featureFlags } from '$lib/data/feature-flags.js';
-	import { settledValues } from '$lib/state/inspector-loads.js';
+	import { featureFlags } from '#lib/data/feature-flags.js';
+	import { settledValues } from '#lib/state/inspector-loads.js';
 	import { groupHitsBySection } from './inspector-panel/internal/sections.js';
 	import { applyApplicabilityReasons } from './inspector-panel/internal/applicability.js';
 	import {
@@ -53,14 +53,14 @@
 	} from './inspector-panel/internal/nearest-oepnv-stop.js';
 	import { getMobilityRating } from './inspector-panel/internal/mobility-rating.js';
 	import { isResidentialLocation } from './inspector-panel/internal/residential-location.js';
-	import { buildLlmExportMarkdown } from '$lib/utils/llm-export-builder.js';
+	import { buildLlmExportMarkdown } from '#lib/utils/llm-export-builder.js';
 	import { formatLayerValue } from './inspector-panel/internal/value-formatters.js';
 	import { page } from '$app/state';
 	import { browser } from '$app/env';
-	import { resolveAppMode } from '$lib/app-mode';
-	import { formatDate } from '$lib/i18n/format.js';
-	import { m } from '$lib/paraglide/messages.js';
-	import { getLocale, type Locale } from '$lib/paraglide/runtime';
+	import { resolveAppMode } from '#lib/app-mode.ts';
+	import { formatDate } from '#lib/i18n/format.js';
+	import { m } from '#lib/paraglide/messages.js';
+	import { getLocale, type Locale } from '#lib/paraglide/runtime.js';
 
 	type Props = {
 		layerMeta?: readonly LayerMetadata[];

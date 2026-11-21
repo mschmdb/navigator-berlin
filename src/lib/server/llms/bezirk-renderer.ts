@@ -19,9 +19,9 @@
  * - Keine em-dashes (Memory), kein „lebenswert"
  */
 
-import type { BezirkStats } from '$lib/server/db/queries/get-bezirk-stats.js';
-import type { BezirkScore } from '$lib/server/db/queries/get-bezirk-score.js';
-import { lintForBannedWords } from '$lib/seo/banned-words.js';
+import type { BezirkStats } from '#lib/server/db/queries/get-bezirk-stats.js';
+import type { BezirkScore } from '#lib/server/db/queries/get-bezirk-score.js';
+import { lintForBannedWords } from '#lib/seo/banned-words.js';
 import {
 	formatKm2,
 	formatNumberDe,

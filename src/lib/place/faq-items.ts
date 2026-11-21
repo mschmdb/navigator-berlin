@@ -3,7 +3,7 @@
  * (eine FAQ-Quelle für Seite und `faq_qna`). Nur Antworten ohne Befund der Faktenprüfung
  * gehen auf die Seite; jede verweist auf das Kapitel mit denselben Werten.
  */
-import type { ClusterKey } from '$lib/server/faq/template-schema.js';
+import type { ClusterKey } from '#lib/server/faq/template-schema.js';
 import type { ChapterId } from './topics';
 
 export const CLUSTER_CHAPTER: Readonly<Record<ClusterKey, ChapterId>> = {

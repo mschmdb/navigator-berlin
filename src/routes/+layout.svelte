@@ -1,19 +1,19 @@
 <script lang="ts">
 	import '../app.css';
 	import { page } from '$app/state';
-	import { locales } from '$lib/paraglide/runtime';
+	import { locales } from '#lib/paraglide/runtime.js';
 	import { browser } from '$app/env';
-	import SkipLink from '$lib/components/atlas/skip-link.svelte';
-	import MetaFooter from '$lib/components/atlas/meta-footer.svelte';
-	import LangSwitcher from '$lib/components/atlas/lang-switcher.svelte';
-	import { basePathname } from '$lib/i18n/base-path.js';
-	import { localizedHref } from '$lib/i18n/localized-href.js';
-	import { createUiState } from '$lib/state/ui-context.svelte.js';
-	import { STORAGE_KEY, loadBookmarks, persistBookmarks } from '$lib/state/bookmark-store.js';
-	import { mountWebMcpServer, unmountWebMcpServer } from '$lib/webmcp';
+	import SkipLink from '#lib/components/atlas/skip-link.svelte';
+	import MetaFooter from '#lib/components/atlas/meta-footer.svelte';
+	import LangSwitcher from '#lib/components/atlas/lang-switcher.svelte';
+	import { basePathname } from '#lib/i18n/base-path.js';
+	import { localizedHref } from '#lib/i18n/localized-href.js';
+	import { createUiState } from '#lib/state/ui-context.svelte.js';
+	import { STORAGE_KEY, loadBookmarks, persistBookmarks } from '#lib/state/bookmark-store.js';
+	import { mountWebMcpServer, unmountWebMcpServer } from '#lib/webmcp/index.ts';
 	import { afterNavigate } from '$app/navigation';
-	import { trackPageview } from '$lib/utils/plausible.js';
-	import { pageviewPathFor } from '$lib/app-mode';
+	import { trackPageview } from '#lib/utils/plausible.js';
+	import { pageviewPathFor } from '#lib/app-mode.ts';
 
 	const ui = createUiState();
 

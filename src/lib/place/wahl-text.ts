@@ -3,9 +3,9 @@
  * seit der ersten Wahl der Reihe am stärksten verschoben hat. Die Fakten (`wahlFacts`) sind
  * sprachfrei, die Sätze (`wahlSentences`) kommen aus Vorlagen mit Artikel und Verbform.
  */
-import { m } from '$lib/paraglide/messages.js';
-import type { Locale } from '$lib/paraglide/runtime';
-import { formatPercent } from '$lib/i18n/format.js';
+import { m } from '#lib/paraglide/messages.js';
+import type { Locale } from '#lib/paraglide/runtime.js';
+import { formatPercent } from '#lib/i18n/format.js';
 import type { WahlArt, WahlPunkt } from './wahl-types';
 
 /** Kleinere Verschiebungen erzählen wir nicht, sie liegen im Rauschen der Rundung. */

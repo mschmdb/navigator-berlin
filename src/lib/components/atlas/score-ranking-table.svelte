@@ -2,14 +2,14 @@
 	import { goto } from '$app/navigation';
 	import { browser } from '$app/env';
 	import { page } from '$app/state';
-	import type { RankingRow } from '$lib/data/ranking-types.js';
-	import { rankForSort } from '$lib/data/ranking-rank.js';
-	import RichText from '$lib/components/rich-text.svelte';
-	import { localizedHref } from '$lib/i18n/localized-href.js';
-	import { chapterAnchorForSort } from '$lib/place/topics';
-	import { richSegments } from '$lib/i18n/rich-text.js';
-	import { m } from '$lib/paraglide/messages.js';
-	import { getLocale } from '$lib/paraglide/runtime.js';
+	import type { RankingRow } from '#lib/data/ranking-types.js';
+	import { rankForSort } from '#lib/data/ranking-rank.js';
+	import RichText from '#lib/components/rich-text.svelte';
+	import { localizedHref } from '#lib/i18n/localized-href.js';
+	import { chapterAnchorForSort } from '#lib/place/topics.ts';
+	import { richSegments } from '#lib/i18n/rich-text.js';
+	import { m } from '#lib/paraglide/messages.js';
+	import { getLocale } from '#lib/paraglide/runtime.js';
 	import {
 		collatorLocale,
 		columnLabel,

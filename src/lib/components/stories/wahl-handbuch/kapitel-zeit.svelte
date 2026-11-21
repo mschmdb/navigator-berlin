@@ -6,12 +6,12 @@
 -->
 <script lang="ts">
 	import { MediaQuery } from 'svelte/reactivity';
-	import { Auswahl, Knopf, Segmente } from '$lib/components/stories/quadrate';
-	import { m } from '$lib/paraglide/messages.js';
-	import type { HandbuchDaten } from '$lib/stories/wahl-quadrate/handbuch-daten';
-	import type { OrderMode } from '$lib/stories/wahl-quadrate/layout';
-	import type { WahlTyp } from '$lib/stories/wahl-quadrate/parteien';
-	import type { ZeitState } from '$lib/stories/wahl-quadrate/url-state';
+	import { Auswahl, Knopf, Segmente } from '#lib/components/stories/quadrate/index.ts';
+	import { m } from '#lib/paraglide/messages.js';
+	import type { HandbuchDaten } from '#lib/stories/wahl-quadrate/handbuch-daten.ts';
+	import type { OrderMode } from '#lib/stories/wahl-quadrate/layout.ts';
+	import type { WahlTyp } from '#lib/stories/wahl-quadrate/parteien.ts';
+	import type { ZeitState } from '#lib/stories/wahl-quadrate/url-state.ts';
 	import Karte from './karte.svelte';
 	import Reihe from './reihe.svelte';
 	import Reihenfolge from './reihenfolge.svelte';

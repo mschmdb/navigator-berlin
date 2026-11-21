@@ -1,5 +1,5 @@
 import * as v from 'valibot';
-import type { GeocodeSuggestion } from '$lib/data';
+import type { GeocodeSuggestion } from '#lib/data/index.ts';
 import { BookmarkStoreSchema, type Bookmark, type BookmarkStore } from './bookmark-schema.js';
 
 export const STORAGE_KEY = 'navigator-berlin.bookmarks.v1';

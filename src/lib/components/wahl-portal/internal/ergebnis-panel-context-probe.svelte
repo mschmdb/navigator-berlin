@@ -5,8 +5,8 @@
 		applyWahlList,
 		setJahr,
 		type WahlPortalListEntry
-	} from '$lib/state/wahl-portal-context.svelte.js';
-	import type { WahlPortalReihe, WahlPortalEbene } from '$lib/utils/wahl-portal-url-state.js';
+	} from '#lib/state/wahl-portal-context.svelte.js';
+	import type { WahlPortalReihe, WahlPortalEbene } from '#lib/utils/wahl-portal-url-state.js';
 
 	type Props = {
 		reihe?: WahlPortalReihe;

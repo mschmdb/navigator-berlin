@@ -3,7 +3,7 @@
  * Antworten aus `loadPlaceFaq` (dieselben Templates wie `faq_qna`), danach die Faktenprüfung.
  * Antworten mit Befund fallen weg und landen als Warnung im Build-Log.
  */
-import { getDb } from '$lib/server/db/index.js';
+import { getDb } from '#lib/server/db/index.js';
 import {
 	bezirkComparison,
 	bezirkRank,
@@ -11,11 +11,11 @@ import {
 	kiezComparison,
 	kiezRank,
 	kiezStats
-} from '$lib/server/db/schema/index.js';
-import { checkFaqAnswer } from '$lib/server/faq/faq-fact-check.js';
-import { buildMetricContexts, loadPlaceFaq } from '$lib/server/faq/place-faq.js';
-import type { MetricContext, TemplateAggregate } from '$lib/server/faq/template-renderer.js';
-import type { TemplateLocale } from '$lib/server/faq/template-schema.js';
+} from '#lib/server/db/schema/index.js';
+import { checkFaqAnswer } from '#lib/server/faq/faq-fact-check.js';
+import { buildMetricContexts, loadPlaceFaq } from '#lib/server/faq/place-faq.js';
+import type { MetricContext, TemplateAggregate } from '#lib/server/faq/template-renderer.js';
+import type { TemplateLocale } from '#lib/server/faq/template-schema.js';
 import { toPageFaq, type PageFaqItem } from './faq-items';
 
 type Level = 'kiez' | 'bezirk';

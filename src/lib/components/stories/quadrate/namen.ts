@@ -1,7 +1,7 @@
-import { m } from '$lib/paraglide/messages.js';
-import type { GreyKey, GreyNames } from '$lib/stories/wahl-quadrate/grau';
-import type { PartyKey } from '$lib/stories/wahl-quadrate/parteien';
-import type { Locale } from '$lib/paraglide/runtime';
+import { m } from '#lib/paraglide/messages.js';
+import type { GreyKey, GreyNames } from '#lib/stories/wahl-quadrate/grau.ts';
+import type { PartyKey } from '#lib/stories/wahl-quadrate/parteien.ts';
+import type { Locale } from '#lib/paraglide/runtime.js';
 
 type Message = (inputs?: Record<string, never>, options?: { locale?: Locale }) => string;
 

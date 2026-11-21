@@ -11,8 +11,8 @@ import * as v from 'valibot';
 import {
 	FINDER_PARTIES as PARTIES,
 	type FinderWeights
-} from '$lib/components/atlas/internal/kiez-finder-engine.js';
-import { encodeFinderUrlState } from '$lib/components/atlas/internal/finder-url-state.js';
+} from '#lib/components/atlas/internal/kiez-finder-engine.js';
+import { encodeFinderUrlState } from '#lib/components/atlas/internal/finder-url-state.js';
 
 /** Englischer Schema-Key → interner FinderWeights-Key. */
 export const FINDER_WEIGHT_KEY_MAP = {
@@ -40,7 +40,7 @@ const Unipolar = v.pipe(v.number(), v.integer(), v.minValue(0), v.maxValue(2));
 export {
 	FINDER_PARTIES,
 	type FinderParty
-} from '$lib/components/atlas/internal/kiez-finder-engine.js';
+} from '#lib/components/atlas/internal/kiez-finder-engine.js';
 
 export const SetFinderWeightsInputSchema = v.object({
 	quiet_air: v.optional(Bipolar),

@@ -1,4 +1,4 @@
-import type { StoriesWahlData } from '$lib/stories/wahl-quadrate/types';
+import type { StoriesWahlData } from '#lib/stories/wahl-quadrate/types.ts';
 import type { PageLoad } from './$types';
 
 /** Demo der Bausteine von „Berlin in Quadraten“ (#200) mit den echten Wahldaten. */

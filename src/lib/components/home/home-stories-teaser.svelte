@@ -4,10 +4,10 @@
 	mit statischer Miniatur. Ein Link pro Eintrag, der Titel.
 -->
 <script lang="ts">
-	import StoryEntryItem from '$lib/components/stories/story-entry.svelte';
-	import type { StoryTeaserData } from '$lib/content/stories/story-teaser.server.js';
-	import { localizedHref } from '$lib/i18n/localized-href.js';
-	import { m } from '$lib/paraglide/messages.js';
+	import StoryEntryItem from '#lib/components/stories/story-entry.svelte';
+	import type { StoryTeaserData } from '#lib/content/stories/story-teaser.server.js';
+	import { localizedHref } from '#lib/i18n/localized-href.js';
+	import { m } from '#lib/paraglide/messages.js';
 	import { ctaSecondary } from './internal/cta.js';
 
 	interface Props {

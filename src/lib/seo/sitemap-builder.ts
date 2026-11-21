@@ -1,6 +1,6 @@
-import type { Manifest } from '$lib/data/types.js';
-import { hasLayerDetailPage } from '$lib/data/layer-visibility.js';
-import { baseLocale, locales, type Locale } from '$lib/paraglide/runtime';
+import type { Manifest } from '#lib/data/types.js';
+import { hasLayerDetailPage } from '#lib/data/layer-visibility.js';
+import { baseLocale, locales, type Locale } from '#lib/paraglide/runtime.js';
 import { isRouteTranslated, translatedLocalesFor } from './translation-register.js';
 import { buildHreflangCluster } from './hreflang.js';
 import { localizedPathname } from './canonical.js';
@@ -217,7 +217,7 @@ export const LAYER_DETAIL_SOURCE: SitemapSource = (ctx) => {
  * register new sources here without editing the per-language endpoint.
  *
  * Story 2.13 (`UPDATES_PAGES_SOURCE`): `/updates`-Index + alle `/updates/{slug}` Detail-Routes
- * (`$lib/seo/sources/updates.ts`, Build-Time-MD-Glob).
+ * (`#lib/seo/sources/updates.ts`, Build-Time-MD-Glob).
  *
  * Story 2.3 (`BEZIRK_PAGES_SOURCE`): 12 `/bezirk/{slug}` Detail-Routes; konsumiert
  * Slug-Liste via `SitemapSourceContext.bezirkSlugs` (Endpoint-Route ist verantwortlich

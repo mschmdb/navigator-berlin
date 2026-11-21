@@ -2,8 +2,8 @@
 	import { onMount } from 'svelte';
 	import { X } from '@lucide/svelte';
 	import AddressSearch from './address-search.svelte';
-	import type { GeocodeSuggestion } from '$lib/data';
-	import { m } from '$lib/paraglide/messages.js';
+	import type { GeocodeSuggestion } from '#lib/data/index.ts';
+	import { m } from '#lib/paraglide/messages.js';
 
 	type Props = {
 		open: boolean;

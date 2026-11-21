@@ -10,7 +10,7 @@ import {
 	type SitemapSourceContext
 } from './sitemap-builder.js';
 import { isRouteTranslated } from './translation-register.js';
-import type { Manifest } from '$lib/data/types.js';
+import type { Manifest } from '#lib/data/types.js';
 
 const ORIGIN = 'https://navigator.berlin';
 

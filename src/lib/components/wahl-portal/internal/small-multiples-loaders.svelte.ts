@@ -6,7 +6,7 @@
  * ein evtl. bereits offener Partei-Tab an der Winner-Map (Design Notes:
  * „Small Multiples teilen sich diese Responses mit den Tabs").
  */
-import { FINDER_PARTIES } from '$lib/components/atlas/internal/kiez-finder-engine.js';
+import { FINDER_PARTIES } from '#lib/components/atlas/internal/kiez-finder-engine.js';
 import { KiezBezirkWinnersLoader, type LoadStatus } from './winner-map-winners.svelte.js';
 
 type FinderParty = (typeof FINDER_PARTIES)[number];

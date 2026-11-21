@@ -1,5 +1,5 @@
 import { resolve } from '$app/paths';
-import { localizeHref, type Locale } from '$lib/paraglide/runtime';
+import { localizeHref, type Locale } from '#lib/paraglide/runtime.js';
 
 /**
  * Locale-aware href, resolved through SvelteKit's `resolve()` so base-path

@@ -1,6 +1,6 @@
 import type { Reroute } from '@sveltejs/kit/hooks';
-import { deLocalizeUrl } from '$lib/paraglide/runtime';
-import { hitzeReroute, kaelteReroute, storiesReroute } from '$lib/app-mode';
+import { deLocalizeUrl } from '#lib/paraglide/runtime.js';
+import { hitzeReroute, kaelteReroute, storiesReroute } from '#lib/app-mode.ts';
 
 export const reroute: Reroute = (request) => {
 	// Hitze-Subdomain: Wurzel rendert die dedizierte /hitze-Route ohne URL-Wechsel (SEO).

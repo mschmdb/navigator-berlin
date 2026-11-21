@@ -8,7 +8,7 @@
  * `wahl-labels.ts` (Block B) bleibt bewusst unangetastet -- eigener Scope,
  * kein Teil dieser Aufräum-Runde.
  */
-import type { Locale } from '$lib/paraglide/runtime';
+import type { Locale } from '#lib/paraglide/runtime.js';
 
 export interface LocaleOptions {
 	readonly locale?: Locale;

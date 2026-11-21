@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import type { WahlListItem } from '$lib/server/db/queries/wahl/get-wahl-list.js';
-import type { BerlinResult } from '$lib/server/db/queries/wahl/get-results-for-berlin.js';
+import type { WahlListItem } from '#lib/server/db/queries/wahl/get-wahl-list.js';
+import type { BerlinResult } from '#lib/server/db/queries/wahl/get-results-for-berlin.js';
 import type { WahlDetailPageData } from './+page.server.js';
 
 const {
@@ -15,16 +15,16 @@ const {
 	getStimmbezirksWinnersMock: vi.fn()
 }));
 
-vi.mock('$lib/server/db/queries/wahl/get-wahl-list.js', () => ({
+vi.mock('#lib/server/db/queries/wahl/get-wahl-list.js', () => ({
 	getWahlList: getWahlListMock
 }));
-vi.mock('$lib/server/db/queries/wahl/get-results-for-berlin.js', () => ({
+vi.mock('#lib/server/db/queries/wahl/get-results-for-berlin.js', () => ({
 	getResultsForBerlin: getResultsForBerlinMock
 }));
-vi.mock('$lib/server/db/queries/wahl/get-results-for-bezirk.js', () => ({
+vi.mock('#lib/server/db/queries/wahl/get-results-for-bezirk.js', () => ({
 	getResultsForBezirk: getResultsForBezirkMock
 }));
-vi.mock('$lib/server/db/queries/wahl/get-stimmbezirks-winners.js', () => ({
+vi.mock('#lib/server/db/queries/wahl/get-stimmbezirks-winners.js', () => ({
 	getStimmbezirksWinners: getStimmbezirksWinnersMock
 }));
 
