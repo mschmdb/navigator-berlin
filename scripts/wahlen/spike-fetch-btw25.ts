@@ -75,7 +75,7 @@ async function main(): Promise<void> {
 	const berlinAroundExpected = berlin.length >= 3500 && berlin.length <= 3700;
 
 	const headerLineIndex = (() => {
-		const stripped = csv.replace(/^﻿/, '');
+		const stripped = csv.replace(/^\uFEFF/, '');
 		const lines = stripped.split(/\r?\n/);
 		return lines.findIndex((l) => /^Wahlkreis;\s*Land\s*;/i.test(l));
 	})();

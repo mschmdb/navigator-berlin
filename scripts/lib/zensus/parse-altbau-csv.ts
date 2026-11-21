@@ -53,7 +53,7 @@ export function parseAltbauCsv(
 ): AltbauCell[] {
 	const lines = new TextDecoder('utf-8').decode(raw).split(/\r?\n/);
 	const header = (lines[0] ?? '')
-		.replace(/^﻿/, '')
+		.replace(/^\uFEFF/, '')
 		.split(';')
 		.map((h) => h.trim());
 	const iId = requireColumn(header, COL.id);

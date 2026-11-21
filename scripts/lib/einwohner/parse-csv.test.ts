@@ -6,7 +6,7 @@ const HEADER =
 
 describe('parseEinwohnerCsv', () => {
 	it('parst Semikolon-CSV mit BOM + CRLF in EinwohnerRow', () => {
-		const raw = `﻿${HEADER}\r\n202412;01100101;01;3580;18;22;55;52;37;128;455;262\r\n`;
+		const raw = `\uFEFF${HEADER}\r\n202412;01100101;01;3580;18;22;55;52;37;128;455;262\r\n`;
 		const rows = parseEinwohnerCsv(raw);
 		expect(rows).toHaveLength(1);
 		expect(rows[0].lorId).toBe('01100101');

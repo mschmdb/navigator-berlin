@@ -32,7 +32,7 @@ function parseCount(raw: string | undefined, line: number): number {
 export function parseBevoelkerungCsv(raw: Uint8Array, bbox?: Bbox3035): BevoelkerungCell[] {
 	const lines = new TextDecoder('utf-8').decode(raw).split(/\r?\n/);
 	const header = (lines[0] ?? '')
-		.replace(/^﻿/, '')
+		.replace(/^\uFEFF/, '')
 		.split(';')
 		.map((h) => h.trim());
 	const iId = requireColumn(header, COL.id);
