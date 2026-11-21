@@ -62,6 +62,20 @@ describe('poi-summary-builder.getPopoverSummary', () => {
 		it('ohne belegte Angaben kein Subtitle', () => {
 			expect(getPopoverSummary('trinkbrunnen', { fountain: 'bubbler' }).subtitle).toBeUndefined();
 		});
+
+		it('EN: Subtitle und Fallback-Titel englisch', () => {
+			const en = { locale: 'en' } as const;
+			expect(getPopoverSummary('trinkbrunnen', { fee: 'no', bottle: 'yes' }, en).subtitle).toBe(
+				'free, bottle refill'
+			);
+			expect(getPopoverSummary('trinkbrunnen', { wheelchair: 'yes' }, en).subtitle).toBe(
+				'accessible'
+			);
+			expect(getPopoverSummary('trinkbrunnen', { wheelchair: 'limited' }, en).subtitle).toBe(
+				'partly accessible'
+			);
+			expect(getPopoverSummary('trinkbrunnen', {}, en).title).not.toBe('Trinkbrunnen');
+		});
 	});
 
 	describe('kitas-2024', () => {
@@ -192,6 +206,15 @@ describe('poi-summary-builder.getPopoverSummary', () => {
 			expect(
 				getPopoverSummary('kuehle-orte', { name: 'Madame Tussauds', cat: 'Museum', cool_score: 4 })
 			).toEqual({ title: 'Madame Tussauds', subtitle: 'Museum, Kühle 4/5' });
+		});
+		it('EN: Kategorie und Kühle-Score englisch', () => {
+			expect(
+				getPopoverSummary(
+					'kuehle-orte',
+					{ name: 'Kino International', cat: 'Kino', cool_score: 4 },
+					{ locale: 'en' }
+				)
+			).toEqual({ title: 'Kino International', subtitle: 'Cinema, Cool 4/5' });
 		});
 		it('faellt auf Layer-Namen zurueck, wenn name fehlt', () => {
 			expect(getPopoverSummary('kuehle-orte', { cat: 'Museum' }).title).toBe('Kühle Orte');

@@ -38,27 +38,32 @@ const SUMMARY_BY_SLUG: Record<string, SummaryFn> = {
 		const person = readString(props, 'person');
 		return { title: person ?? STOLPERSTEIN_FALLBACK_TITLE };
 	},
-	trinkbrunnen: (props, layerName) => {
+	trinkbrunnen: (props, layerName, locale) => {
+		const opts = { locale };
 		const name = readString(props, 'name') ?? layerName;
 		// Kompakte, für Durstige nützliche Angaben aus den OSM-Tags. Max zwei, damit der
 		// Tooltip einzeilig bleibt (Priorität: kostenlos, Flaschen, Barrierefreiheit).
 		const parts: string[] = [];
-		if (readString(props, 'fee') === 'no') parts.push('kostenlos');
-		if (readString(props, 'bottle') === 'yes') parts.push('Flaschen auffüllen');
+		if (readString(props, 'fee') === 'no')
+			parts.push(m.inspector_trinkbrunnen_badge_kostenlos(undefined, opts));
+		if (readString(props, 'bottle') === 'yes')
+			parts.push(m.inspector_trinkbrunnen_badge_bottle(undefined, opts));
 		const wc = readString(props, 'wheelchair');
-		if (wc === 'yes') parts.push('barrierefrei');
-		else if (wc === 'limited') parts.push('teils barrierefrei');
+		if (wc === 'yes') parts.push(m.inspector_trinkbrunnen_badge_wheelchair(undefined, opts));
+		else if (wc === 'limited')
+			parts.push(m.inspector_trinkbrunnen_badge_wheelchair_limited(undefined, opts));
 		const subtitle = parts.slice(0, 2).join(', ');
 		return subtitle ? { title: name, subtitle } : { title: name };
 	},
-	'kuehle-orte': (props, layerName) => {
+	'kuehle-orte': (props, layerName, locale) => {
 		const name = readString(props, 'name') ?? layerName;
 		const cat = readString(props, 'cat');
 		const scoreRaw = props?.cool_score;
 		const score = typeof scoreRaw === 'number' ? scoreRaw : null;
-		const parts = [cat, score !== null ? `Kühle ${score}/5` : null].filter(
-			(x): x is string => x !== null
-		);
+		const parts = [
+			cat ? categoryLabel(cat, locale).text : null,
+			score !== null ? m.inspector_kuehle_orte_cool_score({ score }, { locale }) : null
+		].filter((x): x is string => x !== null);
 		return parts.length > 0 ? { title: name, subtitle: parts.join(', ') } : { title: name };
 	},
 	'waerme-orte': (props, layerName, locale) => {
