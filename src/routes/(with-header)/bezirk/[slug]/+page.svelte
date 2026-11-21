@@ -31,7 +31,6 @@
 	import { bezirkAnchorId } from '#lib/data/region-overview.js';
 	import { unpackRegions, unpackWahl } from '#lib/place/pack.ts';
 	import { localizedHref } from '#lib/i18n/localized-href.js';
-	import { page } from '$app/state';
 	import { m } from '#lib/paraglide/messages.js';
 	import { getLocale } from '#lib/paraglide/runtime.js';
 	import type { PageData } from './$types';
@@ -69,7 +68,7 @@
 		all: new Set(bezirke.map((b) => b.slug))
 	}));
 	$effect(() => {
-		view.readUrl(page.url);
+		view.readPage();
 	});
 	const ref = $derived(resolveReference(view.choice, { berlin, bezirk: null, regions: byslug }));
 	const kind = $derived(view.choice.kind);

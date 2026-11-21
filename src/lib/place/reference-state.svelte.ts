@@ -8,6 +8,14 @@ import { pointsFromSeries, seriesUrl } from './wahl-api';
 
 export type Lesart = 'erzaehlen' | 'zahlen';
 
+/**
+ * Die URL mit `vs` und `lesart`. Die Auswahl schreibt per shallow `goto`, dann steht sie in
+ * `page.shallow.url`. Nach Zurück auf so einen Eintrag zeigt `page.url` die Ausgangs-URL.
+ */
+function currentUrl(): ReadonlyURL {
+	return page.shallow?.url ?? page.url;
+}
+
 /** Bezugspunkt und Lesart im URL (`?vs=…&lesart=zahlen`), damit ein Vergleich teilbar bleibt. */
 export class PlaceViewState {
 	choice = $state<ReferenceChoice>({ kind: 'berlin', slug: null });
@@ -23,7 +31,8 @@ export class PlaceViewState {
 	 * Nur im Browser aufrufen (in einem $effect): Die Seiten sind vorgerendert, dort gibt es keine
 	 * Query-Parameter. Auch nach Client-Navigation, dieselbe Komponente kann einen anderen Ort zeigen.
 	 */
-	readUrl(url: ReadonlyURL) {
+	readPage() {
+		const url = currentUrl();
 		this.choice = parseReference(url.searchParams.get('vs'), this.#ctx());
 		this.mode = url.searchParams.get('lesart') === 'zahlen' ? 'zahlen' : 'erzaehlen';
 	}
@@ -39,7 +48,7 @@ export class PlaceViewState {
 	}
 
 	private sync() {
-		const url = new SvelteURL(page.url.href);
+		const url = new SvelteURL(currentUrl().href);
 		const vs = serializeReference(this.choice);
 		if (vs) url.searchParams.set('vs', vs);
 		else url.searchParams.delete('vs');
