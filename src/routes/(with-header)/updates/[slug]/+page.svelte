@@ -106,6 +106,7 @@
 		data-testid="updates-detail-body"
 		lang={bodyLang}
 	>
+		<!-- eslint-disable-next-line svelte/no-at-html-tags -- eigenes Markdown, serverseitig via renderMarkdownBody gerendert -->
 		{@html bodyHtml}
 	</section>
 

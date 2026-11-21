@@ -46,9 +46,11 @@
 
 	/** Kapitel 5 im Handbuch: Bezirk und Wahl teilbar in der URL, andere Parameter bleiben. */
 	function rememberZeit(next: ZeitState): void {
-		const url = new URL(window.location.href);
-		const state = { ...parseUrlState(url), zeit: next };
-		url.search = serializeUrlState(state, url.searchParams).search;
+		const current = new URL(window.location.href);
+		const state = { ...parseUrlState(current), zeit: next };
+		const { search } = serializeUrlState(state, current.searchParams);
+		// `?` allein leert die Query, ein leerer Verweis würde sie behalten.
+		const url = new URL(`${search || '?'}${current.hash}`, current);
 		goto(url, { shallow: true, replace: true, state: page.state });
 	}
 
@@ -162,6 +164,7 @@
 				data-testid="stories-detail-intro"
 				lang={bodyLang}
 			>
+				<!-- eslint-disable-next-line svelte/no-at-html-tags -- eigenes Markdown, serverseitig via renderMarkdownBody gerendert -->
 				{@html data.bodyHtmlBefore}
 			</section>
 		{/if}
@@ -180,6 +183,7 @@
 			data-testid="stories-detail-body"
 			lang={bodyLang}
 		>
+			<!-- eslint-disable-next-line svelte/no-at-html-tags -- eigenes Markdown, serverseitig via renderMarkdownBody gerendert -->
 			{@html data.bodyHtml}
 		</section>
 	{/if}
