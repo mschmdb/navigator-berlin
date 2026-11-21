@@ -6,6 +6,7 @@ function fakeBuilder(): Builder {
 	const target = {
 		config: { paths: { base: '/b', origin: 'https://navigator.berlin' }, other: 1 },
 		marker: 'builder',
+		log: Object.assign(() => undefined, { minor: () => 'minor' }),
 		getAppPath() {
 			return this.marker;
 		}
@@ -37,11 +38,11 @@ describe('withRequestOrigin', () => {
 		expect((seen.builder?.config as unknown as { other: number }).other).toBe(1);
 	});
 
-	it('keeps builder methods bound to the real builder', async () => {
+	it('keeps builder methods and their properties', async () => {
 		const seen: { builder?: Builder } = {};
 		await withRequestOrigin(capturingAdapter(seen)).adapt(fakeBuilder());
-		const getAppPath = seen.builder!.getAppPath;
-		expect(getAppPath()).toBe('builder');
+		expect(seen.builder?.getAppPath()).toBe('builder');
+		expect((seen.builder?.log as unknown as { minor: () => string }).minor()).toBe('minor');
 	});
 
 	it('keeps name and supports of the wrapped adapter', () => {

@@ -17,16 +17,16 @@ export function withRequestOrigin(adapter) {
 	return {
 		...adapter,
 		adapt(builder) {
-			const config = {
-				...builder.config,
-				paths: { ...builder.config.paths, origin: undefined }
-			};
+			const paths = { ...builder.config.paths, origin: undefined };
+			// Proxy statt Spread: `config` trägt deprecated Getter wie `kit`, die beim
+			// Kopieren warnen würden.
+			const config = new Proxy(builder.config, {
+				get: (target, prop, receiver) =>
+					prop === 'paths' ? paths : Reflect.get(target, prop, receiver)
+			});
 			const proxy = new Proxy(builder, {
-				get(target, prop) {
-					if (prop === 'config') return config;
-					const value = Reflect.get(target, prop, target);
-					return typeof value === 'function' ? value.bind(target) : value;
-				}
+				get: (target, prop, receiver) =>
+					prop === 'config' ? config : Reflect.get(target, prop, receiver)
 			});
 			return adapter.adapt(proxy);
 		}
