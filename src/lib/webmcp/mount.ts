@@ -12,7 +12,7 @@
  * zur App-Wireup-Schicht (analog `+layout.svelte`).
  */
 
-import { browser } from '$app/environment';
+import { browser } from '$app/env';
 import { registerWebMcpServer, loadMcpBGlobalPolyfill } from './adapter.js';
 import type { WebMcpServerHandle, NavigatorWithModelContext } from './adapter.js';
 import type { ElectionListEntry } from './tools/index.js';

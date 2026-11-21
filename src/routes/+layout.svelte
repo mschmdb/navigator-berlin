@@ -2,7 +2,7 @@
 	import '../app.css';
 	import { page } from '$app/state';
 	import { locales } from '$lib/paraglide/runtime';
-	import { browser } from '$app/environment';
+	import { browser } from '$app/env';
 	import SkipLink from '$lib/components/atlas/skip-link.svelte';
 	import MetaFooter from '$lib/components/atlas/meta-footer.svelte';
 	import LangSwitcher from '$lib/components/atlas/lang-switcher.svelte';
@@ -88,14 +88,13 @@
 
 {#if isExplore}
 	<!-- Compact-Bottom-Bar auf /explore. Mobile aus, da das Header-Menü dieselben Links hat. -->
-	<div class="hidden md:block">
-		<MetaFooter variant="compact" {langSwitcher} />
-	</div>
+	<div class="hidden md:block"><MetaFooter variant="compact" {langSwitcher} /></div>
 {:else}
 	<MetaFooter variant="full" {langSwitcher} />
 {/if}
 
 <div id="global-aria-live" aria-live="polite" aria-atomic="false" class="sr-only"></div>
+
 <div
 	id="global-aria-live-assertive"
 	aria-live="assertive"

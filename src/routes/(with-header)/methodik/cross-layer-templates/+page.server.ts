@@ -1,5 +1,5 @@
 import { error } from '@sveltejs/kit';
-import { dev } from '$app/environment';
+import { dev } from '$app/env';
 import type { PageServerLoad } from './$types';
 import { loadCrossLayerTemplates } from '$lib/server/cross-layer-templates-loader.js';
 import {

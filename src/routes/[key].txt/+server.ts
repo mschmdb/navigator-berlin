@@ -1,5 +1,5 @@
 import { error } from '@sveltejs/kit';
-import { env } from '$env/dynamic/private';
+import { INDEXNOW_KEY } from '$app/env/private';
 import type { RequestHandler } from './$types';
 
 /**
@@ -21,7 +21,7 @@ const RESERVED = new Set(['robots', 'llms', 'llms-full', 'humans', 'security']);
 export const GET: RequestHandler = ({ params }) => {
 	const key = (params.key ?? '').toLowerCase();
 	if (RESERVED.has(key)) error(404, 'reserved');
-	const indexNowKey = env.INDEXNOW_KEY;
+	const indexNowKey = INDEXNOW_KEY;
 	if (!indexNowKey) error(404, 'indexnow not configured');
 	if (key !== indexNowKey.toLowerCase()) error(404, 'unknown key');
 	return new Response(indexNowKey, {

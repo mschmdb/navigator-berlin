@@ -56,7 +56,7 @@
 	import { buildLlmExportMarkdown } from '$lib/utils/llm-export-builder.js';
 	import { formatLayerValue } from './inspector-panel/internal/value-formatters.js';
 	import { page } from '$app/state';
-	import { browser } from '$app/environment';
+	import { browser } from '$app/env';
 	import { resolveAppMode } from '$lib/app-mode';
 	import { formatDate } from '$lib/i18n/format.js';
 	import { m } from '$lib/paraglide/messages.js';

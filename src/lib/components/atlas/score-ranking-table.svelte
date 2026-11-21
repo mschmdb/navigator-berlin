@@ -1,19 +1,6 @@
-<!--
-	Story 2.9b T2: Ranking-Table mit Sort + View-Toggle.
-
-	Phase-1 DE-only. Hairline-Tabelle ohne Vertikal-Linien (UX-DR43).
-	Sort + View-State im URL via replaceState; Page-Daten kommen einmalig
-	vom Server-Loader weil die Route prerendered=true ist (statisches HTML,
-	keine erneute Server-Anfrage).
-
-	Stigma-Disziplin (Memory feedback_no_lebenswert + project_compare_
-	editorial_profiles): Default-Sort ist composite ohne „beste/schlechteste"-
-	Sprache; Soziale-Lage als Spalten-Wert erlaubt, Sortier-Button funktioniert
-	technisch, aber Disclaimer-Banner wird sichtbar wenn aktiv.
--->
 <script lang="ts">
 	import { goto } from '$app/navigation';
-	import { browser } from '$app/environment';
+	import { browser } from '$app/env';
 	import { page } from '$app/state';
 	import type { RankingRow } from '$lib/data/ranking-types.js';
 	import { rankForSort } from '$lib/data/ranking-rank.js';
@@ -264,6 +251,20 @@
 	});
 </script>
 
+<!--
+	Story 2.9b T2: Ranking-Table mit Sort + View-Toggle.
+
+	Phase-1 DE-only. Hairline-Tabelle ohne Vertikal-Linien (UX-DR43).
+	Sort + View-State im URL via replaceState; Page-Daten kommen einmalig
+	vom Server-Loader weil die Route prerendered=true ist (statisches HTML,
+	keine erneute Server-Anfrage).
+
+	Stigma-Disziplin (Memory feedback_no_lebenswert + project_compare_
+	editorial_profiles): Default-Sort ist composite ohne „beste/schlechteste"-
+	Sprache; Soziale-Lage als Spalten-Wert erlaubt, Sortier-Button funktioniert
+	technisch, aber Disclaimer-Banner wird sichtbar wenn aktiv.
+-->
+
 <section data-testid="score-ranking" class="space-y-6">
 	<div
 		class="flex flex-wrap items-center justify-between gap-3"
@@ -327,9 +328,10 @@
 			<caption class="sr-only">{m.uis_h1_title()}</caption>
 			<thead>
 				<tr class="border-b border-rule text-left align-bottom">
-					<th class="py-2 pr-3 text-dense-label whitespace-nowrap text-ink-subtle" scope="col">
-						{m.uis_ranking_col_rank()}
-					</th>
+					<th class="py-2 pr-3 text-dense-label whitespace-nowrap text-ink-subtle" scope="col"
+						>{m.uis_ranking_col_rank()}</th
+					>
+
 					<th
 						class="py-2 pr-3 align-bottom whitespace-nowrap"
 						scope="col"
@@ -399,6 +401,7 @@
 							class="py-3 pr-3 text-xs text-ink-subtle tabular-nums"
 							data-testid="ranking-cell-rank">{rankForSort(row.ranks, sortKey) ?? '–'}</td
 						>
+
 						<th scope="row" class="py-3 pr-3 text-left font-semibold text-ink">
 							<a
 								class="inline-flex min-h-(--target-min) items-center text-ink hover:text-accent hover:underline"
