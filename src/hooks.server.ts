@@ -60,16 +60,16 @@ export const handleRenamedRouteRedirect: Handle = ({ event, resolve }) => {
 };
 
 const handleParaglide: Handle = ({ event, resolve }) =>
-	paraglideMiddleware(event.request, ({ request, locale }) => {
-		event.request = request;
-
-		return resolve(event, {
+	// Kit 3: `event.request` ist readonly. Ohne effektive Request-URL liefert die
+	// Middleware nur einen Klon derselben URL, darum reicht das Original.
+	paraglideMiddleware(event.request, ({ locale }) =>
+		resolve(event, {
 			transformPageChunk: ({ html }) =>
 				html
 					.replace('%paraglide.lang%', locale)
 					.replace('%paraglide.dir%', getTextDirection(locale))
-		});
-	});
+		})
+	);
 
 /**
  * Indexierungs-Hygiene S1: `/explore` mit Query (Zustands-URLs wie `?kiez=`)
