@@ -44,6 +44,7 @@ describe('lokale Layer im Manifest', () => {
 				sha256(source.localPath!),
 				`${source.localPath} ist neuer als der Karten-Layer. Lauf: pnpm exec tsx scripts/fetch-static.ts ${source.slug}`
 			).toBe(entry!.sha256);
+			expect(sha256(layerPath), `${layerPath} weicht vom Manifest-Hash ab`).toBe(entry!.sha256);
 		});
 	}
 });
