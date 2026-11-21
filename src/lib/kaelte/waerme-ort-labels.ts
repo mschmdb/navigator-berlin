@@ -61,6 +61,24 @@ export function feeText(value: WaermeOrt['isFree'], locale: Locale = getLocale()
 	return m.kaelte_orte_fee_unknown(undefined, opts);
 }
 
+export interface HoursNote {
+	readonly text: string;
+	/** Gesetzt, wenn der deutsche Freitext auf einer anderssprachigen Seite steht. */
+	readonly lang?: 'de';
+}
+
+/** Zeiten-Notiz der Recherche in der Seiten-Locale; ohne Übersetzung deutsch mit `lang`. */
+export function hoursNoteText(
+	ort: Pick<WaermeOrt, 'openingHoursNote' | 'openingHoursNoteEn'>,
+	locale: Locale = getLocale()
+): HoursNote | null {
+	const de = ort.openingHoursNote.trim();
+	if (!de) return null;
+	if (locale === 'de') return { text: de };
+	const en = ort.openingHoursNoteEn.trim();
+	return en ? { text: en } : { text: de, lang: 'de' };
+}
+
 export function checkedText(iso: string, locale: Locale = getLocale()): string {
 	const date = new Date(`${iso}T00:00:00Z`);
 	const formatted = Number.isNaN(date.getTime())

@@ -51,6 +51,8 @@ export interface WaermeEnrichment {
 	 * `"unklar"`, wenn die Notiz keinen festen Plan nennt. Fehlt bei Orten ohne Notiz.
 	 */
 	oh_recherche?: string;
+	/** Englische Übersetzung von `opening_hours_note`, für die EN-Seiten. Fehlt ohne Übersetzung. */
+	opening_hours_note_en?: string;
 	stay_without_purchase: StayWithoutPurchase;
 	is_free: Admission;
 	website: string;

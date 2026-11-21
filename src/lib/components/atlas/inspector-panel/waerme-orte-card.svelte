@@ -10,6 +10,7 @@
 		checkedText,
 		counterText,
 		feeText,
+		hoursNoteText,
 		reportHref,
 		statusClass,
 		statusSourceOf,
@@ -243,10 +244,13 @@
 							<li>{stayText(ort.stayWithoutPurchase, locale)}</li>
 							<li>{feeText(ort.isFree, locale)}</li>
 							{#if ort.openingHoursNote}
-								<li>
-									{m.kaelte_orte_zeiten(undefined, localeOpts)}:
-									<span lang={deLang}>{ort.openingHoursNote}</span>
-								</li>
+								{@const note = hoursNoteText(ort, locale)}
+								{#if note}
+									<li>
+										{m.kaelte_orte_zeiten(undefined, localeOpts)}:
+										<span lang={note.lang} data-testid="waerme-orte-hours-note">{note.text}</span>
+									</li>
+								{/if}
 							{/if}
 						</ul>
 						<p class="mt-0.5 font-sans text-dense-meta text-ink-subtle">

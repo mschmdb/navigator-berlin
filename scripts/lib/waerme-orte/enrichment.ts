@@ -49,6 +49,15 @@ function ohRechercheError(value: unknown): string | null {
 	return null;
 }
 
+function noteEnErrors(item: WaermeEnrichment): string[] {
+	const value: unknown = item.opening_hours_note_en;
+	if (value === undefined) return [];
+	if (typeof value !== 'string') return ['opening_hours_note_en muss ein String sein'];
+	if (!value.trim()) return ['opening_hours_note_en ist leer'];
+	if (!item.opening_hours_note.trim()) return ['opening_hours_note_en ohne opening_hours_note'];
+	return [];
+}
+
 const PLACEHOLDER_NAME = /\(ohne Namen in OSM\)$/;
 const STRING_FIELDS = [
 	'name',
@@ -89,6 +98,7 @@ export function validateEnrichment(item: WaermeEnrichment): string[] {
 
 	const ohError = ohRechercheError(item.oh_recherche);
 	if (ohError) errors.push(ohError);
+	errors.push(...noteEnErrors(item));
 	if (item.oh_recherche !== undefined && !item.opening_hours_note.trim()) {
 		errors.push('oh_recherche ohne opening_hours_note');
 	}
@@ -185,16 +195,24 @@ export function buildResearchBatches(
 	return batches;
 }
 
-/** `oh_recherche` hängt an der Notiz: bleibt sie gleich, gilt der alte Wert, sonst entfällt er. */
+/**
+ * `oh_recherche` und `opening_hours_note_en` hängen an der Notiz: Bleibt sie gleich, gelten
+ * die alten Werte, sonst entfallen sie.
+ */
 function withCoupledOhRecherche(
 	previous: WaermeEnrichment | undefined,
 	result: WaermeEnrichment
 ): WaermeEnrichment {
-	const { oh_recherche: _drop, ...rest } = result;
-	void _drop;
-	const keep =
-		previous?.opening_hours_note === result.opening_hours_note ? previous.oh_recherche : undefined;
-	return keep === undefined ? rest : { ...rest, oh_recherche: keep };
+	const { oh_recherche: _dropOh, opening_hours_note_en: _dropEn, ...rest } = result;
+	void _dropOh;
+	void _dropEn;
+	const same = previous?.opening_hours_note === result.opening_hours_note;
+	const coupled: WaermeEnrichment = { ...rest };
+	if (same && previous.oh_recherche !== undefined) coupled.oh_recherche = previous.oh_recherche;
+	if (same && previous.opening_hours_note_en !== undefined) {
+		coupled.opening_hours_note_en = previous.opening_hours_note_en;
+	}
+	return coupled;
 }
 
 export interface MergeResultsOutcome {

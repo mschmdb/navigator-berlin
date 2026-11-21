@@ -18,6 +18,8 @@ export interface WaermeOrt {
 	lng: number;
 	winterOpen: WinterOpen;
 	openingHoursNote: string;
+	/** Englische Fassung der Notiz, leer ohne Übersetzung. */
+	openingHoursNoteEn: string;
 	stayWithoutPurchase: Tristate;
 	isFree: EntryFee;
 	website: string;
@@ -43,6 +45,7 @@ export type WaermeOrtProps = {
 	cat: string;
 	winter_open?: string;
 	opening_hours_note?: string;
+	opening_hours_note_en?: string;
 	stay_without_purchase?: string;
 	is_free?: string;
 	website?: string;
@@ -80,6 +83,7 @@ export function featureToWaermeOrt(feature: Feature<Point, WaermeOrtProps>): Wae
 		lng,
 		winterOpen: oneOf(p.winter_open, ['yes', 'limited', 'no'], 'unknown'),
 		openingHoursNote: p.opening_hours_note ?? '',
+		openingHoursNoteEn: p.opening_hours_note_en ?? '',
 		stayWithoutPurchase: oneOf(p.stay_without_purchase, ['yes', 'no'], 'unknown'),
 		isFree: oneOf(p.is_free, ['free', 'ticket'], 'unknown'),
 		website: p.website ?? '',

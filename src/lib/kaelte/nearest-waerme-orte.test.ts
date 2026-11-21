@@ -10,6 +10,7 @@ function ort(over: Partial<WaermeOrt> & Pick<WaermeOrt, 'id'>): WaermeOrt {
 		lng: 13.405,
 		winterOpen: 'yes',
 		openingHoursNote: '',
+		openingHoursNoteEn: '',
 		stayWithoutPurchase: 'unknown',
 		isFree: 'unknown',
 		website: '',
