@@ -59,6 +59,10 @@ Sekundärquellen, teils ungeprüft.
 - Das Tool hat Kommentarblöcke am Anfang von `.svelte`-Dateien hinter `</script>` verschoben und Leerzeilen eingefügt. Kosmetisch.
 - `lib-alias` hat `src/routes/.well-known/webmcp.json/+server.ts` ausgelassen.
 - `MIGRATION_TASKS.md` meldet `delta` und Remote-Form-Felder in `explore/+page.svelte`. Beides sind Fehlalarme: `delta` ist ein Zoom-Parameter, und navigator nutzt kein Remote-`form`.
+- svelte 5.58.1 und neuer crashen im keyed `{#each}`-Reconcile. Der Test `stories/[slug]/page.svelte.test.ts` (Kapitel 5 mit `?bezirk=` und `wahl5=`) wirft `Cannot read properties of undefined (reading 'e')`. 5.58.0 läuft grün, darum ist svelte exakt auf 5.58.0 gepinnt. Ein Upstream-Issue ist noch offen zu suchen oder anzulegen.
+- adapter-node 6 schickt keinen `Link`-Preload-Header mehr (`output.linkHeaderPreload` ist `false`). Die Preloads stehen als `<link rel="modulepreload">` im `<head>`.
+- Redirects auf Trailing Slash liefern eine relative `location` (`../explore` statt `/explore`). Browser lösen beides gleich auf.
+- `Cache-Control` aus `server.js` bleibt für alle geprüften Pfade gleich. Sitemaps, `robots.txt` und die Liste der Prerender-Dateien sind identisch mit `main`.
 - `pnpm lint` hatte auf `main` schon 110 Fehler. Nach dem Upgrade bleiben dieselben Regeln übrig. `svelte/no-navigation-without-resolve` meldet nichts mehr, die Disable-Kommentare dafür bleiben als Warnung stehen.
 
 ## Quellen
