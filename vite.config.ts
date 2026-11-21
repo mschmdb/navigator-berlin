@@ -11,6 +11,40 @@ import { FontaineTransform } from 'fontaine';
 /** Pfade, deren Prerender-HTTP-Fehler den strikten Build nicht abbrechen. Bewusst leer (S5). */
 const ALLOWED_HTTP_ERROR_PATHS: string[] = [];
 
+/**
+ * Eigene Chunks für große Bibliotheken. Kit 3 setzt `output.codeSplitting`, Rolldown ignoriert
+ * dann `manualChunks`. Darum läuft die Zuordnung als dynamischer Name einer `codeSplitting`-Gruppe.
+ */
+function manualChunk(id: string): string | null {
+	if (id.includes('node_modules/maplibre-gl')) return 'maplibre';
+	// Story 11 (Sankey-Rework): d3-sankey lazy geladen, EIGENER Chunk,
+	// getrennt von `d3-shape` (Review Triage Log #7: ein gemeinsamer Chunk
+	// kettete den layerchart-Chunk an den sankey-Chunk, weil layerchart
+	// selbst `d3-shape` nutzt -- Home/Atlas luden d3-sankey dadurch
+	// ungewollt mit). Beide Regeln bleiben VOR der layerchart-Regel, sonst
+	// zöge diese `d3-shape` zuerst in den `layerchart`-Chunk.
+	// #127: die Grafik nutzt LayerCharts `Sankey` über den Einstieg
+	// `layerchart/svg`. Barrel und Sankey-Komponente gehören in den
+	// sankey-Chunk, sonst importiert der `layerchart`-Chunk (Home/Atlas)
+	// d3-sankey statisch mit.
+	if (
+		id.includes('node_modules/d3-sankey') ||
+		id.includes('node_modules/layerchart/dist/svg.js') ||
+		id.includes('node_modules/layerchart/dist/components/graph/Sankey.svelte')
+	)
+		return 'sankey';
+	if (id.includes('node_modules/d3-shape')) return 'd3-shape';
+	if (
+		id.includes('node_modules/layerchart') ||
+		id.includes('node_modules/d3-scale') ||
+		id.includes('node_modules/d3-interpolate') ||
+		id.includes('node_modules/d3-array')
+	)
+		return 'layerchart';
+	if (id.includes('node_modules/@turf/') || id.includes('node_modules/rbush')) return 'turf';
+	return null;
+}
+
 export default defineConfig({
 	plugins: [
 		tailwindcss(),
@@ -97,38 +131,9 @@ export default defineConfig({
 		commonjsOptions: {
 			ignoreDynamicRequires: true
 		},
-		rollupOptions: {
+		rolldownOptions: {
 			output: {
-				manualChunks(id: string): string | undefined {
-					if (id.includes('node_modules/maplibre-gl')) return 'maplibre';
-					// Story 11 (Sankey-Rework): d3-sankey lazy geladen, EIGENER Chunk,
-					// getrennt von `d3-shape` (Review Triage Log #7: ein gemeinsamer Chunk
-					// kettete den layerchart-Chunk an den sankey-Chunk, weil layerchart
-					// selbst `d3-shape` nutzt -- Home/Atlas luden d3-sankey dadurch
-					// ungewollt mit). Beide Regeln bleiben VOR der layerchart-Regel, sonst
-					// zöge diese `d3-shape` zuerst in den `layerchart`-Chunk.
-					// #127: die Grafik nutzt LayerCharts `Sankey` über den Einstieg
-					// `layerchart/svg`. Barrel und Sankey-Komponente gehören in den
-					// sankey-Chunk, sonst importiert der `layerchart`-Chunk (Home/Atlas)
-					// d3-sankey statisch mit.
-					if (
-						id.includes('node_modules/d3-sankey') ||
-						id.includes('node_modules/layerchart/dist/svg.js') ||
-						id.includes('node_modules/layerchart/dist/components/graph/Sankey.svelte')
-					)
-						return 'sankey';
-					if (id.includes('node_modules/d3-shape')) return 'd3-shape';
-					if (
-						id.includes('node_modules/layerchart') ||
-						id.includes('node_modules/d3-scale') ||
-						id.includes('node_modules/d3-interpolate') ||
-						id.includes('node_modules/d3-array')
-					)
-						return 'layerchart';
-					if (id.includes('node_modules/@turf/') || id.includes('node_modules/rbush'))
-						return 'turf';
-					return undefined;
-				}
+				codeSplitting: { groups: [{ name: manualChunk }] }
 			}
 		}
 	},
