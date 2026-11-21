@@ -1,3 +1,5 @@
+import adapter from '@sveltejs/adapter-node';
+import { createHandleHttpError } from './src/lib/build/strict-build.js';
 import tailwindcss from '@tailwindcss/vite';
 import { paraglideVitePlugin } from '@inlang/paraglide-js';
 import { defineConfig } from 'vitest/config';
@@ -5,10 +7,52 @@ import { playwright } from '@vitest/browser-playwright';
 import { sveltekit } from '@sveltejs/kit/vite';
 import { FontaineTransform } from 'fontaine';
 
+/** Pfade, deren Prerender-HTTP-Fehler den strikten Build nicht abbrechen. Bewusst leer (S5). */
+const ALLOWED_HTTP_ERROR_PATHS: string[] = [];
+
 export default defineConfig({
 	plugins: [
 		tailwindcss(),
-		sveltekit(),
+		sveltekit({
+			compilerOptions: {
+				// Force runes mode for the project, except for libraries. Can be removed in svelte 6.
+				runes: ({ filename }) =>
+					filename.split(/[/\\]/).includes('node_modules') ? undefined : true,
+				experimental: { async: true }
+			},
+			adapter: adapter(),
+			experimental: { remoteFunctions: true },
+			prerender: {
+				// `robots.txt`, `sitemap.xml`, `sitemap-de.xml` haben keine internen Links und
+				// werden vom Crawler nicht entdeckt. Story 2.1 zwingt sie als Entry-Points
+				// in den prerender. Falls weitere standalone-Endpoints dazukommen, hier ergaenzen.
+				entries: [
+					'*',
+					'/robots.txt',
+					'/sitemap.xml',
+					'/sitemap-de.xml',
+					'/sitemap-en.xml',
+					'/webmcp-manifest.json',
+					'/.well-known/webmcp.json'
+				],
+
+				handleUnseenRoutes: ({ route }) => {
+					console.warn(`[prerender] unseen route ${route} (Phase-1 warn-only)`);
+				},
+
+				// S5: Im strikten Build (NAVIGATOR_STRICT_BUILD=1, setzt das Dockerfile) bricht
+				// jeder Prerender-HTTP-Fehler (404/500) den Build ab. NODE_ENV taugt nicht als
+				// Signal, weil `vite build` es selbst auf production setzt. Die Allowlist ist
+				// leer, weil der Build 0 Fehler hat. Ohne Flag bleibt es bei der Warnung.
+				// `handleUnseenRoutes` bleibt bewusst eine Warnung.
+				handleHttpError: createHandleHttpError(ALLOWED_HTTP_ERROR_PATHS)
+			},
+			// Production-Origin für robots.txt/sitemap.xml während Prerender (früher
+			// `prerender.origin`). Ohne ihn liefert `url.origin` den SvelteKit-Default
+			// `http://sveltekit-prerender`, dann verlinken robots.txt und Sitemap-Index kaputt.
+			paths: { origin: 'https://navigator.berlin' }
+		}),
+
 		paraglideVitePlugin({
 			project: './project.inlang',
 			outdir: './src/lib/paraglide',
