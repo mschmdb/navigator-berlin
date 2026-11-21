@@ -1,3 +1,4 @@
+import type { ReadonlyURL } from '$app/state';
 import { deLocalizeUrl } from '#lib/paraglide/runtime.js';
 
 /**
@@ -10,6 +11,6 @@ import { deLocalizeUrl } from '#lib/paraglide/runtime.js';
  * branch, `/en/api/*` lost its `X-Robots-Tag` header. Use this helper instead
  * of raw `url.pathname` for ANY such check.
  */
-export function basePathname(url: URL): string {
-	return deLocalizeUrl(url).pathname;
+export function basePathname(url: ReadonlyURL): string {
+	return deLocalizeUrl(url.href).pathname;
 }

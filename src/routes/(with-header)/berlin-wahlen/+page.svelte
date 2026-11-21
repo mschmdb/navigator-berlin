@@ -75,7 +75,7 @@
 	// State → URL (replace, reset: false). No-Op-Guard über den
 	// kompletten Query-String, damit Kaltstart keinen Query-Müll schreibt.
 	$effect(() => {
-		const url = new URL(page.url);
+		const url = new URL(page.url.href);
 		const before = url.search;
 		url.searchParams.delete('reihe');
 		url.searchParams.delete('jahr');

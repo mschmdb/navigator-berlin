@@ -12,6 +12,7 @@
  *
  * Ungültige Werte fallen still auf Defaults zurück (kein Fehler, kein 404).
  */
+import type { ReadonlyURLSearchParams } from '$app/state';
 
 export type WahlPortalReihe = 'btw' | 'agh' | 'bvv';
 export type WahlPortalEbene = 'stimmbezirk' | 'kiez' | 'bezirk';
@@ -56,7 +57,7 @@ function parseJahr(value: string | null): number | null {
 	return n;
 }
 
-export function parsePortalState(params: URLSearchParams): WahlPortalUrlState {
+export function parsePortalState(params: ReadonlyURLSearchParams): WahlPortalUrlState {
 	return {
 		reihe: parseReihe(params.get('reihe')),
 		jahr: parseJahr(params.get('jahr')),

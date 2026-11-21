@@ -1,4 +1,4 @@
-import { page } from '$app/state';
+import { page, type ReadonlyURL } from '$app/state';
 import { goto } from '$app/navigation';
 import { SvelteMap, SvelteURL } from 'svelte/reactivity';
 import { parseReference, serializeReference, type ReferenceParseContext } from './reference';
@@ -23,7 +23,7 @@ export class PlaceViewState {
 	 * Nur im Browser aufrufen (in einem $effect): Die Seiten sind vorgerendert, dort gibt es keine
 	 * Query-Parameter. Auch nach Client-Navigation, dieselbe Komponente kann einen anderen Ort zeigen.
 	 */
-	readUrl(url: URL) {
+	readUrl(url: ReadonlyURL) {
 		this.choice = parseReference(url.searchParams.get('vs'), this.#ctx());
 		this.mode = url.searchParams.get('lesart') === 'zahlen' ? 'zahlen' : 'erzaehlen';
 	}
@@ -39,7 +39,7 @@ export class PlaceViewState {
 	}
 
 	private sync() {
-		const url = new SvelteURL(page.url);
+		const url = new SvelteURL(page.url.href);
 		const vs = serializeReference(this.choice);
 		if (vs) url.searchParams.set('vs', vs);
 		else url.searchParams.delete('vs');

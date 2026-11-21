@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { goto } from '$app/navigation';
 	import { browser } from '$app/env';
-	import { page } from '$app/state';
+	import { page, type ReadonlyURLSearchParams } from '$app/state';
 	import type { RankingRow } from '#lib/data/ranking-types.js';
 	import { rankForSort } from '#lib/data/ranking-rank.js';
 	import RichText from '#lib/components/rich-text.svelte';
@@ -22,7 +22,7 @@
 	// url.searchParams. URL-State (sort/dir/view) ist nur browser-relevant —
 	// auf dem Server-Render starten alle mit Default, Client hydratiert.
 	const EMPTY_SEARCH = new URLSearchParams();
-	function searchParams(): URLSearchParams {
+	function searchParams(): ReadonlyURLSearchParams {
 		return browser ? page.url.searchParams : EMPTY_SEARCH;
 	}
 
@@ -52,14 +52,14 @@
 		return (NUMERIC_SORT_KEYS as readonly string[]).includes(key);
 	}
 
-	function readSort(params: URLSearchParams): SortKey {
+	function readSort(params: ReadonlyURLSearchParams): SortKey {
 		const raw = params.get('sort');
 		return ALL_SORT_KEYS.includes(raw as SortKey) ? (raw as SortKey) : 'composite';
 	}
-	function readDir(params: URLSearchParams): SortDir {
+	function readDir(params: ReadonlyURLSearchParams): SortDir {
 		return params.get('dir') === 'asc' ? 'asc' : 'desc';
 	}
-	function readView(params: URLSearchParams): View {
+	function readView(params: ReadonlyURLSearchParams): View {
 		return params.get('view') === 'bezirke' ? 'bezirke' : 'kieze';
 	}
 
@@ -101,7 +101,7 @@
 	});
 
 	function applyParams(updates: Record<string, string | null>): void {
-		const params = new URLSearchParams(searchParams());
+		const params = new URLSearchParams(searchParams().toString());
 		for (const [key, value] of Object.entries(updates)) {
 			if (value === null) params.delete(key);
 			else params.set(key, value);
