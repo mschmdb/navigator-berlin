@@ -1,5 +1,6 @@
 import adapter from '@sveltejs/adapter-node';
 import { createHandleHttpError } from './src/lib/build/strict-build.js';
+import { withRequestOrigin } from './src/lib/build/request-origin-adapter.js';
 import tailwindcss from '@tailwindcss/vite';
 import { paraglideVitePlugin } from '@inlang/paraglide-js';
 import { defineConfig } from 'vitest/config';
@@ -20,7 +21,8 @@ export default defineConfig({
 					filename.split(/[/\\]/).includes('node_modules') ? undefined : true,
 				experimental: { async: true }
 			},
-			adapter: adapter(),
+			// Laufzeit-Origin kommt aus dem Request, `paths.origin` gilt nur im Prerender.
+			adapter: withRequestOrigin(adapter()),
 			experimental: { remoteFunctions: true },
 			prerender: {
 				// `robots.txt`, `sitemap.xml`, `sitemap-de.xml` haben keine internen Links und
