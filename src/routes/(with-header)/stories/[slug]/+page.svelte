@@ -1,26 +1,26 @@
 <script lang="ts">
-	import { afterNavigate, replaceState } from '$app/navigation';
+	import { afterNavigate, goto } from '$app/navigation';
 	import { page } from '$app/state';
 	import { onMount } from 'svelte';
-	import PunktLinieKiezAuswahl from '$lib/components/stories/punkt-linie-kiez-auswahl.svelte';
-	import Handbuch from '$lib/components/stories/wahl-handbuch/handbuch.svelte';
-	import SeoHead from '$lib/components/atlas/seo-head.svelte';
-	import JsonLd from '$lib/components/atlas/json-ld.svelte';
-	import { formatUpdateDate } from '$lib/components/updates/category-label.js';
-	import { localizeStory } from '$lib/content/stories/localize-story.js';
-	import { localizedHref } from '$lib/i18n/localized-href.js';
-	import { m } from '$lib/paraglide/messages.js';
-	import { getLocale } from '$lib/paraglide/runtime';
-	import { buildBreadcrumbList } from '$lib/seo/jsonld-breadcrumb.js';
-	import { buildStoryPosting, storyImagePath } from '$lib/seo/jsonld-story.js';
-	import { canonicalOrigin, localizedPathname } from '$lib/seo/canonical.js';
-	import { buildPageTitle } from '$lib/seo/page-title.js';
+	import PunktLinieKiezAuswahl from '#lib/components/stories/punkt-linie-kiez-auswahl.svelte';
+	import Handbuch from '#lib/components/stories/wahl-handbuch/handbuch.svelte';
+	import SeoHead from '#lib/components/atlas/seo-head.svelte';
+	import JsonLd from '#lib/components/atlas/json-ld.svelte';
+	import { formatUpdateDate } from '#lib/components/updates/category-label.js';
+	import { localizeStory } from '#lib/content/stories/localize-story.js';
+	import { localizedHref } from '#lib/i18n/localized-href.js';
+	import { m } from '#lib/paraglide/messages.js';
+	import { getLocale } from '#lib/paraglide/runtime.js';
+	import { buildBreadcrumbList } from '#lib/seo/jsonld-breadcrumb.js';
+	import { buildStoryPosting, storyImagePath } from '#lib/seo/jsonld-story.js';
+	import { canonicalOrigin, localizedPathname } from '#lib/seo/canonical.js';
+	import { buildPageTitle } from '#lib/seo/page-title.js';
 	import {
 		DEFAULT_URL_STATE,
 		parseUrlState,
 		serializeUrlState,
 		type ZeitState
-	} from '$lib/stories/wahl-quadrate/url-state';
+	} from '#lib/stories/wahl-quadrate/url-state.ts';
 
 	type Props = { data: import('./$types').PageData };
 	let { data }: Props = $props();
@@ -33,8 +33,10 @@
 		zeit = readZeit();
 	});
 	// Kapitel 5 folgt der URL auch nach Zurück oder einem Deep-Link im selben Beitrag.
-	// Eigene Schreibvorgänge laufen über replaceState und lösen afterNavigate nicht aus.
-	afterNavigate(() => {
+	// Eigene Schreibvorgänge laufen über goto({ shallow: true }), der Guard überspringt sie.
+	afterNavigate(({ shallow, type }) => {
+		if (shallow && type === 'goto') return;
+
 		zeit = readZeit();
 	});
 
@@ -44,17 +46,19 @@
 
 	/** Kapitel 5 im Handbuch: Bezirk und Wahl teilbar in der URL, andere Parameter bleiben. */
 	function rememberZeit(next: ZeitState): void {
-		const url = new URL(window.location.href);
-		const state = { ...parseUrlState(url), zeit: next };
-		url.search = serializeUrlState(state, url.searchParams).search;
-		replaceState(url, page.state);
+		const current = new URL(window.location.href);
+		const state = { ...parseUrlState(current), zeit: next };
+		const { search } = serializeUrlState(state, current.searchParams);
+		// `?` allein leert die Query, ein leerer Verweis würde sie behalten.
+		const url = new URL(`${search || '?'}${current.hash}`, current);
+		goto(url, { shallow: true, replace: true, state: page.state });
 	}
 
 	/** Hält die Wahl in der URL teilbar, ohne den Verlauf zu füllen. */
 	function rememberBezirk(slug: string): void {
 		const url = new URL(window.location.href);
 		url.searchParams.set('bezirk', slug);
-		replaceState(url, page.state);
+		goto(url, { shallow: true, replace: true, state: page.state });
 	}
 
 	const entry = $derived(data.entry);
@@ -160,6 +164,7 @@
 				data-testid="stories-detail-intro"
 				lang={bodyLang}
 			>
+				<!-- eslint-disable-next-line svelte/no-at-html-tags -- eigenes Markdown, serverseitig via renderMarkdownBody gerendert -->
 				{@html data.bodyHtmlBefore}
 			</section>
 		{/if}
@@ -178,6 +183,7 @@
 			data-testid="stories-detail-body"
 			lang={bodyLang}
 		>
+			<!-- eslint-disable-next-line svelte/no-at-html-tags -- eigenes Markdown, serverseitig via renderMarkdownBody gerendert -->
 			{@html data.bodyHtml}
 		</section>
 	{/if}

@@ -25,7 +25,7 @@ so that ich die Cross-Layer-Sicht für meine Adresse als gleichzeitige Antwort s
    **Given** Story 1.8 nutzt `<div id="map-status">` lokal in MapLibreCanvas
    **When** Live-Channel zentralisiert wird
    **Then** `+layout.svelte` rendert genau eine globale Live-Region: `<div id="global-aria-live" aria-live="polite" aria-atomic="false" class="sr-only"></div>`
-   **And** Helper `announceGlobal(text: string)` in `$lib/utils/aria-live.ts` setzt `textContent` mit Clear-Timeout 5s
+   **And** Helper `announceGlobal(text: string)` in `#lib/utils/aria-live.ts` setzt `textContent` mit Clear-Timeout 5s
    **And** Map-Status-Updates aus Story 1.7/1.8 delegieren an Helper
    **And** Erfüllt UX-DR50 (sparsame Live-Regions, eine pro Page).
 
@@ -137,7 +137,7 @@ so that ich die Cross-Layer-Sicht für meine Adresse als gleichzeitige Antwort s
   - [ ] 1.1 `src/lib/state/ui-context.ts`:
     ```typescript
     import { getContext, setContext } from 'svelte';
-    import type { LayerHit, GeocodeSuggestion } from '$lib/data';
+    import type { LayerHit, GeocodeSuggestion } from '#lib/data/index.ts';
 
     const KEY = Symbol('ui-state');
 

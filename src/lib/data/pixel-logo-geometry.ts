@@ -75,7 +75,7 @@ export const SILHOUETTE_PATH_D: string =
 
 /**
  * 20 gesättigte Fremdfarben, bewusst unabhängig von den `COLORS`-Tokens in
- * `$lib/components/atlas/internal/colors.ts`. Nicht umfärben ohne Rücksprache.
+ * `#lib/components/atlas/internal/colors.ts`. Nicht umfärben ohne Rücksprache.
  */
 export const PALETTE: readonly string[] = [
 	'#D4322C',

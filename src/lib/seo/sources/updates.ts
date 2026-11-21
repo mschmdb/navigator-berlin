@@ -1,10 +1,10 @@
 import type { SitemapEntry, SitemapSource } from '../sitemap-builder.js';
-import { entryModifiedDate } from '$lib/content/updates/modified-date.js';
-import type { UpdateEntry } from '$lib/content/updates/types.js';
+import { entryModifiedDate } from '#lib/content/updates/modified-date.js';
+import type { UpdateEntry } from '#lib/content/updates/types.js';
 import { localizedPathname } from '../canonical.js';
 import { latestLastmod, validLastmod } from '../lastmod.js';
-import type { Locale } from '$lib/paraglide/runtime';
-import { loadUpdatesFromModules, sortByDateDesc } from '$lib/content/updates/load-updates.js';
+import type { Locale } from '#lib/paraglide/runtime.js';
+import { loadUpdatesFromModules, sortByDateDesc } from '#lib/content/updates/load-updates.js';
 
 /**
  * Story 2.13 AC-10: Sitemap-Source für Updates-Routes.
@@ -57,7 +57,7 @@ export function buildUpdatesSitemapEntries(input: BuildUpdatesSitemapEntriesInpu
 
 /**
  * SitemapSource das Build-Time MD-Files unter `_content/updates/` lädt.
- * Wird in `$lib/seo/sitemap-builder.ts ALL_SOURCES` registriert.
+ * Wird in `#lib/seo/sitemap-builder.ts ALL_SOURCES` registriert.
  */
 export const UPDATES_PAGES_SOURCE: SitemapSource = (ctx) => {
 	// Build-Time-Glob. eager:true → Module sync verfügbar.

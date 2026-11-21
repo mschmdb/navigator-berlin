@@ -1,5 +1,5 @@
-import { m } from '$lib/paraglide/messages.js';
-import type { Locale } from '$lib/paraglide/runtime';
+import { m } from '#lib/paraglide/messages.js';
+import type { Locale } from '#lib/paraglide/runtime.js';
 import type { ChapterId, LabelId, MetricId } from './topics';
 
 type TextFn = (inputs?: Record<string, never>, options?: { locale?: Locale }) => string;

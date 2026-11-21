@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { YearValue } from '$lib/data';
+	import type { YearValue } from '#lib/data/index.ts';
 	import { AreaChart, Tooltip } from 'layerchart';
 	import DataTableAlternative, { type TableColumn } from './data-table-alternative.svelte';
 	import {
@@ -7,12 +7,12 @@
 		markersInRange,
 		type NarrativeMarker
 	} from './internal/narrative-markers.js';
-	import { rollingMean } from '$lib/utils/rolling-mean.js';
-	import { announceGlobal } from '$lib/utils/aria-live.js';
-	import { NORMAL_OLD, NORMAL_NEW, getNormalperiodMean } from '$lib/utils/normalperiod.js';
-	import { m } from '$lib/paraglide/messages.js';
-	import { getLocale, type Locale } from '$lib/paraglide/runtime';
-	import { formatDecimal } from '$lib/i18n/format.js';
+	import { rollingMean } from '#lib/utils/rolling-mean.js';
+	import { announceGlobal } from '#lib/utils/aria-live.js';
+	import { NORMAL_OLD, NORMAL_NEW, getNormalperiodMean } from '#lib/utils/normalperiod.js';
+	import { m } from '#lib/paraglide/messages.js';
+	import { getLocale, type Locale } from '#lib/paraglide/runtime.js';
+	import { formatDecimal } from '#lib/i18n/format.js';
 
 	type Props = {
 		series: readonly YearValue[];
@@ -162,7 +162,7 @@
 
 	function onKeydown(event: KeyboardEvent): void {
 		if (rows.length === 0) return;
-		let next = focusedIndex;
+		let next: number;
 		if (event.key === 'ArrowRight') {
 			next = focusedIndex < 0 ? 0 : Math.min(rows.length - 1, focusedIndex + 1);
 		} else if (event.key === 'ArrowLeft') {

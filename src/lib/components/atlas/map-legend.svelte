@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { ArrowDownUp, Eye, EyeOff, X } from '@lucide/svelte';
-	import type { LayerMetadata } from '$lib/data';
-	import { m } from '$lib/paraglide/messages.js';
-	import { getLocale, type Locale } from '$lib/paraglide/runtime';
-	import { localizedHref } from '$lib/i18n/localized-href.js';
+	import type { LayerMetadata } from '#lib/data/index.ts';
+	import { m } from '#lib/paraglide/messages.js';
+	import { getLocale, type Locale } from '#lib/paraglide/runtime.js';
+	import { localizedHref } from '#lib/i18n/localized-href.js';
 	import { getLegendSpec } from './internal/layer-style-builder.js';
 	import { getPinIcon } from './internal/pin-icon-mapping.js';
 	import { COLORS } from './internal/colors.js';
@@ -14,7 +14,7 @@
 	import { hasPinnedChoropleth } from './internal/layer-visibility.js';
 	import { dotSpecForSlug } from './internal/choropleth-dots.js';
 	import { SCORE_DOT_BASE_PX } from './internal/dimension-ramps.js';
-	import { isKiezScoreLayer } from '$lib/data/kiez-score-layer.js';
+	import { isKiezScoreLayer } from '#lib/data/kiez-score-layer.js';
 
 	type Props = {
 		activeLayerSlugs: readonly string[];

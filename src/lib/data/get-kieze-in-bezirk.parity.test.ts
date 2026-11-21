@@ -3,7 +3,7 @@ import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { buildKiezeInBezirk } from './get-kieze-in-bezirk.js';
 import { normalizeSlug } from './internal/slug.js';
-import { readKiezSlugsFromGeoJson } from '$lib/seo/sources/kiez-slugs.js';
+import { readKiezSlugsFromGeoJson } from '#lib/seo/sources/kiez-slugs.js';
 import type { Manifest } from './types.js';
 
 type Fc = { features: { properties?: Record<string, unknown> }[] };

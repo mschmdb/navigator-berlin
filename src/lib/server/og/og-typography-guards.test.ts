@@ -9,7 +9,7 @@ import {
 	buildWahlCardVdom,
 	type SatoriNode
 } from './page-card-template.js';
-import { buildOgCardVdom, loadDefaultOgFonts } from '$lib/utils/og-card-renderer.js';
+import { buildOgCardVdom, loadDefaultOgFonts } from '#lib/utils/og-card-renderer.js';
 import type { ScoreCardData } from './score-card-data.js';
 
 // #132: OG-Karten folgen der Typografie aus #87. Plex Sans mit Gewichtsstufen,

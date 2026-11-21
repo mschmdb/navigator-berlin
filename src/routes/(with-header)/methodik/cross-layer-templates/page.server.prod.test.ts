@@ -1,7 +1,7 @@
 import { describe, expect, it, vi } from 'vitest';
 import { isHttpError } from '@sveltejs/kit';
 
-vi.mock('$app/environment', () => ({ dev: false, browser: false, building: false, version: '' }));
+vi.mock('$app/env', () => ({ dev: false, browser: false, building: false, version: '' }));
 
 const { load } = await import('./+page.server');
 const runLoad = () => (load as unknown as () => Promise<unknown>)();

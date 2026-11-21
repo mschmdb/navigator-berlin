@@ -1,8 +1,8 @@
 import { page } from 'vitest/browser';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
-import { overwriteGetLocale } from '$lib/paraglide/runtime';
-import { m } from '$lib/paraglide/messages.js';
+import { overwriteGetLocale } from '#lib/paraglide/runtime.js';
+import { m } from '#lib/paraglide/messages.js';
 import MapLibreCanvas from './map-libre-canvas.svelte';
 
 afterEach(() => {

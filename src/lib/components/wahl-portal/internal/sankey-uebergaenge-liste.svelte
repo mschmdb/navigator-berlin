@@ -4,9 +4,9 @@
 	 * wenige Pixel hoch und kaum zu treffen; die Liste trägt dort die Details.
 	 * Antippen hebt das passende Band in der Grafik hervor (gleicher Schlüssel).
 	 */
-	import { m } from '$lib/paraglide/messages.js';
-	import { formatPercent } from '$lib/i18n/format.js';
-	import { parteiColor } from '$lib/data/partei-farben.js';
+	import { m } from '#lib/paraglide/messages.js';
+	import { formatPercent } from '#lib/i18n/format.js';
+	import { parteiColor } from '#lib/data/partei-farben.js';
 	import { parteiDisplayName } from './winner-map-data.js';
 	import type { UebergangsGruppe } from './sankey-liste.js';
 

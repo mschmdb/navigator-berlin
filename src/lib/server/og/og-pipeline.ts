@@ -13,9 +13,9 @@
  * Pure Function ohne IO.
  */
 
-import { normalizeSlug } from '$lib/data/internal/slug.js';
-import { buildKiezSlugs, type KiezNameRef } from '$lib/data/internal/kiez-slug.js';
-import { LAYER_EXPLAIN_DE } from '$lib/components/atlas/internal/layer-palette-filter.js';
+import { normalizeSlug } from '#lib/data/internal/slug.js';
+import { buildKiezSlugs, type KiezNameRef } from '#lib/data/internal/kiez-slug.js';
+import { LAYER_EXPLAIN_DE } from '#lib/components/atlas/internal/layer-palette-filter.js';
 
 export type Bbox4 = readonly [minLon: number, minLat: number, maxLon: number, maxLat: number];
 

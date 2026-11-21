@@ -15,12 +15,12 @@ baseline_commit: 'b3efbbcefa06fd171534664ba450ef0f29aca12d'
 
 **Problem:** Das Wahl→Geometrie-Wissen (Wahl-Slug-Bildung, Wahl→Geo-Layer-Mapping, uwbId-Format-Konvertierung) existiert in bis zu sechs divergenten Kopien in Runtime, API-Routen, Komponente und Build-Skripten, fast ohne Tests. Jede neue Wahl (AGH/BVV 2026, nächste Woche) muss heute an allen Stellen nachgezogen werden.
 
-**Approach:** `src/lib/data/wahl-geo-mapping.ts` wird die einzige Quelle (pure TS, keine `$lib`-Imports, damit Build-Skripte relativ importieren können). Alle Kopien delegieren dorthin. Kein Verhaltens-Change: bestehende Outputs bleiben identisch, nachgewiesen über die vorhandenen Tests plus neue Unit-Tests für das konsolidierte Modul.
+**Approach:** `src/lib/data/wahl-geo-mapping.ts` wird die einzige Quelle (pure TS, keine `#lib`-Imports, damit Build-Skripte relativ importieren können). Alle Kopien delegieren dorthin. Kein Verhaltens-Change: bestehende Outputs bleiben identisch, nachgewiesen über die vorhandenen Tests plus neue Unit-Tests für das konsolidierte Modul.
 
 ## Boundaries & Constraints
 
 **Always:**
-- `wahl-geo-mapping.ts` bleibt reines TS ohne `$lib`/`$app`/`$env`-Imports (Vorbild `src/lib/data/internal/slug.ts`), damit `tsx`-Skripte es relativ importieren können.
+- `wahl-geo-mapping.ts` bleibt reines TS ohne `#lib`/`$app`/`$env`-Imports (Vorbild `src/lib/data/internal/slug.ts`), damit `tsx`-Skripte es relativ importieren können.
 - Verhalten bleibt exakt gleich: forward `dbUwbIdFromGeo` emittiert für AGH/BVV weiterhin OHNE `-W`-Suffix; reverse `candidateDbUwbIds` akzeptiert weiterhin beide Varianten.
 - `scripts/wahlen/lib/kiez-mapper.test.ts` (14 Cases) bleibt als Kontrakt bestehen und muss grün bleiben.
 - TDD: neue Modul-Tests zuerst (rot bei fehlendem Export), dann Umbau.

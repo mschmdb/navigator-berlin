@@ -14,7 +14,7 @@
 
 import { isRouteTranslated } from './translation-register.js';
 import { describe, it, expect } from 'vitest';
-import type { Manifest } from '$lib/data/types.js';
+import type { Manifest } from '#lib/data/types.js';
 import { collectPrerenderedUrls } from './sitemap-builder.js';
 import { collectLlmsSourceEntries, type LlmsSourceContext } from './llms-builder.js';
 

@@ -5,9 +5,9 @@
 -->
 <script lang="ts">
 	import type { Snippet } from 'svelte';
-	import type { HomePreview } from '$lib/content/home-previews.js';
-	import { localizedHref } from '$lib/i18n/localized-href.js';
-	import { trackLanding } from '$lib/utils/plausible.js';
+	import type { HomePreview } from '#lib/content/home-previews.js';
+	import { localizedHref } from '#lib/i18n/localized-href.js';
+	import { trackLanding } from '#lib/utils/plausible.js';
 	import HomePreviewLink from './home-preview-link.svelte';
 	import { ctaPrimary, ctaSecondary } from './internal/cta.js';
 

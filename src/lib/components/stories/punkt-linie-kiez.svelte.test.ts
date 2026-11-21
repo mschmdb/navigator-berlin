@@ -2,8 +2,8 @@ import { userEvent } from 'vitest/browser';
 import { flushSync } from 'svelte';
 import { afterEach, describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
-import { overwriteGetLocale } from '$lib/paraglide/runtime';
-import type { Kennzahlen } from '$lib/stories/punkt-linie-kiez/types';
+import { overwriteGetLocale } from '#lib/paraglide/runtime.js';
+import type { Kennzahlen } from '#lib/stories/punkt-linie-kiez/types.ts';
 import PunktLinieKiez from './punkt-linie-kiez.svelte';
 
 const fk: Kennzahlen = {

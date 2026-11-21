@@ -2,7 +2,7 @@
  * Social-Bild je Bezirk und Wahltyp (1080 × 1350, Vorrat für Nachposts) und OG-Bild der
  * Handbuch-Seite (1200 × 630) als SVG. Gerastert wird auf dem Server (`raster.ts`).
  */
-import { m } from '$lib/paraglide/messages.js';
+import { m } from '#lib/paraglide/messages.js';
 import { STORY_FONT, STORY_PAPER } from '../tokens';
 import { fitSquareSize, labelExtent, placeSquare, type PlacedSquare } from './anordnung';
 import { bezirkeAlphabetisch, sourceLine, squareSpec, wahlenOf } from './bilddaten';

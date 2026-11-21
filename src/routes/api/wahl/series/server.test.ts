@@ -1,6 +1,6 @@
 import { describe, expect, it, beforeAll, afterAll } from 'vitest';
 import { GET } from './+server';
-import { closeDb } from '$lib/server/db/index.js';
+import { closeDb } from '#lib/server/db/index.js';
 
 async function call(query: string): Promise<Response> {
 	return await GET({

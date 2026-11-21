@@ -1,4 +1,4 @@
-import type { LayerFormat } from '$lib/data/types.js';
+import type { LayerFormat } from '#lib/data/types.js';
 
 export type BboxTuple = readonly [minLng: number, minLat: number, maxLng: number, maxLat: number];
 

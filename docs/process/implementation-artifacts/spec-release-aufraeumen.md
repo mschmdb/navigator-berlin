@@ -59,13 +59,13 @@ context:
 2. `layer_explain_lor_bezirksregion_short` DE/EN: 138 auf 143 (GeoJSON `lor-bezirksregion.*.geojson` hat 143 Features).
 3. Wahlportal-DataCatalog: `inLanguage: localeToBcp47(getLocale())`; Absicherung per E2E in `dataset-jsonld.e2e.ts` (de-DE, en-US).
 4. `formatMonthYear`: `timeZone: 'Europe/Berlin'`; Unit-Test setzt `TZ=America/Los_Angeles` (war rot, jetzt grün).
-5. `sourceName` nach `$lib/data/wahl-source-name.ts` verschoben (`$lib/server/` ist im Client-Bundle gesperrt); alle Nutzer umgestellt, zwei Duplikate entfernt.
+5. `sourceName` nach `#lib/data/wahl-source-name.ts` verschoben (`$lib/server/` ist im Client-Bundle gesperrt); alle Nutzer umgestellt, zwei Duplikate entfernt.
 6. `/methodik/kiez-score`: Pipeline-Absatz ohne Befehl und Tabellennamen, keine Code-Spans mehr; Tests und DE-Snapshot angepasst.
 7. Gelöscht: `layer-level-card`, `inspector-level-toggle`, `charts/kiez-score-hero` samt Tests; Hero-Block aus `kiez-score-ring.svelte.test.ts` entfernt, Kommentar in `radiogroup-keyboard.ts` bereinigt.
 8. `a11y.e2e.ts`: Wortmarke-Fall entfernt.
 
 Review-Patches (15.10.2026):
-- OG-Skript `generate-og-images.ts` nutzt `sourceName` aus `$lib/data/wahl-source-name.ts` (Landeswahlleiterin Berlin wird jetzt erkannt); OG-Bilder nicht neu erzeugt.
+- OG-Skript `generate-og-images.ts` nutzt `sourceName` aus `#lib/data/wahl-source-name.ts` (Landeswahlleiterin Berlin wird jetzt erkannt); OG-Bilder nicht neu erzeugt.
 - `address-search.e2e.ts`: Showcase-Test gelöscht, SiteHeader-Test läuft auf `/lizenzen` (Link-Name `navigator.berlin` im Banner); kein Test ruft mehr `/_dev/` auf.
 - Weitere tote Module gelöscht: `aggregate-layer-for-level`, `charts/coverage-bar` (Test-Block aus `chart-primitives.svelte.test.ts` entfernt), `count-points-in-polygon`, je mit Tests. Neu verwaiste Module der ersten Ebene: keine (chart-scale, chart-palette, inspector-level-context, layer-aggregates-types, value-severity-mapping, kiez-score-ring, layer-hit-row, editorial-disclaimer haben weitere Nutzer).
 - `home_data_source_dwd_climate_data_center_description` DE/EN auf "in und um Berlin"; keine weiteren Treffer für "Berliner Wetterstation".

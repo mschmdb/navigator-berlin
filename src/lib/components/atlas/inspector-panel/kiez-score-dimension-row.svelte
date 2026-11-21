@@ -1,15 +1,15 @@
 <script lang="ts">
 	import { ChevronDown, ChevronRight, Eye, EyeOff, ExternalLink } from '@lucide/svelte';
-	import { localizedHref } from '$lib/i18n/localized-href.js';
-	import { m } from '$lib/paraglide/messages.js';
-	import { getLocale, type Locale } from '$lib/paraglide/runtime';
-	import { formatCount, formatDate } from '$lib/i18n/format.js';
+	import { localizedHref } from '#lib/i18n/localized-href.js';
+	import { m } from '#lib/paraglide/messages.js';
+	import { getLocale, type Locale } from '#lib/paraglide/runtime.js';
+	import { formatCount, formatDate } from '#lib/i18n/format.js';
 	import ValueChip from '../value-chip.svelte';
 	import EditorialDisclaimer from '../editorial-disclaimer.svelte';
 	import { getLayerDisplayName } from '../internal/layer-palette-filter.js';
 	import { dimensionLabel, scaleFor } from './internal/kiez-score-display.js';
 	import { severityDescriptions } from './internal/value-severity-mapping.js';
-	import type { DimensionScore } from '$lib/data';
+	import type { DimensionScore } from '#lib/data/index.ts';
 
 	type Props = {
 		score: DimensionScore;

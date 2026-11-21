@@ -1,10 +1,11 @@
 <script lang="ts">
+	import { indexBy } from '#lib/utils/collections.js';
 	import { onMount, onDestroy } from 'svelte';
-	import { parteiColor } from '$lib/data/partei-farben.js';
-	import { normalizeSlug } from '$lib/data/internal/slug.js';
-	import { m } from '$lib/paraglide/messages.js';
+	import { parteiColor } from '#lib/data/partei-farben.js';
+	import { normalizeSlug } from '#lib/data/internal/slug.js';
+	import { m } from '#lib/paraglide/messages.js';
 	import { COLORS } from './internal/colors.js';
-	import { formatPercent } from '$lib/i18n/format.js';
+	import { formatPercent } from '#lib/i18n/format.js';
 
 	export type BezirkSummary = {
 		readonly slug: string;
@@ -27,11 +28,7 @@
 	let mapInstance: unknown = null;
 	let resizeListener: (() => void) | null = null;
 
-	const byBezirkSlug = $derived.by(() => {
-		const map = new Map<string, BezirkSummary>();
-		for (const b of bezirke) map.set(b.slug, b);
-		return map;
-	});
+	const byBezirkSlug = $derived(indexBy(bezirke, (b: BezirkSummary) => b.slug));
 
 	onMount(() => {
 		void (async () => {

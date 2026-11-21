@@ -8,7 +8,7 @@
 import { readdir, readFile } from 'node:fs/promises';
 import path from 'node:path';
 import type { FeatureCollection } from 'geojson';
-import { buildKiezSlugs } from '$lib/data/internal/kiez-slug.js';
+import { buildKiezSlugs } from '#lib/data/internal/kiez-slug.js';
 
 async function loadStaticLayer(repoRoot: string, prefix: string): Promise<FeatureCollection> {
 	const dir = path.join(repoRoot, 'static', 'layers');

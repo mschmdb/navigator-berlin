@@ -25,7 +25,7 @@ describe('PortalQuellen', () => {
 	// `licenseDisplayLabel` (ausgeschriebener Name statt Rohcode); das
 	// API-Feld selbst (`quelle.license`) bleibt unveraendert.
 	it('EN: zeigt den ausgeschriebenen Lizenz-Namen statt des Rohcodes', async () => {
-		const { overwriteGetLocale } = await import('$lib/paraglide/runtime');
+		const { overwriteGetLocale } = await import('#lib/paraglide/runtime.js');
 		overwriteGetLocale(() => 'en');
 		try {
 			render(PortalQuellen, {
@@ -56,7 +56,7 @@ describe('PortalQuellen', () => {
 	});
 
 	it('Methodik-Link zeigt sprechenden Text statt Pfad (EN)', async () => {
-		const { overwriteGetLocale } = await import('$lib/paraglide/runtime');
+		const { overwriteGetLocale } = await import('#lib/paraglide/runtime.js');
 		overwriteGetLocale(() => 'en');
 		try {
 			render(PortalQuellen, { quellen: [] });

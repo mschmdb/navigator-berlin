@@ -6,7 +6,7 @@
 	 * sind keine Sprachalternativen der Seite, deshalb tragen die Links kein
 	 * `hreflang`. Auf EN weist der `title` stattdessen auf die deutsche Sprache hin.
 	 */
-	import { m } from '$lib/paraglide/messages.js';
+	import { m } from '#lib/paraglide/messages.js';
 
 	type Props = {
 		/** Absolute Origin der Site (page.url.origin). */

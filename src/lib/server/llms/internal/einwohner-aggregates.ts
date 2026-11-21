@@ -50,7 +50,6 @@ export async function loadEinwohnerAggregates(repoRoot: string): Promise<Einwohn
 		// statt still leere Exporte auszuliefern.
 		const code = (err as NodeJS.ErrnoException).code;
 		if (code !== 'ENOENT') {
-			// eslint-disable-next-line no-console
 			console.warn(
 				'[einwohner-aggregates] Payload unlesbar, Exporte ohne Einwohner:',
 				err instanceof Error ? err.message : err

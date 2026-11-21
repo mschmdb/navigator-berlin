@@ -2,7 +2,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 const { fromMock } = vi.hoisted(() => ({ fromMock: vi.fn() }));
 
-vi.mock('$lib/server/db/index.js', () => ({
+vi.mock('#lib/server/db/index.js', () => ({
 	getDb: () => ({ select: () => ({ from: fromMock }) })
 }));
 

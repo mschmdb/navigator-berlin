@@ -1,18 +1,18 @@
 import { afterEach, describe, expect, it } from 'vitest';
-import { overwriteGetLocale } from '$lib/paraglide/runtime';
+import { overwriteGetLocale } from '#lib/paraglide/runtime.js';
 import {
 	approximateTokens,
 	buildLlmExportMarkdown,
 	type LlmExportInput
 } from './llm-export-builder.js';
-import type { LayerHit, LayerMetadata, ClimateStation, ClimateData } from '$lib/data';
+import type { LayerHit, LayerMetadata, ClimateStation, ClimateData } from '#lib/data/index.ts';
 import type {
 	NearestStop,
 	Modus
-} from '$lib/components/atlas/inspector-panel/internal/nearest-oepnv-stop.js';
-import type { MobilityRating } from '$lib/components/atlas/inspector-panel/internal/mobility-rating.js';
-import type { WahlResultsAtPoint } from '$lib/data/get-wahl-results-at-point.js';
-import type { KiezDemografieData } from '$lib/components/atlas/inspector-panel/internal/demografie-types.js';
+} from '#lib/components/atlas/inspector-panel/internal/nearest-oepnv-stop.js';
+import type { MobilityRating } from '#lib/components/atlas/inspector-panel/internal/mobility-rating.js';
+import type { WahlResultsAtPoint } from '#lib/data/get-wahl-results-at-point.js';
+import type { KiezDemografieData } from '#lib/components/atlas/inspector-panel/internal/demografie-types.js';
 
 const ADDRESS = {
 	displayName: 'Boxhagener Straße 12, 10245 Berlin',

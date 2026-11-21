@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { buildBezirkSitemapEntries, BEZIRK_PAGES_SOURCE } from './bezirk-pages.js';
-import type { Manifest } from '$lib/data/types.js';
+import type { Manifest } from '#lib/data/types.js';
 import type { SitemapSourceContext } from '../sitemap-builder.js';
 
 const ORIGIN = 'https://navigator.berlin';

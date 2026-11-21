@@ -3,8 +3,8 @@
  * Gemessen wird bei 100 px, zurück kommen Werte je Schriftgröße 1 (siehe `Metrics`).
  * Nur im Browser. Auf dem Server misst `poster-pdf` mit Font-Metriken.
  */
-import type { Measure, Metrics } from '$lib/stories/wahl-quadrate/labels';
-import { STORY_FONT } from '$lib/stories/tokens';
+import type { Measure, Metrics } from '#lib/stories/wahl-quadrate/labels.ts';
+import { STORY_FONT } from '#lib/stories/tokens.ts';
 
 const PX = 100;
 export const SQUARE_FONT = `900 ${PX}px ${STORY_FONT}`;

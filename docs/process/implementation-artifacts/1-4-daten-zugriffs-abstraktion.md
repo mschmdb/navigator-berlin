@@ -7,12 +7,12 @@ Status: review
 ## Story
 
 As a Komponenten-Entwickler,
-I want eine typesafe Daten-Zugriffs-Abstraktion in `$lib/data/`,
+I want eine typesafe Daten-Zugriffs-Abstraktion in `#lib/data//index.ts`,
 so that Komponenten Layer-Hits via einheitlichem Interface abrufen können — und Phase-2/3-SQL-Swap ohne Component-Code-Änderung möglich ist.
 
 ## Acceptance Criteria
 
-1. **AC-1 (Type-Definitions in `$lib/data/types.ts`):**
+1. **AC-1 (Type-Definitions in `#lib/data/types.ts`):**
    **Given** `static/layers/MANIFEST.json` aus Story 1.3 existiert
    **When** `src/lib/data/types.ts` mit Type-Hierarchie definiert wird (siehe Dev-Note „Type-Reference")
    **Then** folgende Types exportiert + TypeScript-strict + kein `any`:
@@ -90,14 +90,14 @@ so that Komponenten Layer-Hits via einheitlichem Interface abrufen können — u
 8. **AC-8 (Module-Public-API + Re-Exports):**
    **Given** alle Reader
    **When** `src/lib/data/index.ts` Re-Exports definiert
-   **Then** Folgende Public-API verfügbar via `import { ... } from '$lib/data'`:
+   **Then** Folgende Public-API verfügbar via `import { ... } from '#lib/data'`:
    - `loadManifest`, `getLayerEntry`, `getLayersByBundle`
    - `getLayersAtPoint`
    - `getKiezProfile`, `getBezirkProfile`, `getLayerMetadata`
    - `getNearestClimateStation`, `getClimateSeries`
    - Types: `LayerHit`, `LayerMetadata`, `Manifest`, `KiezProfile`, `BezirkProfile`, `ClimateData`, `ClimateStation`
-   **And** Konsumenten importieren AUSSCHLIESSLICH via `$lib/data`-Public-Surface
-   **And** Phase-2-SQL-Swap: Interfaces bleiben stabil, Implementation in `$lib/data/`-internen Files austauschbar — Konsumenten merken nichts (Architecture-Doc Decision).
+   **And** Konsumenten importieren AUSSCHLIESSLICH via `#lib/data/index.ts`-Public-Surface
+   **And** Phase-2-SQL-Swap: Interfaces bleiben stabil, Implementation in `#lib/data//index.ts`-internen Files austauschbar — Konsumenten merken nichts (Architecture-Doc Decision).
 
 ## Tasks / Subtasks
 

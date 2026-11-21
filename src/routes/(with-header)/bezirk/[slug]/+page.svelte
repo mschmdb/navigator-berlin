@@ -4,36 +4,35 @@
 	Die eigenen Kieze erscheinen nur als Spanne innerhalb des Bezirks.
 -->
 <script lang="ts">
-	import { formatCount, formatPercent } from '$lib/i18n/format.js';
-	import '$lib/components/place/place.css';
-	import RegionTitle from '$lib/components/atlas/region-title.svelte';
-	import NoJsFallback from '$lib/components/place/no-js-fallback.svelte';
-	import PlaceSeo from '$lib/components/place/place-seo.svelte';
-	import ReferenceBar from '$lib/components/place/reference-bar.svelte';
-	import Section from '$lib/components/place/place-section.svelte';
-	import Chapter from '$lib/components/place/chapter.svelte';
-	import ScoreMap from '$lib/components/place/score-map.svelte';
-	import ProfileChart from '$lib/components/place/profile-chart.svelte';
-	import PartyMultiples from '$lib/components/place/party-multiples.svelte';
-	import WahlSwitch from '$lib/components/place/wahl-switch.svelte';
-	import NeighborList from '$lib/components/place/neighbor-list.svelte';
-	import FaqBlock from '$lib/components/place/place-faq.svelte';
-	import DataTable from '$lib/components/place/data-table.svelte';
-	import { aggregateProfile, resolveReference } from '$lib/place/reference';
-	import { PlaceViewState, WahlCache } from '$lib/place/reference-state.svelte';
-	import { wahlFacts, wahlSentences } from '$lib/place/wahl-text';
-	import { CHAPTERS, chapterText } from '$lib/place/topics';
-	import { trackLanding } from '$lib/utils/plausible.js';
-	import { atlasQuery } from '$lib/place/atlas-link';
-	import { RATED_DIMS, type Dim } from '$lib/place/types';
-	import type { WahlArt } from '$lib/place/wahl-types';
-	import { dimLabel, formatScore, signedPoints } from '$lib/place/labels';
-	import { bezirkAnchorId } from '$lib/data/region-overview.js';
-	import { unpackRegions, unpackWahl } from '$lib/place/pack';
-	import { localizedHref } from '$lib/i18n/localized-href.js';
-	import { page } from '$app/state';
-	import { m } from '$lib/paraglide/messages.js';
-	import { getLocale } from '$lib/paraglide/runtime';
+	import { formatCount, formatPercent } from '#lib/i18n/format.js';
+	import '#lib/components/place/place.css';
+	import RegionTitle from '#lib/components/atlas/region-title.svelte';
+	import NoJsFallback from '#lib/components/place/no-js-fallback.svelte';
+	import PlaceSeo from '#lib/components/place/place-seo.svelte';
+	import ReferenceBar from '#lib/components/place/reference-bar.svelte';
+	import Section from '#lib/components/place/place-section.svelte';
+	import Chapter from '#lib/components/place/chapter.svelte';
+	import ScoreMap from '#lib/components/place/score-map.svelte';
+	import ProfileChart from '#lib/components/place/profile-chart.svelte';
+	import PartyMultiples from '#lib/components/place/party-multiples.svelte';
+	import WahlSwitch from '#lib/components/place/wahl-switch.svelte';
+	import NeighborList from '#lib/components/place/neighbor-list.svelte';
+	import FaqBlock from '#lib/components/place/place-faq.svelte';
+	import DataTable from '#lib/components/place/data-table.svelte';
+	import { aggregateProfile, resolveReference } from '#lib/place/reference.ts';
+	import { PlaceViewState, WahlCache } from '#lib/place/reference-state.svelte.ts';
+	import { wahlFacts, wahlSentences } from '#lib/place/wahl-text.ts';
+	import { CHAPTERS, chapterText } from '#lib/place/topics.ts';
+	import { trackLanding } from '#lib/utils/plausible.js';
+	import { atlasQuery } from '#lib/place/atlas-link.ts';
+	import { RATED_DIMS, type Dim } from '#lib/place/types.ts';
+	import type { WahlArt } from '#lib/place/wahl-types.ts';
+	import { dimLabel, formatScore, signedPoints } from '#lib/place/labels.ts';
+	import { bezirkAnchorId } from '#lib/data/region-overview.js';
+	import { unpackRegions, unpackWahl } from '#lib/place/pack.ts';
+	import { localizedHref } from '#lib/i18n/localized-href.js';
+	import { m } from '#lib/paraglide/messages.js';
+	import { getLocale } from '#lib/paraglide/runtime.js';
 	import type { PageData } from './$types';
 
 	let { data }: { data: PageData } = $props();
@@ -69,7 +68,7 @@
 		all: new Set(bezirke.map((b) => b.slug))
 	}));
 	$effect(() => {
-		view.readUrl(page.url);
+		view.readPage();
 	});
 	const ref = $derived(resolveReference(view.choice, { berlin, bezirk: null, regions: byslug }));
 	const kind = $derived(view.choice.kind);

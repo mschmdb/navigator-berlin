@@ -39,7 +39,7 @@ export function loadTemplatesFromRawMap(rawFiles: Record<string, string>): Loade
 			});
 		} catch (err) {
 			const msg = err instanceof Error ? err.message : String(err);
-			throw new Error(`failed to parse template file ${path}: ${msg}`);
+			throw new Error(`failed to parse template file ${path}: ${msg}`, { cause: err });
 		}
 	}
 	return bundles;

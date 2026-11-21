@@ -4,7 +4,6 @@ import {
 	extractStopFromFeature,
 	dedupeStops,
 	buildOepnvStopIndex,
-	type Modus,
 	type RawStop
 } from './oepnv-stop-index.js';
 

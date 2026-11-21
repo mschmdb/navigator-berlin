@@ -1,7 +1,7 @@
 <script lang="ts">
 	import { Phone, ExternalLink, CircleCheck, Clock, Info } from '@lucide/svelte';
-	import { m } from '$lib/paraglide/messages.js';
-	import { getLocale } from '$lib/paraglide/runtime';
+	import { m } from '#lib/paraglide/messages.js';
+	import { getLocale } from '#lib/paraglide/runtime.js';
 	import {
 		HILFE_DIENSTE,
 		HILFE_STAND,
@@ -10,13 +10,13 @@
 		NOTRUF,
 		type HilfeDienst,
 		type HilfeDienstId
-	} from '$lib/kaelte/hilfe-dienste.js';
+	} from '#lib/kaelte/hilfe-dienste.js';
 	import {
 		formatMonthDay,
 		isKaelteSaison,
 		serviceStatus,
 		type ServiceStatus
-	} from '$lib/utils/berlin-time.js';
+	} from '#lib/utils/berlin-time.js';
 	import QuellenZeile from './quellen-zeile.svelte';
 
 	/** Zeitpunkt der Berechnung. Ohne Angabe: aktuelle Zeit, minütlich aktualisiert. */

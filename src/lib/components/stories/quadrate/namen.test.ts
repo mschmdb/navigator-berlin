@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it } from 'vitest';
-import { overwriteGetLocale } from '$lib/paraglide/runtime';
+import { overwriteGetLocale } from '#lib/paraglide/runtime.js';
 import { greyNames, partyName } from './namen';
-import { ORDER } from '$lib/stories/wahl-quadrate/parteien';
+import { ORDER } from '#lib/stories/wahl-quadrate/parteien.ts';
 
 afterEach(() => overwriteGetLocale(() => 'de'));
 

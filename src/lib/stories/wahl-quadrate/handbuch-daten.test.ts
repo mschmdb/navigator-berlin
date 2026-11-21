@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { toHandbuchDaten } from './handbuch-daten';
-import { loadStoriesWahl } from '$lib/server/stories/wahl-daten';
+import { loadStoriesWahl } from '#lib/server/stories/wahl-daten.ts';
 import type { StoriesWahlData, WahlZahlen } from './types';
 
 const zahlen = (beteiligung: number, parteien: [string, number][]): WahlZahlen => ({

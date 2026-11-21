@@ -15,7 +15,7 @@
  * rendern auch direkt im Kiez-/Bezirk-Steckbrief (Client, übersetzt);
  * `describeMssDe` bleibt ausschließlich ein Server-FAQ-Zwischenschritt.
  */
-import { m } from '$lib/paraglide/messages.js';
+import { m } from '#lib/paraglide/messages.js';
 import {
 	toAtlasMessageOptions,
 	type LocaleOptions

@@ -3,7 +3,7 @@ import { resolve } from 'node:path';
 import type { FeatureCollection } from 'geojson';
 import { describe, expect, it } from 'vitest';
 import { rankBy } from '../../../../../scripts/lib/ranking/ranking.js';
-import type { RegionComposites } from '$lib/data/get-region-composites.js';
+import type { RegionComposites } from '#lib/data/get-region-composites.js';
 import { compositeRank, resolveRegionFocus } from './region-focus.js';
 
 function readLayer(slug: string): FeatureCollection {

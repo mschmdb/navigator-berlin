@@ -1,6 +1,6 @@
 import type { PageServerLoad } from './$types';
-import { loadUpdatesFromModules } from '$lib/content/updates/load-updates.js';
-import type { UpdateEntry } from '$lib/content/updates/types.js';
+import { loadUpdatesFromModules } from '#lib/content/updates/load-updates.js';
+import type { UpdateEntry } from '#lib/content/updates/types.js';
 
 export const prerender = true;
 

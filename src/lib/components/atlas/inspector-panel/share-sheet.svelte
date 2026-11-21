@@ -4,11 +4,11 @@
 
 <script lang="ts">
 	import { Check, Link2, Printer, Share2, Sparkles, X } from '@lucide/svelte';
-	import { approximateTokens } from '$lib/utils/llm-export-builder.js';
-	import { canNativeShare, nativeShare } from '$lib/utils/native-share.js';
-	import { m } from '$lib/paraglide/messages.js';
-	import { getLocale, type Locale } from '$lib/paraglide/runtime';
-	import { formatCount, formatDecimal } from '$lib/i18n/format.js';
+	import { approximateTokens } from '#lib/utils/llm-export-builder.js';
+	import { canNativeShare, nativeShare } from '#lib/utils/native-share.js';
+	import { m } from '#lib/paraglide/messages.js';
+	import { getLocale, type Locale } from '#lib/paraglide/runtime.js';
+	import { formatCount, formatDecimal } from '#lib/i18n/format.js';
 
 	type FeedbackState = 'idle' | 'done';
 	type Variant = 'popover' | 'sheet';

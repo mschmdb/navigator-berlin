@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { page } from 'vitest/browser';
-import { overwriteGetLocale } from '$lib/paraglide/runtime';
+import { overwriteGetLocale } from '#lib/paraglide/runtime.js';
 import WahlSection from './wahl-section.svelte';
 
 afterEach(() => {
@@ -10,9 +10,8 @@ afterEach(() => {
 import type {
 	WahlResultsAtPoint,
 	WahlResultBundle,
-	LevelKey,
 	LevelResults
-} from '$lib/data/get-wahl-results-at-point.js';
+} from '#lib/data/get-wahl-results-at-point.js';
 
 function makeLevel(top5: LevelResults['top5']): LevelResults {
 	return { available: !!top5 && top5.length > 0, top5 };

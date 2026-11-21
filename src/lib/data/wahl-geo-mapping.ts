@@ -3,7 +3,7 @@
  * Wahl→Geo-Layer-Mapping und uwbId-Format-Konvertierung (Story: Geo-Mapping
  * auf eine Quelle konsolidieren).
  *
- * Pures TS ohne `$lib`/`$app`/`$env`-Imports, damit `tsx`-Build-Skripte
+ * Pures TS ohne `#lib`/`$app`/`$env`-Imports, damit `tsx`-Build-Skripte
  * dieses Modul relativ importieren können (Vorbild: internal/slug.ts).
  * `scripts/wahlen/lib/sbb-geo-sources.ts`, `scripts/wahlen/lib/kiez-mapper.ts`
  * und alle API-Routen/Komponenten delegieren hierher.

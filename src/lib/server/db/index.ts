@@ -10,9 +10,9 @@ import * as schema from './schema/index.js';
  * Grund: `pnpm data:fetch` und andere Build-Schritte importieren möglicherweise
  * indirekt Server-Code; ohne Lazy-Init würden sie ohne `DATABASE_URL` brechen.
  *
- * Boundary: Dieses Modul lebt unter `$lib/server/`. SvelteKit verifiziert
- * zur Build-Zeit, dass Client-Code (`$lib/components/`, `+page.svelte`)
- * keine `$lib/server/`-Module importiert.
+ * Boundary: Dieses Modul lebt unter `#lib/server/`. SvelteKit verifiziert
+ * zur Build-Zeit, dass Client-Code (`#lib/components/`, `+page.svelte`)
+ * keine `#lib/server/`-Module importiert.
  */
 
 export type Db = PostgresJsDatabase<typeof schema>;

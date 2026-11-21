@@ -1,6 +1,6 @@
 import distance from '@turf/distance';
 import { point } from '@turf/helpers';
-import type { KuehleOrt } from '$lib/data/get-kuehle-orte-index.js';
+import type { KuehleOrt } from '#lib/data/get-kuehle-orte-index.js';
 import { getOpeningStatus, isOpenNow } from './opening-status.js';
 
 /**

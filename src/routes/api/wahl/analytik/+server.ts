@@ -9,16 +9,16 @@
  * Ohne Datenbank: 200 mit leerer Liste.
  */
 
-import { json, error } from '@sveltejs/kit';
+import { error } from '@sveltejs/kit';
 import * as v from 'valibot';
 import type { RequestHandler } from './$types';
-import { getWahlList } from '$lib/server/db/queries/wahl/get-wahl-list.js';
+import { getWahlList } from '#lib/server/db/queries/wahl/get-wahl-list.js';
 import {
 	getAnalytikForReihe,
 	getTrendForReihe
-} from '$lib/server/db/queries/wahl/get-analytik-for-reihe.js';
-import { sourceName } from '$lib/data/wahl-source-name.js';
-import { wahlCacheHeaders } from '$lib/server/wahl/cache-control.js';
+} from '#lib/server/db/queries/wahl/get-analytik-for-reihe.js';
+import { sourceName } from '#lib/data/wahl-source-name.js';
+import { wahlCacheHeaders } from '#lib/server/wahl/cache-control.js';
 
 const QuerySchema = v.object({
 	ebene: v.literal('kiez'),
@@ -61,7 +61,7 @@ export const GET: RequestHandler = async ({ url }) => {
 
 	const latestWahl = list.filter((w) => w.typ === typ && w.stimmtyp === stimmtyp)[0] ?? null;
 
-	return json(
+	return Response.json(
 		{
 			ebene,
 			typ,

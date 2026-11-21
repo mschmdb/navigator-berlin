@@ -1,7 +1,7 @@
 import { error } from '@sveltejs/kit';
 import type { EntryGenerator, RequestHandler } from './$types';
-import type { Locale } from '$lib/paraglide/runtime.js';
-import { bildSlugs, renderBild } from '$lib/server/stories/wahl-bilder.js';
+import type { Locale } from '#lib/paraglide/runtime.js';
+import { bildSlugs, renderBild } from '#lib/server/stories/wahl-bilder.js';
 
 export const prerender = true;
 

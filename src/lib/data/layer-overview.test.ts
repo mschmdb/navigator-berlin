@@ -1,8 +1,8 @@
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { explainLayer } from '$lib/components/atlas/inspector-panel/internal/layer-explain.js';
-import { getLayerDisplayName } from '$lib/components/atlas/internal/layer-palette-filter.js';
+import { explainLayer } from '#lib/components/atlas/inspector-panel/internal/layer-explain.js';
+import { getLayerDisplayName } from '#lib/components/atlas/internal/layer-palette-filter.js';
 import { hasLayerDetailPage } from './layer-visibility.js';
 import { groupLayersForOverview, layersOutsideBundles } from './layer-overview.js';
 import type { LayerMetadata } from './types.js';

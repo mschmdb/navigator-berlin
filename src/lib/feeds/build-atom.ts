@@ -1,7 +1,7 @@
-import type { UpdateEntry } from '$lib/content/updates/types.js';
+import type { UpdateEntry } from '#lib/content/updates/types.js';
 import { escapeXml } from './escape-xml.js';
-import { entryModifiedDate } from '$lib/content/updates/modified-date.js';
-import { sortByDateDesc } from '$lib/content/updates/load-updates.js';
+import { entryModifiedDate } from '#lib/content/updates/modified-date.js';
+import { sortByDateDesc } from '#lib/content/updates/load-updates.js';
 
 /**
  * Story 2.13 AC-6: Atom 1.0 Feed Builder.

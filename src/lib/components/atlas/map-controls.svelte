@@ -9,8 +9,8 @@
 		Minus,
 		Plus
 	} from '@lucide/svelte';
-	import { m } from '$lib/paraglide/messages.js';
-	import { getLocale } from '$lib/paraglide/runtime';
+	import { m } from '#lib/paraglide/messages.js';
+	import { getLocale } from '#lib/paraglide/runtime.js';
 
 	export type PanDirection = 'north' | 'east' | 'south' | 'west';
 
@@ -28,10 +28,6 @@
 
 	function togglePopout(): void {
 		popoutOpen = !popoutOpen;
-	}
-
-	function closePopout(): void {
-		popoutOpen = false;
 	}
 
 	const panBase =

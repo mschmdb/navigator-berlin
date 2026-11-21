@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
-import { overwriteGetLocale } from '$lib/paraglide/runtime';
+import { overwriteGetLocale } from '#lib/paraglide/runtime.js';
 import Page from './+page.svelte';
 import { internalHrefs, textLines } from '../methodik/methodik-test-utils.js';
 

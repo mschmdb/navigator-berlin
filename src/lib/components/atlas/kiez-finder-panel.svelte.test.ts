@@ -1,17 +1,17 @@
 import { page } from 'vitest/browser';
-import { __setEmbeddedForTests } from '$lib/utils/plausible.js';
+import { __setEmbeddedForTests } from '#lib/utils/plausible.js';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
-import { overwriteGetLocale } from '$lib/paraglide/runtime';
+import { overwriteGetLocale } from '#lib/paraglide/runtime.js';
 import KiezFinderPanel from './kiez-finder-panel.svelte';
 import { neutralWeights } from './internal/kiez-finder-engine.js';
 import type { FinderBaseData } from './internal/kiez-finder-data.js';
-import { FINDER_PARTIES } from '$lib/webmcp/internal/finder-schemas.js';
+import { FINDER_PARTIES } from '#lib/webmcp/internal/finder-schemas.js';
 import {
 	requestAgentWeights,
 	readFinderBridge,
 	resetFinderBridgeForTests
-} from '$lib/state/finder-bridge.svelte.js';
+} from '#lib/state/finder-bridge.svelte.js';
 
 function baseData(): FinderBaseData {
 	return {

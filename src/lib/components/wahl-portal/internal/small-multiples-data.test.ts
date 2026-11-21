@@ -6,7 +6,7 @@ import {
 	type KiezPathCell
 } from './small-multiples-data.js';
 import { parteiAnteilSpanne } from './winner-map-expressions.js';
-import { parteiColor } from '$lib/data/partei-farben.js';
+import { parteiColor } from '#lib/data/partei-farben.js';
 import { NEUTRAL_FARBE, NEUTRAL_OPACITY, type WinnerApiRow } from './winner-map-data.js';
 
 function row(overrides: Partial<WinnerApiRow>): WinnerApiRow {

@@ -1,9 +1,9 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
-import { overwriteGetLocale } from '$lib/paraglide/runtime';
-import type { StoryEntry } from '$lib/content/stories/types.js';
+import { overwriteGetLocale } from '#lib/paraglide/runtime.js';
+import type { StoryEntry } from '#lib/content/stories/types.js';
 import raw from '../../../../../static/data/stories-wahl.json';
-import type { StoriesWahlData } from '$lib/stories/wahl-quadrate/types';
+import type { StoriesWahlData } from '#lib/stories/wahl-quadrate/types.ts';
 import Page from './+page.svelte';
 
 const entry: StoryEntry = {

@@ -1,5 +1,5 @@
 import { describe, it, expect, afterEach } from 'vitest';
-import { overwriteGetLocale } from '$lib/paraglide/runtime';
+import { overwriteGetLocale } from '#lib/paraglide/runtime.js';
 import { resolveEffectiveLocale, resolveFrameLocale } from './effective-locale.js';
 import type { TranslationRegisterEntry } from './translation-register.js';
 

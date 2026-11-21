@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import type { Feature, FeatureCollection, Polygon } from 'geojson';
+import type { Feature, Polygon } from 'geojson';
 import {
 	buildKiezScoresFromInput,
 	buildDerivedLayerGeojsons,

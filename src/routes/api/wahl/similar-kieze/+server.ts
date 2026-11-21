@@ -13,14 +13,14 @@
  * `hint`-Feld statt Fehler.
  */
 
-import { json, error } from '@sveltejs/kit';
+import { error } from '@sveltejs/kit';
 import * as v from 'valibot';
 import type { RequestHandler } from './$types';
-import { getWahlList } from '$lib/server/db/queries/wahl/get-wahl-list.js';
-import { getKiezSharesForWahl } from '$lib/server/db/queries/wahl/get-kiez-shares-for-wahl.js';
-import { rankSimilarKieze } from '$lib/server/wahl/similar-kieze.js';
-import { sourceName } from '$lib/data/wahl-source-name.js';
-import { wahlCacheHeaders } from '$lib/server/wahl/cache-control.js';
+import { getWahlList } from '#lib/server/db/queries/wahl/get-wahl-list.js';
+import { getKiezSharesForWahl } from '#lib/server/db/queries/wahl/get-kiez-shares-for-wahl.js';
+import { rankSimilarKieze } from '#lib/server/wahl/similar-kieze.js';
+import { sourceName } from '#lib/data/wahl-source-name.js';
+import { wahlCacheHeaders } from '#lib/server/wahl/cache-control.js';
 
 const QuerySchema = v.object({
 	kiez: v.pipe(v.string(), v.minLength(1)),
@@ -45,7 +45,7 @@ export const GET: RequestHandler = async ({ url }) => {
 	const rows = latestWahl ? await getKiezSharesForWahl(latestWahl.id) : [];
 	const { results, hint } = rankSimilarKieze(kiez, rows, 5);
 
-	return json(
+	return Response.json(
 		{
 			kiez,
 			typ,

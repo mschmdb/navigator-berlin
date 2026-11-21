@@ -1,4 +1,4 @@
-import type { YearValue } from '$lib/data';
+import type { YearValue } from '#lib/data/index.ts';
 
 export const NORMAL_OLD = { from: 1961, to: 1990 } as const;
 export const NORMAL_NEW = { from: 1991, to: 2020 } as const;

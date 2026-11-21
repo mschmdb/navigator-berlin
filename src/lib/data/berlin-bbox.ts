@@ -1,4 +1,4 @@
-import type { BboxTuple } from '$lib/seo/dataset-helpers.js';
+import type { BboxTuple } from '#lib/seo/dataset-helpers.js';
 
 interface FeatureCollectionLike {
 	readonly features: ReadonlyArray<{

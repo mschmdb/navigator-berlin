@@ -269,7 +269,7 @@ Konsistent mit Story 2.1 + 2.2: `page.url.origin` aus `$app/state`. Für JSON-LD
 - Komponente: `src/lib/components/atlas/bezirk-hero.svelte` (plus ggf. Sub-Komponenten)
 - Embed-Map: `src/lib/components/atlas/map-embed.svelte` (neu)
 - Sitemap-Source: `src/lib/seo/sources/bezirk-pages.ts` (neu; Verzeichnis aus Story 2.1)
-- Loader nutzt `$lib/data/get-bezirk-profile.ts` (Bestand) + `$lib/server/db/queries/get-bezirk-stats.ts` (Story 2.0)
+- Loader nutzt `#lib/data/get-bezirk-profile.ts` (Bestand) + `$lib/server/db/queries/get-bezirk-stats.ts` (Story 2.0)
 - i18n-Keys: neue Messages für Lead, Title, Description in `messages/de.json`
 
 ### References

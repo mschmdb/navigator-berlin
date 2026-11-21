@@ -1,6 +1,6 @@
 import type { RequestHandler } from './$types';
-import { loadUpdatesFromModules } from '$lib/content/updates/load-updates.js';
-import { buildRssXml } from '$lib/feeds/build-rss.js';
+import { loadUpdatesFromModules } from '#lib/content/updates/load-updates.js';
+import { buildRssXml } from '#lib/feeds/build-rss.js';
 
 export const prerender = true;
 

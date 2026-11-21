@@ -1,6 +1,6 @@
 <script lang="ts">
-	import { m } from '$lib/paraglide/messages.js';
-	import type { Quelle } from '$lib/kaelte/hilfe-dienste.js';
+	import { m } from '#lib/paraglide/messages.js';
+	import type { Quelle } from '#lib/kaelte/hilfe-dienste.js';
 
 	let { quellen }: { quellen: readonly Quelle[] } = $props();
 </script>

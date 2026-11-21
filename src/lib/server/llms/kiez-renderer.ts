@@ -13,9 +13,9 @@
  * gerendert (Memory `feedback_no_lebenswert` + Story 1.30).
  */
 
-import type { KiezStats } from '$lib/server/db/queries/get-kiez-stats.js';
-import type { KiezScore } from '$lib/server/db/queries/get-kiez-score.js';
-import { lintForBannedWords } from '$lib/seo/banned-words.js';
+import type { KiezStats } from '#lib/server/db/queries/get-kiez-stats.js';
+import type { KiezScore } from '#lib/server/db/queries/get-kiez-score.js';
+import { lintForBannedWords } from '#lib/seo/banned-words.js';
 import {
 	formatKm2,
 	formatNumberDe,

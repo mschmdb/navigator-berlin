@@ -5,7 +5,7 @@
 	in app.css).
 -->
 <script lang="ts">
-	import { breakAfterSlash } from '$lib/utils/break-after-slash.js';
+	import { breakAfterSlash } from '#lib/utils/break-after-slash.js';
 
 	interface Props {
 		readonly name: string;

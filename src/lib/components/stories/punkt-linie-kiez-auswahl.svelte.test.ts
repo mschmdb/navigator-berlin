@@ -1,13 +1,13 @@
 import { flushSync } from 'svelte';
 import { userEvent } from 'vitest/browser';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { trackEvent } from '$lib/utils/plausible.js';
+import { trackEvent } from '#lib/utils/plausible.js';
 import { render } from 'vitest-browser-svelte';
-import { overwriteGetLocale } from '$lib/paraglide/runtime';
-import type { BezirkItem, KennzahlenQuelle } from '$lib/stories/punkt-linie-kiez/types';
+import { overwriteGetLocale } from '#lib/paraglide/runtime.js';
+import type { BezirkItem, KennzahlenQuelle } from '#lib/stories/punkt-linie-kiez/types.ts';
 import Auswahl from './punkt-linie-kiez-auswahl.svelte';
 
-vi.mock('$lib/utils/plausible.js', () => ({ trackEvent: vi.fn() }));
+vi.mock('#lib/utils/plausible.js', () => ({ trackEvent: vi.fn() }));
 
 const NAMES = [
 	'Charlottenburg-Wilmersdorf',

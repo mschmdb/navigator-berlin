@@ -6,21 +6,21 @@ import booleanPointInPolygon from '@turf/boolean-point-in-polygon';
 import { point } from '@turf/helpers';
 import type { Feature, FeatureCollection, Polygon, MultiPolygon } from 'geojson';
 import type { RequestHandler } from './$types';
-import { BERLIN_BBOX } from '$lib/data/constants.js';
-import { normalizeSlug } from '$lib/data/internal/slug.js';
-import { getWahlList } from '$lib/server/db/queries/wahl/get-wahl-list.js';
-import { getResultsForStimmbezirk } from '$lib/server/db/queries/wahl/get-results-for-stimmbezirk.js';
-import { kiezSlugAt } from '$lib/server/wahl/point-kiez-slug.js';
-import { getResultsForKiez } from '$lib/server/db/queries/wahl/get-results-for-kiez.js';
-import { getResultsForBezirk } from '$lib/server/db/queries/wahl/get-results-for-bezirk.js';
-import { getResultsForBerlin } from '$lib/server/db/queries/wahl/get-results-for-berlin.js';
-import { getSparklineForKiez } from '$lib/server/db/queries/wahl/get-sparkline-for-kiez.js';
+import { BERLIN_BBOX } from '#lib/data/constants.js';
+import { normalizeSlug } from '#lib/data/internal/slug.js';
+import { getWahlList } from '#lib/server/db/queries/wahl/get-wahl-list.js';
+import { getResultsForStimmbezirk } from '#lib/server/db/queries/wahl/get-results-for-stimmbezirk.js';
+import { kiezSlugAt } from '#lib/server/wahl/point-kiez-slug.js';
+import { getResultsForKiez } from '#lib/server/db/queries/wahl/get-results-for-kiez.js';
+import { getResultsForBezirk } from '#lib/server/db/queries/wahl/get-results-for-bezirk.js';
+import { getResultsForBerlin } from '#lib/server/db/queries/wahl/get-results-for-berlin.js';
+import { getSparklineForKiez } from '#lib/server/db/queries/wahl/get-sparkline-for-kiez.js';
 import {
 	WAHL_TO_GEO,
 	wahlSlugFromTypJahr,
 	pickUwb3,
 	dbUwbIdFromGeo
-} from '$lib/data/wahl-geo-mapping.js';
+} from '#lib/data/wahl-geo-mapping.js';
 
 const QuerySchema = v.object({
 	lat: v.pipe(

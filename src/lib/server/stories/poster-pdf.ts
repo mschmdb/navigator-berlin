@@ -5,12 +5,12 @@ import {
 	overviewPosterSvg,
 	posterSvg,
 	POSTER_WIDTH
-} from '$lib/stories/punkt-linie-kiez/poster-svg.js';
-import type { BezirkItem, KennzahlenQuelle } from '$lib/stories/punkt-linie-kiez/types.js';
-import type { Locale } from '$lib/paraglide/runtime.js';
-import { POSTER_WIDTH as WALL_WIDTH, wallPoster } from '$lib/stories/wahl-quadrate/poster-svg.js';
-import { TEXTE } from '$lib/stories/wahl-quadrate/texte.js';
-import type { WahlTyp } from '$lib/stories/wahl-quadrate/parteien.js';
+} from '#lib/stories/punkt-linie-kiez/poster-svg.js';
+import type { BezirkItem, KennzahlenQuelle } from '#lib/stories/punkt-linie-kiez/types.js';
+import type { Locale } from '#lib/paraglide/runtime.js';
+import { POSTER_WIDTH as WALL_WIDTH, wallPoster } from '#lib/stories/wahl-quadrate/poster-svg.js';
+import { TEXTE } from '#lib/stories/wahl-quadrate/texte.js';
+import type { WahlTyp } from '#lib/stories/wahl-quadrate/parteien.js';
 import { jostFile, jostMeasure, type JostWeight } from './jost.js';
 import { loadStoriesWahl } from './wahl-daten.js';
 

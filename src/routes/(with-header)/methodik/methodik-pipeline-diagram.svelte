@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { m } from '$lib/paraglide/messages.js';
+	import { m } from '#lib/paraglide/messages.js';
 
 	const stages = [
 		{ label: 'Source', detail: m.methodik_pipeline_stage_source_detail() },

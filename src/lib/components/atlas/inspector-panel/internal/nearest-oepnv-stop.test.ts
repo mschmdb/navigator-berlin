@@ -5,8 +5,8 @@ import {
 	findAllNearestStopsWithSoft,
 	type AddressPoint
 } from './nearest-oepnv-stop.js';
-import { EXTENDED_WALKING_DISTANCE_M } from '$lib/utils/oepnv-walking.js';
-import type { OepnvStop, OepnvStopIndex } from '$lib/data';
+import { EXTENDED_WALKING_DISTANCE_M } from '#lib/utils/oepnv-walking.js';
+import type { OepnvStop, OepnvStopIndex } from '#lib/data/index.ts';
 
 const FRANKFURTER_TOR: AddressPoint = { lat: 52.5159, lng: 13.4544 };
 

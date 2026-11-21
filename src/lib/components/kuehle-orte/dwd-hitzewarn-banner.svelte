@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { TriangleAlert, ExternalLink } from '@lucide/svelte';
-	import type { HeatWarning } from '$lib/data/dwd-warnung.types.js';
-	import { m } from '$lib/paraglide/messages.js';
-	import { getLocale } from '$lib/paraglide/runtime';
+	import type { HeatWarning } from '#lib/data/dwd-warnung.types.js';
+	import { m } from '#lib/paraglide/messages.js';
+	import { getLocale } from '#lib/paraglide/runtime.js';
 
 	// Story 16.2: Live-DWD-Hitzewarnung. Ganzes Banner in {#if warning} → kein Layout-Sprung
 	// bei Normallage. Stufe als Text (nicht nur Farbe), DWD-Quelle immer sichtbar (GeoNutzV).

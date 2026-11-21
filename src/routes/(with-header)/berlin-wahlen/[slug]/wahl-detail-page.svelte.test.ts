@@ -1,8 +1,8 @@
 import { page } from 'vitest/browser';
 import { afterEach, describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
-import { readDatasetJsonLd } from '$lib/seo/dataset-jsonld-test-utils.js';
-import { overwriteGetLocale } from '$lib/paraglide/runtime';
+import { readDatasetJsonLd } from '#lib/seo/dataset-jsonld-test-utils.js';
+import { overwriteGetLocale } from '#lib/paraglide/runtime.js';
 import WahlDetailPage from './+page.svelte';
 import type { WahlDetailPageData } from './+page.server.js';
 

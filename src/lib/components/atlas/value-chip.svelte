@@ -76,6 +76,6 @@
 		class={['leading-none', isNumeric && 'tabular-nums'].filter(Boolean).join(' ')}
 	>
 		<!-- GH-88: echtes (geschütztes) Leerzeichen statt Rand, damit der Text „60.000 €/m²" lautet. -->
-		{value}{#if unit}{' '}<span class="text-xs">{unit}</span>{/if}
+		{value}{#if unit}&nbsp;<span class="text-xs">{unit}</span>{/if}
 	</span>
 </span>

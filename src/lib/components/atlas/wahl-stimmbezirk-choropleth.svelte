@@ -1,20 +1,21 @@
 <script lang="ts">
+	import { indexBy } from '#lib/utils/collections.js';
 	import { onMount, onDestroy } from 'svelte';
 	import type { ExpressionSpecification } from 'maplibre-gl';
-	import { parteiColor } from '$lib/data/partei-farben.js';
-	import { gruppeIdFromGeo } from '$lib/data/wahl-geo-mapping.js';
-	import { gruppenAnzeigeName } from '$lib/data/wahl-gruppe-label.js';
-	import { m } from '$lib/paraglide/messages.js';
+	import { parteiColor } from '#lib/data/partei-farben.js';
+	import { gruppeIdFromGeo } from '#lib/data/wahl-geo-mapping.js';
+	import { gruppenAnzeigeName } from '#lib/data/wahl-gruppe-label.js';
+	import { m } from '#lib/paraglide/messages.js';
 	import { COLORS } from './internal/colors.js';
-	import { formatPercent } from '$lib/i18n/format.js';
+	import { formatPercent } from '#lib/i18n/format.js';
 	import DataTableAlternative from './data-table-alternative.svelte';
-	import WinnerMapLegende from '$lib/components/wahl-portal/winner-map-legende.svelte';
-	import { buildWinnerTableColumns } from '$lib/components/wahl-portal/internal/winner-map-labels.js';
-	import { ANTEIL_OPACITY_RAMP } from '$lib/components/wahl-portal/internal/winner-map-data.js';
+	import WinnerMapLegende from '#lib/components/wahl-portal/winner-map-legende.svelte';
+	import { buildWinnerTableColumns } from '#lib/components/wahl-portal/internal/winner-map-labels.js';
+	import { ANTEIL_OPACITY_RAMP } from '#lib/components/wahl-portal/internal/winner-map-data.js';
 	import {
 		patternImageId,
 		registerPartyPatterns
-	} from '$lib/components/wahl-portal/internal/partei-pattern-images.js';
+	} from '#lib/components/wahl-portal/internal/partei-pattern-images.js';
 	import {
 		buildStimmbezirkZeilen,
 		stimmbezirkParteien,
@@ -50,11 +51,7 @@
 	let mapInstance: unknown = null;
 	let resizeListener: (() => void) | null = null;
 
-	const winnerMap = $derived.by(() => {
-		const m = new Map<string, WinnerEntry>();
-		for (const w of winnersByUwb) m.set(w.uwbId, w);
-		return m;
-	});
+	const winnerMap = $derived(indexBy(winnersByUwb, (w: WinnerEntry) => w.uwbId));
 
 	const parteien = $derived(stimmbezirkParteien(winnersByUwb));
 	const tableColumns = buildWinnerTableColumns();
@@ -110,13 +107,11 @@
 				}>;
 			};
 			const fc = geoFc as RawFc;
-			let matched = 0;
-			const namen = new Map<string, string>();
+			const namen: [string, string][] = [];
 			for (const feature of fc.features) {
 				const props = (feature.properties ?? {}) as Record<string, unknown>;
 				const gruppeId = gruppeIdFromGeo(props, wahlSlug);
 				const winner = gruppeId ? winnerMap.get(gruppeId) : null;
-				if (winner) matched++;
 				props.partei = winner?.parteiKurzname ?? null;
 				props.partei_farbe = winner ? parteiColor(winner.parteiKurzname) : COLORS.noData;
 				props.anteil = winner?.anteil ?? 0;
@@ -130,9 +125,9 @@
 				props.has_winner = winner ? 1 : 0;
 				props.pattern_id = winner ? patternImageId(winner.parteiKurzname) : null;
 				if (gruppeId && typeof props.gruppe_name === 'string')
-					namen.set(gruppeId, props.gruppe_name);
+					namen.push([gruppeId, props.gruppe_name]);
 			}
-			gruppenNamen = namen;
+			gruppenNamen = new Map(namen);
 			// Komponente während der Fetches abgebaut: kein Container mehr, keine Karte.
 			if (!container) return;
 			const map = new MapLibreMap({

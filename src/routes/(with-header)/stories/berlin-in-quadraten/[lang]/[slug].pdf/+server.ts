@@ -1,8 +1,8 @@
 import { error } from '@sveltejs/kit';
 import type { EntryGenerator, RequestHandler } from './$types';
-import type { Locale } from '$lib/paraglide/runtime.js';
-import { renderWallPosterPdf } from '$lib/server/stories/poster-pdf.js';
-import { WAHL_TYPEN } from '$lib/stories/wahl-quadrate/parteien.js';
+import type { Locale } from '#lib/paraglide/runtime.js';
+import { renderWallPosterPdf } from '#lib/server/stories/poster-pdf.js';
+import { WAHL_TYPEN } from '#lib/stories/wahl-quadrate/parteien.js';
 
 export const prerender = true;
 

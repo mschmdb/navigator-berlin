@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import { createSetFinderWeightsTool } from './set-finder-weights.js';
-import { neutralWeights } from '$lib/components/atlas/internal/kiez-finder-engine.js';
+import { neutralWeights } from '#lib/components/atlas/internal/kiez-finder-engine.js';
 
 function makeDeps(overrides: Record<string, unknown> = {}) {
 	return {

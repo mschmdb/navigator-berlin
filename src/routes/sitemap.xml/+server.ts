@@ -1,7 +1,7 @@
 import type { RequestHandler } from './$types';
-import { buildSitemapIndexXml } from '$lib/seo/sitemap-builder.js';
-import { latestLastmod } from '$lib/seo/lastmod.js';
-import { loadSitemapEntries } from '$lib/seo/sitemap-context.js';
+import { buildSitemapIndexXml } from '#lib/seo/sitemap-builder.js';
+import { latestLastmod } from '#lib/seo/lastmod.js';
+import { loadSitemapEntries } from '#lib/seo/sitemap-context.js';
 
 export const prerender = true;
 
@@ -10,7 +10,7 @@ export const prerender = true;
  *
  * i18n Block A: lists both per-locale sitemaps. `sitemap-en.xml` renders an
  * empty `<urlset>` until the translation register marks pages translated
- * (`$lib/seo/translation-register.ts`).
+ * (`#lib/seo/translation-register.ts`).
  *
  * S5: `lastmod` je Teil-Sitemap = jüngstes `lastmod` ihrer Einträge. Ohne
  * datierte Einträge entfällt es (kein `new Date()` mehr).

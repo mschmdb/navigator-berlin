@@ -8,10 +8,10 @@
  * Wahl" ist das nächstkleinere Jahr, das in den Punkten tatsächlich
  * vorkommt (nicht zwingend `jahr - 1`, Wahlen finden nicht jährlich statt).
  */
-import { m } from '$lib/paraglide/messages.js';
-import { formatPercentagePointsDelta, type LocaleFormatOptions } from '$lib/i18n/format.js';
+import { m } from '#lib/paraglide/messages.js';
+import { formatPercentagePointsDelta, type LocaleFormatOptions } from '#lib/i18n/format.js';
 import { formatAnteilPct } from './winner-map-data.js';
-import { parteiFarbeToken, type Pattern } from '$lib/data/partei-farben.js';
+import { parteiFarbeToken, type Pattern } from '#lib/data/partei-farben.js';
 
 /** Ein Punkt aus der Series-API-Response (`points[]`), identisch für
  * kiez/bezirk/berlin. */

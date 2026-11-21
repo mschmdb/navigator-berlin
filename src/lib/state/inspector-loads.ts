@@ -1,5 +1,5 @@
-import type { ClimateData, KiezScore } from '$lib/data';
-import type { WahlResultsAtPoint } from '$lib/data/get-wahl-results-at-point.js';
+import type { ClimateData, KiezScore } from '#lib/data/index.ts';
+import type { WahlResultsAtPoint } from '#lib/data/get-wahl-results-at-point.js';
 
 /** Blöcke im Inspector, die nach einem Adresswechsel asynchron nachladen. */
 export type InspectorLoadKey = 'score' | 'wahl' | 'laerm' | 'climate';

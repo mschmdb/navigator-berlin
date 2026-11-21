@@ -2,10 +2,10 @@ import { page, userEvent } from 'vitest/browser';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import WinnerMapContextProbe from './internal/winner-map-context-probe.svelte';
-import { _resetManifestCache } from '$lib/data/manifest.js';
-import { _resetLayerCache } from '$lib/data/internal/layer-fetch.js';
+import { _resetManifestCache } from '#lib/data/manifest.js';
+import { _resetLayerCache } from '#lib/data/internal/layer-fetch.js';
 import { _resetWinnersCache } from './internal/winner-map-winners.svelte.js';
-import type { WahlPortalListEntry } from '$lib/state/wahl-portal-context.svelte.js';
+import type { WahlPortalListEntry } from '#lib/state/wahl-portal-context.svelte.js';
 
 const SHA = 'a'.repeat(64);
 
@@ -617,7 +617,7 @@ describe('winner-map.svelte', () => {
 // Messages geprueft (das Svelte-Ternary selbst ist trivial).
 describe('wahl_portal_fallback_hinweis_* Messages (Review-Fund)', () => {
 	it('DE: "ohne Jahr"-Varianten zeigen keine Jahreszahl (kein "0:")', async () => {
-		const { m } = await import('$lib/paraglide/messages.js');
+		const { m } = await import('#lib/paraglide/messages.js');
 		expect(m.wahl_portal_fallback_hinweis_bezirk_ohne_jahr(undefined, { locale: 'de' })).toBe(
 			'Keine Stimmbezirks-Daten, Karte zeigt Bezirke.'
 		);
@@ -627,7 +627,7 @@ describe('wahl_portal_fallback_hinweis_* Messages (Review-Fund)', () => {
 	});
 
 	it('EN: "mit Jahr"/"ohne Jahr"-Varianten je Ebene mit korrektem, fest eingebautem Plural', async () => {
-		const { m } = await import('$lib/paraglide/messages.js');
+		const { m } = await import('#lib/paraglide/messages.js');
 		expect(m.wahl_portal_fallback_hinweis_bezirk_mit_jahr({ jahr: 2011 }, { locale: 'en' })).toBe(
 			'2011: no polling district data, map shows Bezirke.'
 		);

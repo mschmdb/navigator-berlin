@@ -1,4 +1,4 @@
-import { isStrictBuild } from '$lib/build/strict-build.js';
+import { isStrictBuild } from '#lib/build/strict-build.js';
 
 /**
  * Meldet Vollständigkeitsprobleme der Übersichtsseiten (S7). Lokale Builds

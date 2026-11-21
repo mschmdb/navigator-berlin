@@ -6,9 +6,9 @@
 -->
 <script lang="ts">
 	import { ctaSecondary } from './internal/cta.js';
-	import { m } from '$lib/paraglide/messages.js';
-	import { localizedHref } from '$lib/i18n/localized-href.js';
-	import { formatShortDate } from '$lib/i18n/format.js';
+	import { m } from '#lib/paraglide/messages.js';
+	import { localizedHref } from '#lib/i18n/localized-href.js';
+	import { formatShortDate } from '#lib/i18n/format.js';
 
 	interface UpdateTeaser {
 		readonly slug: string;

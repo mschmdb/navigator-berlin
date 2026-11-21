@@ -1,9 +1,9 @@
 import { afterEach, describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { page } from 'vitest/browser';
-import { overwriteGetLocale } from '$lib/paraglide/runtime';
+import { overwriteGetLocale } from '#lib/paraglide/runtime.js';
 import Banner from './dwd-kaeltewarn-banner.svelte';
-import type { ColdWarning } from '$lib/data/dwd-warnung.types.js';
+import type { ColdWarning } from '#lib/data/dwd-warnung.types.js';
 
 const FROST: ColdWarning = {
 	event: 'strenger-frost',

@@ -1,5 +1,5 @@
 import type { WithContext } from 'schema-dts';
-import type { License } from '$lib/data/types.js';
+import type { License } from '#lib/data/types.js';
 import { licenseToSchemaOrgUrl } from './license-url.js';
 import { DATA_CATALOG_NAME, dataCatalogId } from './jsonld-datacatalog.js';
 import { bboxToGeoShapeBox, type BboxTuple } from './dataset-helpers.js';

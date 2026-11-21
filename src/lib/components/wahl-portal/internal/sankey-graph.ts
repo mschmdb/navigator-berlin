@@ -15,7 +15,7 @@
  *
  * MapLibre-/d3-frei, kein Netzwerk-Zugriff, voll unit-testbar.
  */
-import { parteiColor } from '$lib/data/partei-farben.js';
+import { parteiColor } from '#lib/data/partei-farben.js';
 import {
 	computeUebergaengeFromRows,
 	effectiveJahreFromRows,

@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 const getWahlList = vi.fn();
-vi.mock('$lib/server/db/queries/wahl/get-wahl-list.js', () => ({
+vi.mock('#lib/server/db/queries/wahl/get-wahl-list.js', () => ({
 	getWahlList: (...args: unknown[]) => getWahlList(...args)
 }));
 

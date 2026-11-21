@@ -5,8 +5,8 @@
  * (`buildTakeawaySentence` etc.) unverändert bleiben (Boundary: kein
  * "Stärkste Partei"-Framing im Partei-Modus, `lint:wahl`-konform).
  */
-import { m } from '$lib/paraglide/messages.js';
-import type { LocaleFormatOptions } from '$lib/i18n/format.js';
+import { m } from '#lib/paraglide/messages.js';
+import type { LocaleFormatOptions } from '#lib/i18n/format.js';
 import type { AnteilSpanne } from './winner-map-expressions.js';
 import { formatAnteilPct } from './winner-map-data.js';
 

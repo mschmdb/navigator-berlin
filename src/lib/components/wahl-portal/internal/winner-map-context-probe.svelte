@@ -4,9 +4,9 @@
 		createWahlPortalState,
 		applyWahlList,
 		type WahlPortalListEntry
-	} from '$lib/state/wahl-portal-context.svelte.js';
-	import type { WahlPortalReihe, WahlPortalEbene } from '$lib/utils/wahl-portal-url-state.js';
-	import type { GeocodeSuggestion } from '$lib/data';
+	} from '#lib/state/wahl-portal-context.svelte.js';
+	import type { WahlPortalReihe, WahlPortalEbene } from '#lib/utils/wahl-portal-url-state.js';
+	import type { GeocodeSuggestion } from '#lib/data/index.ts';
 	import type { ComponentProps } from 'svelte';
 
 	type Props = {

@@ -2,10 +2,10 @@
  * Umriss-Karten der Kiez- und Bezirksseiten: Quelle für die SVG-Dateien unter
  * `/karte/[kind]/[slug].svg` und für Breite und Höhe der Bilder auf den Seiten.
  */
-import { buildBezirkKiezeView } from '$lib/data/bezirk-kieze-view.js';
-import { normalizeSlug } from '$lib/data/internal/slug.js';
-import { readLayer } from '$lib/server/kiez-neighbors-index.js';
-import type { RegionOutline } from '$lib/seo/region-outline-svg.js';
+import { buildBezirkKiezeView } from '#lib/data/bezirk-kieze-view.js';
+import { normalizeSlug } from '#lib/data/internal/slug.js';
+import { readLayer } from '#lib/server/kiez-neighbors-index.js';
+import type { RegionOutline } from '#lib/seo/region-outline-svg.js';
 import { readBerlinBezirkeOutline } from './bezirk-context.server';
 import { loadBezirkRegions, loadKiezRegions } from './load-regions.server';
 import { renderScoreMapSvg } from './score-map-svg';

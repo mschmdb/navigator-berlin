@@ -26,7 +26,7 @@ so that ich nach 2 Zeichen passende Treffer sehe und per Tastatur oder Maus sele
    - Response: `{ suggestions: GeocodeSuggestion[] }`, max 10 Einträge sortiert nach Relevanz
    **And** Erfüllt NFR-I6, NFR-PR2, NFR-S7 (Allowlist-Eintrag in Story 4.3).
 
-2. **AC-2 (Geocoding-Server-Logik in `$lib/server/`):**
+2. **AC-2 (Geocoding-Server-Logik in `#lib/server/`):**
    **Given** Proxy-Route
    **When** Server-Logik in `src/lib/server/geocode.ts` modularisiert wird
    **Then** Module exportiert:
@@ -151,14 +151,14 @@ so that ich nach 2 Zeichen passende Treffer sehe und per Tastatur oder Maus sele
     ```typescript
     import { query } from '$app/server';
     import * as v from 'valibot';
-    import { proxyNominatim } from '$lib/server/geocode';
+    import { proxyNominatim } from '#lib/server/geocode.ts';
 
     export const geocodeAddress = query(
       v.object({ q: v.pipe(v.string(), v.minLength(2), v.maxLength(120)) }),
       async ({ q }) => await proxyNominatim(q)
     );
     ```
-  - [ ] 4.2 Verify: `geocodeAddress` ist via `import { geocodeAddress } from '$lib/data/geocode.remote'` in Components verfügbar
+  - [ ] 4.2 Verify: `geocodeAddress` ist via `import { geocodeAddress } from '#lib/data/geocode.remote'` in Components verfügbar
 
 - [ ] **Task 5: Debounce-Utility** (Helper)
   - [ ] 5.1 `src/lib/utils/debounce.ts`:
@@ -338,7 +338,7 @@ function isInBerlin(lat: number, lng: number): boolean {
 }
 ```
 
-**Identisch zu Berlin-Bbox aus Story 1.4** (`get-layers-at-point.ts`) — DRY-Verletzung. Optional: Konstante in `$lib/data/constants.ts` zentralisieren. Falls in 1.5 nicht extrahiert, Story 1.6 (Karten) tut es zwingend.
+**Identisch zu Berlin-Bbox aus Story 1.4** (`get-layers-at-point.ts`) — DRY-Verletzung. Optional: Konstante in `#lib/data/constants.ts` zentralisieren. Falls in 1.5 nicht extrahiert, Story 1.6 (Karten) tut es zwingend.
 
 ### Header-Komponente — Landing-Exception
 

@@ -9,8 +9,8 @@
  * Pure Function ohne IO.
  */
 
-import type { BezirkScore } from '$lib/server/db/queries/get-bezirk-score.js';
-import type { KiezScore } from '$lib/server/db/queries/get-kiez-score.js';
+import type { BezirkScore } from '#lib/server/db/queries/get-bezirk-score.js';
+import type { KiezScore } from '#lib/server/db/queries/get-kiez-score.js';
 
 export interface ScoreDim {
 	readonly label: string;

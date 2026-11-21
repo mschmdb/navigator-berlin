@@ -143,7 +143,7 @@ so that die Ranking-Page (Story 2.9b) und die Bezirks-/Kiez-Pages (Stories 2.3/2
 - [x] **T5: Methodik-Doku + Editorial-Patterns** (AC: 6, 7, 8)
   - [x] T5.1: `docs/scoring-methodology.md` geschrieben mit allen 6 Pflicht-Sections
   - [x] T5.2: `/methodik/kiez-score`-Page um Sections `#kiez-score` und `#bezirks-score` erweitert + TOC-Anker
-  - [x] T5.3: Stigma-Lint bereits in `$lib/seo/banned-words.ts` zentralisiert (Story 2.5b/2.8). Test prüft Methodik-Page (`page.svelte.test.ts`) gegen „lebenswert"-Wort
+  - [x] T5.3: Stigma-Lint bereits in `#lib/seo/banned-words.ts` zentralisiert (Story 2.5b/2.8). Test prüft Methodik-Page (`page.svelte.test.ts`) gegen „lebenswert"-Wort
 
 - [x] **T6: Final-Verifikation** (AC: 1-8)
   - [x] T6.1: `pnpm test:unit -- --run` 100% grün (siehe Dev Agent Record)

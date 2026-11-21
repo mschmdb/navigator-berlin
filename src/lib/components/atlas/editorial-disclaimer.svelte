@@ -52,8 +52,8 @@
 
 <script lang="ts">
 	import { ExternalLink } from '@lucide/svelte';
-	import { m } from '$lib/paraglide/messages.js';
-	import { getLocale, type Locale } from '$lib/paraglide/runtime';
+	import { m } from '#lib/paraglide/messages.js';
+	import { getLocale, type Locale } from '#lib/paraglide/runtime.js';
 
 	type Props = {
 		variant: DisclaimerVariant;

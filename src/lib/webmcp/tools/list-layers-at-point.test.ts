@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { createListLayersAtPointTool } from './list-layers-at-point.js';
-import type { LayerHit } from '$lib/data';
+import type { LayerHit } from '#lib/data/index.ts';
 
 const FIXTURE_HITS: LayerHit[] = [
 	{

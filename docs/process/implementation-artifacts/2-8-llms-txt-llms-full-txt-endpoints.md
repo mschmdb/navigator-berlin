@@ -61,7 +61,7 @@ so that ich Site-Inhalt effizient als strukturierte Wissens-Quelle aufnehmen kan
      ## Optional
      - [WebMCP-Manifest](https://navigator.berlin/webmcp-manifest.json): Tools + Resources
      ```
-   - URL-Liste wird aus zentralem Builder (`$lib/seo/llms-builder.ts`) generiert, der die gleichen Sources nutzt wie Story-2.1-Sitemap (Konsistenz via shared `SitemapSource`-Pattern aus Story 2.1)
+   - URL-Liste wird aus zentralem Builder (`#lib/seo/llms-builder.ts`) generiert, der die gleichen Sources nutzt wie Story-2.1-Sitemap (Konsistenz via shared `SitemapSource`-Pattern aus Story 2.1)
    - Pro URL: max 1-Zeilen-Description (vom Page-Front-Matter oder von `LayerMetadata.explain.short`)
    - DE-Variante unter `/llms.txt`, EN-Variante unter `/en/llms.txt` (oder unified mit beiden Locales — Open-Question 1)
    - `Content-Type: text/markdown; charset=utf-8`
@@ -114,7 +114,7 @@ so that ich Site-Inhalt effizient als strukturierte Wissens-Quelle aufnehmen kan
 
 5. **AC-5 (Builder-Bibliothek + Sitemap-Konsistenz):**
    **Given** Story 2.1 `SitemapSource`-Pattern
-   **When** ich `$lib/seo/llms-builder.ts` implementiere
+   **When** ich `#lib/seo/llms-builder.ts` implementiere
    **Then**:
    - Builder liest aus Postgres `llms_content` (oder direkt aus Renderern bei Open-Question-3-Variante B)
    - URL-Quellen kommen aus den gleichen `SitemapSource`-Functions wie 2.1 (Refactor: SitemapSource → `PageRegistrySource` mit beiden Outputs)
@@ -255,7 +255,7 @@ Bei Variante B Empfehlung: Top-50-Kieze in llms-full.txt, Rest nur als URL in ll
 ### Open-Questions vor Dev-Start
 
 1. **Locale-URL-Pattern:** `/llms.txt` + `/en/llms.txt` (Recommended), unified-File, oder DE-only? Empfehlung Pattern a.
-2. **Stigma-Lint zentralisieren in `$lib/seo/`:** Empfehlung ja (DRY mit Story 2.5b). OK?
+2. **Stigma-Lint zentralisieren in `#lib/seo//index.ts`:** Empfehlung ja (DRY mit Story 2.5b). OK?
 3. **Rendering-Strategie (Cache vs. On-the-Fly):** Empfehlung B (On-the-Fly bei Prerender). Akzeptabel?
 4. **Variante-B-Skalierung (Story 2.4 1.084 Kiez-Pages):** Top-50 in llms-full.txt oder Split in mehrere Files? User-Decision.
 5. **Empfohlene Cache-Control:** 1h oder länger? Empfehlung 1h (Build-Time-Generated, aber Updates pro Deploy).
@@ -267,7 +267,7 @@ Bei Variante B Empfehlung: Top-50-Kieze in llms-full.txt, Rest nur als URL in ll
 - Builder: `src/lib/seo/llms-builder.ts`
 - Lint-Blacklist: `src/lib/seo/banned-words.ts`
 - Build-Script (falls AC-4 Variante A): `scripts/render-llms.ts`
-- Re-use: `$lib/utils/llm-export-builder.ts` (Patterns)
+- Re-use: `#lib/utils/llm-export-builder.ts` (Patterns)
 
 ### References
 
@@ -291,7 +291,7 @@ claude-opus-4-7 (Claude Agent SDK, BMAD dev-story workflow, Pragmatic TDD per AD
 - Worktree-Branch von alter Basis (Story 1.31) gestartet, `git rebase main` zog die Pre-Reqs (Story 2.0 Postgres-Foundation, 2.1 SEO-Foundation, 2.7 WebMCP) sauber ein, kein Konflikt.
 - Story-File `2-8-llms-txt-llms-full-txt-endpoints.md` lag nur auf main-Workspace, nicht im Worktree (BMAD-Story-Files sind file-system-tracked aber außerhalb git im Master-Checkout). Datei aus dem master-Workspace per `cp` in den Worktree gespiegelt für Status-Updates.
 - `pnpm install --frozen-lockfile` für Worktree-Setup, `node_modules` lokal pro Worktree.
-- Type-Errors zuerst aus falschem Re-Export: `BezirkStats` lebt in `$lib/server/db/queries/get-bezirk-stats.ts` (via `InferSelectModel`), nicht im Schema-Barrel. Fix: Import direkt aus dem Query-Modul. Test-Fixtures mussten zusätzlich `slug`, `bezirkSlug` (Kiez), `computedAt: Date` enthalten weil Drizzle-`InferSelectModel` die PK + Default-Date-Spalte einbezieht.
+- Type-Errors zuerst aus falschem Re-Export: `BezirkStats` lebt in `#lib/server/db/queries/get-bezirk-stats.ts` (via `InferSelectModel`), nicht im Schema-Barrel. Fix: Import direkt aus dem Query-Modul. Test-Fixtures mussten zusätzlich `slug`, `bezirkSlug` (Kiez), `computedAt: Date` enthalten weil Drizzle-`InferSelectModel` die PK + Default-Date-Spalte einbezieht.
 
 ### Completion Notes List
 
@@ -303,7 +303,7 @@ claude-opus-4-7 (Claude Agent SDK, BMAD dev-story workflow, Pragmatic TDD per AD
 - **Open-Question 5 (Cache-Control):** RESOLVED `public, max-age=3600` als Response-Header.
 - **Robots-Integration:** Story-2.1 `routes/robots.txt/+server.ts` wurde um Trailing-Hinweiszeile `# LLM-friendly: /llms.txt + /llms-full.txt (story 2.8)` erweitert. Story-2.1-Endpoint-Test bleibt grün (testet nur `User-agent`, `Allow`, `Sitemap:` Pflicht-Direktiven).
 - **Sitemap-Konsistenz-Test:** Sitemap-URL ⊂ llms.txt-Source-URLs. Test in `llms-sitemap-consistency.test.ts` prüft alle drei Static-Pfade + alle Manifest-Layer-Pfade. Bezirk- + Kiez-Pages dürfen in llms.txt sein bevor Story 2.3/2.4 die Sitemap-Source registrieren (Asymmetrie dokumentiert).
-- **Boundary-Sauberkeit:** `$lib/seo/`-Builder ist pure-function, kein Server-only-Import. DB-Touchpoints leben unter `$lib/server/llms/data-collector.ts` (Server-Boundary). Renderer leben unter `$lib/server/llms/` aus Symmetrie zum Collector; sind aber selbst pure-functions (kein I/O). Boundary-Test (Story 2.0) bleibt grün.
+- **Boundary-Sauberkeit:** `#lib/seo/`-Builder ist pure-function, kein Server-only-Import. DB-Touchpoints leben unter `$lib/server/llms/data-collector.ts` (Server-Boundary). Renderer leben unter `$lib/server/llms/` aus Symmetrie zum Collector; sind aber selbst pure-functions (kein I/O). Boundary-Test (Story 2.0) bleibt grün.
 - **Pre-existing Issues (out-of-scope):**
   - `src/lib/server/db/queries/queries.test.ts` 9/9 fail wegen fehlender DATABASE_URL in CI. Pre-existing seit Story 2.0; per Story-2.0 Completion-Note „DB-Tests aus Story 2.0 brauchen DATABASE_URL und sind out-of-scope" explizit gewollt. Verifikation: `git stash && pnpm exec vitest run src/lib/server/db/queries/queries.test.ts` schlägt mit identischen 9 Fails fehl.
   - `pnpm build` Adapter-Node-Stage bricht auf `@resvg/resvg-js`-Native-Binary, pre-existing seit Story 2.1, out-of-scope.
@@ -341,8 +341,8 @@ claude-opus-4-7 (Claude Agent SDK, BMAD dev-story workflow, Pragmatic TDD per AD
 | Date | Change | Reason |
 |------|--------|--------|
 | 2026-05-16 | Story 2.8 in-progress | Dev-Session-Start, User-Decisions aus Story-Spec |
-| 2026-05-16 | Stigma-Lint zentralisiert in `$lib/seo/banned-words.ts` | DRY für Story 2.5b FAQ + 2.8 LLMS, Memory `feedback_no_lebenswert` |
-| 2026-05-16 | Renderer als Pure-Functions in `$lib/server/llms/` | Server-Boundary für DB-Access; pure-function-shape ermöglicht deterministische Tests |
+| 2026-05-16 | Stigma-Lint zentralisiert in `#lib/seo/banned-words.ts` | DRY für Story 2.5b FAQ + 2.8 LLMS, Memory `feedback_no_lebenswert` |
+| 2026-05-16 | Renderer als Pure-Functions in `#lib/server/llms/` | Server-Boundary für DB-Access; pure-function-shape ermöglicht deterministische Tests |
 | 2026-05-16 | Shared `internal/aggregate-renderer.ts` extrahiert | Bezirk-/Kiez-Stats teilen 8-Cluster-Shape, DRY-Refactor nach Green-Cycle |
 | 2026-05-16 | `KIEZ_FULL_TXT_CAP = 50` als Top-50-Cap | User-Decision Q4 Variante-B-Skalierung |
 | 2026-05-16 | DE-only Phase 1, kein `/en/llms.txt` | User-Decision Q1, Memory `project_i18n_phase_1_de_only` |

@@ -6,7 +6,7 @@
  * Bezirksnamen und Fußzeile teilen die linke Kante. Legende, Lesehilfe und Grau stehen klein in der Fußzeile. Jede Zahl steht im Block und ist mindestens 2 mm groß,
  * kleinere entfallen (die Bildschirmfassung zeigt sie).
  */
-import { m } from '$lib/paraglide/messages.js';
+import { m } from '#lib/paraglide/messages.js';
 import { STORY_FONT, STORY_INK, STORY_PAPER } from '../tokens';
 import { placeSquare, type PlacedSquare } from './anordnung';
 import { DEFAULT_THRESHOLD, type Lang } from './grau';

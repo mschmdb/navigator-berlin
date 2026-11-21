@@ -9,10 +9,10 @@
 	 * (`steuerleiste-jahr*`, `steuerleiste-ebene*`) und Tastatursteuerung
 	 * bleiben unverändert, damit die bestehenden E2E-Stellen stabil bleiben.
 	 */
-	import { EBENE_VALUES, type WahlPortalEbene } from '$lib/utils/wahl-portal-url-state.js';
+	import { EBENE_VALUES, type WahlPortalEbene } from '#lib/utils/wahl-portal-url-state.js';
 	import { nextRadioIndex } from './internal/radiogroup-keyboard.js';
-	import { m } from '$lib/paraglide/messages.js';
-	import { wahlEbeneLabel, wahlWiederholungLabel } from '$lib/data/wahl-labels.js';
+	import { m } from '#lib/paraglide/messages.js';
+	import { wahlEbeneLabel, wahlWiederholungLabel } from '#lib/data/wahl-labels.js';
 
 	export interface JahrOption {
 		readonly jahr: number;

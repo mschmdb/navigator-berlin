@@ -20,9 +20,9 @@
 	 * Registry der Hauptkarte gekoppelt (`buildMultiHoverContent`), die
 	 * Winner-Map hat nur einen einzigen Custom-Layer mit eigenen Properties.
 	 */
-	import { parteiColor } from '$lib/data/partei-farben.js';
-	import { m } from '$lib/paraglide/messages.js';
-	import { wahlWiederholungLabel } from '$lib/data/wahl-labels.js';
+	import { parteiColor } from '#lib/data/partei-farben.js';
+	import { m } from '#lib/paraglide/messages.js';
+	import { wahlWiederholungLabel } from '#lib/data/wahl-labels.js';
 	import { formatAnteilPct, parteiDisplayName } from './internal/winner-map-data.js';
 
 	type Props = {

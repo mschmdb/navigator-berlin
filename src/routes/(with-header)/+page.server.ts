@@ -1,10 +1,10 @@
 import type { PageServerLoad } from './$types';
-import { loadStoryTeaser, type StoryTeaserData } from '$lib/content/stories/story-teaser.server.js';
-import { getLocale, type Locale } from '$lib/paraglide/runtime.js';
+import { loadStoryTeaser, type StoryTeaserData } from '#lib/content/stories/story-teaser.server.js';
+import { getLocale, type Locale } from '#lib/paraglide/runtime.js';
 import {
 	mapHomeUpdateEntry,
 	type HomeUpdateTeaser
-} from '$lib/content/updates/map-home-update-entry.js';
+} from '#lib/content/updates/map-home-update-entry.js';
 
 // SSR statt prerender: Die Hitze-Subdomain reroutet `/` → `/hitze` per reroute-Hook.
 // Prerenderte Seiten werden als statische Assets ausgeliefert und durchlaufen den
@@ -45,7 +45,7 @@ const UPDATE_MODULES = import.meta.glob('/_content/updates/*.md', {
  */
 async function loadUpdates(locale: Locale): Promise<HomeUpdateTeaser[]> {
 	try {
-		const { loadUpdatesFromModules } = await import('$lib/content/updates/load-updates.js');
+		const { loadUpdatesFromModules } = await import('#lib/content/updates/load-updates.js');
 		const entries = loadUpdatesFromModules(UPDATE_MODULES);
 		return entries.slice(0, UPDATES_TEASER).map((e) => mapHomeUpdateEntry(e, locale));
 	} catch (err) {

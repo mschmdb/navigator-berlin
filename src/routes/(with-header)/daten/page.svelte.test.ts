@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
-import { overwriteGetLocale } from '$lib/paraglide/runtime';
-import type { LayerOverviewSource } from '$lib/data/layer-overview.js';
+import { overwriteGetLocale } from '#lib/paraglide/runtime.js';
+import type { LayerOverviewSource } from '#lib/data/layer-overview.js';
 import Page from './+page.svelte';
 import { internalHrefs } from '../methodik/methodik-test-utils.js';
 

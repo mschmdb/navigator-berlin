@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
-import { overwriteGetLocale } from '$lib/paraglide/runtime';
-import { parseWahlSlug } from '$lib/data/wahl-slug.js';
+import { overwriteGetLocale } from '#lib/paraglide/runtime.js';
+import { parseWahlSlug } from '#lib/data/wahl-slug.js';
 import HomeTasks from './home-tasks.svelte';
 
 afterEach(() => overwriteGetLocale(() => 'de'));

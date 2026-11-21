@@ -1,26 +1,26 @@
 <script lang="ts">
-	import { buildPageTitle } from '$lib/seo/page-title.js';
-	import { localizedPathname } from '$lib/seo/canonical.js';
+	import { buildPageTitle } from '#lib/seo/page-title.js';
+	import { localizedPathname } from '#lib/seo/canonical.js';
 	import { page } from '$app/state';
-	import SeoHead from '$lib/components/atlas/seo-head.svelte';
-	import JsonLd from '$lib/components/atlas/json-ld.svelte';
-	import RichText from '$lib/components/rich-text.svelte';
-	import { formatCount } from '$lib/i18n/format.js';
-	import { localizedHref } from '$lib/i18n/localized-href.js';
-	import { richSegments } from '$lib/i18n/rich-text.js';
-	import { m } from '$lib/paraglide/messages.js';
-	import { getLocale } from '$lib/paraglide/runtime.js';
-	import { organizationRef } from '$lib/seo/jsonld-organization.js';
-	import { buildBreadcrumbList } from '$lib/seo/index.js';
-	import { localeToBcp47 } from '$lib/seo/locale-meta.js';
-	import { FEEDBACK_EMAIL } from '$lib/utils/contact.js';
+	import SeoHead from '#lib/components/atlas/seo-head.svelte';
+	import JsonLd from '#lib/components/atlas/json-ld.svelte';
+	import RichText from '#lib/components/rich-text.svelte';
+	import { formatCount } from '#lib/i18n/format.js';
+	import { localizedHref } from '#lib/i18n/localized-href.js';
+	import { richSegments } from '#lib/i18n/rich-text.js';
+	import { m } from '#lib/paraglide/messages.js';
+	import { getLocale } from '#lib/paraglide/runtime.js';
+	import { organizationRef } from '#lib/seo/jsonld-organization.js';
+	import { buildBreadcrumbList } from '#lib/seo/index.js';
+	import { localeToBcp47 } from '#lib/seo/locale-meta.js';
+	import { FEEDBACK_EMAIL } from '#lib/utils/contact.js';
 	import {
 		getAggregationLevels,
 		getCoverageReasons,
 		getMethodikSections,
 		getOmissions
 	} from './methodik-content.js';
-	import { hasLayerDetailPage } from '$lib/data/layer-visibility.js';
+	import { hasLayerDetailPage } from '#lib/data/layer-visibility.js';
 	import MethodikDatenTabelle from './methodik-daten-tabelle.svelte';
 	import MethodikPipelineDiagram from './methodik-pipeline-diagram.svelte';
 

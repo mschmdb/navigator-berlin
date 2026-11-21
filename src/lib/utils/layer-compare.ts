@@ -10,9 +10,9 @@
  * `compare-row.svelte` ist der einzige Aufrufer und uebergibt `{ locale:
  * getLocale() }` explizit.
  */
-import { m } from '$lib/paraglide/messages.js';
-import { formatCount, formatDecimal } from '$lib/i18n/format.js';
-import type { Locale } from '$lib/paraglide/runtime';
+import { m } from '#lib/paraglide/messages.js';
+import { formatCount, formatDecimal } from '#lib/i18n/format.js';
+import type { Locale } from '#lib/paraglide/runtime.js';
 
 export interface CompareLocaleOptions {
 	readonly locale?: Locale;
@@ -290,7 +290,7 @@ function compareNumericNoJudgment(
 }
 
 function rankFor(slug: string, value: string): { rank: number; ranking: readonly string[] } | null {
-	let ranking: readonly string[] | null = null;
+	let ranking: readonly string[] | null;
 	if (slug === 'wohnlagen-2024' || slug === 'mietspiegel-wohnlage') {
 		ranking = ORDINAL_RANKINGS.wohnlage ?? null;
 	} else if (slug === 'gruenversorgung-2023') {

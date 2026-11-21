@@ -1,9 +1,9 @@
 import type { WithContext } from 'schema-dts';
-import type { UpdateEntry } from '$lib/content/updates/types.js';
-import { sortByDateDesc } from '$lib/content/updates/load-updates.js';
-import { localizeUpdateEntry } from '$lib/content/updates/localize-update-entry.js';
-import { baseLocale, localizeHref, type Locale } from '$lib/paraglide/runtime';
-import { entryModifiedDate } from '$lib/content/updates/modified-date.js';
+import type { UpdateEntry } from '#lib/content/updates/types.js';
+import { sortByDateDesc } from '#lib/content/updates/load-updates.js';
+import { localizeUpdateEntry } from '#lib/content/updates/localize-update-entry.js';
+import { baseLocale, localizeHref, type Locale } from '#lib/paraglide/runtime.js';
+import { entryModifiedDate } from '#lib/content/updates/modified-date.js';
 import { localeToBcp47 } from './locale-meta.js';
 import { organizationRef, type OrganizationRefJsonLd } from './jsonld-organization.js';
 

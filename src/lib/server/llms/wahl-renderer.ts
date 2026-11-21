@@ -6,8 +6,8 @@
  * ohne dass 12 Bezirks-Tops aufgezählt werden müssen.
  */
 
-import type { LlmsWahlEntry } from '$lib/seo/llms-builder.js';
-import { formatBerlinDate } from '$lib/utils/format-berlin-date.js';
+import type { LlmsWahlEntry } from '#lib/seo/llms-builder.js';
+import { formatBerlinDate } from '#lib/utils/format-berlin-date.js';
 
 export interface WahlMarkdownInput {
 	readonly origin: string;

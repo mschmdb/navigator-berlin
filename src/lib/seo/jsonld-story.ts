@@ -1,7 +1,7 @@
-import { localizeStory } from '$lib/content/stories/localize-story.js';
-import { sortStoriesByDateDesc } from '$lib/content/stories/load-stories.js';
-import type { StoryEntry } from '$lib/content/stories/types.js';
-import { baseLocale, localizeHref, type Locale } from '$lib/paraglide/runtime';
+import { localizeStory } from '#lib/content/stories/localize-story.js';
+import { sortStoriesByDateDesc } from '#lib/content/stories/load-stories.js';
+import type { StoryEntry } from '#lib/content/stories/types.js';
+import { baseLocale, localizeHref, type Locale } from '#lib/paraglide/runtime.js';
 import type {
 	BlogJsonLd,
 	BlogPostingJsonLd,

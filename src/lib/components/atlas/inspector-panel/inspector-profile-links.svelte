@@ -1,9 +1,9 @@
 <!-- Story 14.10: Links auf Kiez- und Bezirks-Profil mit deren Composite-Score. Aus
      `inspector-panel.svelte` herausgelöst (GH-88, Datei unter 500 Zeilen). -->
 <script lang="ts">
-	import { localizedHref } from '$lib/i18n/localized-href.js';
-	import { m } from '$lib/paraglide/messages.js';
-	import type { Locale } from '$lib/paraglide/runtime';
+	import { localizedHref } from '#lib/i18n/localized-href.js';
+	import { m } from '#lib/paraglide/messages.js';
+	import type { Locale } from '#lib/paraglide/runtime.js';
 
 	type Props = {
 		kiezSlug: string | null;

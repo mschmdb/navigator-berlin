@@ -10,8 +10,8 @@
  * also übersetzt -- über Paraglide-Messages, ausgewertet beim Aufruf
  * (`getLocale()` bzw. explizites `{ locale }`).
  */
-import { m } from '$lib/paraglide/messages.js';
-import type { Locale } from '$lib/paraglide/runtime';
+import { m } from '#lib/paraglide/messages.js';
+import type { Locale } from '#lib/paraglide/runtime.js';
 
 export interface GruppenAnzeigeNameOptions {
 	readonly locale?: Locale;

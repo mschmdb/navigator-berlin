@@ -10,7 +10,7 @@
  * im Kiez-/Bezirk-Steckbrief (Client, übersetzt).
  * Die FAQ-Sätze stehen seit NAV-108 in `src/lib/server/faq/fact-phrases.ts`.
  */
-import { m } from '$lib/paraglide/messages.js';
+import { m } from '#lib/paraglide/messages.js';
 import {
 	toAtlasMessageOptions,
 	type LocaleOptions

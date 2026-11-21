@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { Combobox as BitsCombobox } from 'bits-ui';
 	import Search from '@lucide/svelte/icons/search';
-	import { debounce } from '$lib/utils/debounce.js';
-	import { trackEvent } from '$lib/utils/plausible.js';
-	import type { GeocodeSuggestion } from '$lib/data';
+	import { debounce } from '#lib/utils/debounce.js';
+	import { trackEvent } from '#lib/utils/plausible.js';
+	import type { GeocodeSuggestion } from '#lib/data/index.ts';
 
 	type Variant = 'hero' | 'header';
 	type GeocodeFn = (q: string) => Promise<GeocodeSuggestion[]>;

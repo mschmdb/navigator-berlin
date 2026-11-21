@@ -1,10 +1,10 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
-import { overwriteGetLocale } from '$lib/paraglide/runtime';
-import { __setEmbeddedForTests } from '$lib/utils/plausible.js';
+import { overwriteGetLocale } from '#lib/paraglide/runtime.js';
+import { __setEmbeddedForTests } from '#lib/utils/plausible.js';
 import LayerKiezRanking from './layer-kiez-ranking.svelte';
-import NeighborList from '$lib/components/place/neighbor-list.svelte';
-import type { LayerKiezRanking as Ranking } from '$lib/data/layer-kiez-ranking.js';
+import NeighborList from '#lib/components/place/neighbor-list.svelte';
+import type { LayerKiezRanking as Ranking } from '#lib/data/layer-kiez-ranking.js';
 
 type Recorded = [string, { props?: Record<string, unknown> } | undefined];
 let events: Recorded[] = [];

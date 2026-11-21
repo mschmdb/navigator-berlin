@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { BedDouble, ExternalLink } from '@lucide/svelte';
-	import RichText from '$lib/components/rich-text.svelte';
-	import { richSegments } from '$lib/i18n/rich-text.js';
-	import { KAELTEHILFE_APP_URL } from '$lib/kaelte/hilfe-dienste.js';
-	import { m } from '$lib/paraglide/messages.js';
+	import RichText from '#lib/components/rich-text.svelte';
+	import { richSegments } from '#lib/i18n/rich-text.js';
+	import { KAELTEHILFE_APP_URL } from '#lib/kaelte/hilfe-dienste.js';
+	import { m } from '#lib/paraglide/messages.js';
 
 	// Nachtcafés und Notübernachtungen zeigen wir bewusst nicht: freie Plätze kennt nur die App.
 	const textSegments = $derived(

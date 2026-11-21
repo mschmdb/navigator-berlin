@@ -122,7 +122,7 @@ Runde 1 (23.09.2026), 3 Layer: Blind Hunter (BH) 14, Edge Case (EC) 18, Verifica
 | 14 | VG | Beteiligungs-Mapping WberIns/Waehler/Unguelt/AghWkr ungetestet | gap | W/B-Test prüft Beteiligung nicht | P5 |
 | 15 | VG | Testname „Vormittags“ bei 23:30Z | low | kosmetisch | P5 |
 | 16 | VG | `isMain`-Guard ohne Prozess-Smoke | maybe-false | lokal ok; Spawn mit `--only=gibtsnicht` → Exit 2 würde klären | D |
-| 17 | BH | `sourceName` vierfach | low | Bestand dreifach; geteiltes Modul unter `$lib/data/` | D |
+| 17 | BH | `sourceName` vierfach | low | Bestand dreifach; geteiltes Modul unter `#lib/data//index.ts` | D |
 | 18 | BH | BSW-Alias exakt: anderer Strich → still Sonstige | maybe-false | Endergebnis-Legende unbekannt; Gate „Name >3 % ohne Alias“ würde klären | D |
 | 19 | BH | AC-Berlin-Werte nur manuell geprüft | low | kein Regressions-Check beim Re-Ingest | D |
 | 20 | BH | OG-Images und `list_elections`-Description offen | low | technical-notes Punkt 6 | D |

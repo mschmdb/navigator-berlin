@@ -1,7 +1,7 @@
-import { m } from '$lib/paraglide/messages.js';
-import { getLocale } from '$lib/paraglide/runtime';
-import { formatShare, type Lang } from '$lib/stories/wahl-quadrate/grau';
-import type { WahlTyp } from '$lib/stories/wahl-quadrate/parteien';
+import { m } from '#lib/paraglide/messages.js';
+import { getLocale } from '#lib/paraglide/runtime.js';
+import { formatShare, type Lang } from '#lib/stories/wahl-quadrate/grau.ts';
+import type { WahlTyp } from '#lib/stories/wahl-quadrate/parteien.ts';
 
 /** Sprache der Zahlen und Grau-Zeilen im Handbuch. */
 export function lang(): Lang {

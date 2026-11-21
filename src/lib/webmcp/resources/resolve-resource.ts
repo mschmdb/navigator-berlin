@@ -10,7 +10,7 @@ import { parseResourceUri } from '../internal/uri-parser.js';
 import { readActiveAddressResource } from './active-address.js';
 import { readLoadedLayersResource } from './loaded-layers.js';
 import type { WebMcpResourceRead } from './resource-types.js';
-import type { GeocodeSuggestion } from '$lib/data';
+import type { GeocodeSuggestion } from '#lib/data/index.ts';
 
 export interface ResourceContext {
 	readonly selectedAddress: GeocodeSuggestion | null;

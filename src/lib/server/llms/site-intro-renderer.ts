@@ -3,10 +3,10 @@
  *
  * Liefert das H1 + Blockquote-Summary nach llmstxt.org-Spec.
  *
- * Boundary: pure function, kein I/O. Liegt unter `$lib/server/` aus Symmetrie zu
+ * Boundary: pure function, kein I/O. Liegt unter `#lib/server/` aus Symmetrie zu
  * den anderen Renderern (Bezirk/Kiez/Layer brauchen DB-Access), nicht weil hier
  * Server-only-Code wäre. Falls die Symmetrie irrelevant wird, kann das File
- * problemlos nach `$lib/seo/` wandern.
+ * problemlos nach `#lib/seo//index.ts` wandern.
  */
 
 export interface SiteIntroInput {
@@ -23,6 +23,8 @@ export interface SiteIntroInput {
  * Keine em-dashes (Memory `feedback_no_em_dashes`). Kein „lebenswert"
  * (Memory `feedback_no_lebenswert`).
  */
+// Parameter bleibt als stabile Signatur (origin ist für künftige Links reserviert), wird aktuell nicht gelesen.
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function renderSiteIntroMarkdown(_input: SiteIntroInput): string {
 	const lines: string[] = [];
 	lines.push('# navigator.berlin');

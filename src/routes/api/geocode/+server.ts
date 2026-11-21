@@ -1,7 +1,7 @@
 import * as v from 'valibot';
 import type { RequestHandler } from './$types';
-import { proxyNominatim, reverseGeocode } from '$lib/server/geocode';
-import type { Locale } from '$lib/data';
+import { proxyNominatim, reverseGeocode } from '#lib/server/geocode.ts';
+import type { Locale } from '#lib/data/index.ts';
 
 const QuerySchema = v.object({
 	q: v.pipe(v.string(), v.minLength(2), v.maxLength(120))

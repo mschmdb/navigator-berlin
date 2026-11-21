@@ -1,8 +1,8 @@
 /**
  * Story 7 (Zeit-Animation mit Wechsel-Markierung): Client-Zwilling der
- * Wiederholungswahl-Merge-Regel aus `$lib/server/wahl/analytik.ts`
+ * Wiederholungswahl-Merge-Regel aus `#lib/server/wahl/analytik.ts`
  * (`mergeRepeatElections`/`winningPartei`). Bewusst NICHT von dort
- * importiert (Boundary: kein `$lib/server`-Import im Client) -- die
+ * importiert (Boundary: kein `#lib/server`-Import im Client) -- die
  * Fixture-Tests (`wechsel-data.test.ts`) klammern beide Implementierungen
  * auf dasselbe Ergebnis.
  *

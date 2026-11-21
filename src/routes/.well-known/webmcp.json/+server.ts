@@ -1,4 +1,4 @@
-import { buildWebMcpManifest } from '$lib/webmcp';
+import { buildWebMcpManifest } from '#lib/webmcp/index.js';
 import type { RequestHandler } from './$types';
 
 /**

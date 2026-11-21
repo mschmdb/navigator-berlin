@@ -1,10 +1,10 @@
 import distance from '@turf/distance';
 import { point } from '@turf/helpers';
-import type { WaermeOrt } from '$lib/data/get-waerme-orte-index.js';
+import type { WaermeOrt } from '#lib/data/get-waerme-orte-index.js';
 import {
 	getOpeningStatus,
 	isOpenNow
-} from '$lib/components/atlas/inspector-panel/internal/opening-status.js';
+} from '#lib/components/atlas/inspector-panel/internal/opening-status.js';
 
 export type WaermeOrtStatus = 'open' | 'closing-soon' | 'closed';
 

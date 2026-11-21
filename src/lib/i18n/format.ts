@@ -18,7 +18,7 @@
  * `{ locale }` explizit statt sich auf den globalen Request-Kontext zu
  * verlassen (Boundary: „Auswertung beim Aufruf").
  */
-import { getLocale, type Locale } from '$lib/paraglide/runtime';
+import { getLocale, type Locale } from '#lib/paraglide/runtime.js';
 
 export interface LocaleFormatOptions {
 	readonly locale?: Locale;
@@ -156,7 +156,7 @@ export function formatDecimal(
  * September 2026`, ausgeschriebener Monat statt `'short'` -- Review-Fund:
  * `'short'` ist ICU-Versions-abhängig zwischen "Sep" und "Sept" und damit
  * nicht stabil). Für DE-Aufrufer ausserhalb des Wahlportals bleibt
- * `$lib/utils/format-berlin-date.ts` die eigenständige Quelle (Boundary:
+ * `#lib/utils/format-berlin-date.ts` die eigenständige Quelle (Boundary:
  * „Keine anderen Seiten übersetzen").
  */
 export function formatWahlDate(iso: string, opts?: LocaleFormatOptions): string {

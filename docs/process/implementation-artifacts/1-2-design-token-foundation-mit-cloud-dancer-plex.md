@@ -448,7 +448,7 @@ Nach Setup: `bg-bg`, `text-ink`, `font-serif`, `text-2xl`, `p-4`, `border-rule-s
 ```svelte
 <!-- src/lib/components/atlas/skip-link.svelte -->
 <script lang="ts">
-  import * as m from '$lib/i18n/messages';
+  import * as m from '#lib/i18n/messages';
 </script>
 
 <a

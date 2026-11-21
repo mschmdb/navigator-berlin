@@ -1,6 +1,6 @@
-import { loadManifest } from '$lib/data/manifest.js';
-import { featureFlags } from '$lib/data/feature-flags.js';
-import type { Locale } from '$lib/paraglide/runtime';
+import { loadManifest } from '#lib/data/manifest.js';
+import { featureFlags } from '#lib/data/feature-flags.js';
+import type { Locale } from '#lib/paraglide/runtime.js';
 import { buildSitemapXml, collectPrerenderedUrls, type SitemapEntry } from './sitemap-builder.js';
 import { readBezirkSlugsFromGeoJson } from './sources/bezirk-slugs.js';
 import { readKiezSlugsFromGeoJson } from './sources/kiez-slugs.js';

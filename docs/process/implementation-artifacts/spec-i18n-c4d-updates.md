@@ -80,7 +80,7 @@ context:
 
 - 30.09. Übersetzung 10:56-10:59, Spec 10:58, Abnahme Matze 11:03, Umsetzung 11:05-11:22 (17 min), Review 11:22-11:24, Patches 11:24-11:29, Verifikation 11:29-11:45.
 - Loader: `.en.md` als `bodyEn`, verwaiste Schwester, Frontmatter in Schwester und fremde Locale-Suffixe werfen. Register `/updates` mit `prefix` und `except` für die drei Feeds.
-- `formatLongDate` in `$lib/i18n/format.ts` (neu, Intl/UTC), DE unverändert.
+- `formatLongDate` in `#lib/i18n/format.ts` (neu, Intl/UTC), DE unverändert.
 - publish-update: EN-Draft (Titel, Summary, `.en.md`), EN-Lint inkl. Titel/Summary, atomares Paar-Schreiben, Kollisions-Suffixe, YAML-sicheres Quoting. Runbook `docs/runbooks/publish-update-skill.md` auf `mv` + `git add` (Koordinator).
 - DE-Korrekturen: `2026-05-19-wahldaten` (Satz vervollständigt), „Methodik-Änderungen“ im Blog-JSON-LD.
 - Nicht abgenommen: `updates_jsonld_blog_description` EN „Data updates, features and methodology changes.“

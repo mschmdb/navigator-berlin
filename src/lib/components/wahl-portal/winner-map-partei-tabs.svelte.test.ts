@@ -2,7 +2,7 @@ import { page } from 'vitest/browser';
 import { describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import WinnerMapParteiTabs from './winner-map-partei-tabs.svelte';
-import { FINDER_PARTIES } from '$lib/components/atlas/internal/kiez-finder-engine.js';
+import { FINDER_PARTIES } from '#lib/components/atlas/internal/kiez-finder-engine.js';
 
 describe('winner-map-partei-tabs.svelte', () => {
 	it('rendert "Gewinner" + einen Tab pro FINDER_PARTIES-Partei (7 Parteien)', async () => {

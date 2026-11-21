@@ -70,7 +70,7 @@ so that ich (a) als Bürger über Daten-Refreshes informiert bin, (b) als Civic-
      - Category-Badge (5 unterschiedliche Token-Farben aus existierendem Severity- oder Chart-Cat-Palette, KEIN Rot-Grün, KEIN Marketing-Akzent).
      - Plex-Serif h2 mit Title (locale-aware aus `title_de`/`title_en`).
      - Summary-Lead in Plex-Sans (locale-aware).
-     - „Mehr lesen"-Disclosure-Toggle (bits-ui `Disclosure` aus `$lib/components/ui/disclosure.svelte`) öffnet inline Body-Markdown ODER „Zur Detail-Seite"-Link auf `/updates/{slug}` (Empfehlung: Link, weil Per-Entry-Detail-Seiten ihre eigenen SEO-Pages sind, siehe AC-3).
+     - „Mehr lesen"-Disclosure-Toggle (bits-ui `Disclosure` aus `#lib/components/ui/disclosure.svelte`) öffnet inline Body-Markdown ODER „Zur Detail-Seite"-Link auf `/updates/{slug}` (Empfehlung: Link, weil Per-Entry-Detail-Seiten ihre eigenen SEO-Pages sind, siehe AC-3).
    - **Empfehlung**: Inline-Disclosure für kurze Updates, separate Detail-Seite für längere. Heuristik: Wenn Body > 500 Zeichen → nur Link, sonst Inline-Disclosure-optional. Final-Lock: nur Link, weil sonst Doppel-Render-Kostet + SEO-Cannibalization (zwei Pages mit selbem Body).
 
 3. **AC-3 (Per-Entry-Detail-Route `/updates/[slug]`):**
@@ -104,7 +104,7 @@ so that ich (a) als Bürger über Daten-Refreshes informiert bin, (b) als Civic-
    **Given** 5er-Category-Enum.
    **When** ich Filter-Komponente oberhalb der Index-Liste einbaue.
    **Then**:
-   - `src/lib/components/updates/updates-filter.svelte` mit `ToggleGroup` aus `$lib/components/ui/toggle-group.svelte`, `type="multiple"`, 6 Toggles: „Alle" / „Daten-Update" / „Feature" / „Methodik" / „Datenquelle" / „Lizenz" (DE-Labels, EN-Pendants via Paraglide).
+   - `src/lib/components/updates/updates-filter.svelte` mit `ToggleGroup` aus `#lib/components/ui/toggle-group.svelte`, `type="multiple"`, 6 Toggles: „Alle" / „Daten-Update" / „Feature" / „Methodik" / „Datenquelle" / „Lizenz" (DE-Labels, EN-Pendants via Paraglide).
    - „Alle"-Toggle ist Mutually-Exclusive zu den anderen 5 (wenn „Alle" gewählt, kein Category-Filter aktiv).
    - Filter-State im URL-Query-Parameter `?cat=feature,methodik` reflektiert, deeplink-fähig.
    - URL-State-Parser in `src/lib/content/updates/parse-filter.ts` + Tests pro Input-Variante (leer / single / multi / unknown-Category → silent-ignore).
@@ -309,7 +309,7 @@ so that ich (a) als Bürger über Daten-Refreshes informiert bin, (b) als Civic-
 
 - [x] **T3: Markdown-Render-Helper + Sanitization** (AC: 3)
   - [x] T3.1: `src/lib/content/updates/render-markdown.ts` mit `renderMarkdownBody(md): string` (marked sync + sanitize Pipe).
-  - [x] T3.2: **Option A** Lock per User-Decision: Custom-Regex-Whitelist in `$lib/seo/markdown-sanitizer.ts`. Block-Liste `<script>`/`<iframe>`/`<object>`/`<embed>`/`<style>`/`<link>`/`<meta>` + alle `on*=`-Attribute + `javascript:`/`data:`-URLs. Kein DOMPurify-Bundle in Phase 1.
+  - [x] T3.2: **Option A** Lock per User-Decision: Custom-Regex-Whitelist in `#lib/seo/markdown-sanitizer.ts`. Block-Liste `<script>`/`<iframe>`/`<object>`/`<embed>`/`<style>`/`<link>`/`<meta>` + alle `on*=`-Attribute + `javascript:`/`data:`-URLs. Kein DOMPurify-Bundle in Phase 1.
   - [x] T3.3: Tests mit XSS-Try-Vectors (`<script>alert(1)</script>`, `<img src=x onerror=alert(1)>`, `[click](javascript:alert(1))`, `<iframe>`, ALLE green).
 
 - [x] **T4: Index-Route + Filter** (AC: 2, 4, 15)
@@ -545,7 +545,7 @@ Claude Opus 4.7 (parallel-agent worktree-session, 2026-05-16).
 
 **Open-Questions Lock:**
 
-- **Q1 Sanitization**: Option A (Custom-Regex-Whitelist, User-Lock 2026-05-16). `$lib/seo/markdown-sanitizer.ts`.
+- **Q1 Sanitization**: Option A (Custom-Regex-Whitelist, User-Lock 2026-05-16). `#lib/seo/markdown-sanitizer.ts`.
 - **Q2 Render-Pattern**: Detail-Page-Only. Index-Card zeigt Summary + „Mehr lesen"-Link, kein Inline-Disclosure.
 - **Q3 RSS-EN**: DE-only Phase 1.
 - **Q4 Tags**: Optional, max 8, lowercase-kebab-case.

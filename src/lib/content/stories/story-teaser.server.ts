@@ -1,7 +1,7 @@
-import { loadStoriesWahl } from '$lib/server/stories/wahl-daten.js';
-import { teaserBezirke } from '$lib/stories/punkt-linie-kiez/bezirke-daten.server.js';
-import { vorschauShares } from '$lib/stories/wahl-quadrate/og-komposition.js';
-import type { BezirkItem } from '$lib/stories/punkt-linie-kiez/types.js';
+import { loadStoriesWahl } from '#lib/server/stories/wahl-daten.js';
+import { teaserBezirke } from '#lib/stories/punkt-linie-kiez/bezirke-daten.server.js';
+import { vorschauShares } from '#lib/stories/wahl-quadrate/og-komposition.js';
+import type { BezirkItem } from '#lib/stories/punkt-linie-kiez/types.js';
 import { loadStoriesFromModules } from './load-stories.js';
 import type { StoryEntry } from './types.js';
 

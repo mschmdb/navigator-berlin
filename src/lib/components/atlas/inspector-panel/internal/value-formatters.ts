@@ -1,12 +1,12 @@
 import { mapGruenversorgungKategorie } from './gruenversorgung-kategorie.js';
-import { m } from '$lib/paraglide/messages.js';
-import { formatCount, formatDecimal } from '$lib/i18n/format.js';
+import { m } from '#lib/paraglide/messages.js';
+import { formatCount, formatDecimal } from '#lib/i18n/format.js';
 import { toAtlasMessageOptions, type LocaleOptions } from '../../internal/atlas-label-options.js';
 import { dimensionLabel, kiezScoreScaleLabel, scaleIdFor } from './kiez-score-display.js';
 
 type MessageFn = (
 	params?: undefined,
-	options?: { locale: import('$lib/paraglide/runtime').Locale }
+	options?: { locale: import('#lib/paraglide/runtime.js').Locale }
 ) => string;
 
 /**

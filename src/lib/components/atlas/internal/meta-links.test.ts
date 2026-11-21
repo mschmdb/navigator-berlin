@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it } from 'vitest';
-import { overwriteGetLocale } from '$lib/paraglide/runtime';
+import { overwriteGetLocale } from '#lib/paraglide/runtime.js';
 import { META_LINKS, META_LINK_GROUPS, metaLinkLabel, metaLinkGroupTitle } from './meta-links.js';
 
 afterEach(() => {

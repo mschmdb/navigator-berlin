@@ -1,5 +1,5 @@
-import type { Bundle, LayerHit, LayerMetadata } from '$lib/data';
-import { m } from '$lib/paraglide/messages.js';
+import type { Bundle, LayerHit, LayerMetadata } from '#lib/data/index.ts';
+import { m } from '#lib/paraglide/messages.js';
 import {
 	assertUnreachable,
 	toAtlasMessageOptions,

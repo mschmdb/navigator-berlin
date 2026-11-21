@@ -1,10 +1,9 @@
-import { sequence } from '@sveltejs/kit/hooks';
-import type { Handle } from '@sveltejs/kit';
-import { getTextDirection } from '$lib/paraglide/runtime';
-import { paraglideMiddleware } from '$lib/paraglide/server';
-import { staleLocaleRedirectTarget } from '$lib/seo/stale-locale-redirect';
-import { renamedRouteRedirectTarget } from '$lib/seo/renamed-route-redirect';
-import { basePathname } from '$lib/i18n/base-path';
+import { sequence, type Handle } from '@sveltejs/kit/hooks';
+import { getTextDirection } from '#lib/paraglide/runtime.js';
+import { paraglideMiddleware } from '#lib/paraglide/server.js';
+import { staleLocaleRedirectTarget } from '#lib/seo/stale-locale-redirect.ts';
+import { renamedRouteRedirectTarget } from '#lib/seo/renamed-route-redirect.ts';
+import { basePathname } from '#lib/i18n/base-path.ts';
 
 /**
  * Query-String für Redirects. Beim Prerender wirft SvelteKit schon beim Lesen von
@@ -24,7 +23,7 @@ function searchOf(url: URL): string {
  * prefix under Paraglide's `['url', 'baseLocale']` strategy). `en` is the
  * one exception since i18n Block A (2026-09-26, ADR-005): it's now an active
  * locale with its own real `/en/…` routes, so `staleLocaleRedirectTarget`
- * excludes it from this redirect (see `$lib/seo/stale-locale-redirect.ts`
+ * excludes it from this redirect (see `#lib/seo/stale-locale-redirect.ts`
  * for the historical-vs-active split). Runs before Paraglide so the redirect
  * happens prior to locale resolution.
  */
@@ -61,16 +60,16 @@ export const handleRenamedRouteRedirect: Handle = ({ event, resolve }) => {
 };
 
 const handleParaglide: Handle = ({ event, resolve }) =>
-	paraglideMiddleware(event.request, ({ request, locale }) => {
-		event.request = request;
-
-		return resolve(event, {
+	// Kit 3: `event.request` ist readonly. Ohne effektive Request-URL liefert die
+	// Middleware nur einen Klon derselben URL, darum reicht das Original.
+	paraglideMiddleware(event.request, ({ locale }) =>
+		resolve(event, {
 			transformPageChunk: ({ html }) =>
 				html
 					.replace('%paraglide.lang%', locale)
 					.replace('%paraglide.dir%', getTextDirection(locale))
-		});
-	});
+		})
+	);
 
 /**
  * Indexierungs-Hygiene S1: `/explore` mit Query (Zustands-URLs wie `?kiez=`)

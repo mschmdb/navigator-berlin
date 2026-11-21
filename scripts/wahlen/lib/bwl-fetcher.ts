@@ -18,7 +18,7 @@ export function detectEncoding(buf: Buffer): 'utf-8' | 'latin1' {
 			i++;
 			continue;
 		}
-		let len = 0;
+		let len: number;
 		if ((b & 0xe0) === 0xc0) len = 2;
 		else if ((b & 0xf0) === 0xe0) len = 3;
 		else if ((b & 0xf8) === 0xf0) len = 4;

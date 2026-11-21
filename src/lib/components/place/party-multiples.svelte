@@ -1,13 +1,13 @@
 <script lang="ts">
-	import { formatPercent } from '$lib/i18n/format.js';
+	import { formatPercent } from '#lib/i18n/format.js';
 	import { Chart, Circle, Spline, Svg, Text } from 'layerchart';
 	import ChartAxis from './chart-axis.svelte';
 	import { scaleLinear } from 'd3-scale';
-	import { m } from '$lib/paraglide/messages.js';
-	import { getLocale } from '$lib/paraglide/runtime';
-	import {} from '$lib/place/labels';
-	import { partiesOf, seriesFor } from '$lib/place/wahl-summary';
-	import type { WahlPunkt } from '$lib/place/wahl-types';
+	import { m } from '#lib/paraglide/messages.js';
+	import { getLocale } from '#lib/paraglide/runtime.js';
+	import {} from '#lib/place/labels.ts';
+	import { partiesOf, seriesFor } from '#lib/place/wahl-summary.ts';
+	import type { WahlPunkt } from '#lib/place/wahl-types.ts';
 	import { chartMotion } from './motion.svelte';
 
 	interface Props {

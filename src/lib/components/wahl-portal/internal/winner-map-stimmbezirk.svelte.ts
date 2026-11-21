@@ -19,12 +19,12 @@
 import booleanPointInPolygon from '@turf/boolean-point-in-polygon';
 import { point } from '@turf/helpers';
 import type { Feature, FeatureCollection, Polygon, MultiPolygon } from 'geojson';
-import { loadManifest } from '$lib/data/manifest.js';
-import { fetchLayer } from '$lib/data/internal/layer-fetch.js';
-import { buildIndex, type FeatureIndex } from '$lib/data/internal/spatial-index.js';
-import { gruppeIdFromGeo, type GeoUwbProps } from '$lib/data/wahl-geo-mapping.js';
-import { gruppenAnzeigeName } from '$lib/data/wahl-gruppe-label.js';
-import type { Locale } from '$lib/paraglide/runtime';
+import { loadManifest } from '#lib/data/manifest.js';
+import { fetchLayer } from '#lib/data/internal/layer-fetch.js';
+import { buildIndex, type FeatureIndex } from '#lib/data/internal/spatial-index.js';
+import { gruppeIdFromGeo, type GeoUwbProps } from '#lib/data/wahl-geo-mapping.js';
+import { gruppenAnzeigeName } from '#lib/data/wahl-gruppe-label.js';
+import type { Locale } from '#lib/paraglide/runtime.js';
 import type { WinnerApiRow } from './winner-map-data.js';
 
 export type LoadStatus = 'idle' | 'loading' | 'loaded' | 'error';

@@ -1,5 +1,5 @@
 import matter from 'gray-matter';
-import { classifyUpdateFilename, filenameOf } from '$lib/content/updates/update-filename.js';
+import { classifyUpdateFilename, filenameOf } from '#lib/content/updates/update-filename.js';
 import { parseStoryFrontmatter } from './frontmatter-schema.js';
 import type { StoryEntry } from './types.js';
 

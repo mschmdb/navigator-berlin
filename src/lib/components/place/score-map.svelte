@@ -4,10 +4,10 @@
 	eingebunden als Bild mit Alternativtext; die Werte stehen in den Tabellen der Seite.
 -->
 <script lang="ts">
-	import { m } from '$lib/paraglide/messages.js';
-	import { NO_SCORE_FILL } from '$lib/components/atlas/internal/score-class-color.js';
-	import { PLACE_MAP_FILLS } from '$lib/place/map-classes';
-	import type { MapImage } from '$lib/place/types';
+	import { m } from '#lib/paraglide/messages.js';
+	import { NO_SCORE_FILL } from '#lib/components/atlas/internal/score-class-color.js';
+	import { PLACE_MAP_FILLS } from '#lib/place/map-classes.ts';
+	import type { MapImage } from '#lib/place/types.ts';
 
 	interface Props {
 		/** Statische SVG-Datei (`/karte/…`), Breite und Höhe gegen Layoutsprünge. */

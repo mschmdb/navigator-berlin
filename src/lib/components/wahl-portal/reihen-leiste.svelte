@@ -9,10 +9,10 @@
 	 * (`steuerleiste-reihe*`) und Tastatursteuerung bleiben unverändert, damit
 	 * die bestehenden E2E-Stellen stabil bleiben.
 	 */
-	import { REIHE_VALUES, type WahlPortalReihe } from '$lib/utils/wahl-portal-url-state.js';
+	import { REIHE_VALUES, type WahlPortalReihe } from '#lib/utils/wahl-portal-url-state.js';
 	import { nextRadioIndex } from './internal/radiogroup-keyboard.js';
-	import { m } from '$lib/paraglide/messages.js';
-	import { wahlReiheLabel } from '$lib/data/wahl-labels.js';
+	import { m } from '#lib/paraglide/messages.js';
+	import { wahlReiheLabel } from '#lib/data/wahl-labels.js';
 
 	type Props = {
 		reihe: WahlPortalReihe;

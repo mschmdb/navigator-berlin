@@ -1,8 +1,8 @@
 import { afterEach, describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
-import { overwriteGetLocale } from '$lib/paraglide/runtime';
+import { overwriteGetLocale } from '#lib/paraglide/runtime.js';
 import FaqSection from './faq-section.svelte';
-import type { FaqEntry } from '$lib/data/types.js';
+import type { FaqEntry } from '#lib/data/types.js';
 
 afterEach(() => {
 	overwriteGetLocale(() => 'de');

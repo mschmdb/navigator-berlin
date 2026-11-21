@@ -1,5 +1,5 @@
-import { getWahlList } from '$lib/server/db/queries/wahl/get-wahl-list.js';
-import { isStrictBuild } from '$lib/build/strict-build.js';
+import { getWahlList } from '#lib/server/db/queries/wahl/get-wahl-list.js';
+import { isStrictBuild } from '#lib/build/strict-build.js';
 import type { SitemapSourceContext } from './sitemap-builder.js';
 
 type SitemapWahlen = NonNullable<SitemapSourceContext['wahlen']>;

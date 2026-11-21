@@ -2,7 +2,7 @@
 import { describe, expect, it } from 'vitest';
 import { readFileSync } from 'node:fs';
 import { getValueSeverity } from './value-severity-mapping.js';
-import { formatPercentValue, formatWithUnit } from '$lib/i18n/format.js';
+import { formatPercentValue, formatWithUnit } from '#lib/i18n/format.js';
 import { getLayerHitDisplay } from './layer-hit-display.js';
 import { formatDistance } from './format-distance.js';
 

@@ -1,5 +1,5 @@
 import type { WithContext } from 'schema-dts';
-import type { License } from '$lib/data/types.js';
+import type { License } from '#lib/data/types.js';
 import { licenseToSchemaOrgUrl } from './license-url.js';
 import { canonicalOrigin } from './canonical.js';
 import { organizationRef, type OrganizationRefJsonLd } from './jsonld-organization.js';

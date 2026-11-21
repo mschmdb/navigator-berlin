@@ -5,8 +5,8 @@
  * (Boundary DB-los) -- dieser Guard bleibt beim Aufrufer, hier nur Laden/Cache.
  */
 import type { FeatureCollection } from 'geojson';
-import { loadManifest } from '$lib/data/manifest.js';
-import { fetchLayer } from '$lib/data/internal/layer-fetch.js';
+import { loadManifest } from '#lib/data/manifest.js';
+import { fetchLayer } from '#lib/data/internal/layer-fetch.js';
 import {
 	buildKiezSlugsForFeatures,
 	bezirkSlugsForFeatures,

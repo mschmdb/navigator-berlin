@@ -1,25 +1,25 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import SiteHeader from '$lib/components/atlas/site-header.svelte';
-	import BookmarkDialog from '$lib/components/atlas/bookmark-dialog.svelte';
-	import LangSwitcher from '$lib/components/atlas/lang-switcher.svelte';
-	import TranslationDisclaimer from '$lib/components/atlas/translation-disclaimer.svelte';
-	import { geocodeAddress } from '$lib/data/geocode.remote.js';
-	import type { GeocodeSuggestion } from '$lib/data';
-	import { provideAddressSelection } from '$lib/state/address-selection.svelte.js';
+	import SiteHeader from '#lib/components/atlas/site-header.svelte';
+	import BookmarkDialog from '#lib/components/atlas/bookmark-dialog.svelte';
+	import LangSwitcher from '#lib/components/atlas/lang-switcher.svelte';
+	import TranslationDisclaimer from '#lib/components/atlas/translation-disclaimer.svelte';
+	import { geocodeAddress } from '#lib/data/geocode.remote.js';
+	import type { GeocodeSuggestion } from '#lib/data/index.ts';
+	import { provideAddressSelection } from '#lib/state/address-selection.svelte.js';
 	import {
 		getUiState,
 		setComparisonAddress,
 		openPalette,
 		openBookmarksDialog
-	} from '$lib/state/ui-context.svelte.js';
-	import { isBookmarked, bookmarkToSuggestion } from '$lib/state/bookmark-store.js';
-	import type { Bookmark } from '$lib/state/bookmark-schema.js';
-	import { getLocale, baseLocale } from '$lib/paraglide/runtime';
-	import { resolveEffectiveLocale } from '$lib/seo/effective-locale.js';
-	import { isRoutePartiallyTranslated } from '$lib/seo/translation-register.js';
-	import { basePathname } from '$lib/i18n/base-path.js';
-	import { localizedHref } from '$lib/i18n/localized-href.js';
+	} from '#lib/state/ui-context.svelte.js';
+	import { isBookmarked, bookmarkToSuggestion } from '#lib/state/bookmark-store.js';
+	import type { Bookmark } from '#lib/state/bookmark-schema.js';
+	import { getLocale, baseLocale } from '#lib/paraglide/runtime.js';
+	import { resolveEffectiveLocale } from '#lib/seo/effective-locale.js';
+	import { isRoutePartiallyTranslated } from '#lib/seo/translation-register.js';
+	import { basePathname } from '#lib/i18n/base-path.js';
+	import { localizedHref } from '#lib/i18n/localized-href.js';
 
 	let { children } = $props();
 

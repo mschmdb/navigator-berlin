@@ -1,13 +1,13 @@
 import { afterEach, describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { page } from 'vitest/browser';
-import { overwriteGetLocale } from '$lib/paraglide/runtime';
+import { overwriteGetLocale } from '#lib/paraglide/runtime.js';
 import LayerKiezRanking from './layer-kiez-ranking.svelte';
 import type {
 	LayerKiezRanking as Ranking,
 	RankingEntry,
 	RankingList
-} from '$lib/data/layer-kiez-ranking.js';
+} from '#lib/data/layer-kiez-ranking.js';
 
 afterEach(() => {
 	overwriteGetLocale(() => 'de');

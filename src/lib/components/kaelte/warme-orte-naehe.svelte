@@ -1,16 +1,16 @@
 <script lang="ts">
 	import { tick } from 'svelte';
 	import { LocateFixed, Navigation, Mail, ExternalLink } from '@lucide/svelte';
-	import { requestPosition, type PositionResult } from '$lib/utils/geolocation.js';
-	import { announceGlobal } from '$lib/utils/aria-live.js';
-	import { formatDistance } from '$lib/components/atlas/inspector-panel/internal/format-distance.js';
-	import { getWaermeOrteIndex, type WaermeOrt } from '$lib/data/get-waerme-orte-index.js';
+	import { requestPosition, type PositionResult } from '#lib/utils/geolocation.js';
+	import { announceGlobal } from '#lib/utils/aria-live.js';
+	import { formatDistance } from '#lib/components/atlas/inspector-panel/internal/format-distance.js';
+	import { getWaermeOrteIndex, type WaermeOrt } from '#lib/data/get-waerme-orte-index.js';
 	import {
 		nearestWaermeOrte,
 		waermeKategorien,
 		type WaermeOrtMitDistanz
-	} from '$lib/kaelte/nearest-waerme-orte.js';
-	import { categoryLabel } from '$lib/components/kuehle-orte/category-label.js';
+	} from '#lib/kaelte/nearest-waerme-orte.js';
+	import { categoryLabel } from '#lib/components/kuehle-orte/category-label.js';
 	import {
 		checkedText,
 		counterText,
@@ -21,10 +21,10 @@
 		statusText,
 		stayText,
 		winterText
-	} from '$lib/kaelte/waerme-ort-labels.js';
+	} from '#lib/kaelte/waerme-ort-labels.js';
 	import SchlafplatzHinweis from './schlafplatz-hinweis.svelte';
-	import { m } from '$lib/paraglide/messages.js';
-	import { getLocale } from '$lib/paraglide/runtime';
+	import { m } from '#lib/paraglide/messages.js';
+	import { getLocale } from '#lib/paraglide/runtime.js';
 
 	type Phase = 'idle' | 'locating' | 'ready' | 'denied' | 'unsupported' | 'error' | 'load-error';
 

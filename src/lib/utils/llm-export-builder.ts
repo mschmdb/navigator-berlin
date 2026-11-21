@@ -5,23 +5,23 @@ import {
 	type KiezScore,
 	type LayerHit,
 	type LayerMetadata
-} from '$lib/data';
+} from '#lib/data/index.ts';
 import {
 	DIMENSION_LABELS_DE,
 	scaleFor
-} from '$lib/components/atlas/inspector-panel/internal/kiez-score-display.js';
+} from '#lib/components/atlas/inspector-panel/internal/kiez-score-display.js';
 import {
 	scoreDimensionLabelFor,
 	contextNoteFor
-} from '$lib/components/atlas/inspector-panel/internal/score-membership.js';
-import { groupHitsBySection } from '$lib/components/atlas/inspector-panel/internal/sections.js';
-import { getLayerExplainEntry } from '$lib/components/atlas/inspector-panel/internal/layer-explain.js';
-import { getLayerDisplayName } from '$lib/components/atlas/internal/layer-palette-filter.js';
-import { formatLayerValue } from '$lib/components/atlas/inspector-panel/internal/value-formatters.js';
-import { formatBerlinDate } from '$lib/utils/format-berlin-date.js';
-import { sourceName } from '$lib/data/wahl-source-name.js';
-import { getEditorialConfig } from '$lib/components/atlas/internal/editorial-config.js';
-import { DISCLAIMER_TEXTS_DE } from '$lib/components/atlas/editorial-disclaimer.svelte';
+} from '#lib/components/atlas/inspector-panel/internal/score-membership.js';
+import { groupHitsBySection } from '#lib/components/atlas/inspector-panel/internal/sections.js';
+import { getLayerExplainEntry } from '#lib/components/atlas/inspector-panel/internal/layer-explain.js';
+import { getLayerDisplayName } from '#lib/components/atlas/internal/layer-palette-filter.js';
+import { formatLayerValue } from '#lib/components/atlas/inspector-panel/internal/value-formatters.js';
+import { formatBerlinDate } from '#lib/utils/format-berlin-date.js';
+import { sourceName } from '#lib/data/wahl-source-name.js';
+import { getEditorialConfig } from '#lib/components/atlas/internal/editorial-config.js';
+import { DISCLAIMER_TEXTS_DE } from '#lib/components/atlas/editorial-disclaimer.svelte';
 import {
 	NORMAL_OLD,
 	NORMAL_NEW,
@@ -32,18 +32,18 @@ import {
 import type {
 	NearestStop,
 	Modus
-} from '$lib/components/atlas/inspector-panel/internal/nearest-oepnv-stop.js';
+} from '#lib/components/atlas/inspector-panel/internal/nearest-oepnv-stop.js';
 import {
 	MOBILITY_SCORE_MAX,
 	MOBILITY_SCORE_TOP_THRESHOLD,
 	type MobilityRating
-} from '$lib/components/atlas/inspector-panel/internal/mobility-rating.js';
+} from '#lib/components/atlas/inspector-panel/internal/mobility-rating.js';
 import type {
 	WahlResultsAtPoint,
 	WahlResultBundle,
 	LevelKey
-} from '$lib/data/get-wahl-results-at-point.js';
-import type { KiezDemografieData } from '$lib/components/atlas/inspector-panel/internal/demografie-types.js';
+} from '#lib/data/get-wahl-results-at-point.js';
+import type { KiezDemografieData } from '#lib/components/atlas/inspector-panel/internal/demografie-types.js';
 
 export interface LlmExportAddress {
 	displayName: string;

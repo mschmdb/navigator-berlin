@@ -1,6 +1,6 @@
-import { loadManifest } from '$lib/data/manifest.js';
-import { layersOutsideBundles, type LayerOverviewSource } from '$lib/data/layer-overview.js';
-import { reportOverviewProblems } from '$lib/server/profile/overview-problems.js';
+import { loadManifest } from '#lib/data/manifest.js';
+import { layersOutsideBundles, type LayerOverviewSource } from '#lib/data/layer-overview.js';
+import { reportOverviewProblems } from '#lib/server/profile/overview-problems.js';
 import type { PageServerLoad } from './$types';
 
 export const prerender = true;

@@ -1,4 +1,4 @@
-import { formatDecimal } from '$lib/i18n/format.js';
+import { formatDecimal } from '#lib/i18n/format.js';
 import type { LocaleOptions } from '../../internal/atlas-label-options.js';
 
 /**
@@ -7,7 +7,7 @@ import type { LocaleOptions } from '../../internal/atlas-label-options.js';
  * nicht auseinanderdriften. Locale-fähig (i18n Block B3a), ohne
  * `opts.locale`: DE (Boundary). Der früher hart auf ein deutsches
  * Dezimalkomma verdrahtete `.replace('.', ',')` läuft jetzt über
- * `$lib/i18n/format.ts` ("Komma-Hacks auf format.ts").
+ * `#lib/i18n/format.ts` ("Komma-Hacks auf format.ts").
  */
 export function formatDistance(distanceM: number, opts?: LocaleOptions): string {
 	if (distanceM < 1000) return `${distanceM} m`;

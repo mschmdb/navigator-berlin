@@ -1,5 +1,5 @@
-import type { FaqEntry } from '$lib/data/types.js';
-import { m } from '$lib/paraglide/messages.js';
+import type { FaqEntry } from '#lib/data/types.js';
+import { m } from '#lib/paraglide/messages.js';
 
 // Story 16 SEO: FAQ für die Hitze-Landing. Fragen an realer Suchintention orientiert
 // („kühle Orte Berlin", „klimatisierte Orte", „was hilft bei Hitze"). Sichtbar gerendert

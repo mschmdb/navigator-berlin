@@ -1,13 +1,13 @@
 import { page } from 'vitest/browser';
 import { beforeEach, describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
-import { overwriteGetLocale } from '$lib/paraglide/runtime';
+import { overwriteGetLocale } from '#lib/paraglide/runtime.js';
 import SmallMultiplesContextProbe from './internal/small-multiples-context-probe.svelte';
-import { _resetManifestCache } from '$lib/data/manifest.js';
-import { _resetLayerCache } from '$lib/data/internal/layer-fetch.js';
+import { _resetManifestCache } from '#lib/data/manifest.js';
+import { _resetLayerCache } from '#lib/data/internal/layer-fetch.js';
 import { _resetWinnersCache } from './internal/winner-map-winners.svelte.js';
-import { FINDER_PARTIES } from '$lib/components/atlas/internal/kiez-finder-engine.js';
-import type { WahlPortalListEntry } from '$lib/state/wahl-portal-context.svelte.js';
+import { FINDER_PARTIES } from '#lib/components/atlas/internal/kiez-finder-engine.js';
+import type { WahlPortalListEntry } from '#lib/state/wahl-portal-context.svelte.js';
 
 const SHA = 'a'.repeat(64);
 

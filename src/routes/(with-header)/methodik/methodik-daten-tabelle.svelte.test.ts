@@ -1,9 +1,9 @@
 import { afterEach, describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { page } from 'vitest/browser';
-import { overwriteGetLocale } from '$lib/paraglide/runtime';
+import { overwriteGetLocale } from '#lib/paraglide/runtime.js';
 import MethodikDatenTabelle from './methodik-daten-tabelle.svelte';
-import type { LayerMetadata } from '$lib/data';
+import type { LayerMetadata } from '#lib/data/index.ts';
 
 function meta(slug: string, overrides: Partial<LayerMetadata> = {}): LayerMetadata {
 	return {

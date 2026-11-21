@@ -1,5 +1,5 @@
 import { getContext, setContext } from 'svelte';
-import type { WahlPortalEbene, WahlPortalReihe } from '$lib/utils/wahl-portal-url-state.js';
+import type { WahlPortalEbene, WahlPortalReihe } from '#lib/utils/wahl-portal-url-state.js';
 
 const KEY = Symbol('wahl-portal-state');
 

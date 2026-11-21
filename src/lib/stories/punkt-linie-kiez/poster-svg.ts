@@ -1,5 +1,5 @@
-import { m } from '$lib/paraglide/messages.js';
-import type { Locale } from '$lib/paraglide/runtime.js';
+import { m } from '#lib/paraglide/messages.js';
+import type { Locale } from '#lib/paraglide/runtime.js';
 import { compositionElements } from './composition-svg';
 import { legendRows, legendShapes, type LegendShape } from './legend';
 import { STORY_FONT, STORY_INK, STORY_PAPER, STORY_SERIES } from '../tokens';

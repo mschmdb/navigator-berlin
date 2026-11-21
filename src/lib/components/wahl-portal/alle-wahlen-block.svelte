@@ -8,9 +8,9 @@
 	crawlbar).
 -->
 <script lang="ts">
-	import { m } from '$lib/paraglide/messages.js';
-	import { localizedHref } from '$lib/i18n/localized-href.js';
-	import { wahlReiheLabel, wahlStimmtypLabel } from '$lib/data/wahl-labels.js';
+	import { m } from '#lib/paraglide/messages.js';
+	import { localizedHref } from '#lib/i18n/localized-href.js';
+	import { wahlReiheLabel, wahlStimmtypLabel } from '#lib/data/wahl-labels.js';
 	import type { AlleWahlenEntry } from '../../../routes/(with-header)/berlin-wahlen/+page.server.js';
 
 	type Props = {

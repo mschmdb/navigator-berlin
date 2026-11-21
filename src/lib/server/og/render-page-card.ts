@@ -14,7 +14,7 @@
  * Font-Pipeline aus Story 1.20 (Memory `project_satori_font_pipeline`).
  */
 
-import { loadDefaultOgFonts, type OgFont } from '$lib/utils/og-card-renderer.js';
+import { loadDefaultOgFonts, type OgFont } from '#lib/utils/og-card-renderer.js';
 import type { SatoriNode } from './page-card-template.js';
 import { OG_WIDTH, OG_HEIGHT } from './page-card-template.js';
 

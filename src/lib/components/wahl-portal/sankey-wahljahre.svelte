@@ -22,17 +22,17 @@
 	 * (`KiezBezirkWinnersLoader`, Modul-Cache) -- keine neue Server-API, kein
 	 * Geometrie-Load (REVISION 12:07: war nur für die Gebiets-Spalte nötig).
 	 */
-	import { getWahlPortalState } from '$lib/state/wahl-portal-context.svelte.js';
-	import { stimmtypForReihe } from '$lib/utils/wahl-portal-url-state.js';
-	import { m } from '$lib/paraglide/messages.js';
+	import { getWahlPortalState } from '#lib/state/wahl-portal-context.svelte.js';
+	import { stimmtypForReihe } from '#lib/utils/wahl-portal-url-state.js';
+	import { m } from '#lib/paraglide/messages.js';
 	import {
 		wahlEbeneLabel,
 		sourceDisplayLabel,
 		licenseDisplayLabel
-	} from '$lib/data/wahl-labels.js';
+	} from '#lib/data/wahl-labels.js';
 	import DataTableAlternative, {
 		type TableColumn
-	} from '$lib/components/atlas/data-table-alternative.svelte';
+	} from '#lib/components/atlas/data-table-alternative.svelte';
 	import { KiezBezirkWinnersLoader } from './internal/winner-map-winners.svelte.js';
 	import { nextRadioIndex } from './internal/radiogroup-keyboard.js';
 	import { buildSankeyGraph } from './internal/sankey-graph.js';
@@ -79,7 +79,8 @@
 		ebene = EBENEN[next];
 	}
 
-	// svelte-ignore state_referenced_locally -- fetchFn ist ein Test-/DI-Prop.
+	// fetchFn ist ein Test-/DI-Prop.
+	// svelte-ignore state_referenced_locally
 	const winnersLoader = new KiezBezirkWinnersLoader(fetchFn);
 
 	$effect(() => {

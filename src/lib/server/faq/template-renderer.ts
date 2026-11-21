@@ -9,11 +9,11 @@ import type {
 	LuftAggregat,
 	OepnvAggregat,
 	WohnenAggregat
-} from '$lib/server/db/schema/aggregate-types.js';
-import { describeLaermCategoryDe } from '$lib/data/faq-helpers/laerm.js';
-import { formatStopsPerKm2 } from '$lib/data/faq-helpers/oepnv.js';
-import { describeWohnlageDe, mssBeschreibungDe } from '$lib/data/faq-helpers/wohnen.js';
-import { sourceLabel } from '$lib/data/source-label.js';
+} from '#lib/server/db/schema/aggregate-types.js';
+import { describeLaermCategoryDe } from '#lib/data/faq-helpers/laerm.js';
+import { formatStopsPerKm2 } from '#lib/data/faq-helpers/oepnv.js';
+import { describeWohnlageDe, mssBeschreibungDe } from '#lib/data/faq-helpers/wohnen.js';
+import { sourceLabel } from '#lib/data/source-label.js';
 import {
 	REGION_WORDS,
 	klimaSatz,

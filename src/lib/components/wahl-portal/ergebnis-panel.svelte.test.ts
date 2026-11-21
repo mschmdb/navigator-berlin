@@ -1,9 +1,9 @@
 import { page } from 'vitest/browser';
 import { afterEach, describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
-import { overwriteGetLocale } from '$lib/paraglide/runtime';
+import { overwriteGetLocale } from '#lib/paraglide/runtime.js';
 import ErgebnisPanelContextProbe from './internal/ergebnis-panel-context-probe.svelte';
-import type { WahlPortalListEntry } from '$lib/state/wahl-portal-context.svelte.js';
+import type { WahlPortalListEntry } from '#lib/state/wahl-portal-context.svelte.js';
 
 afterEach(() => {
 	overwriteGetLocale(() => 'de');

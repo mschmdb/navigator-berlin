@@ -64,7 +64,7 @@ EN-Coverage komplett verschoben in Future-Epic „i18n-Phase-3-EN-Coverage" (Sto
 **Given** der Paraglide-Verbrauch im aktuellen Code
 **When** ich `grep -rn "from '\$lib/paraglide" src/` ausführe
 **Then** die Treffer beschränken sich auf:
-  - `src/hooks.ts` Zeile 2: `import { deLocalizeUrl } from '$lib/paraglide/runtime'` (Reroute-Hook, bleibt funktional)
+  - `src/hooks.ts` Zeile 2: `import { deLocalizeUrl } from '#lib/paraglide/runtime'` (Reroute-Hook, bleibt funktional)
   - `src/hooks.server.ts` Zeilen 2–3: `getTextDirection` + `paraglideMiddleware` (bleibt funktional, gibt mit `["baseLocale"]`-Strategy konstant `"de"` + `"ltr"` zurück)
   - `src/routes/+layout.svelte` Zeile 6: `locales, localizeHref` (Hidden-Crawler-Discovery-Loop in Zeilen 56–60 rendert mit `locales=["de"]` genau 1 Link — funktional ein No-Op aber kein Build-Fehler)
   - `src/routes/(with-header)/layer/[slug]/+page.ts` Zeile 4: `getLocale()` (gibt konstant `"de"` zurück nach Reduce — kein Refactor nötig)
@@ -126,7 +126,7 @@ EN-Coverage komplett verschoben in Future-Epic „i18n-Phase-3-EN-Coverage" (Sto
 
 **Given** der reduzierte Setup
 **When** ich `tests/i18n-de-only.spec.ts` als Vitest-Server-Spec implementiere
-**Then** Spec verifiziert per Import aus `$lib/paraglide/runtime`:
+**Then** Spec verifiziert per Import aus `#lib/paraglide/runtime.js`:
   - `locales` strict-equals `["de"]`
   - `baseLocale` strict-equals `"de"`
   - `getLocale()` returns `"de"` (server-context)
@@ -180,7 +180,7 @@ EN-Coverage komplett verschoben in Future-Epic „i18n-Phase-3-EN-Coverage" (Sto
 
 - [ ] **Task 8: Vitest-Smoke-Spec schreiben (AC: #12)**
   - [ ] Create `tests/i18n-de-only.spec.ts`
-  - [ ] Pattern: Server-Spec mit `import { locales, baseLocale, getLocale, strategy } from '$lib/paraglide/runtime'`
+  - [ ] Pattern: Server-Spec mit `import { locales, baseLocale, getLocale, strategy } from '#lib/paraglide/runtime'`
   - [ ] 4 Assertions: `locales`, `baseLocale`, `getLocale()`, `strategy`
   - [ ] `pnpm test:unit -- tests/i18n-de-only.spec.ts` → grün
 
@@ -273,7 +273,7 @@ Nach Reduce auf 1 Locale + `["baseLocale"]`-Strategy: `urlPatterns` sollte entwe
 
 Story 3.1 ist **Setup/Config-Task** mit Smoke-Level-Test-Pflicht. AC-12 spezifiziert genau 1 Vitest-Spec (`tests/i18n-de-only.spec.ts`) als Foundation-Smoke. Test-First-Workflow:
 
-1. **Red:** Spec schreiben gegen `import { locales, baseLocale, strategy } from '$lib/paraglide/runtime'`. Bei aktuellem Setup failt der Test (locales hat 8 Einträge, baseLocale="en", strategy enthält "cookie").
+1. **Red:** Spec schreiben gegen `import { locales, baseLocale, strategy } from '#lib/paraglide/runtime'`. Bei aktuellem Setup failt der Test (locales hat 8 Einträge, baseLocale="en", strategy enthält "cookie").
 2. **Green:** `settings.json` + `vite.config.ts` editieren + recompile. Test grün.
 3. **Refactor:** Type-Reduce in `data/types.ts`, Cleanup.
 

@@ -1,7 +1,7 @@
 /**
  * Tool `get_layer_metadata`: liefert Layer-Metadaten + Methodik-Eintrag.
  *
- * Delegiert an `getLayerMetadata` + `getLayerMethodology` aus `$lib/data`.
+ * Delegiert an `getLayerMetadata` + `getLayerMethodology` aus `#lib/data/index.ts`.
  * `license_url` wird via lokales License-Mapping aufgelöst (bis Story 2.2
  * einen zentralen Helper publiziert).
  *
@@ -19,8 +19,8 @@ import {
 import type { WebMcpToolDefinition } from '../internal/tool-types.js';
 import type { JsonObject } from '../internal/json-types.js';
 import { licenseToUrl } from '../internal/license-url.js';
-import type { LayerMetadata, Locale } from '$lib/data';
-import type { LayerMethodology } from '$lib/data/layer-methodology.js';
+import type { LayerMetadata, Locale } from '#lib/data/index.ts';
+import type { LayerMethodology } from '#lib/data/layer-methodology.js';
 
 export interface GetLayerMetadataDeps {
 	readonly getLayerMetadata: (slug: string) => LayerMetadata;

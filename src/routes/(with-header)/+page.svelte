@@ -1,18 +1,18 @@
 <script lang="ts">
-	import { buildPageTitle } from '$lib/seo/page-title.js';
+	import { buildPageTitle } from '#lib/seo/page-title.js';
 	import { page } from '$app/state';
-	import SeoHead from '$lib/components/atlas/seo-head.svelte';
-	import JsonLd from '$lib/components/atlas/json-ld.svelte';
-	import HomeSearchHero from '$lib/components/home/home-search-hero.svelte';
-	import HomeSeasonNote from '$lib/components/home/home-season-note.svelte';
-	import HomeTasks from '$lib/components/home/home-tasks.svelte';
-	import HomeTrust from '$lib/components/home/home-trust.svelte';
-	import HomeUpdatesTeaser from '$lib/components/home/home-updates-teaser.svelte';
-	import { buildWebSite } from '$lib/seo/jsonld-website.js';
-	import { buildOrganization } from '$lib/seo/jsonld-organization.js';
-	import { localeToBcp47, resolveEffectiveLocale } from '$lib/seo/index.js';
-	import { getLocale } from '$lib/paraglide/runtime';
-	import { m } from '$lib/paraglide/messages.js';
+	import SeoHead from '#lib/components/atlas/seo-head.svelte';
+	import JsonLd from '#lib/components/atlas/json-ld.svelte';
+	import HomeSearchHero from '#lib/components/home/home-search-hero.svelte';
+	import HomeSeasonNote from '#lib/components/home/home-season-note.svelte';
+	import HomeTasks from '#lib/components/home/home-tasks.svelte';
+	import HomeTrust from '#lib/components/home/home-trust.svelte';
+	import HomeUpdatesTeaser from '#lib/components/home/home-updates-teaser.svelte';
+	import { buildWebSite } from '#lib/seo/jsonld-website.js';
+	import { buildOrganization } from '#lib/seo/jsonld-organization.js';
+	import { localeToBcp47, resolveEffectiveLocale } from '#lib/seo/index.js';
+	import { getLocale } from '#lib/paraglide/runtime.js';
+	import { m } from '#lib/paraglide/messages.js';
 	import type { PageData } from './$types';
 
 	interface Props {

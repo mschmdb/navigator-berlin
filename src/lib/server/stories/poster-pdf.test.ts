@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { loadBezirkeDaten } from '$lib/stories/punkt-linie-kiez/bezirke-daten.server.js';
+import { loadBezirkeDaten } from '#lib/stories/punkt-linie-kiez/bezirke-daten.server.js';
 import { PAGE_HEIGHT_PT, PAGE_WIDTH_PT, renderPosterPdf, renderWallPosterPdf } from './poster-pdf';
 
 const utf16hex = (s: string): string =>

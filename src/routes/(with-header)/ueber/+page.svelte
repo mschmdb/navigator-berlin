@@ -1,17 +1,17 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import { ExternalLink } from '@lucide/svelte';
-	import JsonLd from '$lib/components/atlas/json-ld.svelte';
-	import RichText from '$lib/components/rich-text.svelte';
-	import SeoHead from '$lib/components/atlas/seo-head.svelte';
-	import { localizedHref } from '$lib/i18n/localized-href.js';
-	import { richSegments, type TagMarkers } from '$lib/i18n/rich-text.js';
-	import { m } from '$lib/paraglide/messages.js';
-	import { getLocale } from '$lib/paraglide/runtime';
-	import { canonicalOrigin, localizedPathname } from '$lib/seo/canonical.js';
-	import { buildAboutPage, buildBreadcrumbList, localeToBcp47 } from '$lib/seo/index.js';
-	import { buildPageTitle } from '$lib/seo/page-title.js';
-	import { FEEDBACK_EMAIL } from '$lib/utils/contact.js';
+	import JsonLd from '#lib/components/atlas/json-ld.svelte';
+	import RichText from '#lib/components/rich-text.svelte';
+	import SeoHead from '#lib/components/atlas/seo-head.svelte';
+	import { localizedHref } from '#lib/i18n/localized-href.js';
+	import { richSegments, type TagMarkers } from '#lib/i18n/rich-text.js';
+	import { m } from '#lib/paraglide/messages.js';
+	import { getLocale } from '#lib/paraglide/runtime.js';
+	import { canonicalOrigin, localizedPathname } from '#lib/seo/canonical.js';
+	import { buildAboutPage, buildBreadcrumbList, localeToBcp47 } from '#lib/seo/index.js';
+	import { buildPageTitle } from '#lib/seo/page-title.js';
+	import { FEEDBACK_EMAIL } from '#lib/utils/contact.js';
 	import { UEBER_LINKS, isUeberLinkName, type UeberLinkName } from './ueber-links.js';
 
 	const locale = $derived(getLocale());

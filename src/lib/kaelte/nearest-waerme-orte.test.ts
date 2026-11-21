@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import type { WaermeOrt } from '$lib/data/get-waerme-orte-index.js';
+import type { WaermeOrt } from '#lib/data/get-waerme-orte-index.js';
 import { nearestWaermeOrte, openingStatusOf, waermeKategorien } from './nearest-waerme-orte.js';
 
 function ort(over: Partial<WaermeOrt> & Pick<WaermeOrt, 'id'>): WaermeOrt {

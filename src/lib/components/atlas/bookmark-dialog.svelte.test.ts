@@ -1,10 +1,10 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { page } from 'vitest/browser';
-import { overwriteGetLocale } from '$lib/paraglide/runtime';
+import { overwriteGetLocale } from '#lib/paraglide/runtime.js';
 import Harness from './bookmark-dialog-harness.svelte';
-import type { Bookmark } from '$lib/state/bookmark-schema.js';
-import type { GeocodeSuggestion } from '$lib/data';
+import type { Bookmark } from '#lib/state/bookmark-schema.js';
+import type { GeocodeSuggestion } from '#lib/data/index.ts';
 
 afterEach(() => {
 	overwriteGetLocale(() => 'de');

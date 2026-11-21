@@ -1,7 +1,7 @@
 import { readFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
-import type { LayerAggregatesFile } from '$lib/data/layer-aggregates-types.js';
-import type { CompositesLike } from '$lib/data/region-overview.js';
+import type { LayerAggregatesFile } from '#lib/data/layer-aggregates-types.js';
+import type { CompositesLike } from '#lib/data/region-overview.js';
 
 async function readStaticJson(relativePath: string): Promise<unknown> {
 	const raw = await readFile(resolve(process.cwd(), relativePath), 'utf-8');

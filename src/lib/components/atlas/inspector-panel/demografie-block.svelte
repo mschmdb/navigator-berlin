@@ -1,9 +1,9 @@
 <script lang="ts">
 	import { Users, Eye, EyeOff, ExternalLink, ChevronDown } from '@lucide/svelte';
-	import { localizedHref } from '$lib/i18n/localized-href.js';
-	import { m } from '$lib/paraglide/messages.js';
-	import { getLocale, type Locale } from '$lib/paraglide/runtime';
-	import { formatCount, formatDecimal } from '$lib/i18n/format.js';
+	import { localizedHref } from '#lib/i18n/localized-href.js';
+	import { m } from '#lib/paraglide/messages.js';
+	import { getLocale, type Locale } from '#lib/paraglide/runtime.js';
+	import { formatCount, formatDecimal } from '#lib/i18n/format.js';
 	import {
 		demografieBezugLabel,
 		type DemografieScope,

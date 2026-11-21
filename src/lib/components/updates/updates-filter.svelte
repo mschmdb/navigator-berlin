@@ -3,8 +3,8 @@
 	import {
 		UPDATE_CATEGORIES,
 		type UpdateCategory
-	} from '$lib/content/updates/frontmatter-schema.js';
-	import { m } from '$lib/paraglide/messages.js';
+	} from '#lib/content/updates/frontmatter-schema.js';
+	import { m } from '#lib/paraglide/messages.js';
 	import { categoryLabel } from './category-label.js';
 
 	type Props = {

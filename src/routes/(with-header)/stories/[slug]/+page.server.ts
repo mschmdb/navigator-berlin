@@ -1,14 +1,14 @@
 import { error } from '@sveltejs/kit';
 import type { EntryGenerator, PageServerLoad } from './$types';
-import { loadStoriesFromModules } from '$lib/content/stories/load-stories.js';
-import { localizeStory } from '$lib/content/stories/localize-story.js';
-import type { StoryEntry } from '$lib/content/stories/types.js';
-import { renderMarkdownBody } from '$lib/content/updates/render-markdown.js';
-import { splitAtVisual } from '$lib/content/stories/split-at-visual.js';
-import { splitHeading, splitSections } from '$lib/content/stories/split-sections.js';
-import { loadStoriesWahl } from '$lib/server/stories/wahl-daten.js';
-import { loadBezirkeDaten } from '$lib/stories/punkt-linie-kiez/bezirke-daten.server.js';
-import { getLocale } from '$lib/paraglide/runtime.js';
+import { loadStoriesFromModules } from '#lib/content/stories/load-stories.js';
+import { localizeStory } from '#lib/content/stories/localize-story.js';
+import type { StoryEntry } from '#lib/content/stories/types.js';
+import { renderMarkdownBody } from '#lib/content/updates/render-markdown.js';
+import { splitAtVisual } from '#lib/content/stories/split-at-visual.js';
+import { splitHeading, splitSections } from '#lib/content/stories/split-sections.js';
+import { loadStoriesWahl } from '#lib/server/stories/wahl-daten.js';
+import { loadBezirkeDaten } from '#lib/stories/punkt-linie-kiez/bezirke-daten.server.js';
+import { getLocale } from '#lib/paraglide/runtime.js';
 
 export const prerender = true;
 

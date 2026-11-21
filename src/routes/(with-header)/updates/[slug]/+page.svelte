@@ -1,20 +1,20 @@
 <script lang="ts">
-	import { buildPageTitle } from '$lib/seo/page-title.js';
-	import { localizedPathname } from '$lib/seo/canonical.js';
+	import { buildPageTitle } from '#lib/seo/page-title.js';
+	import { localizedPathname } from '#lib/seo/canonical.js';
 	import { page } from '$app/state';
-	import SeoHead from '$lib/components/atlas/seo-head.svelte';
-	import JsonLd from '$lib/components/atlas/json-ld.svelte';
-	import FeedDiscoveryLinks from '$lib/components/seo/feed-discovery-links.svelte';
+	import SeoHead from '#lib/components/atlas/seo-head.svelte';
+	import JsonLd from '#lib/components/atlas/json-ld.svelte';
+	import FeedDiscoveryLinks from '#lib/components/seo/feed-discovery-links.svelte';
 	import {
 		CATEGORY_BADGE_CLASSES,
 		categoryLabel,
 		formatUpdateDate
-	} from '$lib/components/updates/category-label.js';
-	import { localizeUpdateEntry } from '$lib/content/updates/localize-update-entry.js';
-	import { localizedHref } from '$lib/i18n/localized-href.js';
-	import { m } from '$lib/paraglide/messages.js';
-	import { getLocale } from '$lib/paraglide/runtime';
-	import { buildBlogPosting, buildBreadcrumbList } from '$lib/seo/index.js';
+	} from '#lib/components/updates/category-label.js';
+	import { localizeUpdateEntry } from '#lib/content/updates/localize-update-entry.js';
+	import { localizedHref } from '#lib/i18n/localized-href.js';
+	import { m } from '#lib/paraglide/messages.js';
+	import { getLocale } from '#lib/paraglide/runtime.js';
+	import { buildBlogPosting, buildBreadcrumbList } from '#lib/seo/index.js';
 
 	type Props = { data: import('./$types').PageData };
 	let { data }: Props = $props();
@@ -106,6 +106,7 @@
 		data-testid="updates-detail-body"
 		lang={bodyLang}
 	>
+		<!-- eslint-disable-next-line svelte/no-at-html-tags -- eigenes Markdown, serverseitig via renderMarkdownBody gerendert -->
 		{@html bodyHtml}
 	</section>
 

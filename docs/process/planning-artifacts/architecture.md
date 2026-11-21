@@ -48,13 +48,13 @@ Sieben FR-Cluster prägen die Architektur:
 
 2. **Karten-Visualisierung** (FR7–FR13, FR11a–e) — MapLibre Plex-Cartography, Auto-Zoom, Pan/Zoom mit Tastatur, Viewport in URL gespiegelt (deeplinkbar), Layer-Granularität wechselt automatisch mit Zoom-Level (Bezirk → LOR → POI). Architektur-Implikation: Karten-Wrapper-Komponente mit Viewport-State-Sync zur URL, Layer-Manifest mit Zoom-Schwellen, lazy-load nach Hydration.
 
-3. **Layer-System & Inspektor-Panel** (FR14–FR21) — Inspektor-Panel mit allen Hits, Layer-Toggle-Palette via `/`-Shortcut (Desktop) / Bottom-Sheet (Mobile), transparente Layer-Stacks, Daten-Tabellen-Alternative pro Karte/Chart, „Daten nicht vorhanden"-Markierung. Architektur-Implikation: Daten-Zugriffs-Abstraktion `$lib/data/getLayersAtPoint(lat, lng): Promise<LayerHits>` mit Phase-1-Turf.js-Implementierung, Phase-2/3-SQL-Swap ohne Component-Code-Änderung.
+3. **Layer-System & Inspektor-Panel** (FR14–FR21) — Inspektor-Panel mit allen Hits, Layer-Toggle-Palette via `/`-Shortcut (Desktop) / Bottom-Sheet (Mobile), transparente Layer-Stacks, Daten-Tabellen-Alternative pro Karte/Chart, „Daten nicht vorhanden"-Markierung. Architektur-Implikation: Daten-Zugriffs-Abstraktion `#lib/data/getLayersAtPoint(lat, lng): Promise<LayerHits>` mit Phase-1-Turf.js-Implementierung, Phase-2/3-SQL-Swap ohne Component-Code-Änderung.
 
 4. **Klima-Heritage** (FR22–FR26) — DWD-Stations-Lookup pro Adresse (Dahlem 1719+, Buch, Tempelhof, Brandenburg), LayerChart-Sparklines mit Tastatur-Navigation und Daten-Tabellen-Alternative. Architektur-Implikation: Build-Zeit-Pipeline für DWD-CDC, statische JSON-Bundles pro Station, kein Runtime-API.
 
 5. **Discovery-Surfaces (SEO/AEO)** (FR27–FR33) — ~200 deutsche Basisrouten × 8 Sprachen = ~1.600 prerendered Routen mit eigenem Title/Meta/JSON-LD/OG-Image, FAQ-Sektion pro Bezirk/Kiez (~1.000 × 8 = ~8.000 strukturierte Q&As), Progressive Enhancement (Page ohne JS lesbar). Architektur-Implikation: SvelteKit `prerender = true` pro Route-Family, Build-Pipeline mit OG-Image-Gen via Satori, sitemap.xml-Generator.
 
-6. **LLM-/Agent-Surfaces** (FR34–FR40) — `llms.txt` + `llms-full.txt`, JSON-LD `Place`/`AdministrativeArea`/`Dataset`/`FAQPage`/`WebSite`, WebMCP-Server mit ≥5 Tools + Resources + Prompts. Architektur-Implikation: WebMCP-Adapter-Schicht in `$lib/webmcp/` mit Spec-Version-Manifest, JSON-LD-Generator-Bibliothek pro Page-Typ.
+6. **LLM-/Agent-Surfaces** (FR34–FR40) — `llms.txt` + `llms-full.txt`, JSON-LD `Place`/`AdministrativeArea`/`Dataset`/`FAQPage`/`WebSite`, WebMCP-Server mit ≥5 Tools + Resources + Prompts. Architektur-Implikation: WebMCP-Adapter-Schicht in `#lib/webmcp//index.ts` mit Spec-Version-Manifest, JSON-LD-Generator-Bibliothek pro Page-Typ.
 
 7. **Accessibility & Responsiveness** (FR41–FR49) — Skip-Link, Tastatur-Navigation flächendeckend, ARIA-Live-Inspektor-Panel, parallele DOM-Liste der Karten-POIs, Single-Click-Alternative für Drag, 44×44 Touch-Targets, sichtbare Focus-Ringe ohne Sticky-Verdeckung, `prefers-reduced-motion`-Respekt. Architektur-Implikation: A11y-Layer-Komponenten als First-Class-Pattern, nicht Add-on; CI-Gate axe-core 0 Violations + Lighthouse ≥95.
 
@@ -88,7 +88,7 @@ Sieben NFR-Kategorien mit harten CI-Gates (Performance, Security, Privacy/DSGVO,
 - **Charts:** LayerChart v2 (`layerchart@next`), Svelte-5-runes-nativ, Plex-Tokens als CSS-Variablen.
 - **Geocoding:** Nominatim (selbst gehostet oder Public-Instance mit serverseitigem IP-anonymisiertem Proxy + LRU-Cache 1.000 Einträge, 1 req/s rate-limit).
 - **Daten-Quellen Build-Zeit:** FIS-Broker WFS, ODIS GeoJSON-Direktdownload, DWD CDC, OSM Overpass; Retry mit exponentieller Backoff (3×, 1s/2s/4s); Health-Check pro Quelle, Build bricht bei Quellen-Ausfall ab.
-- **WebMCP:** `webmcp` npm Package mit Adapter-Schicht in `$lib/webmcp/`, Spec-Version in `webmcp-manifest.json`.
+- **WebMCP:** `webmcp` npm Package mit Adapter-Schicht in `#lib/webmcp/`, Spec-Version in `webmcp-manifest.json`.
 - **DB Phase 1:** keine. Phase 2 = Drizzle + Postgres für tabellarische Daten (Wahl, Klima-Stationen). Phase 3 = PostGIS für räumliche Aggregation.
 - **i18n:** lokale Build-Zeit-Übersetzung via Claude Code (`scripts/translate.ts`), Bundles in `src/lib/i18n/{lang}.json` committed.
 - **Hosting:** Hetzner-Frankfurt + Coolify + Traefik + CrowdSec Plugin (Streaming-Mode, 60s Decision-Sync). Bewusst kein Cloudflare (US/CLOUD Act). Let's Encrypt via Traefik.
@@ -117,7 +117,7 @@ Sieben NFR-Kategorien mit harten CI-Gates (Performance, Security, Privacy/DSGVO,
 
 Acht Concerns spannen über alle Komponenten und müssen architektonisch durchgängig adressiert werden — nicht als Add-on, sondern als Default-Pattern:
 
-1. **i18n + RTL**: URL-Prefix-Routing via Paraglide-Strategy `['url', 'baseLocale']` (Basis-Locale `de` ohne Präfix, jede weitere Locale bekommt `/{locale}/...`, aktuell nur `en`; korrigiert 2026-09-26, ADR-005). **Kein** `Accept-Language`-Server-Redirect und **kein** Locale-Cookie: ein automatischer Redirect nach Browser-Präferenz widerspricht MUST-Rule #10 (Cookieless, ADR-004). Sprachwechsel ausschließlich per explizitem Sprachumschalter-Klick. Logical CSS Properties als Default, Glyph-Pack-Coverage für 4 Skripte, `hreflang`-Cluster + `x-default` (= DE) pro Page nur für im Übersetzungs-Register (`$lib/seo/translation-register.ts`) markierte Seiten, Translation-Bundle-Loading.
+1. **i18n + RTL**: URL-Prefix-Routing via Paraglide-Strategy `['url', 'baseLocale']` (Basis-Locale `de` ohne Präfix, jede weitere Locale bekommt `/{locale}/...`, aktuell nur `en`; korrigiert 2026-09-26, ADR-005). **Kein** `Accept-Language`-Server-Redirect und **kein** Locale-Cookie: ein automatischer Redirect nach Browser-Präferenz widerspricht MUST-Rule #10 (Cookieless, ADR-004). Sprachwechsel ausschließlich per explizitem Sprachumschalter-Klick. Logical CSS Properties als Default, Glyph-Pack-Coverage für 4 Skripte, `hreflang`-Cluster + `x-default` (= DE) pro Page nur für im Übersetzungs-Register (`#lib/seo/translation-register.ts`) markierte Seiten, Translation-Bundle-Loading.
 
 2. **Accessibility** — Karten-A11y-Layer als parallele DOM-Liste mit `<button>`-Reihe für POIs/Boundaries, Daten-Tabellen-Toggle pro Visualisierung, ARIA-Live für Inspektor-Panel-Updates, Skip-Link-Pattern, `role="application"` mit `aria-describedby` für Karte. CI-Gate via Playwright + axe-core, Lighthouse ≥95.
 
@@ -135,7 +135,7 @@ Acht Concerns spannen über alle Komponenten und müssen architektonisch durchg�
 
 **Phase-Boundaries als architektonische Hedge-Punkte:**
 
-- Daten-Abstraktion `$lib/data/` muss Phase-2-SQL-Swap erlauben ohne Component-Code-Änderung.
+- Daten-Abstraktion `#lib/data//index.ts` muss Phase-2-SQL-Swap erlauben ohne Component-Code-Änderung.
 - WebMCP-Adapter muss Pre-1.0-Spec-Breaking-Change abfangen.
 - Tile-Provider-URL hinter Env-Var muss OpenFreeMap → Protomaps-Switch als Config-Edit + Deploy erlauben.
 - Phase-2-Live-Endpunkte müssen Health-Check + Graceful-Skip-Pattern bereits in Phase-1-Inspektor-Panel-Architektur vorbereitet sein (Layer-Slot mit „nicht verfügbar"-Fallback).
@@ -309,7 +309,7 @@ pnpm add -D mapshaper fontnik proj4 satori @resvg/resvg-js
 
 **Daten-Manifest:** `static/layers/MANIFEST.json` mit pro Layer: Source-URL, Abruf-Datum, Lizenz, SHA-256, Zoom-Schwellen für Layer-Granularität-Switch (FR11e), Saisonalitäts-Hinweis (Trinkbrunnen FR21).
 
-**Datenzugriffs-Abstraktion:** `$lib/data/` mit typesafem Interface:
+**Datenzugriffs-Abstraktion:** `#lib/data//index.ts` mit typesafem Interface:
 
 ```typescript
 interface LayerHit {
@@ -357,7 +357,7 @@ Phase-1-Implementation: Turf.js + statisches GeoJSON. Phase-2/3-Swap: identische
 - `GET /api/og/[type]/[slug].png` — On-Demand-OG-Image-Renderer (Build-Time-Cache, Hash-basierte Invalidation).
 - `GET /healthz` — Container-Health für Coolify-Auto-Restart.
 
-**WebMCP-Communication:** WebMCP-Adapter-Schicht in `$lib/webmcp/`. Tool-Schema-Pattern:
+**WebMCP-Communication:** WebMCP-Adapter-Schicht in `#lib/webmcp//index.ts`. Tool-Schema-Pattern:
 
 ```typescript
 registerTool({
@@ -506,10 +506,10 @@ build: { rollupOptions: { output: { manualChunks: {
 **SEO/AEO-Stack:**
 
 - **`<svelte:head>`** pro Route mit dynamischem Title + Meta-Description aus Daten (FR32).
-- **JSON-LD-Generator-Bibliothek** in `$lib/seo/` für `Place`, `AdministrativeArea`, `Dataset`, `FAQPage`, `WebSite`+`SearchAction` (FR36).
+- **JSON-LD-Generator-Bibliothek** in `#lib/seo/` für `Place`, `AdministrativeArea`, `Dataset`, `FAQPage`, `WebSite`+`SearchAction` (FR36).
 - **Sitemap-Strategie:** Sitemap-Index `/sitemap.xml` referenziert je eine Per-Locale-Sitemap `/sitemap-{locale}.xml` (statische Routen pro aktiver Locale, nicht `sitemap-[lang].xml` als dynamische Route -- ein unresolved `[lang]`-Segment bricht `resolve()`; Stand Block A: `/sitemap-de.xml` + `/sitemap-en.xml`, letztere leer bis das Übersetzungs-Register Seiten markiert, ADR-005).
 - **`/llms.txt`** und **`/llms-full.txt`** als SvelteKit-`+server.ts`-Endpoints, build-time generiert (FR34, FR35). EN-Variante explizit nicht in v1 (Plan `_user-input/plan-i18n-de-en-2026-08-22.md`).
-- **`hreflang`-Cluster** + `x-default` (Deutsch/DE, Basis-Locale) pro Page, nur für Seiten die das Übersetzungs-Register (`$lib/seo/translation-register.ts`) als übersetzt markiert (FR55e, NFR-IL7; korrigiert 2026-09-26, ADR-005).
+- **`hreflang`-Cluster** + `x-default` (Deutsch/DE, Basis-Locale) pro Page, nur für Seiten die das Übersetzungs-Register (`#lib/seo/translation-register.ts`) als übersetzt markiert (FR55e, NFR-IL7; korrigiert 2026-09-26, ADR-005).
 - **Canonical-URLs** pro Page für Duplicate-Content-Vermeidung.
 
 ### Infrastructure & Deployment
@@ -570,7 +570,7 @@ Self-Host-Nominatim auf Hetzner verworfen — eigener 8GB-RAM-Container für Pha
 2. **Story 1.2: Design-Token-Setup** — Tailwind v4 `@theme` mit Plex-Tokens, Plex-Variable-Fonts subsetted committed, `app.css` mit Critical-CSS, Bits-UI-Wrapper-Komponenten in `ui/`.
 3. **Story 1.3: i18n-Routing**: tatsächlich umgesetzt als i18n Block A (2026-09-26, ADR-005). Paraglide-Strategy `['url', 'baseLocale']` in `vite.config.ts`, kein Param-Matcher, kein Accept-Language-Redirect, kein `[lang=lang]`-Ordner. Sprach-Switcher-Komponente (`lang-switcher.svelte`) + Übersetzungs-Register (`translation-register.ts`) + Locale-korrekte SEO-Mechanik.
 4. **Story 1.4: Daten-Pipeline** — `scripts/fetch-static.ts` für FIS-Broker WFS + ODIS + DWD CDC + OSM Overpass; mapshaper-Simplifizierung; `MANIFEST.json`-Generator.
-5. **Story 1.5: Daten-Zugriffs-Abstraktion** — `$lib/data/`-Module mit Turf.js + rbush + LRUCache.
+5. **Story 1.5: Daten-Zugriffs-Abstraktion** — `#lib/data//index.ts`-Module mit Turf.js + rbush + LRUCache.
 6. **Story 1.6: Karte + A11y-Layer** — `<MapLibreCanvas>` mit Lazy-Load + `<MapAccessibilityLayer>` parallele DOM-Liste + URL-State-Sync.
 7. **Story 1.7: Inspektor-Panel** — `<InspectorPanel>` mit ARIA-Live + Layer-Hits + Datenstand-Banner + Mailto-Feedback.
 8. **Story 1.8: Layer-Palette** — `/`-Shortcut Desktop + Bottom-Sheet Mobile.
@@ -596,7 +596,7 @@ Self-Host-Nominatim auf Hetzner verworfen — eigener 8GB-RAM-Container für Pha
 
 **Cascading Implications:**
 
-- On-Demand-Layer-Loading bedingt LRUCache-Setup in `$lib/data/` und HTTP-Cache-Header-Disziplin.
+- On-Demand-Layer-Loading bedingt LRUCache-Setup in `#lib/data//index.ts` und HTTP-Cache-Header-Disziplin.
 - URL-State-only bedingt URL-Schema-Versioning falls Phase 2 neue Params (Time-Slider FR59a) ergänzt → ADR-NNN-url-state-versioning.
 - Sitemap-Index pro Sprache bedingt Build-Step für 9 Sitemap-Files (1 Index + 8 Per-Sprache).
 - Tile-Provider hinter Env-Var bedingt Disaster-Recovery-Runbook für Switch (NFR-R6).
@@ -612,10 +612,10 @@ Self-Host-Nominatim auf Hetzner verworfen — eigener 8GB-RAM-Container für Pha
 
 **Datei- und Verzeichnis-Naming:**
 
-- **Komponenten-Files:** `kebab-case.svelte` für Files, `PascalCase` für Component-Imports und Tags. Beispiel: `inspector-panel.svelte` exportiert default → `import InspectorPanel from '$lib/components/atlas/inspector-panel.svelte'` → `<InspectorPanel />`.
-- **TypeScript-Modules:** `kebab-case.ts`. Beispiel: `$lib/data/get-layers-at-point.ts`.
+- **Komponenten-Files:** `kebab-case.svelte` für Files, `PascalCase` für Component-Imports und Tags. Beispiel: `inspector-panel.svelte` exportiert default → `import InspectorPanel from '#lib/components/atlas/inspector-panel.svelte'` → `<InspectorPanel />`.
+- **TypeScript-Modules:** `kebab-case.ts`. Beispiel: `#lib/data/get-layers-at-point.ts`.
 - **Server-Endpoints:** SvelteKit-Convention `+server.ts`, `+page.server.ts`, `+layout.server.ts`. Niemals umbenennen.
-- **Remote-Function-Files:** `*.remote.ts`-Suffix. Beispiel: `$lib/data/geocode.remote.ts`.
+- **Remote-Function-Files:** `*.remote.ts`-Suffix. Beispiel: `#lib/data/geocode.remote.ts`.
 - **Test-Files:** Co-located `*.test.ts` (Unit) neben Source. E2E in `tests/e2e/*.spec.ts`.
 - **Verzeichnisse:** `kebab-case` durchgängig. Beispiel: `src/lib/components/atlas/map-libre-canvas/`.
 
@@ -757,7 +757,7 @@ throw error(404, 'Address not found in Berlin');
 **Date/Time-Format:**
 
 - **Intern:** ISO-8601-UTC-Strings.
-- **User-Facing:** `Intl.DateTimeFormat(lang)` via `$lib/utils/format-date.ts`.
+- **User-Facing:** `Intl.DateTimeFormat(lang)` via `#lib/utils/format-date.ts`.
 - **Datenstand-Banner:** `YYYY-MM`.
 - **Klima-Jahre:** 4-stellig integer.
 
@@ -841,7 +841,7 @@ goto(`?${params}`, { replaceState: true, keepFocus: true, noScroll: true });
 
 **Validation-Pattern:**
 
-- Server-Boundary: input-Schemas via Valibot (kompakter als Zod) in `$lib/server/validators/` oder direkt in Remote-Function-Definition.
+- Server-Boundary: input-Schemas via Valibot (kompakter als Zod) in `#lib/server/validators/` oder direkt in Remote-Function-Definition.
 - Internal Code: TypeScript-Strict + Type-Guards. Kein Runtime-Re-Validation für intern garantierte Daten.
 
 **Retry-Pattern:**
@@ -913,7 +913,7 @@ export default {
 
 ```svelte
 <script lang="ts">
-	import { getLayerHits } from '$lib/data/get-layers-at-point.remote';
+	import { getLayerHits } from '#lib/data/get-layers-at-point.remote';
 	let { lat, lng } = $props();
 </script>
 
@@ -962,7 +962,7 @@ export default {
 // src/routes/[lang=lang]/kiez/[slug]/profile.remote.ts
 import { prerender } from '$app/server';
 import * as v from 'valibot';
-import { getKiezProfile } from '$lib/data/get-kiez-profile';
+import { getKiezProfile } from '#lib/data/get-kiez-profile.ts';
 
 export const kiezProfile = prerender(
 	v.object({ lang: v.string(), slug: v.string() }),
@@ -1005,7 +1005,7 @@ export const entries = async () => {
 // src/lib/data/geocode.remote.ts
 import { query } from '$app/server';
 import * as v from 'valibot';
-import { proxyNominatim } from '$lib/server/geocode';
+import { proxyNominatim } from '#lib/server/geocode.ts';
 
 export const geocodeAddress = query(
 	v.object({ q: v.pipe(v.string(), v.minLength(2)) }),
@@ -1017,7 +1017,7 @@ In Adress-Suche-Component:
 
 ```svelte
 <script>
-	import { geocodeAddress } from '$lib/data/geocode.remote';
+	import { geocodeAddress } from '#lib/data/geocode.remote.ts';
 	let query = $state('');
 	const suggestions = $derived(query.length >= 2 ? geocodeAddress({ q: query }) : null);
 </script>
@@ -1063,7 +1063,7 @@ In Inspector-Panel-Component (Phase 2):
 </svelte:boundary>
 ```
 
-`query.live` ersetzt früher angedachten `load`+60s-Polling-Fallback. Bei Spec-Breaking-Change: Adapter-Schicht in `$lib/data/`-Wrappern fängt das ab.
+`query.live` ersetzt früher angedachten `load`+60s-Polling-Fallback. Bei Spec-Breaking-Change: Adapter-Schicht in `#lib/data//index.ts`-Wrappern fängt das ab.
 
 **Single-Flight-Mutations (Phase 2 falls relevant):**
 
@@ -1089,7 +1089,7 @@ export const submitFeedback = form(/* schema */, async (data) => {
 
 1. **`@lucide/svelte` für Icons.** NIEMALS `lucide-svelte` (deprecated, CLAUDE.md).
 2. **Files <500 Zeilen.** Sonst Split.
-3. **Bestehende Funktionen in `$lib/utils/`, `$lib/data/`, `$lib/seo/` checken vor Neuschreiben** (CLAUDE.md).
+3. **Bestehende Funktionen in `#lib/utils/`, `$lib/data/`, `$lib/seo/` checken vor Neuschreiben** (CLAUDE.md).
 4. **Keine Backwards-Compat-Hacks** für nicht-existente Vorgängerversionen.
 5. **Keine Premature-Abstractions.** Drei ähnliche Code-Stellen ist besser als verfrühte Generalisierung.
 6. **Keine Comments außer für nicht-offensichtliche WHYs** (CLAUDE.md).
@@ -1111,7 +1111,7 @@ export const submitFeedback = form(/* schema */, async (data) => {
 
 **Pattern-Enforcement:**
 
-- **Lint-Gate:** ESLint mit `@typescript-eslint`, `eslint-plugin-svelte`, `eslint-plugin-no-relative-import-paths` (`$lib/*`-Imports erzwungen).
+- **Lint-Gate:** ESLint mit `@typescript-eslint`, `eslint-plugin-svelte`, `eslint-plugin-no-relative-import-paths` (`#lib/*`-Imports erzwungen).
 - **Type-Gate:** `svelte-check` strict in CI (NFR-M3).
 - **Format-Gate:** Prettier mit `prettier-plugin-svelte` + `prettier-plugin-tailwindcss` (NFR-M4).
 - **A11y-Gate:** Playwright + `@axe-core/playwright`, 0 Violations Pflicht (NFR-A1).
@@ -1132,9 +1132,9 @@ export const submitFeedback = form(/* schema */, async (data) => {
 ```svelte
 <!-- src/lib/components/atlas/inspector-panel.svelte -->
 <script lang="ts">
-	import type { LayerHit } from '$lib/data/types';
-	import { getUiState } from '$lib/state/ui-context';
-	import * as m from '$lib/i18n/messages';
+	import type { LayerHit } from '#lib/data/types.ts';
+	import { getUiState } from '#lib/state/ui-context';
+	import * as m from '#lib/i18n/messages';
 	import LayerHitRow from './layer-hit-row.svelte';
 
 	let { hits, onClose }: { hits: LayerHit[]; onClose: () => void } = $props();
@@ -1495,24 +1495,24 @@ navigator-berlin/
 **Component Boundaries:**
 
 - **`ui/` ↛ `atlas/`** — UI-Komponenten kennen Domain nicht. Atlas-Komponenten dürfen UI nutzen.
-- **`atlas/` ↛ `data/`** über Props oder Remote-Functions. Atlas-Komponenten holen Daten NICHT direkt aus `static/layers/` — immer über `$lib/data/`-Abstraktion.
-- **`data/` ↛ `server/`** für Server-only Logik. Client-Code darf `$lib/server/` NICHT importieren — SvelteKit erzwingt das.
+- **`atlas/` ↛ `data/`** über Props oder Remote-Functions. Atlas-Komponenten holen Daten NICHT direkt aus `static/layers/` — immer über `#lib/data//index.ts`-Abstraktion.
+- **`data/` ↛ `server/`** für Server-only Logik. Client-Code darf `#lib/server/` NICHT importieren — SvelteKit erzwingt das.
 - **`webmcp/` ↛ `data/`** für Tool-Implementierungen. WebMCP-Tools sind Adapter, kein neuer Datenpfad.
 - **`seo/` ↛ `data/`** für Page-Data-Konsum. SEO-Generators erhalten typed Data, generieren JSON-LD/Meta/Sitemap.
 
 **Service Boundaries:**
 
 - Phase 1: Single SvelteKit-Container. Kein Inter-Service-Communication.
-- Phase 2: Postgres-Container im selben Coolify-Compose. Internal-Network. Drizzle als Library-Import in `$lib/data/`.
+- Phase 2: Postgres-Container im selben Coolify-Compose. Internal-Network. Drizzle als Library-Import in `#lib/data//index.ts`.
 - Phase 2: RADOLAN-Sidecar (Python FastAPI + wradlib) als separater Container. Internal-Network-Communication via HTTP-API (kein Public-Endpoint).
 - Phase 3: PostGIS ersetzt Postgres-Container, gleiche Drizzle-Library-Schicht.
 
 **Data Boundaries:**
 
-- **Statische Layer (Phase 1):** `static/layers/*.geojson` mit `MANIFEST.json` als Single-Source-of-Truth für Provenance. `$lib/data/manifest.ts` typed Loader. KEIN direkter `fetch()` aus Komponenten — nur via `$lib/data/`-Module.
-- **DWD-Klima-Bundles:** `static/climate/*.json` pro Station. `$lib/data/get-climate-series.ts` als typed Reader.
-- **Translation-Bundles:** Paraglide-Compiler-Output in `$lib/i18n/messages/`. KEIN Runtime-Fetch — Build-Time-tree-shaking.
-- **Geocoding-Cache:** In-Process LRU in `$lib/server/geocode.ts`, 1.000 Einträge. Pro Server-Instance.
+- **Statische Layer (Phase 1):** `static/layers/*.geojson` mit `MANIFEST.json` als Single-Source-of-Truth für Provenance. `#lib/data/manifest.ts` typed Loader. KEIN direkter `fetch()` aus Komponenten — nur via `$lib/data/`-Module.
+- **DWD-Klima-Bundles:** `static/climate/*.json` pro Station. `#lib/data/get-climate-series.ts` als typed Reader.
+- **Translation-Bundles:** Paraglide-Compiler-Output in `#lib/i18n/messages/`. KEIN Runtime-Fetch — Build-Time-tree-shaking.
+- **Geocoding-Cache:** In-Process LRU in `#lib/server/geocode.ts`, 1.000 Einträge. Pro Server-Instance.
 - **WebMCP-Resources:** URI-adressierbares Datenmodell, Read-Only.
 
 ### Requirements to Structure Mapping
@@ -1557,7 +1557,7 @@ navigator-berlin/
 | Concern                  | Lebt in                                                                                                                                                                                                                                                                                                                                                                   |
 | ------------------------ | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Accessibility            | `lib/components/ui/` (Bits-UI accessible-by-default), `lib/components/atlas/skip-link.svelte`, `map-accessibility-layer.svelte`, `data-table-alternative.svelte`, ARIA-Live in `inspector-panel.svelte`, axe-core in `tests/e2e/accessibility.spec.ts`, Focus-Ring in `app.css`                                                                                           |
-| i18n / RTL               | `$lib/paraglide/runtime` (`Locale`-Typ, `strategy: ['url','baseLocale']` aus `vite.config.ts`), `lib/seo/translation-register.ts`, `lib/components/atlas/lang-switcher.svelte`, RTL via Tailwind-Logical-Properties (`me-*`/`ms-*`), `<html lang dir>` via `%paraglide.lang%`/`%paraglide.dir%` in `app.html` (korrigiert 2026-09-26, ADR-005; kein `[lang=lang]`-Ordner) |
+| i18n / RTL               | `#lib/paraglide/runtime` (`Locale`-Typ, `strategy: ['url','baseLocale']` aus `vite.config.ts`), `lib/seo/translation-register.ts`, `lib/components/atlas/lang-switcher.svelte`, RTL via Tailwind-Logical-Properties (`me-*`/`ms-*`), `<html lang dir>` via `%paraglide.lang%`/`%paraglide.dir%` in `app.html` (korrigiert 2026-09-26, ADR-005; kein `[lang=lang]`-Ordner) |
 | SEO / AEO                | `lib/seo/`, `<svelte:head>` in jeder Route, `routes/llms*.txt`, `sitemap*.xml`, `robots.txt`, JSON-LD pro Page, hreflang in Layout                                                                                                                                                                                                                                        |
 | Datenstand & Lizenz      | `static/layers/MANIFEST.json`, `lib/data/manifest.ts`, `data-stand-banner.svelte` in jeder Layer-Hit-Row, `license-footer.svelte` auto-generiert, `routes/[lang=lang]/lizenzen/+page.svelte`                                                                                                                                                                              |
 | Editorial-Verantwortung  | `stolperstein-detail.svelte`, `editorial-disclaimer.svelte`, `error-feedback-mailto.svelte`, Translation-Disclaimer in `meta-footer.svelte`                                                                                                                                                                                                                               |
@@ -1570,10 +1570,10 @@ navigator-berlin/
 **Internal Communication:**
 
 - **Component → Component:** Props (down) + Callbacks `on{Event}` (up). Cross-Hierarchy via Context-API (`ui-context.ts`).
-- **Component → Data:** Remote-Functions (`*.remote.ts`) für Server-Roundtrip; statische Layer-Files via `$lib/data/`-Abstraktion mit `fetch()` aus `static/layers/`.
+- **Component → Data:** Remote-Functions (`*.remote.ts`) für Server-Roundtrip; statische Layer-Files via `#lib/data/`-Abstraktion mit `fetch()` aus `static/layers/`.
 - **Component → URL-State:** `goto()` mit `replaceState: true` für Viewport-Changes; `page.url.searchParams` für Read.
-- **Server-Endpoint → Server-Logik:** Direkter Function-Import aus `$lib/server/`. SvelteKit garantiert Server-only.
-- **WebMCP-Tool → Data-Layer:** Tools delegieren an `$lib/data/`-Functions. Kein eigener Datenpfad.
+- **Server-Endpoint → Server-Logik:** Direkter Function-Import aus `#lib/server/`. SvelteKit garantiert Server-only.
+- **WebMCP-Tool → Data-Layer:** Tools delegieren an `#lib/data//index.ts`-Functions. Kein eigener Datenpfad.
 
 **External Integrations:**
 
@@ -1614,9 +1614,9 @@ navigator-berlin/
 3. SvelteKit serviert prerendered HTML mit JSON-LD + hreflang + OG-Image-URL.
 4. Browser hydratisiert: `+layout.svelte` baut Context (UiState), `+page.svelte` rendert Hero + lazy-load MapLibre.
 5. User tippt Adresse → `geocodeAddress()`-Remote-Function ruft `/api/geocode` → Server-Proxy fragt Nominatim mit Rate-Limit + LRU.
-6. User selektiert Suggestion → URL-State-Update (`goto`), `getLayersAtPoint()` aus `$lib/data/` rechnet via Turf+rbush, In-Process-LRU-Cache.
+6. User selektiert Suggestion → URL-State-Update (`goto`), `getLayersAtPoint()` aus `#lib/data//index.ts` rechnet via Turf+rbush, In-Process-LRU-Cache.
 7. Inspektor-Panel rendert mit ARIA-Live-Update, Layer-Hit-Rows zeigen Wert + Datenstand + Mailto.
-8. WebMCP-Agent-Discovery: Browser-Extension liest `/webmcp-manifest.json`, ruft Tools direkt im Browser-Kontext, Tools delegieren an `$lib/data/`.
+8. WebMCP-Agent-Discovery: Browser-Extension liest `/webmcp-manifest.json`, ruft Tools direkt im Browser-Kontext, Tools delegieren an `#lib/data//index.ts`.
 
 **Runtime (Phase 2 BVG-Live):**
 
@@ -1681,13 +1681,13 @@ pnpm build                    # SvelteKit-Build, prerender, OG-Images
 **Mitigations für Pre-Stable-Features:**
 
 - `experimental.async = true` ist Pre-Stable. Mitigation: explizit in ADR-010 dokumentiert, fallback-Pattern via `{#await}`-Block bleibt unterstützt.
-- `query.live` Phase 2 explizit experimental. Mitigation: Adapter-Schicht in `$lib/data/`-Wrappern, fallback-Pattern via `load`+30s-Polling dokumentiert in ADR-009.
-- WebMCP Pre-1.0. Mitigation: Adapter-Schicht in `$lib/webmcp/`, Spec-Version-Pin in `webmcp-manifest.json`, Adapter-Update bei Spec-Breaking-Change ohne Tool-Code-Änderung.
+- `query.live` Phase 2 explizit experimental. Mitigation: Adapter-Schicht in `#lib/data/`-Wrappern, fallback-Pattern via `load`+30s-Polling dokumentiert in ADR-009.
+- WebMCP Pre-1.0. Mitigation: Adapter-Schicht in `#lib/webmcp/`, Spec-Version-Pin in `webmcp-manifest.json`, Adapter-Update bei Spec-Breaking-Change ohne Tool-Code-Änderung.
 
 **Pattern Consistency:**
 
 - Naming-Patterns (kebab-case Files, PascalCase Components, snake_case WebMCP-Tools) durchgängig dokumentiert mit Beispielen, kollidiert nicht mit Stack-Konventionen.
-- Component-Boundaries (`ui/` ↛ `atlas/` ↛ `data/` ↛ `server/`) decken Schichten-Trennung; SvelteKit erzwingt `$lib/server/`-Server-only.
+- Component-Boundaries (`ui/` ↛ `atlas/` ↛ `data/` ↛ `server/`) decken Schichten-Trennung; SvelteKit erzwingt `#lib/server/`-Server-only.
 - Async-Patterns (`<svelte:boundary>` + Remote Functions) konsistent mit Svelte-5-Best-Practices.
 - Cookieless-Pattern enforced via CI-Gate (Response-Header-Test).
 
@@ -1757,7 +1757,7 @@ pnpm build                    # SvelteKit-Build, prerender, OG-Images
 
 **Important Gaps (sollten in Story-1.1 oder Story-1.15 adressiert werden):**
 
-1. **CSP-Connect-Source-Whitelist konkretisieren.** Liste der erlaubten `connect-src`-Domains (OpenFreeMap-Tiles, Nominatim-Public, FIS-Broker bei Build, etc.) muss in `$lib/server/csp.ts` explizit aufgelistet werden. Aktuell konzeptionell, nicht enumeriert.
+1. **CSP-Connect-Source-Whitelist konkretisieren.** Liste der erlaubten `connect-src`-Domains (OpenFreeMap-Tiles, Nominatim-Public, FIS-Broker bei Build, etc.) muss in `#lib/server/csp.ts` explizit aufgelistet werden. Aktuell konzeptionell, nicht enumeriert.
 2. **Git-LFS-Entscheidung.** Plex Variable Fonts (~500KB-2MB pro File), Glyph-Packs (bis 50MB pro Skript), Klima-JSON-Bundles (Dahlem 1719+ kann mehrere MB) tendieren in LFS-Bereich. Trade-off: LFS = repo-clone-overhead + Git-Provider-Storage-Kosten vs. flat Git = clone-time-bloat. **Empfehlung:** Glyph-Packs als Build-Artefakt (NICHT committed, regen-bar via `pnpm build:glyphs`), Plex-Fonts + Klima-JSON committed (im normalen Git, Größenordnung okay).
 3. **Pre-commit-Hooks-Decision.** Husky vs. Lefthook vs. SimpleGitHooks für lokale Lint-/Format-/Typecheck-Triggers. Trade-off: vermeidet CI-Round-Trip für triviale Lint-Fehler. **Empfehlung:** Lefthook (Go-binary, keine Node-Runtime-Dependency, schnell). Konfig in `lefthook.yml`.
 4. **`.env.example`-Vollständigkeit.** Aktuell konzeptionell aufgelistet. Konkrete Variable mit Beispiel-Werten + Kommentaren als Story-1.1-Output.

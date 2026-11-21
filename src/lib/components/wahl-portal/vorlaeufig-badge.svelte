@@ -10,9 +10,9 @@
 	dunkle `--ink`-Farbe (>4,5:1 auf jedem Seiten-Hintergrund).
 -->
 <script lang="ts">
-	import { m } from '$lib/paraglide/messages.js';
-	import { formatWahlDate } from '$lib/i18n/format.js';
-	import { wahlVorlaeufigLabel } from '$lib/data/wahl-labels.js';
+	import { m } from '#lib/paraglide/messages.js';
+	import { formatWahlDate } from '#lib/i18n/format.js';
+	import { wahlVorlaeufigLabel } from '#lib/data/wahl-labels.js';
 
 	type Props = {
 		/** ISO-Zeitstempel für „· Stand DD.MM.YYYY"; `null`/fehlend = nur „Vorläufig". */

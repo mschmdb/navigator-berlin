@@ -53,7 +53,7 @@ function inferCsvEntryPattern(slug: string): string {
 }
 
 function indexOfHeaderLine(csv: string): number {
-	const stripped = csv.replace(/^﻿/, '');
+	const stripped = csv.replace(/^\uFEFF/, '');
 	const lines = stripped.split(/\r?\n/);
 	return lines.findIndex((l) => /^Wahlkreis;\s*Land\s*;/i.test(l));
 }

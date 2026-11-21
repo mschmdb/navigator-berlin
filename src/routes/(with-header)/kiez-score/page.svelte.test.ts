@@ -1,10 +1,10 @@
 import { afterEach, describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
-import { readDatasetJsonLd } from '$lib/seo/dataset-jsonld-test-utils.js';
-import { overwriteGetLocale } from '$lib/paraglide/runtime';
+import { readDatasetJsonLd } from '#lib/seo/dataset-jsonld-test-utils.js';
+import { overwriteGetLocale } from '#lib/paraglide/runtime.js';
 import Page from './+page.svelte';
 import { internalHrefs, textLines } from '../methodik/methodik-test-utils.js';
-import type { RankingRow } from '$lib/data/ranking-types.js';
+import type { RankingRow } from '#lib/data/ranking-types.js';
 
 function row(slug: string, displayName: string, overrides: Partial<RankingRow> = {}): RankingRow {
 	return {

@@ -1,8 +1,8 @@
 import { afterEach, describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
-import { overwriteGetLocale } from '$lib/paraglide/runtime';
+import { overwriteGetLocale } from '#lib/paraglide/runtime.js';
 import ScoreRankingTable from './score-ranking-table.svelte';
-import type { RankingRow } from '$lib/data/ranking-types.js';
+import type { RankingRow } from '#lib/data/ranking-types.js';
 
 function row(
 	slug: string,

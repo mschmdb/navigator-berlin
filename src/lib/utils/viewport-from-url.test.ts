@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { viewportFromUrl } from './viewport-from-url.js';
-import { BERLIN_BBOX_ARRAY, BERLIN_CENTER, DEFAULT_ZOOM } from '$lib/data/constants.js';
+import { BERLIN_BBOX_ARRAY, BERLIN_CENTER, DEFAULT_ZOOM } from '#lib/data/constants.js';
 
 describe('viewportFromUrl', () => {
 	it('Defaults bei leerer URL', () => {

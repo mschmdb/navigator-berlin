@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { overwriteGetLocale } from '$lib/paraglide/runtime';
-import type { Manifest } from '$lib/data';
+import { overwriteGetLocale } from '#lib/paraglide/runtime.js';
+import type { Manifest } from '#lib/data/index.ts';
 
 const sampleManifest: Manifest = {
 	schemaVersion: 1,
@@ -22,7 +22,7 @@ const sampleManifest: Manifest = {
 	]
 };
 
-vi.mock('$lib/data/manifest.js', () => ({
+vi.mock('#lib/data/manifest.js', () => ({
 	loadManifest: async () => sampleManifest
 }));
 

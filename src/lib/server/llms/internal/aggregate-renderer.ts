@@ -5,8 +5,8 @@
  * gleiche `BezirkStats`/`KiezStats`-Shape (8 Cluster), deshalb DRY.
  */
 
-import type { AggregateValue } from '$lib/server/db/schema/index.js';
-import type { BezirkStats } from '$lib/server/db/queries/get-bezirk-stats.js';
+import type { AggregateValue } from '#lib/server/db/schema/index.js';
+import type { BezirkStats } from '#lib/server/db/queries/get-bezirk-stats.js';
 
 const NUMBER_DE = new Intl.NumberFormat('de-DE', { maximumFractionDigits: 1 });
 

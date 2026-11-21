@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { buildRankingSitemapEntry, RANKING_PAGE_SOURCE } from './ranking-page.js';
 import type { SitemapSourceContext } from '../sitemap-builder.js';
-import type { Manifest } from '$lib/data/types.js';
+import type { Manifest } from '#lib/data/types.js';
 
 const ORIGIN = 'https://navigator.berlin';
 

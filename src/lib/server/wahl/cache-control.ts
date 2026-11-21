@@ -1,4 +1,4 @@
-import { dev } from '$app/environment';
+import { dev } from '$app/env';
 
 /**
  * Cache-Header der Wahl-API-Routen: 1h public-Cache in Produktion (die

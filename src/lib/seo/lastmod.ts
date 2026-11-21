@@ -1,4 +1,4 @@
-import type { Locale } from '$lib/paraglide/runtime';
+import type { Locale } from '#lib/paraglide/runtime.js';
 
 /** Frontmatter-Zeitstempel eines KI-Profils (`generatedAt` DE, `translatedAt` EN). */
 export interface ProfileDates {

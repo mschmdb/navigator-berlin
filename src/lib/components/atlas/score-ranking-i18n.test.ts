@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it } from 'vitest';
-import { overwriteGetLocale } from '$lib/paraglide/runtime';
+import { overwriteGetLocale } from '#lib/paraglide/runtime.js';
 import { collatorLocale, columnLabel, type SortKey } from './score-ranking-i18n.js';
 
 const EXPECTED: Record<'de' | 'en', Record<SortKey, string>> = {

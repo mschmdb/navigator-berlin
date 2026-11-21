@@ -1,30 +1,23 @@
-<!--
-	„Alle Bezirke, alle Wahlen“ (#191): 12 Bezirke mal alle Wahlen einer Art, nach
-	runde-20-ux/src/wall.js und regeln.md Runde 20b/20c. Kapitel 6 der Beitragsseite (#190).
-	Der Zustand steht in der URL (`url-state.ts`, z. B. `?hl=piraten#s6`). Die Komponente liest
-	ihn nach dem Mounten, damit sie auch auf vorgerenderten Seiten den Deep-Link trifft.
-	Unter 640 px Breite: kein Seitwärts-Scrollen, Name über der Reihe, Zahlen nur im Block.
--->
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import { afterNavigate, replaceState } from '$app/navigation';
+	import { afterNavigate, goto } from '$app/navigation';
 	import { page } from '$app/state';
-	import { m } from '$lib/paraglide/messages.js';
+	import { m } from '#lib/paraglide/messages.js';
 	import {
 		bezirkAn,
 		sichtbareJahre,
 		sortiereBezirke,
 		wahlTypen,
 		wandMasse
-	} from '$lib/stories/wahl-quadrate/gesamt';
-	import type { WahlTyp } from '$lib/stories/wahl-quadrate/parteien';
-	import type { StoriesWahlData } from '$lib/stories/wahl-quadrate/types';
+	} from '#lib/stories/wahl-quadrate/gesamt.ts';
+	import type { WahlTyp } from '#lib/stories/wahl-quadrate/parteien.ts';
+	import type { StoriesWahlData } from '#lib/stories/wahl-quadrate/types.ts';
 	import {
 		DEFAULT_URL_STATE,
 		parseUrlState,
 		serializeUrlState,
 		type GesamtState
-	} from '$lib/stories/wahl-quadrate/url-state';
+	} from '#lib/stories/wahl-quadrate/url-state.ts';
 	import Grau from './alle-bezirke-grau.svelte';
 	import Raster from './alle-bezirke-raster.svelte';
 	import Steuerung from './alle-bezirke-steuerung.svelte';
@@ -44,8 +37,7 @@
 		data,
 		readUrl = () => new URL(window.location.href),
 		// Gleiche Seite, nur Suchparameter und Hash ändern sich: kein resolve() nötig.
-		// eslint-disable-next-line svelte/no-navigation-without-resolve
-		writeUrl = (href: string) => replaceState(href, page.state)
+		writeUrl = (href: string) => goto(href, { shallow: true, replace: true, state: page.state })
 	}: Props = $props();
 
 	/** Unter dieser Breite des Rasters gilt die schmale Ansicht. */
@@ -96,6 +88,14 @@
 		hint();
 	});
 </script>
+
+<!--
+	„Alle Bezirke, alle Wahlen“ (#191): 12 Bezirke mal alle Wahlen einer Art, nach
+	runde-20-ux/src/wall.js und regeln.md Runde 20b/20c. Kapitel 6 der Beitragsseite (#190).
+	Der Zustand steht in der URL (`url-state.ts`, z. B. `?hl=piraten#s6`). Die Komponente liest
+	ihn nach dem Mounten, damit sie auch auf vorgerenderten Seiten den Deep-Link trifft.
+	Unter 640 px Breite: kein Seitwärts-Scrollen, Name über der Reihe, Zahlen nur im Block.
+-->
 
 <div class="bq-wall" class:narrow={schmal}>
 	<Steuerung state={s} onchange={commit} />

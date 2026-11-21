@@ -1,5 +1,5 @@
 import { LRUCache } from 'lru-cache';
-import type { HeatLevel, HeatWarning } from '$lib/data/dwd-warnung.types.js';
+import type { HeatLevel, HeatWarning } from '#lib/data/dwd-warnung.types.js';
 
 /**
  * Story 16.2: Laufzeit-Proxy für die DWD-Hitzewarnlage (Berlin). Spiegelt das Geocode-Muster

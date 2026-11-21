@@ -14,7 +14,7 @@
  *
  * Architecture-Boundary: dieser Adapter delegiert alle Daten-Reads via
  * Dependency-Injection (`config.*` Functions). Keine direkten Imports aus
- * `$lib/data/` (siehe `architecture.md` Z. 1463).
+ * `#lib/data/` (siehe `architecture.md` Z. 1463).
  */
 
 import { WEBMCP_SPEC_VERSION } from './internal/spec-version.js';
@@ -33,12 +33,18 @@ import {
 	type ElectionListEntry,
 	type ApplyFinderWeightsResult
 } from './tools/index.js';
-import type { FinderWeights } from '$lib/components/atlas/internal/kiez-finder-engine.js';
-import type { FinderBridgeSnapshot } from '$lib/state/finder-bridge.svelte.js';
+import type { FinderWeights } from '#lib/components/atlas/internal/kiez-finder-engine.js';
+import type { FinderBridgeSnapshot } from '#lib/state/finder-bridge.svelte.js';
 import type { WebMcpToolDefinition } from './internal/tool-types.js';
-import type { GeocodeSuggestion, LayerHit, LayerMetadata, KiezProfile, Locale } from '$lib/data';
-import type { LayerMethodology } from '$lib/data/layer-methodology.js';
-import type { WahlResultsAtPoint } from '$lib/data/get-wahl-results-at-point.js';
+import type {
+	GeocodeSuggestion,
+	LayerHit,
+	LayerMetadata,
+	KiezProfile,
+	Locale
+} from '#lib/data/index.ts';
+import type { LayerMethodology } from '#lib/data/layer-methodology.js';
+import type { WahlResultsAtPoint } from '#lib/data/get-wahl-results-at-point.js';
 import type { JsonObject } from './internal/json-types.js';
 
 /** Minimaler Subset der nativen `ModelContext`-API, den der Adapter nutzt. */

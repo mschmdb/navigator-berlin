@@ -10,10 +10,7 @@ const brandenburger = JSON.parse(
 );
 
 const fetchMock = (response: unknown) =>
-	vi.fn(
-		async (_url: string | URL | Request, _init?: RequestInit) =>
-			new Response(JSON.stringify(response), { status: 200 })
-	);
+	vi.fn<typeof fetch>(async () => new Response(JSON.stringify(response), { status: 200 }));
 
 beforeEach(() => {
 	_resetGeocodeCache();

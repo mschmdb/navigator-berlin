@@ -4,8 +4,8 @@
 	Der Text trägt die Aussage, die Farbe ergänzt nur (Rot-Grün-Schwäche).
 -->
 <script lang="ts">
-	import { m } from '$lib/paraglide/messages.js';
-	import type { Hint } from '$lib/place/topics';
+	import { m } from '#lib/paraglide/messages.js';
+	import type { Hint } from '#lib/place/topics.ts';
 	let { hint, short = false }: { hint: Hint | null; short?: boolean } = $props();
 	const label = $derived(hint ? (short ? hint.short : hint.text) : '');
 	const arrow = $derived(hint?.dir === 'higher' ? '↑' : hint?.dir === 'lower' ? '↓' : '≈');

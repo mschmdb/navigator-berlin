@@ -1,4 +1,4 @@
-import type { HilfeDienst, MonthDay } from '$lib/kaelte/hilfe-dienste.js';
+import type { HilfeDienst, MonthDay } from '#lib/kaelte/hilfe-dienste.js';
 
 const BERLIN_TZ = 'Europe/Berlin';
 

@@ -33,20 +33,20 @@
  * `partei` → 400 (valibot).
  */
 
-import { json, error } from '@sveltejs/kit';
+import { error } from '@sveltejs/kit';
 import * as v from 'valibot';
 import type { RequestHandler } from './$types';
-import { getWahlList, type WahlListItem } from '$lib/server/db/queries/wahl/get-wahl-list.js';
-import { getWinnersBulk } from '$lib/server/db/queries/wahl/get-winners-bulk.js';
-import { getStimmbezirksWinners } from '$lib/server/db/queries/wahl/get-stimmbezirks-winners.js';
+import { getWahlList, type WahlListItem } from '#lib/server/db/queries/wahl/get-wahl-list.js';
+import { getWinnersBulk } from '#lib/server/db/queries/wahl/get-winners-bulk.js';
+import { getStimmbezirksWinners } from '#lib/server/db/queries/wahl/get-stimmbezirks-winners.js';
 import {
 	getParteiAnteileBulk,
 	getParteiAnteileStimmbezirk
-} from '$lib/server/db/queries/wahl/get-partei-anteile-bulk.js';
-import { sourceName } from '$lib/data/wahl-source-name.js';
-import { wahlSlugFromTypJahr, geoSlugForWahl } from '$lib/data/wahl-geo-mapping.js';
-import { TOKEN_PARTEIEN } from '$lib/data/partei-farben.js';
-import { wahlCacheHeaders } from '$lib/server/wahl/cache-control.js';
+} from '#lib/server/db/queries/wahl/get-partei-anteile-bulk.js';
+import { sourceName } from '#lib/data/wahl-source-name.js';
+import { wahlSlugFromTypJahr, geoSlugForWahl } from '#lib/data/wahl-geo-mapping.js';
+import { TOKEN_PARTEIEN } from '#lib/data/partei-farben.js';
+import { wahlCacheHeaders } from '#lib/server/wahl/cache-control.js';
 
 const QuerySchema = v.object({
 	typ: v.picklist(['btw', 'agh', 'bvv']),
@@ -78,7 +78,7 @@ async function handleStimmbezirk(
 	const wahl = list.find((w) => w.typ === typ && w.stimmtyp === stimmtyp && w.jahr === jahr);
 
 	const empty = (w: WahlListItem | undefined) =>
-		json(
+		Response.json(
 			{
 				typ,
 				stimmtyp,
@@ -123,7 +123,7 @@ async function handleStimmbezirk(
 		parent_slug: parentSlug
 	}));
 
-	return json(
+	return Response.json(
 		{
 			typ,
 			stimmtyp,
@@ -188,7 +188,7 @@ export const GET: RequestHandler = async ({ url }) => {
 
 	const latestWahl = wahlenInReihe[0] ?? null;
 
-	return json(
+	return Response.json(
 		{
 			typ,
 			stimmtyp,

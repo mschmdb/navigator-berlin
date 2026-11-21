@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it } from 'vitest';
-import { overwriteGetLocale } from '$lib/paraglide/runtime';
+import { overwriteGetLocale } from '#lib/paraglide/runtime.js';
 import { FEEDBACK_EMAIL, buildErrorReportMailto, buildOptOutMailto } from './contact.js';
 
 describe('FEEDBACK_EMAIL', () => {

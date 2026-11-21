@@ -2,7 +2,7 @@ import { page } from 'vitest/browser';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import AddressSearch from './address-search.svelte';
-import type { GeocodeSuggestion } from '$lib/data';
+import type { GeocodeSuggestion } from '#lib/data/index.ts';
 
 const mockSuggestions: GeocodeSuggestion[] = [
 	{

@@ -2,8 +2,8 @@ import { page } from 'vitest/browser';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import WinnerMapContextProbe from './winner-map-context-probe.svelte';
-import { _resetManifestCache } from '$lib/data/manifest.js';
-import { _resetLayerCache } from '$lib/data/internal/layer-fetch.js';
+import { _resetManifestCache } from '#lib/data/manifest.js';
+import { _resetLayerCache } from '#lib/data/internal/layer-fetch.js';
 import { _resetWinnersCache } from './winner-map-winners.svelte.js';
 import { fakeMapFactory } from './fake-maplibre-test-util.js';
 import { genericFillOpacityExpression } from './winner-map-data.js';
@@ -14,7 +14,7 @@ import {
 	parteiFillOpacityExpression,
 	wechselOutlineExpression
 } from './winner-map-expressions.js';
-import type { WahlPortalListEntry } from '$lib/state/wahl-portal-context.svelte.js';
+import type { WahlPortalListEntry } from '#lib/state/wahl-portal-context.svelte.js';
 import type { FeatureCollection } from 'geojson';
 
 /** Die geteilte Fake-Map trackt `setData` sourcenübergreifend (Muster

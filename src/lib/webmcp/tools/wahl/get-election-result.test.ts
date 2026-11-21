@@ -4,7 +4,7 @@ import type {
 	WahlResultsAtPoint,
 	WahlResultBundle,
 	Top5Entry
-} from '$lib/data/get-wahl-results-at-point.js';
+} from '#lib/data/get-wahl-results-at-point.js';
 
 function makeTop(entries: Array<[string, number]>): Top5Entry[] {
 	return entries.map(([k, a]) => ({

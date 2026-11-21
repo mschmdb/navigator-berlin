@@ -27,7 +27,7 @@ import {
 } from '../../internal/schemas.js';
 import type { WebMcpToolDefinition } from '../../internal/tool-types.js';
 import type { JsonObject } from '../../internal/json-types.js';
-import { UWB_FORMAT_HINT } from '$lib/data/wahl-geo-mapping.js';
+import { UWB_FORMAT_HINT } from '#lib/data/wahl-geo-mapping.js';
 
 export interface VotingDistrictGeometryDeps {
 	readonly fetchGeometry: (districtId: string, year: number) => Promise<JsonObject | null>;

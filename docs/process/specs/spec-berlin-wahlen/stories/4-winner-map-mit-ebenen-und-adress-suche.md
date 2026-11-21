@@ -32,7 +32,7 @@ context:
 - Achromatopsie-Muster: Toggle „Muster anzeigen" rendert `fill-pattern` über pro-Partei generierte Pattern-Images (`parteiPattern()`-Typen stripes/dots/diagonal/solid; Sprite-Erzeugung nach `pin-sprite-renderer`-Muster); Toggle-Zustand ist flüchtig (kein URL/Storage).
 - Hover-Tooltips im Navigator-Stil (Matze 19.09.): aussagekräftiger Tooltip nach dem `map-hover-tooltip.svelte`-Muster des Atlas (Gebietsname, stärkste Partei mit Farb-Swatch, Anteil in Prozent, Jahr + Wiederholungswahl-Hinweis), folgt dem Cursor bzw. Muster der Hauptkarte; kein nackter MapLibre-Klick-Popup mit HTML-String wie in den Alt-Choroplethen.
 - A11y: Container `role="img"` + sprechendes `aria-label`; `DataTableAlternative` (Gebiet, Partei, Anteil, sortierbar) aus denselben derived Rows direkt unter der Karte; Partei-Legende mit sichtbaren Swatches (+ Muster-Vorschau bei aktivem Toggle).
-- Karten-Grenzen (Matze 19.09.): `maxBounds` auf die Berlin-Bounding-Box (mit Puffer, Konstante aus `$lib/data/constants`/Hauptkarten-Muster) und passender `minZoom`, sodass Berlin weder aus dem Viewport geschoben noch beliebig weit herausgezoomt werden kann.
+- Karten-Grenzen (Matze 19.09.): `maxBounds` auf die Berlin-Bounding-Box (mit Puffer, Konstante aus `#lib/data/constants`/Hauptkarten-Muster) und passender `minZoom`, sodass Berlin weder aus dem Viewport geschoben noch beliebig weit herausgezoomt werden kann.
 - Zustands-Wechsel (Reihe/Jahr/Ebene) aktualisieren die bestehende Map-Instanz über `setData`/`setPaintProperty`; die Karte wird dabei NIE zerstört oder leer (Matze-Live-Fund 19.09.: Karte verschwand bei Wert-Änderung bis zum Reload).
 - DB-los/API leer: Kapitel zeigt Leerzustand-Hinweis statt Karte, keine 5xx, kein MapLibre-Init ohne Daten.
 - TDD (ADR-012): Join, Slug-Brücke, stimmtyp-Ableitung, Rampe, Takeaway-Text test-first; Komponente als A11y-Hülle per `.svelte.test.ts`; E2E-Erweiterung in `berlin-wahlen.e2e.ts` mit `/api/wahl/winners`-Mock. Dateien < 500 Zeilen; kein Push/Deploy (Freeze).
@@ -62,7 +62,7 @@ context:
 - `src/lib/components/atlas/wahl-stimmbezirk-choropleth.svelte:36-183` -- MapLibre-Hüllen-Muster (lazy import, Inline-Style ohne Basemap, Opacity-Expression, Popup, Cleanup); Vorlage, aber Loader modernisieren.
 - `src/lib/data/manifest.ts:15` + `src/lib/data/internal/layer-fetch.ts:10` -- `loadManifest`/`fetchLayer` statt roher fetches; Layer-Slugs `lor-bezirksregion` (143, Props `BZR_ID`/`BZR_NAME`/`BEZ`) und `bezirke` (12, `Gemeinde_name`/`Gemeinde_schluessel`).
 - `src/lib/data/internal/kiez-slug.ts:23` + `src/lib/data/resolve-spatial-level.ts:139-163` -- Slug-Brücke (buildKiezSlugs, disambiguierte Duplikate) und Punkt→Gebiet-Auflösung für die Adress-Suche.
-- `src/lib/components/atlas/address-search.svelte:11-18` -- fertige Combobox (Props `variant`, `onSelect`, injiziertes `geocode`); `geocodeAddress` aus `$lib/data/geocode.remote`.
+- `src/lib/components/atlas/address-search.svelte:11-18` -- fertige Combobox (Props `variant`, `onSelect`, injiziertes `geocode`); `geocodeAddress` aus `#lib/data/geocode.remote.ts`.
 - `src/lib/data/partei-farben.ts:22-49` -- `parteiColor`/`parteiPattern`/`Sonstige`-Fallback; `INSPECTOR_BG` für Kontrast-Checks der Legende.
 - `src/lib/components/atlas/internal/pin-sprite-renderer.ts` -- Canvas→`map.addImage`-Muster für die neu zu bauenden Partei-Patterns.
 - `src/lib/components/atlas/data-table-alternative.svelte:1-29` -- generische Tabelle (`TableColumn<T>`), Kopplung nach `climate-long-view.svelte:273-277` (gemeinsame derived Rows unter der figure).

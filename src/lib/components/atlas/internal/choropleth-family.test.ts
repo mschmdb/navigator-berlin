@@ -1,7 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import {
 	LAYER_TO_CHOROPLETH_FAMILY,
-	LAYER_CLASSIFICATION_METHOD,
 	getChoroplethFamily,
 	getClassificationMethod,
 	isPendingValidation,

@@ -6,9 +6,9 @@
  * Kiez-Pfade (`geo-svg.ts`, gemeinsamer Ausschnitt über alle Minis) und
  * liefert Zellen + Extrem-Kieze + eine Tabellen-Row.
  */
-import { m } from '$lib/paraglide/messages.js';
-import type { LocaleFormatOptions } from '$lib/i18n/format.js';
-import { parteiColor } from '$lib/data/partei-farben.js';
+import { m } from '#lib/paraglide/messages.js';
+import type { LocaleFormatOptions } from '#lib/i18n/format.js';
+import { parteiColor } from '#lib/data/partei-farben.js';
 import { parteiOpacityForAnteil, type AnteilSpanne } from './winner-map-expressions.js';
 import {
 	NEUTRAL_FARBE,

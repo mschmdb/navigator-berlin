@@ -205,7 +205,7 @@ so that Pitch-Decks und Konferenz-Talks die Site als praktisches Compliance-Show
   - [ ] em-dash-Check (Memory)
 
 - [ ] **Task 3: JSON-LD BreadcrumbList (AC: #4)**
-  - [ ] `buildBreadcrumbList`-Import aus Story 2.2 `$lib/seo/json-ld.ts`
+  - [ ] `buildBreadcrumbList`-Import aus Story 2.2 `#lib/seo/json-ld.ts`
   - [ ] BreadcrumbList-Generator mit Hierarchie Home → Architektur
   - [ ] `<JsonLd>`-Komponente einbinden
   - [ ] Optional: TechArticle-JSON-LD analog Methodik

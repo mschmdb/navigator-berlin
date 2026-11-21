@@ -1,9 +1,9 @@
 <script lang="ts">
-	import type { UpdateEntry } from '$lib/content/updates/types.js';
-	import { localizeUpdateEntry } from '$lib/content/updates/localize-update-entry.js';
-	import { localizedHref } from '$lib/i18n/localized-href.js';
-	import { m } from '$lib/paraglide/messages.js';
-	import { getLocale } from '$lib/paraglide/runtime';
+	import type { UpdateEntry } from '#lib/content/updates/types.js';
+	import { localizeUpdateEntry } from '#lib/content/updates/localize-update-entry.js';
+	import { localizedHref } from '#lib/i18n/localized-href.js';
+	import { m } from '#lib/paraglide/messages.js';
+	import { getLocale } from '#lib/paraglide/runtime.js';
 	import { CATEGORY_BADGE_CLASSES, categoryLabel, formatUpdateDate } from './category-label.js';
 
 	type Props = { entry: UpdateEntry };

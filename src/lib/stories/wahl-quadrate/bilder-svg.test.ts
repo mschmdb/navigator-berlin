@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { jostMeasure } from '$lib/server/stories/jost';
+import { jostMeasure } from '#lib/server/stories/jost.ts';
 import data from '../../../../static/data/stories-wahl.json';
 import { labelExtent } from './anordnung';
 import { checkPage } from './label-check';

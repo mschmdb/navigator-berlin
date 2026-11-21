@@ -1,6 +1,6 @@
 import { afterEach, describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
-import { overwriteGetLocale } from '$lib/paraglide/runtime';
+import { overwriteGetLocale } from '#lib/paraglide/runtime.js';
 import UpdatesFilter from './updates-filter.svelte';
 
 function texts(): { heading: string; labels: string[]; aria: (string | null)[] } {

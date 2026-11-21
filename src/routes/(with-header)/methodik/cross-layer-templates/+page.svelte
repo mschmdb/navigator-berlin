@@ -1,13 +1,13 @@
 <script lang="ts">
-	import { buildPageTitle } from '$lib/seo/page-title.js';
+	import { buildPageTitle } from '#lib/seo/page-title.js';
 	import { page } from '$app/state';
-	import SeoHead from '$lib/components/atlas/seo-head.svelte';
-	import CrossLayerStoryBlock from '$lib/components/atlas/cross-layer-story-block.svelte';
-	import RichText from '$lib/components/rich-text.svelte';
-	import { localizedHref } from '$lib/i18n/localized-href.js';
-	import { richSegments } from '$lib/i18n/rich-text.js';
-	import { m } from '$lib/paraglide/messages.js';
-	import { baseLocale, getLocale } from '$lib/paraglide/runtime.js';
+	import SeoHead from '#lib/components/atlas/seo-head.svelte';
+	import CrossLayerStoryBlock from '#lib/components/atlas/cross-layer-story-block.svelte';
+	import RichText from '#lib/components/rich-text.svelte';
+	import { localizedHref } from '#lib/i18n/localized-href.js';
+	import { richSegments } from '#lib/i18n/rich-text.js';
+	import { m } from '#lib/paraglide/messages.js';
+	import { baseLocale, getLocale } from '#lib/paraglide/runtime.js';
 	import { previewSources, previewTagLabel } from './preview-fixtures.js';
 	import type { PageData } from './$types';
 

@@ -8,7 +8,7 @@
 	SeoHead (siehe Story 2.1 AC-7).
 -->
 <script lang="ts">
-	import { serializeJsonLd } from '$lib/seo/serialize-jsonld.js';
+	import { serializeJsonLd } from '#lib/seo/serialize-jsonld.js';
 
 	/**
 	 * Minimal JSON-LD-Object-Constraint. Wir akzeptieren jedes Object mit
@@ -30,12 +30,20 @@
 
 	const { data, testid }: Props = $props();
 	const serialized = $derived(serializeJsonLd(data));
+	// Closing-Tag geteilt, sonst beendet er den Script-Block bzw. irritiert den Parser.
+	const closeTag = '</' + 'script>';
+	const plainTag = $derived(`<script type="application/ld+json">${serialized}${closeTag}`);
+	const testidTag = $derived(
+		`<script type="application/ld+json" data-testid="${testid}">${serialized}${closeTag}`
+	);
 </script>
 
 <svelte:head>
 	{#if testid}
-		{@html `<script type="application/ld+json" data-testid="${testid}">${serialized}</script>`}
+		<!-- eslint-disable-next-line svelte/no-at-html-tags -- serializeJsonLd escaped '</', Inhalt ist eigenes JSON-LD -->
+		{@html testidTag}
 	{:else}
-		{@html `<script type="application/ld+json">${serialized}</script>`}
+		<!-- eslint-disable-next-line svelte/no-at-html-tags -- serializeJsonLd escaped '</', Inhalt ist eigenes JSON-LD -->
+		{@html plainTag}
 	{/if}
 </svelte:head>

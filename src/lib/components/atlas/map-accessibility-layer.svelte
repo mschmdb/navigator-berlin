@@ -16,14 +16,14 @@
 
 <script lang="ts">
 	import { onMount } from 'svelte';
-	import type { LayerMetadata } from '$lib/data/types.js';
+	import type { LayerMetadata } from '#lib/data/types.js';
 	import {
 		describeFeature,
 		type AccessibleFeature,
 		type AccessibleFeatureInput
 	} from './internal/feature-describer.js';
-	import { m } from '$lib/paraglide/messages.js';
-	import { getLocale } from '$lib/paraglide/runtime';
+	import { m } from '#lib/paraglide/messages.js';
+	import { getLocale } from '#lib/paraglide/runtime.js';
 
 	type CompareAddressInfo = { displayName: string };
 

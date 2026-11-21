@@ -1,4 +1,4 @@
-import { m } from '$lib/paraglide/messages.js';
+import { m } from '#lib/paraglide/messages.js';
 import { msgOpts, type LocaleOpts } from './locale';
 
 export type WahlArt = 'btw' | 'agh' | 'bvv';

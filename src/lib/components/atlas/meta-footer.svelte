@@ -1,7 +1,7 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
-	import { m } from '$lib/paraglide/messages.js';
-	import { FEEDBACK_EMAIL } from '$lib/utils/contact.js';
+	import { m } from '#lib/paraglide/messages.js';
+	import { FEEDBACK_EMAIL } from '#lib/utils/contact.js';
 	import {
 		META_LINKS,
 		META_LINK_GROUPS,
@@ -10,7 +10,7 @@
 	} from './internal/meta-links.js';
 	import SocialLinks from './internal/social-links.svelte';
 	import MtcLogo from './internal/mtc-logo.svelte';
-	import { localizedHref } from '$lib/i18n/localized-href.js';
+	import { localizedHref } from '#lib/i18n/localized-href.js';
 
 	type Props = {
 		variant?: 'full' | 'compact';

@@ -258,13 +258,11 @@ describe('getKiezScore', () => {
 			generatedAt: '2026-05-15T12:00:00.000Z',
 			scores: { '001': { persona: 'allgemein', dimensions: [], missingDimensions: [] } }
 		};
-		let manifestCalls = 0;
 		let lorCalls = 0;
 		let scoreCalls = 0;
 		const fetchFn = (async (input: RequestInfo | URL) => {
 			const url = typeof input === 'string' ? input : input.toString();
 			if (url.endsWith('MANIFEST.json')) {
-				manifestCalls++;
 				return new Response(JSON.stringify(makeManifest()), { status: 200 });
 			}
 			if (url.includes('lor-planungsraum')) {

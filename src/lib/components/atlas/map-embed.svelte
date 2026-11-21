@@ -14,7 +14,7 @@
 	import { onDestroy, onMount } from 'svelte';
 	import turfBbox from '@turf/bbox';
 	import type { Feature, MultiPolygon, Polygon } from 'geojson';
-	import { m } from '$lib/paraglide/messages.js';
+	import { m } from '#lib/paraglide/messages.js';
 	import { COLORS } from './internal/colors.js';
 
 	interface Props {

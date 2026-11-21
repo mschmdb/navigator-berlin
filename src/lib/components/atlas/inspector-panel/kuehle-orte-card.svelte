@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { KuehleOrt } from '$lib/data/get-kuehle-orte-index.js';
+	import type { KuehleOrt } from '#lib/data/get-kuehle-orte-index.js';
 	import {
 		Eye,
 		EyeOff,
@@ -10,7 +10,7 @@
 		Clock,
 		Mail
 	} from '@lucide/svelte';
-	import { buildOptOutMailto } from '$lib/utils/contact.js';
+	import { buildOptOutMailto } from '#lib/utils/contact.js';
 	import { getEditorialConfig } from '../internal/editorial-config.js';
 	import { getLayerExplainEntry } from './internal/layer-explain.js';
 	import {
@@ -21,8 +21,8 @@
 	import { formatOpeningHours } from './internal/format-opening-hours.js';
 	import { formatDistance } from './internal/format-distance.js';
 	import EditorialDisclaimer from '../editorial-disclaimer.svelte';
-	import { m } from '$lib/paraglide/messages.js';
-	import { getLocale, type Locale } from '$lib/paraglide/runtime';
+	import { m } from '#lib/paraglide/messages.js';
+	import { getLocale, type Locale } from '#lib/paraglide/runtime.js';
 
 	const SLUG = 'kuehle-orte';
 

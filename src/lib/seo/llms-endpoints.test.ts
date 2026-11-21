@@ -1,12 +1,12 @@
 /**
  * Story 2.8 AC-1 + AC-2 + AC-6: Endpoint-Smoke für /llms.txt + /llms-full.txt.
  *
- * Mockt loadManifest + DB-Layer (`$lib/server/llms/data-collector`) und ruft
+ * Mockt loadManifest + DB-Layer (`#lib/server/llms/data-collector.ts`) und ruft
  * GET-Handler direkt auf. Verifies Headers, Body-Shape, Cache-Control.
  */
 
 import { describe, it, expect, vi, beforeEach } from 'vitest';
-import type { Manifest } from '$lib/data/types.js';
+import type { Manifest } from '#lib/data/types.js';
 
 const fixtureManifest: Manifest = {
 	schemaVersion: 1,
@@ -28,12 +28,12 @@ const fixtureManifest: Manifest = {
 	]
 };
 
-vi.mock('$lib/data/manifest.js', () => ({
+vi.mock('#lib/data/manifest.js', () => ({
 	loadManifest: vi.fn(async () => fixtureManifest)
 }));
 
 // Mock DB-Collector um DB-Roundtrip auszuschalten (kein DATABASE_URL in CI)
-vi.mock('$lib/server/llms/data-collector.js', () => ({
+vi.mock('#lib/server/llms/data-collector.js', () => ({
 	collectLlmsData: vi.fn(async (manifest: Manifest) => ({
 		bezirke: [{ slug: 'mitte', name: 'Mitte', markdown: '## Bezirk Mitte\n\nDaten.' }],
 		kieze: [
@@ -125,7 +125,7 @@ describe('routes/llms.txt/+server.ts', () => {
 	// true) -- hier beide Zustände am echten Handler, gemockt statt vom
 	// aktuellen `featureFlags.wahlPortal`-Wert abhängig zu sein.
 	it('enthält /berlin-wahlen wenn featureFlags.wahlPortal=true', async () => {
-		vi.doMock('$lib/data/feature-flags.js', () => ({ featureFlags: { wahlPortal: true } }));
+		vi.doMock('#lib/data/feature-flags.js', () => ({ featureFlags: { wahlPortal: true } }));
 		const mod = await import('../../routes/llms.txt/+server.js');
 		const response = await mod.GET(
 			makeEvent('https://navigator.berlin/llms.txt') as Parameters<typeof mod.GET>[0]
@@ -135,7 +135,7 @@ describe('routes/llms.txt/+server.ts', () => {
 	});
 
 	it('enthält KEIN /berlin-wahlen wenn featureFlags.wahlPortal=false', async () => {
-		vi.doMock('$lib/data/feature-flags.js', () => ({ featureFlags: { wahlPortal: false } }));
+		vi.doMock('#lib/data/feature-flags.js', () => ({ featureFlags: { wahlPortal: false } }));
 		const mod = await import('../../routes/llms.txt/+server.js');
 		const response = await mod.GET(
 			makeEvent('https://navigator.berlin/llms.txt') as Parameters<typeof mod.GET>[0]

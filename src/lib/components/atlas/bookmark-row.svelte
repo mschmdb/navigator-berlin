@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { Trash2, GitCompare } from '@lucide/svelte';
-	import type { Bookmark } from '$lib/state/bookmark-schema.js';
+	import type { Bookmark } from '#lib/state/bookmark-schema.js';
 	import { extractPrimaryName } from './internal/address-subline.js';
-	import { m } from '$lib/paraglide/messages.js';
+	import { m } from '#lib/paraglide/messages.js';
 
 	type Props = {
 		bookmark: Bookmark;

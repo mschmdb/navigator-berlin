@@ -2,7 +2,7 @@ import { page } from 'vitest/browser';
 import { afterEach, describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { createRawSnippet } from 'svelte';
-import { overwriteGetLocale } from '$lib/paraglide/runtime';
+import { overwriteGetLocale } from '#lib/paraglide/runtime.js';
 import MetaFooter from './meta-footer.svelte';
 import { META_LINKS, META_LINK_GROUPS, metaLinkLabel } from './internal/meta-links.js';
 

@@ -1,13 +1,13 @@
 <script lang="ts">
 	import { onMount } from 'svelte';
 	import { X, Search, Clock } from '@lucide/svelte';
-	import type { LayerMetadata } from '$lib/data';
+	import type { LayerMetadata } from '#lib/data/index.ts';
 	import {
 		getUiState,
 		toggleLayer,
 		clearLayers,
 		openPalette
-	} from '$lib/state/ui-context.svelte.js';
+	} from '#lib/state/ui-context.svelte.js';
 	import BottomSheet from './inspector-panel/bottom-sheet.svelte';
 	import {
 		filterLayers,
@@ -17,9 +17,9 @@
 	} from './internal/layer-palette-filter.js';
 	import { getLayerExplain } from './inspector-panel/internal/layer-explain.js';
 	import { shouldHandleSlash } from './internal/palette-shortcut.js';
-	import { classifyViewportWidth, type Breakpoint } from '$lib/utils/use-viewport.svelte.js';
-	import { m } from '$lib/paraglide/messages.js';
-	import { getLocale } from '$lib/paraglide/runtime';
+	import { classifyViewportWidth, type Breakpoint } from '#lib/utils/use-viewport.svelte.js';
+	import { m } from '#lib/paraglide/messages.js';
+	import { getLocale } from '#lib/paraglide/runtime.js';
 
 	type Props = {
 		layers?: readonly LayerMetadata[];

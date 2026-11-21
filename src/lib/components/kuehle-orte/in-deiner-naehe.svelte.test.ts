@@ -1,10 +1,10 @@
 import { afterEach, describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { page } from 'vitest/browser';
-import { overwriteGetLocale } from '$lib/paraglide/runtime';
+import { overwriteGetLocale } from '#lib/paraglide/runtime.js';
 import InDeinerNaehe from './in-deiner-naehe.svelte';
-import type { KuehleOrt } from '$lib/data/get-kuehle-orte-index.js';
-import type { PositionResult } from '$lib/utils/geolocation.js';
+import type { KuehleOrt } from '#lib/data/get-kuehle-orte-index.js';
+import type { PositionResult } from '#lib/utils/geolocation.js';
 
 const NOW = new Date(2026, 6, 1, 12, 0, 0);
 

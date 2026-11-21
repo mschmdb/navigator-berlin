@@ -2,11 +2,11 @@ import type { SitemapEntry, SitemapSource } from '../sitemap-builder.js';
 import {
 	loadStoriesFromModules,
 	sortStoriesByDateDesc
-} from '$lib/content/stories/load-stories.js';
-import type { StoryEntry } from '$lib/content/stories/types.js';
+} from '#lib/content/stories/load-stories.js';
+import type { StoryEntry } from '#lib/content/stories/types.js';
 import { localizedPathname } from '../canonical.js';
 import { latestLastmod, validLastmod } from '../lastmod.js';
-import type { Locale } from '$lib/paraglide/runtime';
+import type { Locale } from '#lib/paraglide/runtime.js';
 
 /**
  * Sitemap-Quelle für die Data Stories: `/stories`-Index (priority 0.6, lastmod = jüngster

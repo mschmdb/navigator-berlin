@@ -1,9 +1,9 @@
 /** Daten für Plakat, Social- und OG-Bild: Quadrate je Bezirk und Wahl, Grau berlinweit, Quellen. */
-import { sourceName } from '$lib/data/wahl-source-name';
+import { sourceName } from '#lib/data/wahl-source-name.ts';
 import { DEFAULT_THRESHOLD, derive, formatShare, sharesOf, type Lang } from './grau';
 import { toElectionShares } from './eingabe';
 import { shareTexts } from './labels';
-import { greyNames } from '$lib/components/stories/quadrate/namen';
+import { greyNames } from '#lib/components/stories/quadrate/namen.ts';
 import { JAHRE, wahlSlug, type WahlTyp } from './parteien';
 import type { SquareSpec } from './anordnung';
 import type { BezirkWahlen, StoriesWahlData, WahlSlug } from './types';

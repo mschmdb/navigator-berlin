@@ -1,4 +1,4 @@
-import { isInBerlin } from '$lib/data/constants.js';
+import { isInBerlin } from '#lib/data/constants.js';
 
 export const OG_CARD_WIDTH = 1200;
 export const OG_CARD_HEIGHT = 630;

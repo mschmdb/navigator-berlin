@@ -1,9 +1,9 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { page } from 'vitest/browser';
-import { overwriteGetLocale } from '$lib/paraglide/runtime';
+import { overwriteGetLocale } from '#lib/paraglide/runtime.js';
 import HitzeTrinkbrunnenToggle from './hitze-trinkbrunnen-toggle.svelte';
-import { featureToTrinkbrunnen, type Trinkbrunnen } from '$lib/data/get-trinkbrunnen-index.js';
+import { featureToTrinkbrunnen, type Trinkbrunnen } from '#lib/data/get-trinkbrunnen-index.js';
 
 afterEach(() => {
 	overwriteGetLocale(() => 'de');

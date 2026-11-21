@@ -1,17 +1,13 @@
 import { afterEach, describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
-import { overwriteGetLocale } from '$lib/paraglide/runtime';
-import type { TranslationRegisterEntry } from '$lib/seo/translation-register.js';
+import { overwriteGetLocale } from '#lib/paraglide/runtime.js';
+import type { TranslationRegisterEntry } from '#lib/seo/translation-register.js';
 import SeoHead from './seo-head.svelte';
 
 /**
  * SeoHead renders into `<svelte:head>`, which appends to `document.head`.
  * We query `document.head` directly and clean up after each test.
  */
-function getHeadHtml(): string {
-	return document.head.innerHTML;
-}
-
 function queryHead(selector: string): Element | null {
 	return document.head.querySelector(selector);
 }

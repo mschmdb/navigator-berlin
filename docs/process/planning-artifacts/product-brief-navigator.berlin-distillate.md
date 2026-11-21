@@ -36,7 +36,7 @@ Kondensierter Detail-Pack mit allem Overflow aus Discovery + Recherche-Doc + Rev
 - **Cookieless by default:** kein `Set-Cookie`-Header verlässt den Server. SvelteKit, Traefik, CrowdSec setzen alle keine Cookies.
 - **Caching ohne CDN:** Browser-Cache via HTTP-Header (Static-Layers `max-age=2592000`, Cache-Invalidation per Filename-Hashing), SvelteKit-Static-Files via Traefik aggressiv gecached, In-Process LRUCache (`lru-cache` npm) für berechnete Outputs falls nötig.
 - **Datenarchitektur Phase 1:** 25+ Layer als simplifiziertes GeoJSON in `static/layers/`, je 100KB-2MB. Reprojektion EPSG:25833 → EPSG:4326 via WFS `srsName` oder `proj4js`. Build-Skript `scripts/fetch-static.ts`.
-- **Datenzugriffs-Abstraktion:** `$lib/data/` mit `getBoundariesAtPoint(lat, lng): Promise<LayerHits>`. Phase 1 Turf.js auf GeoJSON, Phase 2/3 SQL-Swap ohne Component-Code-Änderung.
+- **Datenzugriffs-Abstraktion:** `#lib/data/` mit `getBoundariesAtPoint(lat, lng): Promise<LayerHits>`. Phase 1 Turf.js auf GeoJSON, Phase 2/3 SQL-Swap ohne Component-Code-Änderung.
 - **Drizzle/Postgres:** Phase 1 raus (Skeleton würde Surface unnötig vergrößern). Phase 2 für tabellarische Wahldaten + Klima-Stationen. PostGIS erst Phase 3 mit konkretem Cross-Layer-Use-Case.
 - **WebMCP-Integration:** Phase 1, Tools `address_lookup` / `cross_layer_query` / `get_kiez_profile`, Resources (aktive Adresse, geladene Layer), Prompt-Templates.
 - **Dynamic OG-Images:** SSR-PNG, Stack-Optionen Satori (Vercel) oder Sharp + Map-Tile-Snapshot. Pro Bezirk/Kiez/Layer-Konzept-URL.
@@ -210,7 +210,7 @@ Kondensierter Detail-Pack mit allem Overflow aus Discovery + Recherche-Doc + Rev
 ## Empfohlene Tools für PRD-/Implementation-Phase
 
 - **OG-Image-Rendering:** Satori (Vercel, JSX → SVG → PNG, Node-kompatibel) ODER `node-canvas` + `sharp` falls SVG-Rendering nicht reicht.
-- **JSON-LD-Generierung:** structured-data Pakete oder eigene typesafe Templates in `$lib/seo/`.
+- **JSON-LD-Generierung:** structured-data Pakete oder eigene typesafe Templates in `#lib/seo//index.ts`.
 - **GeoJSON-Reprojektion:** `proj4js` oder direkt im WFS-Request via `srsName=EPSG:4326`.
 - **GeoJSON-Simplifizierung:** `mapshaper` (CLI) für Build-Zeit, `turf.js` für Runtime falls nötig.
 - **Address-Lookup-Punkt-in-Polygon:** Turf.js (`@turf/boolean-point-in-polygon` + R-Tree-Index für Performance).

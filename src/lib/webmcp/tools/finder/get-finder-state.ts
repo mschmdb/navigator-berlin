@@ -14,7 +14,7 @@ import {
 } from '../../internal/finder-schemas.js';
 import type { WebMcpToolDefinition } from '../../internal/tool-types.js';
 import type { JsonObject } from '../../internal/json-types.js';
-import type { FinderBridgeSnapshot } from '$lib/state/finder-bridge.svelte.js';
+import type { FinderBridgeSnapshot } from '#lib/state/finder-bridge.svelte.js';
 
 export interface GetFinderStateDeps {
 	readonly readFinderState: () => FinderBridgeSnapshot;

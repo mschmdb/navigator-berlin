@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { page } from 'vitest/browser';
 import { render } from 'vitest-browser-svelte';
 import KiezScoreRing from './kiez-score-ring.svelte';
-import type { KiezScore } from '$lib/data';
+import type { KiezScore } from '#lib/data/index.ts';
 
 function makeScore(overall = 50): KiezScore {
 	return {

@@ -1,6 +1,6 @@
-import type { LayerMetadata, License } from '$lib/data/types.js';
-import { m } from '$lib/paraglide/messages.js';
-import { formatCount } from '$lib/i18n/format.js';
+import type { LayerMetadata, License } from '#lib/data/types.js';
+import { m } from '#lib/paraglide/messages.js';
+import { formatCount } from '#lib/i18n/format.js';
 import { toAtlasMessageOptions, type LocaleOptions } from './atlas-label-options.js';
 import { getLayerDisplayName } from './layer-palette-filter.js';
 

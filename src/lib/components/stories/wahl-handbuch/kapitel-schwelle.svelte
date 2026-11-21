@@ -1,8 +1,8 @@
 <!-- Kapitel 2 (#190): Regler für die Schwelle über einer Karte. -->
 <script lang="ts">
-	import { Regler } from '$lib/components/stories/quadrate';
-	import { m } from '$lib/paraglide/messages.js';
-	import type { HandbuchBezirk } from '$lib/stories/wahl-quadrate/handbuch-daten';
+	import { Regler } from '#lib/components/stories/quadrate/index.ts';
+	import { m } from '#lib/paraglide/messages.js';
+	import type { HandbuchBezirk } from '#lib/stories/wahl-quadrate/handbuch-daten.ts';
 	import Karte from './karte.svelte';
 	import { percent } from './texte';
 

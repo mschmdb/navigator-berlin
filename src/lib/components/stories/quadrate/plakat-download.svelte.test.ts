@@ -1,10 +1,10 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
-import { overwriteGetLocale } from '$lib/paraglide/runtime';
-import { trackEvent } from '$lib/utils/plausible.js';
+import { overwriteGetLocale } from '#lib/paraglide/runtime.js';
+import { trackEvent } from '#lib/utils/plausible.js';
 import PlakatDownload from './plakat-download.svelte';
 
-vi.mock('$lib/utils/plausible.js', () => ({ trackEvent: vi.fn() }));
+vi.mock('#lib/utils/plausible.js', () => ({ trackEvent: vi.fn() }));
 
 const link = (): HTMLAnchorElement =>
 	document.querySelector<HTMLAnchorElement>('[data-testid="bq-plakat-link"]')!;

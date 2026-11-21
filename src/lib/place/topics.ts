@@ -5,7 +5,7 @@
  */
 
 import { msgOpts, numberFormat, type LocaleOpts } from './locale';
-import { m } from '$lib/paraglide/messages.js';
+import { m } from '#lib/paraglide/messages.js';
 import { LABEL_TEXT, METRIC_TEXT, CHAPTER_TEXT, VALUE_TEXT } from './topics-text';
 
 export const METRICS = [

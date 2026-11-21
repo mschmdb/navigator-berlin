@@ -1,6 +1,6 @@
 import { describe, it, expect, vi } from 'vitest';
 import { createCrossLayerQueryTool } from './cross-layer-query.js';
-import type { LayerHit } from '$lib/data';
+import type { LayerHit } from '#lib/data/index.ts';
 
 const FIXTURE_HITS: LayerHit[] = [
 	{

@@ -4,7 +4,7 @@ import {
 	type KiezNeighborLists,
 	type KiezScoreSnapshot,
 	type NeighborLorCollection
-} from '$lib/data/kiez-neighbors.js';
+} from '#lib/data/kiez-neighbors.js';
 
 export const EMPTY_NEIGHBOR_LISTS: KiezNeighborLists = { neighbors: [], similar: [] };
 
@@ -39,8 +39,8 @@ async function loadScores(): Promise<{
 	const scores = new Map<string, KiezScoreSnapshot>();
 	if (!process.env.DATABASE_URL) return { scores, complete: true };
 	try {
-		const { getDb } = await import('$lib/server/db/index.js');
-		const { kiezScore } = await import('$lib/server/db/schema/index.js');
+		const { getDb } = await import('#lib/server/db/index.js');
+		const { kiezScore } = await import('#lib/server/db/schema/index.js');
 		const rows = await getDb().select().from(kiezScore);
 		for (const row of rows) {
 			scores.set(row.slug, {

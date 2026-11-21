@@ -1,8 +1,8 @@
 import { afterEach, describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import { page } from 'vitest/browser';
-import { overwriteGetLocale } from '$lib/paraglide/runtime';
-import { KAELTEHILFE_APP_URL } from '$lib/kaelte/hilfe-dienste.js';
+import { overwriteGetLocale } from '#lib/paraglide/runtime.js';
+import { KAELTEHILFE_APP_URL } from '#lib/kaelte/hilfe-dienste.js';
 import SchlafplatzHinweis from './schlafplatz-hinweis.svelte';
 
 afterEach(() => overwriteGetLocale(() => 'de'));

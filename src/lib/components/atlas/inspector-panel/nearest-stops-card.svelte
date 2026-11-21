@@ -1,5 +1,5 @@
 <script lang="ts">
-	import type { OepnvStopIndex } from '$lib/data';
+	import type { OepnvStopIndex } from '#lib/data/index.ts';
 	import { TrainFront, TrainTrack, TramFront, Bus } from '@lucide/svelte';
 	import ValueChip from '../value-chip.svelte';
 	import {
@@ -8,10 +8,10 @@
 		EXTENDED_WALKING_DISTANCE_M,
 		WALKING_SPEED_M_PER_MIN,
 		DETOUR_FACTOR
-	} from '$lib/utils/oepnv-walking.js';
-	import { m } from '$lib/paraglide/messages.js';
-	import { getLocale, type Locale } from '$lib/paraglide/runtime';
-	import { formatDecimal } from '$lib/i18n/format.js';
+	} from '#lib/utils/oepnv-walking.js';
+	import { m } from '#lib/paraglide/messages.js';
+	import { getLocale, type Locale } from '#lib/paraglide/runtime.js';
+	import { formatDecimal } from '#lib/i18n/format.js';
 	import { severityDescriptions } from './internal/value-severity-mapping.js';
 	import { formatDistance } from './internal/format-distance.js';
 	import {

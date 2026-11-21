@@ -1,14 +1,14 @@
 import { desc, sql } from 'drizzle-orm';
 import type { PageServerLoad } from './$types';
-import { bezirkRank, bezirkScore, kiezRank, kiezScore } from '$lib/server/db/schema/index.js';
-import { groupRanksBySlug } from '$lib/data/ranking-rank.js';
-import type { RankingRanks } from '$lib/data/ranking-types.js';
-import type { RankingRow } from '$lib/data/ranking-types.js';
+import { bezirkRank, bezirkScore, kiezRank, kiezScore } from '#lib/server/db/schema/index.js';
+import { groupRanksBySlug } from '#lib/data/ranking-rank.js';
+import type { RankingRanks } from '#lib/data/ranking-types.js';
+import type { RankingRow } from '#lib/data/ranking-types.js';
 import {
 	fallbackNameFromSlug,
 	readRegionDisplayNames,
 	type RegionDisplayNames
-} from '$lib/data/region-display-names.js';
+} from '#lib/data/region-display-names.js';
 
 export const prerender = true;
 
@@ -40,7 +40,7 @@ const NO_RANKS: RankingRanks = {};
 async function loadKieze(names: RegionDisplayNames): Promise<RankingRow[]> {
 	if (!process.env.DATABASE_URL) return [];
 	try {
-		const { getDb } = await import('$lib/server/db/index.js');
+		const { getDb } = await import('#lib/server/db/index.js');
 		const [rows, rankRows] = await Promise.all([
 			getDb()
 				.select()
@@ -78,7 +78,7 @@ async function loadKieze(names: RegionDisplayNames): Promise<RankingRow[]> {
 async function loadBezirke(names: RegionDisplayNames): Promise<RankingRow[]> {
 	if (!process.env.DATABASE_URL) return [];
 	try {
-		const { getDb } = await import('$lib/server/db/index.js');
+		const { getDb } = await import('#lib/server/db/index.js');
 		const [rows, rankRows] = await Promise.all([
 			getDb()
 				.select()

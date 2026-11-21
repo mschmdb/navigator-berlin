@@ -1,9 +1,9 @@
 import { page } from 'vitest/browser';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
-import { overwriteGetLocale } from '$lib/paraglide/runtime';
+import { overwriteGetLocale } from '#lib/paraglide/runtime.js';
 import WinnerMapLegende, { patternPreviewStyle } from './winner-map-legende.svelte';
-import { parteiColor } from '$lib/data/partei-farben.js';
+import { parteiColor } from '#lib/data/partei-farben.js';
 
 afterEach(() => {
 	overwriteGetLocale(() => 'de');

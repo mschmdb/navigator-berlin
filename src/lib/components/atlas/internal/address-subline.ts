@@ -1,4 +1,4 @@
-import type { GeocodeSuggestion } from '$lib/data';
+import type { GeocodeSuggestion } from '#lib/data/index.ts';
 
 /**
  * Nominatim liefert displayName mit Komma-getrennten Segmenten. Format

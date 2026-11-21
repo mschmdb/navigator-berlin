@@ -1,6 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import { parseFrontmatter, UPDATE_CATEGORIES, type UpdateCategory } from './frontmatter-schema.js';
 
+function omit<T extends object, K extends keyof T>(obj: T, key: K): Omit<T, K> {
+	return Object.fromEntries(Object.entries(obj).filter(([k]) => k !== key)) as Omit<T, K>;
+}
+
 describe('frontmatter-schema', () => {
 	const validFrontmatter = {
 		title_de: 'Stolpersteine OSM-Sync erweitert',
@@ -26,17 +30,17 @@ describe('frontmatter-schema', () => {
 	});
 
 	it('wirft bei fehlendem title_de', () => {
-		const { title_de: _omit, ...without } = validFrontmatter;
+		const without = omit(validFrontmatter, 'title_de');
 		expect(() => parseFrontmatter(without)).toThrow(/title_de/);
 	});
 
 	it('wirft bei fehlendem summary_de', () => {
-		const { summary_de: _omit, ...without } = validFrontmatter;
+		const without = omit(validFrontmatter, 'summary_de');
 		expect(() => parseFrontmatter(without)).toThrow(/summary_de/);
 	});
 
 	it('wirft bei fehlendem date', () => {
-		const { date: _omit, ...without } = validFrontmatter;
+		const without = omit(validFrontmatter, 'date');
 		expect(() => parseFrontmatter(without)).toThrow(/date/);
 	});
 

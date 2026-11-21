@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { normalizeSlug } from '$lib/data/internal/slug.js';
+import { normalizeSlug } from '#lib/data/internal/slug.js';
 import { BEZIRK_SAMEAS, bezirkSameAs } from './bezirk-sameas.js';
 
 const BEZIRK_SLUGS = [

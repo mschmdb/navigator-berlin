@@ -1,9 +1,9 @@
 import { afterEach, describe, it, expect } from 'vitest';
 import { createGetLayerMetadataTool } from './get-layer-metadata.js';
-import type { LayerMetadata } from '$lib/data';
-import type { LayerMethodology } from '$lib/data/layer-methodology.js';
-import { getLayerMethodology } from '$lib/data/layer-methodology.js';
-import { overwriteGetLocale } from '$lib/paraglide/runtime';
+import type { LayerMetadata } from '#lib/data/index.ts';
+import type { LayerMethodology } from '#lib/data/layer-methodology.js';
+import { getLayerMethodology } from '#lib/data/layer-methodology.js';
+import { overwriteGetLocale } from '#lib/paraglide/runtime.js';
 
 const FIXTURE_LAYER: LayerMetadata = {
 	slug: 'wohnlagen-2024',

@@ -235,7 +235,7 @@ $effect(() => {
 ### Skala-Logik (`internal/layer-style-builder.ts`)
 
 ```typescript
-import type { LayerMetadata } from '$lib/data';
+import type { LayerMetadata } from '#lib/data/index.ts';
 
 const TOKENS = {
   bg: '#ECEAE0',

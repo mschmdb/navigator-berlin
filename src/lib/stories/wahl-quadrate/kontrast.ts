@@ -1,4 +1,4 @@
-import { contrastRatio } from '$lib/data/partei-farben';
+import { contrastRatio } from '#lib/data/partei-farben.ts';
 import { STORY_INK, STORY_PAPER } from '../tokens';
 
 /** Textfarbe für eine Zahl im Block: Papier oder Tinte, je nachdem, was stärker kontrastiert. */

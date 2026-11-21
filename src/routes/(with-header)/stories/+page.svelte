@@ -1,14 +1,14 @@
 <script lang="ts">
 	import { page } from '$app/state';
-	import StoryEntryItem from '$lib/components/stories/story-entry.svelte';
-	import SeoHead from '$lib/components/atlas/seo-head.svelte';
-	import JsonLd from '$lib/components/atlas/json-ld.svelte';
-	import { m } from '$lib/paraglide/messages.js';
-	import { getLocale } from '$lib/paraglide/runtime';
-	import { buildBreadcrumbList } from '$lib/seo/jsonld-breadcrumb.js';
-	import { buildStoriesIndex, storiesImagePath } from '$lib/seo/jsonld-story.js';
-	import { canonicalOrigin, localizedPathname } from '$lib/seo/canonical.js';
-	import { buildPageTitle } from '$lib/seo/page-title.js';
+	import StoryEntryItem from '#lib/components/stories/story-entry.svelte';
+	import SeoHead from '#lib/components/atlas/seo-head.svelte';
+	import JsonLd from '#lib/components/atlas/json-ld.svelte';
+	import { m } from '#lib/paraglide/messages.js';
+	import { getLocale } from '#lib/paraglide/runtime.js';
+	import { buildBreadcrumbList } from '#lib/seo/jsonld-breadcrumb.js';
+	import { buildStoriesIndex, storiesImagePath } from '#lib/seo/jsonld-story.js';
+	import { canonicalOrigin, localizedPathname } from '#lib/seo/canonical.js';
+	import { buildPageTitle } from '#lib/seo/page-title.js';
 
 	type Props = { data: import('./$types').PageData };
 	let { data }: Props = $props();
@@ -17,7 +17,7 @@
 	const origin = $derived(page.url.origin);
 	const primaryOrigin = $derived(canonicalOrigin(origin));
 	// Logischer Pfad: auf der Stories-Subdomain ist `page.url.pathname` die Wurzel `/`,
-	// die Canonical-URL gehört auf `/stories` (siehe `storiesReroute` in `$lib/app-mode.ts`).
+	// die Canonical-URL gehört auf `/stories` (siehe `storiesReroute` in `#lib/app-mode.ts`).
 	const pathname = '/stories';
 	const ogImage = $derived(`${primaryOrigin}${storiesImagePath(getLocale())}`);
 

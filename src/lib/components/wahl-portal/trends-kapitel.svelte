@@ -9,16 +9,16 @@
 	 * um (`+page.svelte`, Section `uebergaenge`) -- er versteckte sich hier
 	 * vorher als Unterabschnitt ohne eigenen Nav-Eintrag.
 	 */
-	import { m } from '$lib/paraglide/messages.js';
-	import { getWahlPortalState } from '$lib/state/wahl-portal-context.svelte.js';
-	import { stimmtypForReihe } from '$lib/utils/wahl-portal-url-state.js';
-	import { sourceDisplayLabel, licenseDisplayLabel } from '$lib/data/wahl-labels.js';
-	import { formatPercentagePointsDelta, type LocaleFormatOptions } from '$lib/i18n/format.js';
-	import { parteiColor } from '$lib/data/partei-farben.js';
-	import { FINDER_PARTIES } from '$lib/components/atlas/internal/kiez-finder-engine.js';
+	import { m } from '#lib/paraglide/messages.js';
+	import { getWahlPortalState } from '#lib/state/wahl-portal-context.svelte.js';
+	import { stimmtypForReihe } from '#lib/utils/wahl-portal-url-state.js';
+	import { sourceDisplayLabel, licenseDisplayLabel } from '#lib/data/wahl-labels.js';
+	import { formatPercentagePointsDelta, type LocaleFormatOptions } from '#lib/i18n/format.js';
+	import { parteiColor } from '#lib/data/partei-farben.js';
+	import { FINDER_PARTIES } from '#lib/components/atlas/internal/kiez-finder-engine.js';
 	import DataTableAlternative, {
 		type TableColumn
-	} from '$lib/components/atlas/data-table-alternative.svelte';
+	} from '#lib/components/atlas/data-table-alternative.svelte';
 	import { AnalytikLoader } from './internal/trends-analytik.svelte.js';
 	import { KiezBezirkGeometryLoader } from './internal/winner-map-geometry.svelte.js';
 	import { nextRadioIndex } from './internal/radiogroup-keyboard.js';
@@ -140,7 +140,8 @@
 		aktivePartei = FINDER_PARTIES[next];
 	}
 
-	// svelte-ignore state_referenced_locally -- fetchFn ist ein Test-/DI-Prop.
+	// fetchFn ist ein Test-/DI-Prop.
+	// svelte-ignore state_referenced_locally
 	const analytikLoader = new AnalytikLoader(fetchFn);
 	// svelte-ignore state_referenced_locally
 	const geometryLoader = new KiezBezirkGeometryLoader(fetchFn);
@@ -270,7 +271,8 @@
 
 	const response = $derived(analytikLoader.response);
 
-	// svelte-ignore state_referenced_locally -- mapFactory ist ein Test-/DI-Prop.
+	// mapFactory ist ein Test-/DI-Prop.
+	// svelte-ignore state_referenced_locally
 	const mapCtl = new TrendsMapController({
 		getFc: () => bakedFc,
 		getToggle: () => toggle,

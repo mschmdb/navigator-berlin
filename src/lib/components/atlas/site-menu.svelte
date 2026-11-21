@@ -7,10 +7,10 @@
 	 */
 	import type { Snippet } from 'svelte';
 	import { X } from '@lucide/svelte';
-	import { m } from '$lib/paraglide/messages.js';
-	import { FEEDBACK_EMAIL } from '$lib/utils/contact.js';
-	import { localizedHref } from '$lib/i18n/localized-href.js';
-	import { basePathname } from '$lib/i18n/base-path.js';
+	import { m } from '#lib/paraglide/messages.js';
+	import { FEEDBACK_EMAIL } from '#lib/utils/contact.js';
+	import { localizedHref } from '#lib/i18n/localized-href.js';
+	import { basePathname } from '#lib/i18n/base-path.js';
 	import { siteMenuGroups, isCurrentMenuHref } from './internal/site-menu.js';
 	import {
 		siteMenuGroupTitle,

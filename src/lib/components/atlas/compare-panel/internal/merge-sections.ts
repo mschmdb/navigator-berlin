@@ -1,4 +1,4 @@
-import type { LayerHit, LayerMetadata } from '$lib/data';
+import type { LayerHit, LayerMetadata } from '#lib/data/index.ts';
 import {
 	groupHitsBySection,
 	sectionLabel,

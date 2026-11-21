@@ -117,7 +117,7 @@ describe('stripMarkdownLinkTargets', () => {
 describe('stripImportStatements', () => {
 	it('entfernt einzeilige import-Statements', () => {
 		const out = stripImportStatements(
-			"import { m } from '$lib/paraglide/messages.js';\nconst x = 1;"
+			"import { m } from '#lib/paraglide/messages.js';\nconst x = 1;"
 		);
 		expect(out).not.toContain('paraglide/messages.js');
 		expect(out).toContain('const x = 1;');
@@ -235,13 +235,13 @@ describe('buildSvelteScannableText', () => {
 	it('ignoriert import-Zeilen und Routing-Properties im Script (negativ)', () => {
 		const svelte = `
 			<script lang="ts">
-				import { buildBreadcrumbList } from '$lib/seo/index.js';
+				import { buildBreadcrumbList } from '#lib/seo/index.js';
 				const items = [{ name: 'Kiez-Score', path: '/methodik/kiez-score' }];
 			</script>
 			<p>Sichtbar</p>
 		`;
 		const out = buildSvelteScannableText(svelte);
-		expect(out).not.toContain('$lib/seo/index.js');
+		expect(out).not.toContain('#lib/seo/index.js');
 		expect(out).not.toContain('/methodik/kiez-score');
 		expect(out).toContain('Sichtbar');
 	});

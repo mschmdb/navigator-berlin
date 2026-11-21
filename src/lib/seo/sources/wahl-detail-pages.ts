@@ -1,7 +1,7 @@
 import type { SitemapEntry, SitemapSource } from '../sitemap-builder.js';
-import { buildWahlSlug } from '$lib/data/wahl-slug.js';
+import { buildWahlSlug } from '#lib/data/wahl-slug.js';
 import { localizedPathname } from '../canonical.js';
-import type { Locale } from '$lib/paraglide/runtime';
+import type { Locale } from '#lib/paraglide/runtime.js';
 import { validLastmod } from '../lastmod.js';
 
 /**

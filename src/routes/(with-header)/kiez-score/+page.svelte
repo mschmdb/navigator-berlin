@@ -1,20 +1,20 @@
 <script lang="ts">
-	import { buildPageTitle } from '$lib/seo/page-title.js';
-	import { canonicalOrigin, localizedPathname } from '$lib/seo/canonical.js';
-	import { getLocale } from '$lib/paraglide/runtime';
+	import { buildPageTitle } from '#lib/seo/page-title.js';
+	import { canonicalOrigin, localizedPathname } from '#lib/seo/canonical.js';
+	import { getLocale } from '#lib/paraglide/runtime.js';
 	import { page } from '$app/state';
 	import { Accordion } from 'bits-ui';
-	import SeoHead from '$lib/components/atlas/seo-head.svelte';
-	import JsonLd from '$lib/components/atlas/json-ld.svelte';
-	import RichText from '$lib/components/rich-text.svelte';
-	import ScoreRankingTable from '$lib/components/atlas/score-ranking-table.svelte';
-	import { localizedHref } from '$lib/i18n/localized-href.js';
-	import { richSegments } from '$lib/i18n/rich-text.js';
-	import { m } from '$lib/paraglide/messages.js';
-	import { BEZIRKE_BBOX } from '$lib/data/berlin-bbox.generated.js';
-	import { buildDataset } from '$lib/seo/jsonld-dataset.js';
-	import { buildItemList } from '$lib/seo/jsonld-itemlist.js';
-	import { buildBreadcrumbList } from '$lib/seo/jsonld-breadcrumb.js';
+	import SeoHead from '#lib/components/atlas/seo-head.svelte';
+	import JsonLd from '#lib/components/atlas/json-ld.svelte';
+	import RichText from '#lib/components/rich-text.svelte';
+	import ScoreRankingTable from '#lib/components/atlas/score-ranking-table.svelte';
+	import { localizedHref } from '#lib/i18n/localized-href.js';
+	import { richSegments } from '#lib/i18n/rich-text.js';
+	import { m } from '#lib/paraglide/messages.js';
+	import { BEZIRKE_BBOX } from '#lib/data/berlin-bbox.generated.js';
+	import { buildDataset } from '#lib/seo/jsonld-dataset.js';
+	import { buildItemList } from '#lib/seo/jsonld-itemlist.js';
+	import { buildBreadcrumbList } from '#lib/seo/jsonld-breadcrumb.js';
 	import type { PageData } from './$types';
 
 	interface Props {

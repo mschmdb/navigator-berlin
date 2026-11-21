@@ -68,7 +68,7 @@ so that ich beliebige Karten-Sichten deeplinken und teilen kann, und Layer-Granu
    **When** Nutzer auf Karten-Position klickt (außerhalb von Controls/Search)
    **Then** Click-Handler:
    1. `lngLat` aus Event
-   2. Reverse-Geocoding via `proxyNominatim` (neue Server-Funktion in `$lib/server/geocode.ts`) ODER bestehendem `/api/geocode?reverse=lat,lng`-Endpoint
+   2. Reverse-Geocoding via `proxyNominatim` (neue Server-Funktion in `#lib/server/geocode.ts`) ODER bestehendem `/api/geocode?reverse=lat,lng`-Endpoint
    3. Marker an `lngLat` setzen (`maplibregl.Marker` mit Plex-Style-Element)
    4. Boundary-Highlight: Layer-Feature mit `--accent`-Outline (1px) via temporärem MapLibre-Layer (`navigator-selected-boundary`)
    5. URL-Update mit `?address={lng,lat}` ODER `?address={displayName-slug}` (Decision in Dev-Note „Adress-URL-Format")
@@ -123,7 +123,7 @@ so that ich beliebige Karten-Sichten deeplinken und teilen kann, und Layer-Granu
 
 - [x] **Task 1: URL-State-Utility** (AC: #1)
   - [x] 1.1 `src/lib/utils/url-state.ts` mit Serializer/Parser (siehe Dev-Note „URL-Schema")
-  - [x] 1.2 Defaults aus `$lib/data/constants.ts` (`BERLIN_BBOX`, `DEFAULT_ZOOM = 10`)
+  - [x] 1.2 Defaults aus `#lib/data/constants.ts` (`BERLIN_BBOX`, `DEFAULT_ZOOM = 10`)
   - [x] 1.3 Unit-Test `url-state.test.ts`:
     - Round-Trip (serialize → parse) identisch
     - Invalid-Input → Default-Fallback

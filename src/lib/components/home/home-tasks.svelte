@@ -4,13 +4,13 @@
 	steht der Data-Stories-Teaser (#163), wenn die Startseite Beiträge übergibt.
 -->
 <script lang="ts">
-	import { featureFlags } from '$lib/data/feature-flags.js';
-	import { HOME_PREVIEWS, type HomePreview } from '$lib/content/home-previews.js';
-	import { localizedHref } from '$lib/i18n/localized-href.js';
-	import { m } from '$lib/paraglide/messages.js';
-	import { trackLanding } from '$lib/utils/plausible.js';
-	import { HOME_BEZIRKE } from '$lib/content/home-bezirke.js';
-	import type { StoryTeaserData } from '$lib/content/stories/story-teaser.server.js';
+	import { featureFlags } from '#lib/data/feature-flags.js';
+	import { HOME_PREVIEWS, type HomePreview } from '#lib/content/home-previews.js';
+	import { localizedHref } from '#lib/i18n/localized-href.js';
+	import { m } from '#lib/paraglide/messages.js';
+	import { trackLanding } from '#lib/utils/plausible.js';
+	import { HOME_BEZIRKE } from '#lib/content/home-bezirke.js';
+	import type { StoryTeaserData } from '#lib/content/stories/story-teaser.server.js';
 	import HomeStoriesTeaser from './home-stories-teaser.svelte';
 	import HomeTaskTile from './home-task-tile.svelte';
 

@@ -4,12 +4,12 @@
 	Texte nichts darunter verschieben.
 -->
 <script lang="ts">
-	import { Quadrat, greyNames } from '$lib/components/stories/quadrate';
-	import { derive, formatGreyLine } from '$lib/stories/wahl-quadrate/grau';
-	import type { HandbuchErgebnis } from '$lib/stories/wahl-quadrate/handbuch-daten';
-	import type { OrderMode } from '$lib/stories/wahl-quadrate/layout';
-	import type { WahlTyp } from '$lib/stories/wahl-quadrate/parteien';
-	import type { ElectionShares } from '$lib/stories/wahl-quadrate/types';
+	import { Quadrat, greyNames } from '#lib/components/stories/quadrate/index.ts';
+	import { derive, formatGreyLine } from '#lib/stories/wahl-quadrate/grau.ts';
+	import type { HandbuchErgebnis } from '#lib/stories/wahl-quadrate/handbuch-daten.ts';
+	import type { OrderMode } from '#lib/stories/wahl-quadrate/layout.ts';
+	import type { WahlTyp } from '#lib/stories/wahl-quadrate/parteien.ts';
+	import type { ElectionShares } from '#lib/stories/wahl-quadrate/types.ts';
 	import { lang, turnoutLine, typName } from './texte';
 
 	interface Props {

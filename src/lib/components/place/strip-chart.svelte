@@ -10,15 +10,15 @@
 	import { Chart, Circle, Line, Svg, Tooltip } from 'layerchart';
 	import { scaleLinear } from 'd3-scale';
 	import { MediaQuery } from 'svelte/reactivity';
-	import { m } from '$lib/paraglide/messages.js';
-	import { getLocale } from '$lib/paraglide/runtime';
-	import { numberFormat } from '$lib/place/locale';
-	import { dodgeLevels } from '$lib/place/dodge';
-	import { median, splitsZeros, zeroShare } from '$lib/place/stats';
+	import { m } from '#lib/paraglide/messages.js';
+	import { getLocale } from '#lib/paraglide/runtime.js';
+	import { numberFormat } from '#lib/place/locale.ts';
+	import { dodgeLevels } from '#lib/place/dodge.ts';
+	import { median, splitsZeros, zeroShare } from '#lib/place/stats.ts';
 	import { chartMotion } from './motion.svelte';
 	import ChartAxis from './chart-axis.svelte';
 	import Hint from './reading-hint.svelte';
-	import type { Hint as HintData } from '$lib/place/topics';
+	import type { Hint as HintData } from '#lib/place/topics.ts';
 
 	interface Props {
 		items: readonly StripItem[];

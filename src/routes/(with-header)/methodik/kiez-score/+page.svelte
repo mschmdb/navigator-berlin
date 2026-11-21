@@ -1,17 +1,17 @@
 <script lang="ts">
-	import { buildPageTitle } from '$lib/seo/page-title.js';
-	import { localizedPathname } from '$lib/seo/canonical.js';
+	import { buildPageTitle } from '#lib/seo/page-title.js';
+	import { localizedPathname } from '#lib/seo/canonical.js';
 	import { page } from '$app/state';
-	import SeoHead from '$lib/components/atlas/seo-head.svelte';
-	import JsonLd from '$lib/components/atlas/json-ld.svelte';
-	import RichText from '$lib/components/rich-text.svelte';
-	import { localizedHref } from '$lib/i18n/localized-href.js';
-	import { richSegments } from '$lib/i18n/rich-text.js';
-	import { m } from '$lib/paraglide/messages.js';
-	import { getLocale } from '$lib/paraglide/runtime.js';
-	import { buildBreadcrumbList, buildSpeakableWebPage } from '$lib/seo/index.js';
-	import { localeToBcp47 } from '$lib/seo/locale-meta.js';
-	import { FEEDBACK_EMAIL } from '$lib/utils/contact.js';
+	import SeoHead from '#lib/components/atlas/seo-head.svelte';
+	import JsonLd from '#lib/components/atlas/json-ld.svelte';
+	import RichText from '#lib/components/rich-text.svelte';
+	import { localizedHref } from '#lib/i18n/localized-href.js';
+	import { richSegments } from '#lib/i18n/rich-text.js';
+	import { m } from '#lib/paraglide/messages.js';
+	import { getLocale } from '#lib/paraglide/runtime.js';
+	import { buildBreadcrumbList, buildSpeakableWebPage } from '#lib/seo/index.js';
+	import { localeToBcp47 } from '#lib/seo/locale-meta.js';
+	import { FEEDBACK_EMAIL } from '#lib/utils/contact.js';
 	import {
 		getKiezScoreDimensions,
 		getKiezScoreOmissions,
@@ -158,9 +158,8 @@
 				{#each weightRows as row (row.id)}
 					<tr class="border-b border-rule">
 						<th scope="row" class="py-2 pr-4 text-left font-normal text-ink">
-							{row.label}{#if row.note}<!-- eslint-disable-next-line svelte/no-useless-mustaches -->{' '}<span
-									class="text-ink-subtle">{row.note}</span
-								>{/if}
+							<!-- eslint-disable-next-line svelte/no-useless-mustaches -- Svelte trimmt Leerraum am Blockanfang, {' '} erhält das Leerzeichen -->
+							{row.label}{#if row.note}{' '}<span class="text-ink-subtle">{row.note}</span>{/if}
 						</th>
 						<td class="py-2 text-right tabular-nums">{row.weight}</td>
 					</tr>

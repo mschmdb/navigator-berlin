@@ -4,10 +4,10 @@
 	`none` in Kacheln (#171).
 -->
 <script lang="ts">
-	import { homePreviewSrc, type HomePreview } from '$lib/content/home-previews.js';
-	import { getLocale } from '$lib/paraglide/runtime';
-	import { localizedHref } from '$lib/i18n/localized-href.js';
-	import { trackLanding } from '$lib/utils/plausible.js';
+	import { homePreviewSrc, type HomePreview } from '#lib/content/home-previews.js';
+	import { getLocale } from '#lib/paraglide/runtime.js';
+	import { localizedHref } from '#lib/i18n/localized-href.js';
+	import { trackLanding } from '#lib/utils/plausible.js';
 
 	interface Props {
 		readonly preview: HomePreview;

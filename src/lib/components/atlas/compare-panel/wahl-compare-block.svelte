@@ -1,19 +1,19 @@
 <script lang="ts">
 	import EditorialDisclaimer from '../editorial-disclaimer.svelte';
 	import BriefwahlMarker from '../briefwahl-marker.svelte';
-	import { featureFlags } from '$lib/data/feature-flags.js';
-	import { parteiColor } from '$lib/data/partei-farben.js';
+	import { featureFlags } from '#lib/data/feature-flags.js';
+	import { parteiColor } from '#lib/data/partei-farben.js';
 	import type {
 		WahlResultsAtPoint,
 		WahlResultBundle,
 		Top5Entry,
 		LevelKey
-	} from '$lib/data/get-wahl-results-at-point.js';
-	import { m } from '$lib/paraglide/messages.js';
-	import { getLocale } from '$lib/paraglide/runtime';
-	import { localizedHref } from '$lib/i18n/localized-href.js';
-	import { formatDecimal, formatPercent } from '$lib/i18n/format.js';
-	import { wahlEbeneLabel, wahlReiheLabel, wahlStimmtypLabel } from '$lib/data/wahl-labels.js';
+	} from '#lib/data/get-wahl-results-at-point.js';
+	import { m } from '#lib/paraglide/messages.js';
+	import { getLocale } from '#lib/paraglide/runtime.js';
+	import { localizedHref } from '#lib/i18n/localized-href.js';
+	import { formatDecimal, formatPercent } from '#lib/i18n/format.js';
+	import { wahlEbeneLabel, wahlReiheLabel, wahlStimmtypLabel } from '#lib/data/wahl-labels.js';
 
 	type Props = {
 		resultsA: WahlResultsAtPoint | null;
@@ -29,12 +29,8 @@
 	type Wahltyp = 'btw' | 'agh' | 'bvv';
 
 	const availableTypen = $derived.by<Wahltyp[]>(() => {
-		const set = new Set<Wahltyp>();
-		for (const r of [resultsA, resultsB]) {
-			if (!r) continue;
-			for (const b of r.wahlen) set.add(b.wahl.typ);
-		}
-		return ['btw', 'agh', 'bvv'].filter((t) => set.has(t as Wahltyp)) as Wahltyp[];
+		const typen = [resultsA, resultsB].flatMap((r) => (r ? r.wahlen.map((b) => b.wahl.typ) : []));
+		return (['btw', 'agh', 'bvv'] as const).filter((t) => typen.includes(t));
 	});
 
 	let selectedTyp = $state<Wahltyp>('btw');

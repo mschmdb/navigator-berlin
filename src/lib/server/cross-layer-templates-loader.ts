@@ -10,7 +10,7 @@
 import {
 	loadTemplatesFromRawMap,
 	type LoadedTemplateBundle
-} from '$lib/data/cross-layer-templates/index.js';
+} from '#lib/data/cross-layer-templates/index.js';
 
 const RAW_TEMPLATES = import.meta.glob<string>('../data/cross-layer-templates/**/*.{yaml,yml}', {
 	query: '?raw',

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { getVisibleLayers } from './layer-visibility.js';
-import type { LayerMetadata } from '$lib/data';
+import type { LayerMetadata } from '#lib/data/index.ts';
 
 function layer(slug: string, min: number, max: number): LayerMetadata {
 	return {

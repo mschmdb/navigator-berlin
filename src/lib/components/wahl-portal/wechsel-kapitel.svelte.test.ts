@@ -2,10 +2,10 @@ import { page } from 'vitest/browser';
 import { afterEach, beforeEach, describe, expect, it } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import WechselKapitelContextProbe from './internal/wechsel-kapitel-context-probe.svelte';
-import { _resetManifestCache } from '$lib/data/manifest.js';
-import { _resetLayerCache } from '$lib/data/internal/layer-fetch.js';
+import { _resetManifestCache } from '#lib/data/manifest.js';
+import { _resetLayerCache } from '#lib/data/internal/layer-fetch.js';
 import { _resetWinnersCache } from './internal/winner-map-winners.svelte.js';
-import type { WahlPortalListEntry } from '$lib/state/wahl-portal-context.svelte.js';
+import type { WahlPortalListEntry } from '#lib/state/wahl-portal-context.svelte.js';
 
 const SHA = 'a'.repeat(64);
 

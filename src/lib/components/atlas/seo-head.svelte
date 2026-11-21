@@ -1,20 +1,20 @@
 <script lang="ts">
-	import { buildCanonical, canonicalOrigin, localizedPathname } from '$lib/seo/canonical.js';
-	import { buildHreflangCluster } from '$lib/seo/hreflang.js';
-	import { localeToOgLocale } from '$lib/seo/locale-meta.js';
+	import { buildCanonical, canonicalOrigin, localizedPathname } from '#lib/seo/canonical.js';
+	import { buildHreflangCluster } from '#lib/seo/hreflang.js';
+	import { localeToOgLocale } from '#lib/seo/locale-meta.js';
 	import {
 		isRouteTranslated,
 		translatedLocalesFor,
 		TRANSLATION_REGISTER,
 		type TranslationRegisterEntry
-	} from '$lib/seo/translation-register.js';
-	import { resolveEffectiveLocale } from '$lib/seo/effective-locale.js';
+	} from '#lib/seo/translation-register.js';
+	import { resolveEffectiveLocale } from '#lib/seo/effective-locale.js';
 	import {
 		baseLocale,
 		getLocale,
 		locales as siteLocales,
 		type Locale
-	} from '$lib/paraglide/runtime';
+	} from '#lib/paraglide/runtime.js';
 
 	/** Artikel-Metadaten für `og:type=article` (article:* Properties). */
 	export interface SeoArticleMeta {

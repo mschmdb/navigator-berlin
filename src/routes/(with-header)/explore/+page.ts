@@ -1,6 +1,6 @@
-import { viewportFromUrl } from '$lib/utils/viewport-from-url.js';
-import { parseAddress, parseLayers, parseLead, parseRegionFocus } from '$lib/utils/url-state.js';
-import { parseFinderUrlState } from '$lib/components/atlas/internal/finder-url-state.js';
+import { viewportFromUrl } from '#lib/utils/viewport-from-url.js';
+import { parseAddress, parseLayers, parseLead, parseRegionFocus } from '#lib/utils/url-state.js';
+import { parseFinderUrlState } from '#lib/components/atlas/internal/finder-url-state.js';
 import type { PageLoad } from './$types';
 
 export const load: PageLoad = ({ url }) => {

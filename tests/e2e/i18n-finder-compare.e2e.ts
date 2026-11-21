@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
-// Relativer statt `$lib`-Import: Playwright hat hier keine SvelteKit-Alias-
-// Aufloesung konfiguriert (kein anderer e2e-Test importiert `$lib/...`),
+// Relativer statt `#lib`-Import: Playwright hat hier keine SvelteKit-Alias-
+// Aufloesung konfiguriert (kein anderer e2e-Test importiert `#lib/...`),
 // ein relativer Pfad in den Quellcode funktioniert aber (smoke-getestet).
 import { STORAGE_KEY } from '../../src/lib/state/bookmark-store.js';
 

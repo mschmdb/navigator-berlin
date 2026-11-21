@@ -2,7 +2,7 @@
  * Locale-Option für die Atlas-Label-Resolver (i18n Block B3a: Layer-Name,
  * Bundle, Section, Score-Dimension, Skala, Legenden-Labels, Formatter).
  *
- * Bewusst ANDERS als `$lib/i18n/message-options.ts` (`toMessageOptions`, das
+ * Bewusst ANDERS als `#lib/i18n/message-options.ts` (`toMessageOptions`, das
  * ohne explizite Locale auf `getLocale()` zurückfällt): diese Resolver
  * werden auch von Seiten aufgerufen, die selbst noch NICHT übersetzt sind
  * (Methodik, Lizenzen, Layer-Detailseiten, OG-Pipeline, LLM-Export,
@@ -11,7 +11,7 @@
  * Resolver ohne Locale-Angabe liefern DE"). Aufrufer auf der übersetzten
  * Karten-Oberfläche übergeben `{ locale: getLocale() }` explizit.
  */
-import type { Locale } from '$lib/paraglide/runtime';
+import type { Locale } from '#lib/paraglide/runtime.js';
 
 export interface LocaleOptions {
 	readonly locale?: Locale;
@@ -21,4 +21,4 @@ export function toAtlasMessageOptions(o?: LocaleOptions): { locale: Locale } {
 	return { locale: o?.locale ?? 'de' };
 }
 
-export { assertUnreachable } from '$lib/i18n/message-options.js';
+export { assertUnreachable } from '#lib/i18n/message-options.js';

@@ -2,10 +2,10 @@
 	import { Chart, Circle, Line, Svg, Text } from 'layerchart';
 	import ChartAxis from './chart-axis.svelte';
 	import { scaleLinear } from 'd3-scale';
-	import { m } from '$lib/paraglide/messages.js';
-	import { getLocale } from '$lib/paraglide/runtime';
-	import { dimLabel, signedPoints } from '$lib/place/labels';
-	import type { Dim, DimValues } from '$lib/place/types';
+	import { m } from '#lib/paraglide/messages.js';
+	import { getLocale } from '#lib/paraglide/runtime.js';
+	import { dimLabel, signedPoints } from '#lib/place/labels.ts';
+	import type { Dim, DimValues } from '#lib/place/types.ts';
 	import { chartMotion } from './motion.svelte';
 
 	interface Props {

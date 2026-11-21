@@ -3,9 +3,9 @@
 	(1.10. bis 30.4., Berliner Zeit), sonst Hitze-Navigator.
 -->
 <script lang="ts">
-	import { isKaelteSaison } from '$lib/utils/berlin-time.js';
-	import { m } from '$lib/paraglide/messages.js';
-	import { localizedHref } from '$lib/i18n/localized-href.js';
+	import { isKaelteSaison } from '#lib/utils/berlin-time.js';
+	import { m } from '#lib/paraglide/messages.js';
+	import { localizedHref } from '#lib/i18n/localized-href.js';
 
 	let { now = new Date() }: { now?: Date } = $props();
 

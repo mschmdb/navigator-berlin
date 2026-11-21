@@ -5,10 +5,10 @@
  * Review-Fund #6 (figure/canvas-aria-label bleibt im Partei-Modus „Karte der
  * stärksten Partei…", kein Live-Announcement beim Tab-Wechsel).
  */
-import { m } from '$lib/paraglide/messages.js';
-import type { LocaleFormatOptions } from '$lib/i18n/format.js';
-import { wahlWiederholungLabel } from '$lib/data/wahl-labels.js';
-import type { TableColumn } from '$lib/components/atlas/data-table-alternative.svelte';
+import { m } from '#lib/paraglide/messages.js';
+import type { LocaleFormatOptions } from '#lib/i18n/format.js';
+import { wahlWiederholungLabel } from '#lib/data/wahl-labels.js';
+import type { TableColumn } from '#lib/components/atlas/data-table-alternative.svelte';
 import { formatAnteilPct, parteiDisplayName, type WinnerTableRow } from './winner-map-data.js';
 
 export interface FigureLabelInput {

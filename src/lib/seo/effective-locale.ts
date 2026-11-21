@@ -1,4 +1,4 @@
-import { baseLocale, getLocale, type Locale } from '$lib/paraglide/runtime';
+import { baseLocale, getLocale, type Locale } from '#lib/paraglide/runtime.js';
 import {
 	isRoutePartiallyTranslated,
 	isRouteTranslated,

@@ -1,10 +1,10 @@
-import { getKiezNeighborLists, readLayer } from '$lib/server/kiez-neighbors-index.js';
+import { getKiezNeighborLists, readLayer } from '#lib/server/kiez-neighbors-index.js';
 import {
 	buildRegionOutline,
 	type OutlineRegion,
 	type RegionOutline
-} from '$lib/seo/region-outline-svg.js';
-import { bezirkSlugFromName, cleanName } from '$lib/data/region-display-names.js';
+} from '#lib/seo/region-outline-svg.js';
+import { bezirkSlugFromName, cleanName } from '#lib/data/region-display-names.js';
 import { neighborBezirke } from './bezirk-neighbors';
 
 let berlinOutlineCache: Promise<RegionOutline | null> | null = null;

@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { Mail, ExternalLink } from '@lucide/svelte';
-	import { buildOptOutMailto } from '$lib/utils/contact.js';
-	import RichText from '$lib/components/rich-text.svelte';
-	import { localizedHref } from '$lib/i18n/localized-href.js';
-	import { richSegments } from '$lib/i18n/rich-text.js';
-	import { m } from '$lib/paraglide/messages.js';
+	import { buildOptOutMailto } from '#lib/utils/contact.js';
+	import RichText from '#lib/components/rich-text.svelte';
+	import { localizedHref } from '#lib/i18n/localized-href.js';
+	import { richSegments } from '#lib/i18n/rich-text.js';
+	import { m } from '#lib/paraglide/messages.js';
 	import { getKuehleOrteQuellen, getKuehleOrteHaltung } from './transparenz-content.js';
 
 	const optOutUrl = buildOptOutMailto();

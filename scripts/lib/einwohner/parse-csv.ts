@@ -6,7 +6,7 @@ import type { EinwohnerRow } from './einwohner.js';
  * alle E_E*-Spalten landen als Altersdaten in `ages`. Story 10.0.
  */
 export function parseEinwohnerCsv(raw: string): EinwohnerRow[] {
-	const text = raw.replace(/^﻿/, '');
+	const text = raw.replace(/^\uFEFF/, '');
 	const lines = text.split(/\r?\n/).filter((l) => l.trim().length > 0);
 	if (lines.length < 2) return [];
 

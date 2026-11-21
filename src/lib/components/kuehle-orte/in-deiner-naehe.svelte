@@ -1,18 +1,18 @@
 <script lang="ts">
 	import { MapPin, Navigation, LocateFixed } from '@lucide/svelte';
-	import { requestPosition, type PositionResult } from '$lib/utils/geolocation.js';
-	import { announceGlobal } from '$lib/utils/aria-live.js';
-	import { getKuehleOrteIndex, type KuehleOrt } from '$lib/data/get-kuehle-orte-index.js';
+	import { requestPosition, type PositionResult } from '#lib/utils/geolocation.js';
+	import { announceGlobal } from '#lib/utils/aria-live.js';
+	import { getKuehleOrteIndex, type KuehleOrt } from '#lib/data/get-kuehle-orte-index.js';
 	import {
 		nearestFilteredKuehleOrte,
 		EMPTY_FILTERS,
 		type KuehleOrtMitDistanz
-	} from '$lib/components/atlas/inspector-panel/internal/nearest-kuehle-orte.js';
-	import { getOpeningStatus } from '$lib/components/atlas/inspector-panel/internal/opening-status.js';
-	import { formatDistance } from '$lib/components/atlas/inspector-panel/internal/format-distance.js';
-	import { m } from '$lib/paraglide/messages.js';
+	} from '#lib/components/atlas/inspector-panel/internal/nearest-kuehle-orte.js';
+	import { getOpeningStatus } from '#lib/components/atlas/inspector-panel/internal/opening-status.js';
+	import { formatDistance } from '#lib/components/atlas/inspector-panel/internal/format-distance.js';
+	import { m } from '#lib/paraglide/messages.js';
 	import { categoryLabel } from './category-label.js';
-	import { getLocale } from '$lib/paraglide/runtime';
+	import { getLocale } from '#lib/paraglide/runtime.js';
 
 	type Phase = 'idle' | 'locating' | 'ready' | 'denied' | 'unsupported' | 'error';
 

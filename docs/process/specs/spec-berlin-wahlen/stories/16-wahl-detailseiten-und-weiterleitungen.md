@@ -79,7 +79,7 @@ context:
 
 ## Implementation Notes
 
-- Slug-Logik konsolidiert: `api/wahl/list/+server.ts` (lokales `buildSlug`), `wahl-detail-pages.ts` (lokales `slugFor`), `wahl-section.svelte` (Inline-Template-Literal) und `llms/data-collector.ts#collectWahlen` (Inline-Template-Literal) importieren jetzt `buildWahlSlug` aus `$lib/data/wahl-slug.ts` statt eigener Kopien.
+- Slug-Logik konsolidiert: `api/wahl/list/+server.ts` (lokales `buildSlug`), `wahl-detail-pages.ts` (lokales `slugFor`), `wahl-section.svelte` (Inline-Template-Literal) und `llms/data-collector.ts#collectWahlen` (Inline-Template-Literal) importieren jetzt `buildWahlSlug` aus `#lib/data/wahl-slug.ts` statt eigener Kopien.
 - Detailseite (Entscheidung 2A): `KapitelSection` für Berlin-gesamt/Karte/Bezirke-Blöcke, `PortalDatenstand` (minJahr=maxJahr=Wahljahr, status `loaded`) und `VorlaeufigBadge` (unverändert) übernommen. Portal-Deep-Link „Im Portal ansehen" nutzt `serializePortalState({ reihe: wahl.typ, jahr: wahl.jahr, ebene: DEFAULT_EBENE })`; bei Erststimme bleibt die Reihe/Stimmtyp unverändert (Portal kennt keinen Erststimme-Toggle), Link-Text trägt den Hinweis „(zeigt Zweitstimme, Erststimme nur hier)".
 - `wahl-detail-pages.ts`: `lastmod` nutzt jetzt `sourceUpdatedAt` (ISO, wenn vorhanden -- v.a. für die vorläufigen AGH/BVV-2026-Ergebnisse), sonst Fallback `Wahljahr-01-01`. `SitemapSourceContext.wahlen[].sourceUpdatedAt` neu, `sitemap-de.xml/+server.ts` reicht `wahl.sourceUpdatedAt.toISOString()` durch.
 - `llms-builder.ts`: Die separate „Wahl-Übersicht"-Bullet-Zeile (ehemals `/wahl`-Index) entfällt ersatzlos -- der Index existiert nicht mehr als eigene Seite, `/berlin-wahlen` deckt die Rolle bereits über den `wahlPortalEnabled`-Eintrag ab.

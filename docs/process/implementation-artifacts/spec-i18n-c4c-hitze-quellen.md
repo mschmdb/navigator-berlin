@@ -54,7 +54,7 @@ context:
 
 - `src/routes/(with-header)/hitze/+page.svelte` (244 Z., `prerender = false`) -- Dataset-/Breadcrumb-JSON-LD `:56-80`, Link `/layer/kuehle-orte` `:156`, `FaqSection … contentLocale="de"` `:241`. Test `page.svelte.test.ts`.
 - `src/lib/content/hitze-faq.ts` -- `HITZE_FAQ` → locale-fähig (Funktion oder Messages), Konsument nur `/hitze`.
-- `src/lib/components/kuehle-orte/{dwd-hitzewarn-banner,in-deiner-naehe,kuehle-orte-transparenz}.svelte`, `transparenz-content.ts` -- Konsument `/hitze` (Tests mitziehen). Datums-/Zahlformat über `$lib/i18n/format.ts`.
+- `src/lib/components/kuehle-orte/{dwd-hitzewarn-banner,in-deiner-naehe,kuehle-orte-transparenz}.svelte`, `transparenz-content.ts` -- Konsument `/hitze` (Tests mitziehen). Datums-/Zahlformat über `#lib/i18n/format.ts`.
 - `src/routes/(with-header)/kuehle-orte/+page.svelte` (65 Z.).
 - `src/routes/(with-header)/lizenzen/+page.svelte` (526 Z.: Arrays in eine `lizenzen-content.ts` auslagern, Datei unter 500 Z.), Links `:286`, `:355`, Breadcrumb `:136`. `+page.ts` DataCatalog bleibt DE (Kommentar anpassen). Tests `page.svelte.test.ts`, `page.load.test.ts`.
 - `messages/{de,en}.json` `methodik_licences_full_list`, `methodik_kiez_score_sources_p1` -- Linktext-Label (C4a-deferred), C4a-Snapshots nachziehen.

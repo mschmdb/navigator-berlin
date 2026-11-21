@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import type { Bundle, LayerMetadata } from '$lib/data';
+import type { Bundle, LayerMetadata } from '#lib/data/index.ts';
 import {
 	filterLayers,
 	groupLayersByBundle,

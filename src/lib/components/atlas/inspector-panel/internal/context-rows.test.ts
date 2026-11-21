@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import type { LayerAggregate, LayerAggregatesFile } from '$lib/data/layer-aggregates-types.js';
+import type { LayerAggregate, LayerAggregatesFile } from '#lib/data/layer-aggregates-types.js';
 import { buildContextRows, glueShare } from './context-rows.js';
 
 const opts = { locale: 'de' as const };

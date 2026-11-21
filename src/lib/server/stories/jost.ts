@@ -1,7 +1,7 @@
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { create, type Font } from 'fontkit';
-import type { Measure, Metrics } from '$lib/stories/wahl-quadrate/labels';
+import type { Measure, Metrics } from '#lib/stories/wahl-quadrate/labels.ts';
 
 export type JostWeight = 400 | 700 | 900;
 

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { HOME_BEZIRKE } from '$lib/content/home-bezirke.js';
+import { HOME_BEZIRKE } from '#lib/content/home-bezirke.js';
 import raw from '../../../../static/data/stories-kennzahlen.json';
 import { loadBezirkeDaten, parseBezirkeDaten, teaserBezirke } from './bezirke-daten.server';
 

@@ -1,20 +1,20 @@
 import { error } from '@sveltejs/kit';
-import { getKiezProfile } from '$lib/data/get-kiez-profile.js';
-import { getLocale, type Locale } from '$lib/paraglide/runtime.js';
-import { m } from '$lib/paraglide/messages.js';
-import { readKiezSlugsFromGeoJson } from '$lib/seo/sources/kiez-slugs.js';
-import { readEinwohnerStichtag } from '$lib/server/profile/meta-sources.js';
-import { toCompositeRank, type CompositeRank } from '$lib/server/profile/composite-rank.js';
-import type { NeighborEntry } from '$lib/data/kiez-neighbors.js';
-import { getKiezNeighborLists } from '$lib/server/kiez-neighbors-index.js';
-import { bezirkSlugFromName } from '$lib/data/region-display-names.js';
-import { loadBezirkRegions, loadKiezRegions } from '$lib/place/load-regions.server';
-import { loadWahlBundle } from '$lib/place/wahl.server';
-import { loadPageFaq } from '$lib/place/faq.server';
-import type { PageFaqItem } from '$lib/place/faq-items';
-import type { MapImage, RegionSnapshot } from '$lib/place/types';
-import { mapImage } from '$lib/place/maps.server';
-import { packRegions, packWahl, type PackedRegions, type PackedWahl } from '$lib/place/pack';
+import { getKiezProfile } from '#lib/data/get-kiez-profile.js';
+import { getLocale, type Locale } from '#lib/paraglide/runtime.js';
+import { m } from '#lib/paraglide/messages.js';
+import { readKiezSlugsFromGeoJson } from '#lib/seo/sources/kiez-slugs.js';
+import { readEinwohnerStichtag } from '#lib/server/profile/meta-sources.js';
+import { toCompositeRank, type CompositeRank } from '#lib/server/profile/composite-rank.js';
+import type { NeighborEntry } from '#lib/data/kiez-neighbors.js';
+import { getKiezNeighborLists } from '#lib/server/kiez-neighbors-index.js';
+import { bezirkSlugFromName } from '#lib/data/region-display-names.js';
+import { loadBezirkRegions, loadKiezRegions } from '#lib/place/load-regions.server.ts';
+import { loadWahlBundle } from '#lib/place/wahl.server.ts';
+import { loadPageFaq } from '#lib/place/faq.server.ts';
+import type { PageFaqItem } from '#lib/place/faq-items.ts';
+import type { MapImage, RegionSnapshot } from '#lib/place/types.ts';
+import { mapImage } from '#lib/place/maps.server.ts';
+import { packRegions, packWahl, type PackedRegions, type PackedWahl } from '#lib/place/pack.ts';
 import type { EntryGenerator, PageServerLoad } from './$types';
 
 export const prerender = true;
@@ -32,7 +32,7 @@ export const entries: EntryGenerator = async () => {
 async function tryLoadKiezRank(slug: string) {
 	if (!process.env.DATABASE_URL) return null;
 	try {
-		const { getKiezRank } = await import('$lib/server/db/queries/get-kiez-rank.js');
+		const { getKiezRank } = await import('#lib/server/db/queries/get-kiez-rank.js');
 		return await getKiezRank(slug);
 	} catch (err) {
 		const msg = err instanceof Error ? err.message : String(err);
@@ -81,7 +81,7 @@ export const load: PageServerLoad = async ({ params, fetch }): Promise<KiezPageD
 		throw error(404, m.kiez_page_not_found({ slug }, { locale: getLocale() }));
 	}
 	const bezirkSlug = profile.bezirk ? bezirkSlugFromName(profile.bezirk) : null;
-	const { getLocalizedProfile } = await import('$lib/server/profile/get-profile.js');
+	const { getLocalizedProfile } = await import('#lib/server/profile/get-profile.js');
 	const [
 		map,
 		neighborLists,

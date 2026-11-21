@@ -1,10 +1,10 @@
 <script lang="ts">
-	import { buildPageTitle } from '$lib/seo/page-title.js';
+	import { buildPageTitle } from '#lib/seo/page-title.js';
 	import { page } from '$app/state';
-	import SeoHead from '$lib/components/atlas/seo-head.svelte';
-	import JsonLd from '$lib/components/atlas/json-ld.svelte';
-	import { buildBreadcrumbList } from '$lib/seo/index.js';
-	import { FEEDBACK_EMAIL } from '$lib/utils/contact.js';
+	import SeoHead from '#lib/components/atlas/seo-head.svelte';
+	import JsonLd from '#lib/components/atlas/json-ld.svelte';
+	import { buildBreadcrumbList } from '#lib/seo/index.js';
+	import { FEEDBACK_EMAIL } from '#lib/utils/contact.js';
 
 	const breadcrumbJsonLd = $derived(
 		buildBreadcrumbList({

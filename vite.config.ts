@@ -1,3 +1,6 @@
+import adapter from '@sveltejs/adapter-node';
+import { createHandleHttpError } from './src/lib/build/strict-build.js';
+import { withRequestOrigin } from './src/lib/build/request-origin-adapter.js';
 import tailwindcss from '@tailwindcss/vite';
 import { paraglideVitePlugin } from '@inlang/paraglide-js';
 import { defineConfig } from 'vitest/config';
@@ -5,10 +8,87 @@ import { playwright } from '@vitest/browser-playwright';
 import { sveltekit } from '@sveltejs/kit/vite';
 import { FontaineTransform } from 'fontaine';
 
+/** Pfade, deren Prerender-HTTP-Fehler den strikten Build nicht abbrechen. Bewusst leer (S5). */
+const ALLOWED_HTTP_ERROR_PATHS: string[] = [];
+
+/**
+ * Eigene Chunks für große Bibliotheken. Kit 3 setzt `output.codeSplitting`, Rolldown ignoriert
+ * dann `manualChunks`. Darum läuft die Zuordnung als dynamischer Name einer `codeSplitting`-Gruppe.
+ */
+function manualChunk(id: string): string | null {
+	if (id.includes('node_modules/maplibre-gl')) return 'maplibre';
+	// Story 11 (Sankey-Rework): d3-sankey lazy geladen, EIGENER Chunk,
+	// getrennt von `d3-shape` (Review Triage Log #7: ein gemeinsamer Chunk
+	// kettete den layerchart-Chunk an den sankey-Chunk, weil layerchart
+	// selbst `d3-shape` nutzt -- Home/Atlas luden d3-sankey dadurch
+	// ungewollt mit). Beide Regeln bleiben VOR der layerchart-Regel, sonst
+	// zöge diese `d3-shape` zuerst in den `layerchart`-Chunk.
+	// #127: die Grafik nutzt LayerCharts `Sankey` über den Einstieg
+	// `layerchart/svg`. Barrel und Sankey-Komponente gehören in den
+	// sankey-Chunk, sonst importiert der `layerchart`-Chunk (Home/Atlas)
+	// d3-sankey statisch mit.
+	if (
+		id.includes('node_modules/d3-sankey') ||
+		id.includes('node_modules/layerchart/dist/svg.js') ||
+		id.includes('node_modules/layerchart/dist/components/graph/Sankey.svelte')
+	)
+		return 'sankey';
+	if (id.includes('node_modules/d3-shape')) return 'd3-shape';
+	if (
+		id.includes('node_modules/layerchart') ||
+		id.includes('node_modules/d3-scale') ||
+		id.includes('node_modules/d3-interpolate') ||
+		id.includes('node_modules/d3-array')
+	)
+		return 'layerchart';
+	if (id.includes('node_modules/@turf/') || id.includes('node_modules/rbush')) return 'turf';
+	return null;
+}
+
 export default defineConfig({
 	plugins: [
 		tailwindcss(),
-		sveltekit(),
+		sveltekit({
+			compilerOptions: {
+				// Force runes mode for the project, except for libraries. Can be removed in svelte 6.
+				runes: ({ filename }) =>
+					filename.split(/[/\\]/).includes('node_modules') ? undefined : true,
+				experimental: { async: true }
+			},
+			// Laufzeit-Origin kommt aus dem Request, `paths.origin` gilt nur im Prerender.
+			adapter: withRequestOrigin(adapter()),
+			experimental: { remoteFunctions: true },
+			prerender: {
+				// `robots.txt`, `sitemap.xml`, `sitemap-de.xml` haben keine internen Links und
+				// werden vom Crawler nicht entdeckt. Story 2.1 zwingt sie als Entry-Points
+				// in den prerender. Falls weitere standalone-Endpoints dazukommen, hier ergaenzen.
+				entries: [
+					'*',
+					'/robots.txt',
+					'/sitemap.xml',
+					'/sitemap-de.xml',
+					'/sitemap-en.xml',
+					'/webmcp-manifest.json',
+					'/.well-known/webmcp.json'
+				],
+
+				handleUnseenRoutes: ({ routes }) => {
+					console.warn(`[prerender] unseen routes ${routes.join(', ')} (Phase-1 warn-only)`);
+				},
+
+				// S5: Im strikten Build (NAVIGATOR_STRICT_BUILD=1, setzt das Dockerfile) bricht
+				// jeder Prerender-HTTP-Fehler (404/500) den Build ab. NODE_ENV taugt nicht als
+				// Signal, weil `vite build` es selbst auf production setzt. Die Allowlist ist
+				// leer, weil der Build 0 Fehler hat. Ohne Flag bleibt es bei der Warnung.
+				// `handleUnseenRoutes` bleibt bewusst eine Warnung.
+				handleHttpError: createHandleHttpError(ALLOWED_HTTP_ERROR_PATHS)
+			},
+			// Production-Origin für robots.txt/sitemap.xml während Prerender (früher
+			// `prerender.origin`). Ohne ihn liefert `url.origin` den SvelteKit-Default
+			// `http://sveltekit-prerender`, dann verlinken robots.txt und Sitemap-Index kaputt.
+			paths: { origin: 'https://navigator.berlin' }
+		}),
+
 		paraglideVitePlugin({
 			project: './project.inlang',
 			outdir: './src/lib/paraglide',
@@ -51,38 +131,9 @@ export default defineConfig({
 		commonjsOptions: {
 			ignoreDynamicRequires: true
 		},
-		rollupOptions: {
+		rolldownOptions: {
 			output: {
-				manualChunks(id: string): string | undefined {
-					if (id.includes('node_modules/maplibre-gl')) return 'maplibre';
-					// Story 11 (Sankey-Rework): d3-sankey lazy geladen, EIGENER Chunk,
-					// getrennt von `d3-shape` (Review Triage Log #7: ein gemeinsamer Chunk
-					// kettete den layerchart-Chunk an den sankey-Chunk, weil layerchart
-					// selbst `d3-shape` nutzt -- Home/Atlas luden d3-sankey dadurch
-					// ungewollt mit). Beide Regeln bleiben VOR der layerchart-Regel, sonst
-					// zöge diese `d3-shape` zuerst in den `layerchart`-Chunk.
-					// #127: die Grafik nutzt LayerCharts `Sankey` über den Einstieg
-					// `layerchart/svg`. Barrel und Sankey-Komponente gehören in den
-					// sankey-Chunk, sonst importiert der `layerchart`-Chunk (Home/Atlas)
-					// d3-sankey statisch mit.
-					if (
-						id.includes('node_modules/d3-sankey') ||
-						id.includes('node_modules/layerchart/dist/svg.js') ||
-						id.includes('node_modules/layerchart/dist/components/graph/Sankey.svelte')
-					)
-						return 'sankey';
-					if (id.includes('node_modules/d3-shape')) return 'd3-shape';
-					if (
-						id.includes('node_modules/layerchart') ||
-						id.includes('node_modules/d3-scale') ||
-						id.includes('node_modules/d3-interpolate') ||
-						id.includes('node_modules/d3-array')
-					)
-						return 'layerchart';
-					if (id.includes('node_modules/@turf/') || id.includes('node_modules/rbush'))
-						return 'turf';
-					return undefined;
-				}
+				codeSplitting: { groups: [{ name: manualChunk }] }
 			}
 		}
 	},

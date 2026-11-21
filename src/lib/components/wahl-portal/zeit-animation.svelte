@@ -11,9 +11,9 @@
 	 */
 	import { untrack } from 'svelte';
 	import { Play, Pause, StepForward } from '@lucide/svelte';
-	import type { WahlPortalEbene } from '$lib/utils/wahl-portal-url-state.js';
-	import { m } from '$lib/paraglide/messages.js';
-	import { wahlWiederholungLabel } from '$lib/data/wahl-labels.js';
+	import type { WahlPortalEbene } from '#lib/utils/wahl-portal-url-state.js';
+	import { m } from '#lib/paraglide/messages.js';
+	import { wahlWiederholungLabel } from '#lib/data/wahl-labels.js';
 	import { ZeitAnimationController } from './internal/zeit-animation.svelte.js';
 
 	export interface ZeitAnimationJahrOption {
@@ -36,8 +36,9 @@
 
 	let { ebene, jahrOptions, jahr, onDisplayJahr, onCommitJahr, onZurKiez }: Props = $props();
 
-	// svelte-ignore state_referenced_locally -- Initialwert einmalig, danach
+	// Initialwert einmalig, danach
 	// hält der Controller sein eigenes Anzeige-Jahr (Muster mapCtl/sbLoader).
+	// svelte-ignore state_referenced_locally
 	const ctl = new ZeitAnimationController({
 		jahre: () => jahrOptions.map((o) => o.jahr),
 		initialJahr: jahr,

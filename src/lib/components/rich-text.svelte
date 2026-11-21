@@ -1,6 +1,6 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
-	import type { RichSegment } from '$lib/i18n/rich-text.js';
+	import type { RichSegment } from '#lib/i18n/rich-text.js';
 
 	type Props = {
 		segments: readonly RichSegment[];

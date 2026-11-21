@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { StimmbezirkLoader } from './winner-map-stimmbezirk.svelte.js';
-import { _resetManifestCache } from '$lib/data/manifest.js';
-import { _resetLayerCache } from '$lib/data/internal/layer-fetch.js';
+import { _resetManifestCache } from '#lib/data/manifest.js';
+import { _resetLayerCache } from '#lib/data/internal/layer-fetch.js';
 
 const SHA = 'a'.repeat(64);
 

@@ -22,8 +22,8 @@ import type {
 	WahlResultsAtPoint,
 	WahlResultBundle,
 	Top5Entry
-} from '$lib/data/get-wahl-results-at-point.js';
-import { sourceName } from '$lib/data/wahl-source-name.js';
+} from '#lib/data/get-wahl-results-at-point.js';
+import { sourceName } from '#lib/data/wahl-source-name.js';
 
 export interface GetElectionResultDeps {
 	readonly fetchResultsAtPoint: (lat: number, lng: number) => Promise<WahlResultsAtPoint | null>;

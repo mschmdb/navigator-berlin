@@ -1,6 +1,6 @@
 import { query } from '$app/server';
 import * as v from 'valibot';
-import { proxyNominatim, reverseGeocode } from '$lib/server/geocode';
+import { proxyNominatim, reverseGeocode } from '#lib/server/geocode.ts';
 import type { GeocodeSuggestion } from './types.js';
 
 export const geocodeAddress = query(

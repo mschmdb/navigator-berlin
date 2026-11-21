@@ -2,7 +2,7 @@
  * Legende für Plakat und Bilder: Parteinamen aus `quadrate/namen.ts`, Grau mit der Schwelle
  * aus dem Handbuch. Die Farben kommen aus `farben.ts`.
  */
-import { partyName } from '$lib/components/stories/quadrate/namen';
+import { partyName } from '#lib/components/stories/quadrate/namen.ts';
 import type { Lang } from './grau';
 import { ORDER } from './parteien';
 

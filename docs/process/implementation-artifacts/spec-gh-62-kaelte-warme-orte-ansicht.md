@@ -53,7 +53,7 @@ context:
 ## Code Map
 
 - `src/routes/(with-header)/kaelte/+page.svelte:67-68` -- Platzhalter `kaelte-platzhalter-orte` ersetzen; `page.svelte.test.ts` prüft ihn als leer.
-- `src/lib/components/kuehle-orte/in-deiner-naehe.svelte` (+ Test) -- Vorlage: Geolocation (`$lib/utils/geolocation.js` `requestPosition`), 5 nächste, `formatDistance`, `getOpeningStatus`, Maps-Links; Props `requestPositionFn`, `loadIndex`, `now` für Tests. Gekoppelt an `KuehleOrt` und `nearestFilteredKuehleOrte` (AC/Sommer-Filter).
+- `src/lib/components/kuehle-orte/in-deiner-naehe.svelte` (+ Test) -- Vorlage: Geolocation (`#lib/utils/geolocation.js` `requestPosition`), 5 nächste, `formatDistance`, `getOpeningStatus`, Maps-Links; Props `requestPositionFn`, `loadIndex`, `now` für Tests. Gekoppelt an `KuehleOrt` und `nearestFilteredKuehleOrte` (AC/Sommer-Filter).
 - `src/lib/data/get-kuehle-orte-index.ts` -- Muster für `get-waerme-orte-index.ts` (fetch `/data/waerme-orte.geojson`, Mapper, Cache + Inflight-Dedupe).
 - `src/lib/components/kuehle-orte/category-label.ts` -- `naehe_cat_*`; fehlen „Mall“ und „Gotteshaus“ (Kühle-Orte nutzt „Mall/Center“). Ergänzen ohne bestehende Labels zu ändern.
 - `src/lib/components/kuehle-orte/kuehle-orte-transparenz.svelte` + `transparenz-content.ts` -- Inhalt hitze-spezifisch (`transparenz_*`); für Kälte eigene Inhalte als Props oder eigene Komponente.

@@ -3,13 +3,13 @@ import { computeWechsel, type SeriesEntry } from './analytik.js';
 import {
 	computeWechselFromRows,
 	parentJahrFromParentSlug
-} from '$lib/components/wahl-portal/internal/wechsel-data.js';
-import type { WinnerApiRow } from '$lib/components/wahl-portal/internal/winner-map-data.js';
+} from '#lib/components/wahl-portal/internal/wechsel-data.js';
+import type { WinnerApiRow } from '#lib/components/wahl-portal/internal/winner-map-data.js';
 
 /**
  * Klammer-Test (Finder-Muster; Story 7 Boundary "Client-Zwilling ... per
  * Fixture-Test an die Server-Semantik geklammert"): der Client-Zwilling der
- * Wiederholungswahl-Merge-Regel (`wechsel-data.ts`, kein `$lib/server`-Import
+ * Wiederholungswahl-Merge-Regel (`wechsel-data.ts`, kein `#lib/server`-Import
  * dort erlaubt, siehe `boundary.test.ts`) muss auf demselben Fixture
  * dieselben Wechsel-Jahre liefern wie der Server-Rechenkern (`analytik.ts`).
  * Deshalb liegt dieser Vergleich hier (Server-Test importiert Client-Modul,

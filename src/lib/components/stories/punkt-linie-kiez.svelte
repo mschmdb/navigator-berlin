@@ -1,20 +1,20 @@
 <!--
 	"Punkt, Linie, Kiez" (#163): Kennzahlen eines Bezirks oder Kiezes als Komposition aus Formen.
-	Geometrie und Größen kommen aus `$lib/stories/punkt-linie-kiez`, die Werte nur aus
+	Geometrie und Größen kommen aus `#lib/stories/punkt-linie-kiez`, die Werte nur aus
 	`stories-kennzahlen.json`. Jede Form ist fokussierbar und hebt sich mit ihrer Legendenzeile
 	hervor. Ohne Bewegung. `decorative` blendet die Figur für Hilfstechnik aus, wenn ein Link
 	den Namen trägt.
 -->
 <script lang="ts">
-	import { m } from '$lib/paraglide/messages.js';
-	import { geometry } from '$lib/stories/punkt-linie-kiez/geometry.js';
+	import { m } from '#lib/paraglide/messages.js';
+	import { geometry } from '#lib/stories/punkt-linie-kiez/geometry.js';
 	import {
 		legendRows,
 		type LegendRow,
 		type ShapeKey
-	} from '$lib/stories/punkt-linie-kiez/legend.js';
-	import { VIEW, type Kennzahlen } from '$lib/stories/punkt-linie-kiez/types.js';
-	import { STORY_FONT, STORY_INK, STORY_PAPER, STORY_SERIES } from '$lib/stories/tokens.js';
+	} from '#lib/stories/punkt-linie-kiez/legend.js';
+	import { VIEW, type Kennzahlen } from '#lib/stories/punkt-linie-kiez/types.js';
+	import { STORY_FONT, STORY_INK, STORY_PAPER, STORY_SERIES } from '#lib/stories/tokens.js';
 
 	interface Props {
 		readonly name: string;

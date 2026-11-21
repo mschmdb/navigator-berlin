@@ -1,6 +1,6 @@
 import type { RequestHandler } from './$types';
-import { loadUpdatesFromModules } from '$lib/content/updates/load-updates.js';
-import { buildAtomXml } from '$lib/feeds/build-atom.js';
+import { loadUpdatesFromModules } from '#lib/content/updates/load-updates.js';
+import { buildAtomXml } from '#lib/feeds/build-atom.js';
 
 export const prerender = true;
 

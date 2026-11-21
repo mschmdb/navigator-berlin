@@ -1,6 +1,6 @@
-import { m } from '$lib/paraglide/messages.js';
-import type { LocaleOptions } from '$lib/components/atlas/internal/atlas-label-options.js';
-import { toAtlasMessageOptions } from '$lib/components/atlas/internal/atlas-label-options.js';
+import { m } from '#lib/paraglide/messages.js';
+import type { LocaleOptions } from '#lib/components/atlas/internal/atlas-label-options.js';
+import { toAtlasMessageOptions } from '#lib/components/atlas/internal/atlas-label-options.js';
 
 export const DEFAULT_OG_IMAGE_PATH = '/og/page/home.png';
 const MAX_TOP_LAYERS = 3;

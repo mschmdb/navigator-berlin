@@ -296,7 +296,7 @@ Vollständige Phase-1-Coverage. Phase-2/3-Items mit klarer Trigger-Bedingung def
 | Plex-Glyph-Pack via fontnik | ✓ | Architecture + UX-DR8 Subset-Strategy abgestimmt |
 | Performance-Budget JS ≤200KB | ✓ | Architecture NFR-P5 + UX-DR Lazy-Load + Vite manualChunks |
 | A11y-Stack (axe-core + Lighthouse) | ✓ | Architecture CI-Gates + UX-DR46 WCAG 2.2 Implementierungs-Mechanik |
-| WebMCP-Adapter-Schicht | ✓ | Architecture `$lib/webmcp/` + UX-DR `useWebMCPTool.ts`-Helper |
+| WebMCP-Adapter-Schicht | ✓ | Architecture `#lib/webmcp/` + UX-DR `useWebMCPTool.ts`-Helper |
 | OG-Image-Pipeline (Satori + resvg) | ✓ | Architecture + UX-DR mit identischem Stack |
 | Component-Boundaries (`ui/` ↛ `atlas/`) | ✓ | Architecture + UX-DR `src/lib/components/ui/` + `atlas/` Struktur identisch |
 

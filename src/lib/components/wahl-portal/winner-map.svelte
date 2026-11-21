@@ -5,16 +5,16 @@
 		jahreForReihe,
 		setJahr,
 		setEbene
-	} from '$lib/state/wahl-portal-context.svelte.js';
-	import { stimmtypForReihe } from '$lib/utils/wahl-portal-url-state.js';
-	import { m } from '$lib/paraglide/messages.js';
-	import { wahlEbeneLabel, wahlWiederholungLabel } from '$lib/data/wahl-labels.js';
-	import { localizedHref } from '$lib/i18n/localized-href.js';
-	import { geocodeAddress } from '$lib/data/geocode.remote.js';
-	import { wahlSlugFromTypJahr, geoSlugForWahl } from '$lib/data/wahl-geo-mapping.js';
-	import type { GeocodeSuggestion } from '$lib/data';
-	import AddressSearch from '$lib/components/atlas/address-search.svelte';
-	import DataTableAlternative from '$lib/components/atlas/data-table-alternative.svelte';
+	} from '#lib/state/wahl-portal-context.svelte.js';
+	import { stimmtypForReihe } from '#lib/utils/wahl-portal-url-state.js';
+	import { m } from '#lib/paraglide/messages.js';
+	import { wahlEbeneLabel, wahlWiederholungLabel } from '#lib/data/wahl-labels.js';
+	import { localizedHref } from '#lib/i18n/localized-href.js';
+	import { geocodeAddress } from '#lib/data/geocode.remote.js';
+	import { wahlSlugFromTypJahr, geoSlugForWahl } from '#lib/data/wahl-geo-mapping.js';
+	import type { GeocodeSuggestion } from '#lib/data/index.ts';
+	import AddressSearch from '#lib/components/atlas/address-search.svelte';
+	import DataTableAlternative from '#lib/components/atlas/data-table-alternative.svelte';
 	import WinnerMapLegende from './winner-map-legende.svelte';
 	import WinnerMapTooltip from './winner-map-tooltip.svelte';
 	import WinnerMapParteiTabs from './winner-map-partei-tabs.svelte';
@@ -98,7 +98,8 @@
 	}
 
 	// Winners-Fetch (kiez/bezirk): eigene Klasse (Datei-Zeilenlimit).
-	// svelte-ignore state_referenced_locally -- fetchFn ist ein Test-/DI-Prop.
+	// fetchFn ist ein Test-/DI-Prop.
+	// svelte-ignore state_referenced_locally
 	const winnersLoader = new KiezBezirkWinnersLoader(fetchFn);
 	// Fetch-Trigger + Response-Latch (Review-Fund #7).
 	const kbGate = new KbWinnersGate({
@@ -118,7 +119,8 @@
 	);
 
 	// Winners-Fetch (stimmbezirk), gecacht pro typ×stimmtyp×jahr(×partei).
-	// svelte-ignore state_referenced_locally -- fetchFn ist ein Test-/DI-Prop.
+	// fetchFn ist ein Test-/DI-Prop.
+	// svelte-ignore state_referenced_locally
 	const sbLoader = new StimmbezirkLoader(fetchFn);
 	const sbGate = new SbWinnersGate({
 		loader: sbLoader,
@@ -156,7 +158,8 @@
 		if (readyToShow) mapShown = true;
 	});
 
-	// svelte-ignore state_referenced_locally -- fetchFn ist ein Test-/DI-Prop.
+	// fetchFn ist ein Test-/DI-Prop.
+	// svelte-ignore state_referenced_locally
 	const geometryLoader = new KiezBezirkGeometryLoader(fetchFn);
 	const geometry = $derived(geometryLoader.geometry);
 
@@ -280,7 +283,8 @@
 	}
 
 	// MapLibre-Hülle: Lifecycle in eigener Klasse (Datei-Zeilenlimit).
-	// svelte-ignore state_referenced_locally -- mapFactory ist ein Test-/DI-Prop.
+	// mapFactory ist ein Test-/DI-Prop.
+	// svelte-ignore state_referenced_locally
 	const mapCtl = new WinnerMapController({
 		getFc: () => joinedFc,
 		getActiveJahr: () => (anzeigeEbene === 'stimmbezirk' ? null : paintJahr),
@@ -288,7 +292,8 @@
 		mapFactory
 	});
 	// Adress-Hervorhebung (Zustand + Handler): eigene Klasse, siehe Modul-Doc.
-	// svelte-ignore state_referenced_locally -- fetchFn ist ein Test-/DI-Prop.
+	// fetchFn ist ein Test-/DI-Prop.
+	// svelte-ignore state_referenced_locally
 	const addressHighlight = new AddressHighlight({
 		getAnzeigeEbene: () => anzeigeEbene,
 		getJoinedFc: () => joinedFc,

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { buildKiezSitemapEntries, KIEZ_PAGES_SOURCE } from './kiez-pages.js';
-import type { Manifest } from '$lib/data/types.js';
+import type { Manifest } from '#lib/data/types.js';
 import type { SitemapSourceContext } from '../sitemap-builder.js';
 
 const ORIGIN = 'https://navigator.berlin';

@@ -1,7 +1,7 @@
 import { open, readdir, readFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import matter from 'gray-matter';
-import { isStrictBuild } from '$lib/build/strict-build.js';
+import { isStrictBuild } from '#lib/build/strict-build.js';
 import { validLastmod, type ProfileDates } from '../lastmod.js';
 
 /**

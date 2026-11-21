@@ -9,7 +9,7 @@
 import type { StimmbezirkLoader } from './winner-map-stimmbezirk.svelte.js';
 import { rowsMatchAktivePartei } from './winner-map-partei-mode.svelte.js';
 import type { WinnerApiRow } from './winner-map-data.js';
-import type { WahlPortalEbene } from '$lib/utils/wahl-portal-url-state.js';
+import type { WahlPortalEbene } from '#lib/utils/wahl-portal-url-state.js';
 
 export interface SbWinnersGateDeps {
 	readonly loader: StimmbezirkLoader;

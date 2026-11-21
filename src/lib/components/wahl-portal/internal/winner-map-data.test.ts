@@ -24,7 +24,7 @@ import {
 	NEUTRAL_FARBE,
 	type WinnerApiRow
 } from './winner-map-data.js';
-import { parteiColor, parteiPattern } from '$lib/data/partei-farben.js';
+import { parteiColor, parteiPattern } from '#lib/data/partei-farben.js';
 
 function feature(properties: Record<string, unknown>): GeoJSON.Feature {
 	return {
@@ -294,7 +294,7 @@ describe('joinStimmbezirkWinners', () => {
 });
 
 // Volle Coverage (AGH/BVV + alle BTW-Formate, Edge-Cases) lebt jetzt bei
-// `$lib/data/wahl-gruppe-label.test.ts` (geteiltes Modul, Review-Fund). Hier
+// `#lib/data/wahl-gruppe-label.test.ts` (geteiltes Modul, Review-Fund). Hier
 // nur ein Re-Export-Smoke-Test, damit `winner-map-data.js` als Import-Pfad
 // weiter funktioniert.
 describe('gruppenAnzeigeName (Re-Export)', () => {

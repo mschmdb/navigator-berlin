@@ -1,7 +1,7 @@
 import type { PageServerLoad } from './$types';
-import { fetchBerlinHeatWarning } from '$lib/server/dwd-warnings.js';
-import { loadManifest } from '$lib/data/manifest.js';
-import type { LayerFormat } from '$lib/data/types.js';
+import { fetchBerlinHeatWarning } from '#lib/server/dwd-warnings.js';
+import { loadManifest } from '#lib/data/manifest.js';
+import type { LayerFormat } from '#lib/data/types.js';
 
 // Story 16.2: Hitze-Home dynamisch (nicht prerendered), damit die Live-DWD-Warnlage
 // pro Request abgerufen wird. fetchBerlinHeatWarning degradiert intern zu null (AC-3).

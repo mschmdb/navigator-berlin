@@ -1,6 +1,6 @@
 import { LRUCache } from 'lru-cache';
-import type { GeocodeSuggestion, Locale } from '$lib/data/types.js';
-import { BERLIN_BBOX, isInBerlin } from '$lib/data/constants.js';
+import type { GeocodeSuggestion, Locale } from '#lib/data/types.js';
+import { BERLIN_BBOX, isInBerlin } from '#lib/data/constants.js';
 import { nominatimBucket } from './rate-limit.js';
 
 const DEFAULT_ENDPOINT = 'https://nominatim.openstreetmap.org';

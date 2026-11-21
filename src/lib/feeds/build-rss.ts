@@ -1,6 +1,6 @@
-import type { UpdateEntry } from '$lib/content/updates/types.js';
+import type { UpdateEntry } from '#lib/content/updates/types.js';
 import { escapeXml } from './escape-xml.js';
-import { sortByDateDesc } from '$lib/content/updates/load-updates.js';
+import { sortByDateDesc } from '#lib/content/updates/load-updates.js';
 
 /**
  * Story 2.13 AC-5: RSS 2.0 Feed Builder für Update-Entries.

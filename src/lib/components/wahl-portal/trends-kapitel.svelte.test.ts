@@ -2,13 +2,13 @@ import { page } from 'vitest/browser';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-svelte';
 import TrendsKapitelContextProbe from './internal/trends-kapitel-context-probe.svelte';
-import { _resetManifestCache } from '$lib/data/manifest.js';
-import { _resetLayerCache } from '$lib/data/internal/layer-fetch.js';
+import { _resetManifestCache } from '#lib/data/manifest.js';
+import { _resetLayerCache } from '#lib/data/internal/layer-fetch.js';
 import { _resetWinnersCache } from './internal/winner-map-winners.svelte.js';
 import { _resetAnalytikCache } from './internal/trends-analytik.svelte.js';
 import { fakeMapFactory } from './internal/fake-maplibre-test-util.js';
 import { trendPropKeys, VOLATILITAET_FARBE_KEY } from './internal/trends-map-expressions.js';
-import type { WahlPortalListEntry } from '$lib/state/wahl-portal-context.svelte.js';
+import type { WahlPortalListEntry } from '#lib/state/wahl-portal-context.svelte.js';
 
 const SHA = 'a'.repeat(64);
 
@@ -274,7 +274,7 @@ describe('trends-kapitel.svelte', () => {
 	});
 
 	it('EN: Trend-Legende zeigt dieselben 6 Schwellen-Labels korrekt uebersetzt/formatiert', async () => {
-		const { overwriteGetLocale } = await import('$lib/paraglide/runtime');
+		const { overwriteGetLocale } = await import('#lib/paraglide/runtime.js');
 		overwriteGetLocale(() => 'en');
 		try {
 			const fetchFn = fakeFetch([

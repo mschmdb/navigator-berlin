@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { contrastRatio } from '$lib/data/partei-farben';
+import { contrastRatio } from '#lib/data/partei-farben.ts';
 import { PLACE_MAP_FILLS, placeMapFill } from './map-classes';
 
 describe('PLACE_MAP_FILLS', () => {

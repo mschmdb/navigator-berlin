@@ -1,28 +1,16 @@
-<!--
-	Story 2.9b T2: Ranking-Table mit Sort + View-Toggle.
-
-	Phase-1 DE-only. Hairline-Tabelle ohne Vertikal-Linien (UX-DR43).
-	Sort + View-State im URL via replaceState; Page-Daten kommen einmalig
-	vom Server-Loader weil die Route prerendered=true ist (statisches HTML,
-	keine erneute Server-Anfrage).
-
-	Stigma-Disziplin (Memory feedback_no_lebenswert + project_compare_
-	editorial_profiles): Default-Sort ist composite ohne „beste/schlechteste"-
-	Sprache; Soziale-Lage als Spalten-Wert erlaubt, Sortier-Button funktioniert
-	technisch, aber Disclaimer-Banner wird sichtbar wenn aktiv.
--->
 <script lang="ts">
+	import { applySearchParamUpdates } from '#lib/utils/search-params.js';
 	import { goto } from '$app/navigation';
-	import { browser } from '$app/environment';
-	import { page } from '$app/state';
-	import type { RankingRow } from '$lib/data/ranking-types.js';
-	import { rankForSort } from '$lib/data/ranking-rank.js';
-	import RichText from '$lib/components/rich-text.svelte';
-	import { localizedHref } from '$lib/i18n/localized-href.js';
-	import { chapterAnchorForSort } from '$lib/place/topics';
-	import { richSegments } from '$lib/i18n/rich-text.js';
-	import { m } from '$lib/paraglide/messages.js';
-	import { getLocale } from '$lib/paraglide/runtime.js';
+	import { browser } from '$app/env';
+	import { page, type ReadonlyURLSearchParams } from '$app/state';
+	import type { RankingRow } from '#lib/data/ranking-types.js';
+	import { rankForSort } from '#lib/data/ranking-rank.js';
+	import RichText from '#lib/components/rich-text.svelte';
+	import { localizedHref } from '#lib/i18n/localized-href.js';
+	import { chapterAnchorForSort } from '#lib/place/topics.ts';
+	import { richSegments } from '#lib/i18n/rich-text.js';
+	import { m } from '#lib/paraglide/messages.js';
+	import { getLocale } from '#lib/paraglide/runtime.js';
 	import {
 		collatorLocale,
 		columnLabel,
@@ -35,7 +23,7 @@
 	// url.searchParams. URL-State (sort/dir/view) ist nur browser-relevant —
 	// auf dem Server-Render starten alle mit Default, Client hydratiert.
 	const EMPTY_SEARCH = new URLSearchParams();
-	function searchParams(): URLSearchParams {
+	function searchParams(): ReadonlyURLSearchParams {
 		return browser ? page.url.searchParams : EMPTY_SEARCH;
 	}
 
@@ -65,14 +53,14 @@
 		return (NUMERIC_SORT_KEYS as readonly string[]).includes(key);
 	}
 
-	function readSort(params: URLSearchParams): SortKey {
+	function readSort(params: ReadonlyURLSearchParams): SortKey {
 		const raw = params.get('sort');
 		return ALL_SORT_KEYS.includes(raw as SortKey) ? (raw as SortKey) : 'composite';
 	}
-	function readDir(params: URLSearchParams): SortDir {
+	function readDir(params: ReadonlyURLSearchParams): SortDir {
 		return params.get('dir') === 'asc' ? 'asc' : 'desc';
 	}
-	function readView(params: URLSearchParams): View {
+	function readView(params: ReadonlyURLSearchParams): View {
 		return params.get('view') === 'bezirke' ? 'bezirke' : 'kieze';
 	}
 
@@ -114,14 +102,9 @@
 	});
 
 	function applyParams(updates: Record<string, string | null>): void {
-		const params = new URLSearchParams(searchParams());
-		for (const [key, value] of Object.entries(updates)) {
-			if (value === null) params.delete(key);
-			else params.set(key, value);
-		}
-		const query = params.toString();
+		const query = applySearchParamUpdates(searchParams().toString(), updates);
 		const url = query.length > 0 ? `${page.url.pathname}?${query}` : page.url.pathname;
-		void goto(url, { replaceState: true, keepFocus: true, noScroll: true });
+		void goto(url, { replace: true, reset: false });
 	}
 
 	function toggleSort(key: SortKey): void {
@@ -264,6 +247,20 @@
 	});
 </script>
 
+<!--
+	Story 2.9b T2: Ranking-Table mit Sort + View-Toggle.
+
+	Phase-1 DE-only. Hairline-Tabelle ohne Vertikal-Linien (UX-DR43).
+	Sort + View-State im URL via replaceState; Page-Daten kommen einmalig
+	vom Server-Loader weil die Route prerendered=true ist (statisches HTML,
+	keine erneute Server-Anfrage).
+
+	Stigma-Disziplin (Memory feedback_no_lebenswert + project_compare_
+	editorial_profiles): Default-Sort ist composite ohne „beste/schlechteste"-
+	Sprache; Soziale-Lage als Spalten-Wert erlaubt, Sortier-Button funktioniert
+	technisch, aber Disclaimer-Banner wird sichtbar wenn aktiv.
+-->
+
 <section data-testid="score-ranking" class="space-y-6">
 	<div
 		class="flex flex-wrap items-center justify-between gap-3"
@@ -327,9 +324,10 @@
 			<caption class="sr-only">{m.uis_h1_title()}</caption>
 			<thead>
 				<tr class="border-b border-rule text-left align-bottom">
-					<th class="py-2 pr-3 text-dense-label whitespace-nowrap text-ink-subtle" scope="col">
-						{m.uis_ranking_col_rank()}
-					</th>
+					<th class="py-2 pr-3 text-dense-label whitespace-nowrap text-ink-subtle" scope="col"
+						>{m.uis_ranking_col_rank()}</th
+					>
+
 					<th
 						class="py-2 pr-3 align-bottom whitespace-nowrap"
 						scope="col"
@@ -399,6 +397,7 @@
 							class="py-3 pr-3 text-xs text-ink-subtle tabular-nums"
 							data-testid="ranking-cell-rank">{rankForSort(row.ranks, sortKey) ?? '–'}</td
 						>
+
 						<th scope="row" class="py-3 pr-3 text-left font-semibold text-ink">
 							<a
 								class="inline-flex min-h-(--target-min) items-center text-ink hover:text-accent hover:underline"

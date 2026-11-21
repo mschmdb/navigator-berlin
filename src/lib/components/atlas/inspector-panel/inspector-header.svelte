@@ -2,20 +2,20 @@
      `inspector-panel.svelte` herausgelöst (GH-88, Datei unter 500 Zeilen). Kein Escape-Schließen
      (Entscheidung Matze, 17.10.2026). -->
 <script lang="ts">
-	import { buildPageTitle } from '$lib/seo/page-title.js';
+	import { buildPageTitle } from '#lib/seo/page-title.js';
 	import { Share2, X, Bookmark, BookmarkCheck, Check, GitCompare } from '@lucide/svelte';
 	import {
 		getUiState,
 		addBookmark,
 		toggleCompareMode,
 		openBookmarksDialog
-	} from '$lib/state/ui-context.svelte.js';
-	import { featureFlags } from '$lib/data/feature-flags.js';
-	import { createBookmark, isBookmarked, persistBookmarks } from '$lib/state/bookmark-store.js';
-	import { trackEvent } from '$lib/utils/plausible.js';
-	import { buildOgImageUrl, type OgImageInput } from '$lib/utils/og-image-url.js';
-	import { m } from '$lib/paraglide/messages.js';
-	import type { Locale } from '$lib/paraglide/runtime';
+	} from '#lib/state/ui-context.svelte.js';
+	import { featureFlags } from '#lib/data/feature-flags.js';
+	import { createBookmark, isBookmarked, persistBookmarks } from '#lib/state/bookmark-store.js';
+	import { trackEvent } from '#lib/utils/plausible.js';
+	import { buildOgImageUrl, type OgImageInput } from '#lib/utils/og-image-url.js';
+	import { m } from '#lib/paraglide/messages.js';
+	import type { Locale } from '#lib/paraglide/runtime.js';
 	import ShareSheet from './share-sheet.svelte';
 
 	type Props = {

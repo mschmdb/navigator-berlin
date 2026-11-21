@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import { handleMapKeydown, type MapHandle } from './map-keyboard.js';
-import { BERLIN_BBOX_ARRAY } from '$lib/data/constants.js';
+import { BERLIN_BBOX_ARRAY } from '#lib/data/constants.js';
 
 type Mocked = {
 	[K in keyof MapHandle]: ReturnType<typeof vi.fn>;
