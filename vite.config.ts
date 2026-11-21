@@ -36,8 +36,8 @@ export default defineConfig({
 					'/.well-known/webmcp.json'
 				],
 
-				handleUnseenRoutes: ({ route }) => {
-					console.warn(`[prerender] unseen route ${route} (Phase-1 warn-only)`);
+				handleUnseenRoutes: ({ routes }) => {
+					console.warn(`[prerender] unseen routes ${routes.join(', ')} (Phase-1 warn-only)`);
 				},
 
 				// S5: Im strikten Build (NAVIGATOR_STRICT_BUILD=1, setzt das Dockerfile) bricht
