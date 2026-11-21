@@ -8,7 +8,7 @@
  * Wahl-Queries).
  */
 
-import { json, error } from '@sveltejs/kit';
+import { error } from '@sveltejs/kit';
 import * as v from 'valibot';
 import type { RequestHandler } from './$types';
 import { getWahlList } from '#lib/server/db/queries/wahl/get-wahl-list.js';
@@ -40,7 +40,7 @@ export const GET: RequestHandler = async ({ url }) => {
 		return bzrId ? [{ bzrId, partei: row.parteiKurzname, anteil: row.anteil }] : [];
 	});
 
-	return json(
+	return Response.json(
 		{
 			election: electionSlug,
 			shares,

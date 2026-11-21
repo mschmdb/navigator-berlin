@@ -9,7 +9,7 @@
  * Ohne Datenbank: 200 mit leerer Liste.
  */
 
-import { json, error } from '@sveltejs/kit';
+import { error } from '@sveltejs/kit';
 import * as v from 'valibot';
 import type { RequestHandler } from './$types';
 import { getWahlList } from '#lib/server/db/queries/wahl/get-wahl-list.js';
@@ -61,7 +61,7 @@ export const GET: RequestHandler = async ({ url }) => {
 
 	const latestWahl = list.filter((w) => w.typ === typ && w.stimmtyp === stimmtyp)[0] ?? null;
 
-	return json(
+	return Response.json(
 		{
 			ebene,
 			typ,

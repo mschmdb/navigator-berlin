@@ -33,7 +33,7 @@
  * `partei` → 400 (valibot).
  */
 
-import { json, error } from '@sveltejs/kit';
+import { error } from '@sveltejs/kit';
 import * as v from 'valibot';
 import type { RequestHandler } from './$types';
 import { getWahlList, type WahlListItem } from '#lib/server/db/queries/wahl/get-wahl-list.js';
@@ -78,7 +78,7 @@ async function handleStimmbezirk(
 	const wahl = list.find((w) => w.typ === typ && w.stimmtyp === stimmtyp && w.jahr === jahr);
 
 	const empty = (w: WahlListItem | undefined) =>
-		json(
+		Response.json(
 			{
 				typ,
 				stimmtyp,
@@ -123,7 +123,7 @@ async function handleStimmbezirk(
 		parent_slug: parentSlug
 	}));
 
-	return json(
+	return Response.json(
 		{
 			typ,
 			stimmtyp,
@@ -188,7 +188,7 @@ export const GET: RequestHandler = async ({ url }) => {
 
 	const latestWahl = wahlenInReihe[0] ?? null;
 
-	return json(
+	return Response.json(
 		{
 			typ,
 			stimmtyp,

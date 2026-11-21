@@ -13,7 +13,7 @@
  * `hint`-Feld statt Fehler.
  */
 
-import { json, error } from '@sveltejs/kit';
+import { error } from '@sveltejs/kit';
 import * as v from 'valibot';
 import type { RequestHandler } from './$types';
 import { getWahlList } from '#lib/server/db/queries/wahl/get-wahl-list.js';
@@ -45,7 +45,7 @@ export const GET: RequestHandler = async ({ url }) => {
 	const rows = latestWahl ? await getKiezSharesForWahl(latestWahl.id) : [];
 	const { results, hint } = rankSimilarKieze(kiez, rows, 5);
 
-	return json(
+	return Response.json(
 		{
 			kiez,
 			typ,
