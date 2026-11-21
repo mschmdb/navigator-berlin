@@ -14,7 +14,7 @@ const hoisted = vi.hoisted(() => ({
 	registerWebMcpServer: vi.fn<(deps?: unknown) => Promise<WebMcpServerHandle>>()
 }));
 
-vi.mock('$app/environment', () => ({ browser: true }));
+vi.mock('$app/env', () => ({ browser: true }));
 
 vi.mock('./adapter.js', () => ({
 	registerWebMcpServer: hoisted.registerWebMcpServer,

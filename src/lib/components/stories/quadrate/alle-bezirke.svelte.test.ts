@@ -7,7 +7,7 @@ import raw from '../../../../../static/data/stories-wahl.json';
 
 const nav = vi.hoisted(() => ({ after: [] as (() => void)[] }));
 vi.mock('$app/navigation', () => ({
-	replaceState: vi.fn(),
+	goto: vi.fn(),
 	afterNavigate: (fn: () => void) => nav.after.push(fn)
 }));
 vi.mock('$app/state', () => ({ page: { state: {} } }));

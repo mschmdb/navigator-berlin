@@ -33,7 +33,7 @@
 		zeit = readZeit();
 	});
 	// Kapitel 5 folgt der URL auch nach Zurück oder einem Deep-Link im selben Beitrag.
-	// Eigene Schreibvorgänge laufen über replaceState und lösen afterNavigate nicht aus.
+	// Eigene Schreibvorgänge laufen über goto({ shallow: true }), der Guard überspringt sie.
 	afterNavigate(({ shallow, type }) => {
 		if (shallow && type === 'goto') return;
 
