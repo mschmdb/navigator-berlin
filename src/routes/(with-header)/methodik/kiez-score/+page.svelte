@@ -158,9 +158,8 @@
 				{#each weightRows as row (row.id)}
 					<tr class="border-b border-rule">
 						<th scope="row" class="py-2 pr-4 text-left font-normal text-ink">
-							{row.label}{#if row.note}<!-- eslint-disable-next-line svelte/no-useless-mustaches -->{' '}<span
-									class="text-ink-subtle">{row.note}</span
-								>{/if}
+							<!-- eslint-disable-next-line svelte/no-useless-mustaches -- Svelte trimmt Leerraum am Blockanfang, {' '} erhält das Leerzeichen -->
+							{row.label}{#if row.note}{' '}<span class="text-ink-subtle">{row.note}</span>{/if}
 						</th>
 						<td class="py-2 text-right tabular-nums">{row.weight}</td>
 					</tr>
