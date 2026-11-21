@@ -65,6 +65,7 @@ async function main(): Promise<void> {
 			`ungeeignet: ${dropped.suitableFalse}, existiert nicht mehr: ${dropped.stillExistsNo}, ` +
 			`ohne Geometrie: ${dropped.missingGeometry}, Dubletten: ${dropped.duplicates}. Geschrieben nach ${OUT_FILE}`
 	);
+	console.log('[waerme-orte] Karten-Layer nachziehen: pnpm data:waerme-orte-fetch');
 	if (missingEnrichment.length > 0) {
 		console.warn(
 			`[waerme-orte] ${missingEnrichment.length} Kandidaten ohne Enrichment (nicht im GeoJSON)`

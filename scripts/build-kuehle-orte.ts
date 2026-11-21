@@ -34,6 +34,7 @@ async function main(): Promise<void> {
 			`(ungeeignet: ${dropped.suitableFalse}, existiert nicht mehr: ${dropped.stillExistsNo}, ` +
 			`ohne Geometrie: ${dropped.missingGeometry}). Geschrieben nach ${OUT_FILE}`
 	);
+	console.log('[kuehle-orte] Karten-Layer nachziehen: pnpm data:kuehle-orte-fetch');
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {
