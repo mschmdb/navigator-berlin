@@ -226,6 +226,21 @@ describe('mergeEnrichmentResults oh_recherche', () => {
 		);
 		expect(changed.merged[0].opening_hours_note_en).toBeUndefined();
 	});
+
+	it('übernimmt eine mitgelieferte Übersetzung vor der alten', () => {
+		const existing = [item({ opening_hours_note_en: 'Mon-Fri 10:00-18:00' })];
+		const { merged } = mergeEnrichmentResults(
+			existing,
+			[
+				item({
+					opening_hours_note: 'Mo-Fr 11-18 Uhr',
+					opening_hours_note_en: 'Mon-Fri 11:00-18:00'
+				})
+			],
+			ids
+		);
+		expect(merged[0].opening_hours_note_en).toBe('Mon-Fri 11:00-18:00');
+	});
 });
 
 describe('mergeEnrichmentResults', () => {

@@ -197,21 +197,19 @@ export function buildResearchBatches(
 
 /**
  * `oh_recherche` und `opening_hours_note_en` hängen an der Notiz: Bleibt sie gleich, gelten
- * die alten Werte, sonst entfallen sie.
+ * die alten Werte, sonst entfallen sie. Eine mitgelieferte Übersetzung gewinnt.
  */
 function withCoupledOhRecherche(
 	previous: WaermeEnrichment | undefined,
 	result: WaermeEnrichment
 ): WaermeEnrichment {
-	const { oh_recherche: _dropOh, opening_hours_note_en: _dropEn, ...rest } = result;
+	const { oh_recherche: _dropOh, opening_hours_note_en: suppliedEn, ...rest } = result;
 	void _dropOh;
-	void _dropEn;
 	const same = previous?.opening_hours_note === result.opening_hours_note;
 	const coupled: WaermeEnrichment = { ...rest };
 	if (same && previous.oh_recherche !== undefined) coupled.oh_recherche = previous.oh_recherche;
-	if (same && previous.opening_hours_note_en !== undefined) {
-		coupled.opening_hours_note_en = previous.opening_hours_note_en;
-	}
+	const noteEn = suppliedEn ?? (same ? previous.opening_hours_note_en : undefined);
+	if (noteEn !== undefined) coupled.opening_hours_note_en = noteEn;
 	return coupled;
 }
 
