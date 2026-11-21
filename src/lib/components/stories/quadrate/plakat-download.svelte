@@ -1,8 +1,3 @@
-<!--
-	Download-Link für das Plakat „Berlin in Quadraten: Alle Bezirke, alle Wahlen“ (#192). Das
-	PDF liegt pro Sprache und Wahlart beim Build vor. Der Klick zählt als Plausible-Event wie
-	bei „Punkt, Linie, Kiez“. Gedacht für die Gesamtansicht (#191) und die Beitragsseite (#190).
--->
 <script lang="ts">
 	import { resolve } from '$app/paths';
 	import { getLocale } from '$lib/paraglide/runtime';
@@ -18,8 +13,14 @@
 	const { typ }: Props = $props();
 	const locale = $derived(getLocale());
 	const t = $derived(TEXTE[locale]);
-	const href = $derived(resolve(`/stories/berlin-in-quadraten/${locale}/alle-bezirke-${typ}.pdf`));
+	const href = $derived(resolve(`stories/berlin-in-quadraten/${locale}/alle-bezirke-${typ}.pdf`));
 </script>
+
+<!--
+	Download-Link für das Plakat „Berlin in Quadraten: Alle Bezirke, alle Wahlen“ (#192). Das
+	PDF liegt pro Sprache und Wahlart beim Build vor. Der Klick zählt als Plausible-Event wie
+	bei „Punkt, Linie, Kiez“. Gedacht für die Gesamtansicht (#191) und die Beitragsseite (#190).
+-->
 
 <a
 	data-testid="bq-plakat-link"
