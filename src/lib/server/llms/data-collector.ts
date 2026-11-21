@@ -86,7 +86,6 @@ const BEZIRK_DISPLAY_NAMES: Record<string, string> = {
 
 function tryGet<T>(loader: () => Promise<T>): Promise<T | null> {
 	return loader().catch((err) => {
-		// eslint-disable-next-line no-console
 		console.warn(
 			'[llms-data-collector] DB-fetch failed, falling back to null:',
 			err instanceof Error ? err.message : err
@@ -134,7 +133,6 @@ async function collectKieze(origin: string): Promise<LlmsKiezEntry[]> {
 			.from(kiezStats);
 		rows = all;
 	} catch (err) {
-		// eslint-disable-next-line no-console
 		console.warn(
 			'[llms-data-collector] kiez-stats list failed, empty list:',
 			err instanceof Error ? err.message : err
@@ -256,7 +254,6 @@ async function collectWahlen(origin: string): Promise<LlmsWahlEntry[]> {
 		}
 		return out;
 	} catch (err) {
-		// eslint-disable-next-line no-console
 		console.warn(
 			'[llms-data-collector] wahlen collection failed:',
 			err instanceof Error ? err.message : err
@@ -275,7 +272,6 @@ export async function collectLlmsData(
 	try {
 		bezirke = await collectBezirke(origin);
 	} catch (err) {
-		// eslint-disable-next-line no-console
 		console.warn(
 			'[llms-data-collector] bezirke collection failed:',
 			err instanceof Error ? err.message : err
@@ -285,7 +281,6 @@ export async function collectLlmsData(
 	try {
 		kieze = await collectKieze(origin);
 	} catch (err) {
-		// eslint-disable-next-line no-console
 		console.warn(
 			'[llms-data-collector] kieze collection failed:',
 			err instanceof Error ? err.message : err

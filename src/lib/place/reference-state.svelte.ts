@@ -55,7 +55,6 @@ export class PlaceViewState {
 		if (this.mode === 'zahlen') url.searchParams.set('lesart', 'zahlen');
 		else url.searchParams.delete('lesart');
 		// Gleiche Seite, nur Query-Parameter: kein Routenwechsel, darum kein resolve().
-		// eslint-disable-next-line svelte/no-navigation-without-resolve
 		goto(url, { shallow: true, replace: true, state: page.state });
 	}
 }

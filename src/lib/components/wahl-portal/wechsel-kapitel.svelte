@@ -49,8 +49,9 @@
 	const portal = getWahlPortalState();
 	const stimmtyp = $derived(stimmtypForReihe(portal.reihe));
 
-	// svelte-ignore state_referenced_locally -- fetchFn ist ein Test-/DI-Prop,
+	// fetchFn ist ein Test-/DI-Prop,
 	// über die Komponenten-Lebenszeit stabil (Muster winner-map.svelte).
+	// svelte-ignore state_referenced_locally
 	const winnersLoader = new KiezBezirkWinnersLoader(fetchFn);
 	// svelte-ignore state_referenced_locally
 	const geometryLoader = new KiezBezirkGeometryLoader(fetchFn);

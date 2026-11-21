@@ -229,7 +229,6 @@
 	// Schreibt die Adresse in die URL. Zwei Aufrufe für dieselbe Wahl vor dem Ende
 	// von `goto` ergeben nur einen Eintrag (#91).
 	const addressWriter = createAddressHistoryWriter(async (search, mode) => {
-		// eslint-disable-next-line svelte/no-navigation-without-resolve
 		await goto(search, { replace: mode === 'replace', reset: false });
 		// `goto` erfüllt sich auch, wenn eine andere Navigation es überholt hat.
 		const target = new URLSearchParams(search).get('address');
@@ -276,7 +275,6 @@
 			}
 		}
 		if (url.searchParams.toString() === vorher) return;
-		// eslint-disable-next-line svelte/no-navigation-without-resolve
 		void goto(`?${url.searchParams.toString()}`, {
 			replace: true,
 			reset: false
@@ -305,7 +303,6 @@
 		for (const key of VIEWPORT_KEYS) url.searchParams.delete(key);
 		const params = serializeViewport(v);
 		for (const [k, v2] of params) url.searchParams.set(k, v2);
-		// eslint-disable-next-line svelte/no-navigation-without-resolve
 		void goto(`?${url.searchParams.toString()}`, {
 			replace: true,
 			reset: false
@@ -365,7 +362,6 @@
 			const csv = serializeLayers(modeLayers);
 			if (csv) url.searchParams.set(LAYERS_KEY, csv);
 			else url.searchParams.delete(LAYERS_KEY);
-			// eslint-disable-next-line svelte/no-navigation-without-resolve
 			void goto(`?${url.searchParams.toString()}`, {
 				replace: true,
 				reset: false
@@ -429,7 +425,6 @@
 		const csv = serializeLayers(slugs);
 		if (csv) url.searchParams.set(LAYERS_KEY, csv);
 		if (csv && lead && slugs.includes(lead)) url.searchParams.set('lead', lead);
-		// eslint-disable-next-line svelte/no-navigation-without-resolve
 		void goto(`?${url.searchParams.toString()}`, {
 			replace: true,
 			reset: false
@@ -749,7 +744,6 @@
 		if (!REGION_FOCUS_KEYS.some((key) => url.searchParams.has(key))) return;
 		for (const key of REGION_FOCUS_KEYS) url.searchParams.delete(key);
 		const query = url.searchParams.toString();
-		// eslint-disable-next-line svelte/no-navigation-without-resolve
 		void goto(query ? `?${query}` : url.pathname, {
 			replace: true,
 			reset: false
@@ -880,7 +874,6 @@
 		if (url.searchParams.has('finder') || hadFocusParams) {
 			url.searchParams.delete('finder');
 			for (const key of REGION_FOCUS_KEYS) url.searchParams.delete(key);
-			// eslint-disable-next-line svelte/no-navigation-without-resolve
 			void goto(`?${url.searchParams.toString()}`, {
 				replace: true,
 				reset: false
@@ -933,7 +926,6 @@
 		if (!updateUrl) return;
 		const url = new URL(window.location.href);
 		for (const key of ADDRESS_KEYS) url.searchParams.delete(key);
-		// eslint-disable-next-line svelte/no-navigation-without-resolve
 		void goto(`?${url.searchParams.toString()}`, {
 			replace: true,
 			reset: false

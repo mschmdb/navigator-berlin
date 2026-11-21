@@ -140,7 +140,8 @@
 		aktivePartei = FINDER_PARTIES[next];
 	}
 
-	// svelte-ignore state_referenced_locally -- fetchFn ist ein Test-/DI-Prop.
+	// fetchFn ist ein Test-/DI-Prop.
+	// svelte-ignore state_referenced_locally
 	const analytikLoader = new AnalytikLoader(fetchFn);
 	// svelte-ignore state_referenced_locally
 	const geometryLoader = new KiezBezirkGeometryLoader(fetchFn);
@@ -270,7 +271,8 @@
 
 	const response = $derived(analytikLoader.response);
 
-	// svelte-ignore state_referenced_locally -- mapFactory ist ein Test-/DI-Prop.
+	// mapFactory ist ein Test-/DI-Prop.
+	// svelte-ignore state_referenced_locally
 	const mapCtl = new TrendsMapController({
 		getFc: () => bakedFc,
 		getToggle: () => toggle,

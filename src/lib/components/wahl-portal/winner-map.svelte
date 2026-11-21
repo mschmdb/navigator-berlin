@@ -98,7 +98,8 @@
 	}
 
 	// Winners-Fetch (kiez/bezirk): eigene Klasse (Datei-Zeilenlimit).
-	// svelte-ignore state_referenced_locally -- fetchFn ist ein Test-/DI-Prop.
+	// fetchFn ist ein Test-/DI-Prop.
+	// svelte-ignore state_referenced_locally
 	const winnersLoader = new KiezBezirkWinnersLoader(fetchFn);
 	// Fetch-Trigger + Response-Latch (Review-Fund #7).
 	const kbGate = new KbWinnersGate({
@@ -118,7 +119,8 @@
 	);
 
 	// Winners-Fetch (stimmbezirk), gecacht pro typ×stimmtyp×jahr(×partei).
-	// svelte-ignore state_referenced_locally -- fetchFn ist ein Test-/DI-Prop.
+	// fetchFn ist ein Test-/DI-Prop.
+	// svelte-ignore state_referenced_locally
 	const sbLoader = new StimmbezirkLoader(fetchFn);
 	const sbGate = new SbWinnersGate({
 		loader: sbLoader,
@@ -156,7 +158,8 @@
 		if (readyToShow) mapShown = true;
 	});
 
-	// svelte-ignore state_referenced_locally -- fetchFn ist ein Test-/DI-Prop.
+	// fetchFn ist ein Test-/DI-Prop.
+	// svelte-ignore state_referenced_locally
 	const geometryLoader = new KiezBezirkGeometryLoader(fetchFn);
 	const geometry = $derived(geometryLoader.geometry);
 
@@ -280,7 +283,8 @@
 	}
 
 	// MapLibre-Hülle: Lifecycle in eigener Klasse (Datei-Zeilenlimit).
-	// svelte-ignore state_referenced_locally -- mapFactory ist ein Test-/DI-Prop.
+	// mapFactory ist ein Test-/DI-Prop.
+	// svelte-ignore state_referenced_locally
 	const mapCtl = new WinnerMapController({
 		getFc: () => joinedFc,
 		getActiveJahr: () => (anzeigeEbene === 'stimmbezirk' ? null : paintJahr),
@@ -288,7 +292,8 @@
 		mapFactory
 	});
 	// Adress-Hervorhebung (Zustand + Handler): eigene Klasse, siehe Modul-Doc.
-	// svelte-ignore state_referenced_locally -- fetchFn ist ein Test-/DI-Prop.
+	// fetchFn ist ein Test-/DI-Prop.
+	// svelte-ignore state_referenced_locally
 	const addressHighlight = new AddressHighlight({
 		getAnzeigeEbene: () => anzeigeEbene,
 		getJoinedFc: () => joinedFc,

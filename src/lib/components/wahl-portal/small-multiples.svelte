@@ -52,9 +52,11 @@
 	const stimmtyp = $derived(stimmtypForReihe(portal.reihe));
 	const jahr = $derived(currentJahr(portal));
 
-	// svelte-ignore state_referenced_locally -- fetchFn ist ein Test-/DI-Prop.
+	// fetchFn ist ein Test-/DI-Prop.
+	// svelte-ignore state_referenced_locally
 	const geometryLoader = new KiezBezirkGeometryLoader(fetchFn);
-	// svelte-ignore state_referenced_locally -- fetchFn ist ein Test-/DI-Prop.
+	// fetchFn ist ein Test-/DI-Prop.
+	// svelte-ignore state_referenced_locally
 	const loaders = new SmallMultiplesLoaders(fetchFn);
 
 	$effect(() => {

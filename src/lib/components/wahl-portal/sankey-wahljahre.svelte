@@ -79,7 +79,8 @@
 		ebene = EBENEN[next];
 	}
 
-	// svelte-ignore state_referenced_locally -- fetchFn ist ein Test-/DI-Prop.
+	// fetchFn ist ein Test-/DI-Prop.
+	// svelte-ignore state_referenced_locally
 	const winnersLoader = new KiezBezirkWinnersLoader(fetchFn);
 
 	$effect(() => {

@@ -36,8 +36,9 @@
 
 	let { ebene, jahrOptions, jahr, onDisplayJahr, onCommitJahr, onZurKiez }: Props = $props();
 
-	// svelte-ignore state_referenced_locally -- Initialwert einmalig, danach
+	// Initialwert einmalig, danach
 	// hält der Controller sein eigenes Anzeige-Jahr (Muster mapCtl/sbLoader).
+	// svelte-ignore state_referenced_locally
 	const ctl = new ZeitAnimationController({
 		jahre: () => jahrOptions.map((o) => o.jahr),
 		initialJahr: jahr,

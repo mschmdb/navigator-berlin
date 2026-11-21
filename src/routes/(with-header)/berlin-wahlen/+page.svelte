@@ -87,7 +87,6 @@
 		});
 		for (const [key, value] of next) url.searchParams.set(key, value);
 		if (url.search === before) return;
-		// eslint-disable-next-line svelte/no-navigation-without-resolve
 		void goto(url, { replace: true, reset: false });
 	});
 

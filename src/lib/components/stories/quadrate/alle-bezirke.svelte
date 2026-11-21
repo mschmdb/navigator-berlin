@@ -37,7 +37,6 @@
 		data,
 		readUrl = () => new URL(window.location.href),
 		// Gleiche Seite, nur Suchparameter und Hash ändern sich: kein resolve() nötig.
-		// eslint-disable-next-line svelte/no-navigation-without-resolve
 		writeUrl = (href: string) => goto(href, { shallow: true, replace: true, state: page.state })
 	}: Props = $props();
 

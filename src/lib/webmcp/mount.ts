@@ -130,7 +130,6 @@ async function doMount(): Promise<WebMcpServerHandle | null> {
 			if (!finderBridge.readFinderBridge().panelActive) {
 				navigation = 'opened_finder';
 				const { goto } = await import('$app/navigation');
-				// eslint-disable-next-line svelte/no-navigation-without-resolve
 				await goto('/explore?finder=1');
 			}
 			// Auf die neue Panel-Rechnung warten: eine leere Liste treibt den
