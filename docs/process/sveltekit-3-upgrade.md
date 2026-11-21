@@ -1,6 +1,6 @@
 # SvelteKit 3 Upgrade (NAV-114)
 
-Stand 21.11.2026. Ziel: `@sveltejs/kit` 2.70.3 auf 3.2.0. Anlass: GHSA-3r8g-jcqq-3p5j.
+Stand 21.11.2026. Ziel: `@sveltejs/kit` 2.70.3 auf 3.4.0. Anlass: GHSA-3r8g-jcqq-3p5j.
 
 ## Anlass
 
@@ -11,10 +11,15 @@ Stand 21.11.2026. Ziel: `@sveltejs/kit` 2.70.3 auf 3.2.0. Anlass: GHSA-3r8g-jcqq
 
 ## Versionen
 
-- npm `latest` ist inzwischen 3.4.0 (18.11.). Dazwischen liegen 3.2.1, 3.3.0, 3.3.1.
-- 3.4.0 lehnt Remote-Function-Requests mit falscher HTTP-Methode ab. adapter-node 6.0.5 baut auf `@sveltejs/adapter-server` auf.
-- Inhalte von 3.2.1 bis 3.3.1: ungeprüft.
+- navigator pinnt Kit exakt auf 3.4.0 (18.11.2026). Erster Stand des Upgrades war 3.2.0.
 - Mindestversionen für Kit 3: Node 22.17, Svelte 5.57.1, Vite 8, TypeScript 6, vite-plugin-svelte 7, adapter-node 6.
+
+Changelog 3.2.1 bis 3.4.0, nur Punkte mit Bezug zu navigator:
+
+- 3.2.1: Preload-`Link`-Header ohne `nopush`. ETag aus den gesendeten Bytes. Der Prerender-Crawler findet Links hinter Attributen, die auf `\` enden.
+- 3.3.0: Vite-DevTools-Dock im Dev. Kein Bezug.
+- 3.3.1: Remote Functions, die ein Server-`load` awaitet, landen nicht mehr serialisiert in der Seite. Env-Variablen für Prerender liest Kit erst nach allen Adapter-Hooks.
+- 3.4.0: Kit lehnt Remote-Function-Requests mit falscher HTTP-Methode ab. `resolve` entfernt Route-Gruppen am Ende auch bei Query oder Hash. Neues Tracing-Attribut `sveltekit.remote.call.file`.
 
 ## Breaking Changes mit Bezug zu navigator
 
