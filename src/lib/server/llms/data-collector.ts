@@ -126,12 +126,11 @@ async function collectBezirke(origin: string): Promise<LlmsBezirkEntry[]> {
 async function collectKieze(origin: string): Promise<LlmsKiezEntry[]> {
 	const { getDb } = await import('#lib/server/db/index.js');
 	const { kiezStats } = await import('#lib/server/db/schema/index.js');
-	let rows: { slug: string; bezirkSlug: string }[] = [];
+	let rows: { slug: string; bezirkSlug: string }[];
 	try {
-		const all = await getDb()
+		rows = await getDb()
 			.select({ slug: kiezStats.slug, bezirkSlug: kiezStats.bezirkSlug })
 			.from(kiezStats);
-		rows = all;
 	} catch (err) {
 		console.warn(
 			'[llms-data-collector] kiez-stats list failed, empty list:',

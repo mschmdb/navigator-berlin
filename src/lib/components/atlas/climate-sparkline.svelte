@@ -159,7 +159,7 @@
 
 	function onKeydown(event: KeyboardEvent): void {
 		if (rows.length === 0) return;
-		let next = focusedIndex;
+		let next: number;
 		if (event.key === 'ArrowRight') {
 			next = focusedIndex < 0 ? 0 : Math.min(rows.length - 1, focusedIndex + 1);
 		} else if (event.key === 'ArrowLeft') {

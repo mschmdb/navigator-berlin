@@ -290,7 +290,7 @@ function compareNumericNoJudgment(
 }
 
 function rankFor(slug: string, value: string): { rank: number; ranking: readonly string[] } | null {
-	let ranking: readonly string[] | null = null;
+	let ranking: readonly string[] | null;
 	if (slug === 'wohnlagen-2024' || slug === 'mietspiegel-wohnlage') {
 		ranking = ORDINAL_RANKINGS.wohnlage ?? null;
 	} else if (slug === 'gruenversorgung-2023') {

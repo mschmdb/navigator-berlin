@@ -56,7 +56,7 @@ interface NormalizedSource {
 
 function normalizeFromHit(weight: LayerWeight, hit: LayerHitLike): NormalizedSource {
 	const { normalize } = weight;
-	let normalized: number | null = null;
+	let normalized: number | null;
 	let rawValue: unknown = hit.value;
 	switch (normalize.kind) {
 		case 'ordinal-3':
