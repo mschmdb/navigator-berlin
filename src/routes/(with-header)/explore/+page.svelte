@@ -230,7 +230,7 @@
 	// von `goto` ergeben nur einen Eintrag (#91).
 	const addressWriter = createAddressHistoryWriter(async (search, mode) => {
 		// eslint-disable-next-line svelte/no-navigation-without-resolve
-		await goto(search, { replaceState: mode === 'replace', keepFocus: true, noScroll: true });
+		await goto(search, { replace: mode === 'replace', reset: false });
 		// `goto` erfüllt sich auch, wenn eine andere Navigation es überholt hat.
 		const target = new URLSearchParams(search).get('address');
 
@@ -278,9 +278,8 @@
 		if (url.searchParams.toString() === vorher) return;
 		// eslint-disable-next-line svelte/no-navigation-without-resolve
 		void goto(`?${url.searchParams.toString()}`, {
-			replaceState: true,
-			keepFocus: true,
-			noScroll: true
+			replace: true,
+			reset: false
 		});
 	}, 200);
 
@@ -308,9 +307,8 @@
 		for (const [k, v2] of params) url.searchParams.set(k, v2);
 		// eslint-disable-next-line svelte/no-navigation-without-resolve
 		void goto(`?${url.searchParams.toString()}`, {
-			replaceState: true,
-			keepFocus: true,
-			noScroll: true
+			replace: true,
+			reset: false
 		});
 	}, 500);
 
@@ -369,9 +367,8 @@
 			else url.searchParams.delete(LAYERS_KEY);
 			// eslint-disable-next-line svelte/no-navigation-without-resolve
 			void goto(`?${url.searchParams.toString()}`, {
-				replaceState: true,
-				keepFocus: true,
-				noScroll: true
+				replace: true,
+				reset: false
 			}).finally(() => {
 				pendingMode = null;
 			});
@@ -434,9 +431,8 @@
 		if (csv && lead && slugs.includes(lead)) url.searchParams.set('lead', lead);
 		// eslint-disable-next-line svelte/no-navigation-without-resolve
 		void goto(`?${url.searchParams.toString()}`, {
-			replaceState: true,
-			keepFocus: true,
-			noScroll: true
+			replace: true,
+			reset: false
 		});
 	}, 200);
 
@@ -755,9 +751,8 @@
 		const query = url.searchParams.toString();
 		// eslint-disable-next-line svelte/no-navigation-without-resolve
 		void goto(query ? `?${query}` : url.pathname, {
-			replaceState: true,
-			keepFocus: true,
-			noScroll: true
+			replace: true,
+			reset: false
 		});
 	}
 
@@ -887,9 +882,8 @@
 			for (const key of REGION_FOCUS_KEYS) url.searchParams.delete(key);
 			// eslint-disable-next-line svelte/no-navigation-without-resolve
 			void goto(`?${url.searchParams.toString()}`, {
-				replaceState: true,
-				keepFocus: true,
-				noScroll: true
+				replace: true,
+				reset: false
 			});
 		}
 	});
@@ -941,9 +935,8 @@
 		for (const key of ADDRESS_KEYS) url.searchParams.delete(key);
 		// eslint-disable-next-line svelte/no-navigation-without-resolve
 		void goto(`?${url.searchParams.toString()}`, {
-			replaceState: true,
-			keepFocus: true,
-			noScroll: true
+			replace: true,
+			reset: false
 		});
 	}
 

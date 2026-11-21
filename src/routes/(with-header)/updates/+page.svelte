@@ -40,14 +40,14 @@
 	});
 
 	$effect(() => {
-		// push state → URL (replaceState, keepFocus, noScroll)
+		// push state → URL (replace, reset: false)
 		const next = serializeCategoryFilter(new Set(filterValue));
 		const current = page.url.searchParams.get('cat') ?? '';
 		if (next === current) return;
 		const url = new URL(page.url);
 		if (next) url.searchParams.set('cat', next);
 		else url.searchParams.delete('cat');
-		void goto(url, { replaceState: true, keepFocus: true, noScroll: true });
+		void goto(url, { replace: true, reset: false });
 	});
 
 	const filteredEntries = $derived(applyCategoryFilter(entries, new Set(filterValue)));

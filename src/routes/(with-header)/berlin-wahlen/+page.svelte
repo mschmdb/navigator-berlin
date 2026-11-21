@@ -72,7 +72,7 @@
 		});
 	});
 
-	// State → URL (replaceState, keepFocus, noScroll). No-Op-Guard über den
+	// State → URL (replace, reset: false). No-Op-Guard über den
 	// kompletten Query-String, damit Kaltstart keinen Query-Müll schreibt.
 	$effect(() => {
 		const url = new URL(page.url);
@@ -88,7 +88,7 @@
 		for (const [key, value] of next) url.searchParams.set(key, value);
 		if (url.search === before) return;
 		// eslint-disable-next-line svelte/no-navigation-without-resolve
-		void goto(url, { replaceState: true, keepFocus: true, noScroll: true });
+		void goto(url, { replace: true, reset: false });
 	});
 
 	onMount(() => {

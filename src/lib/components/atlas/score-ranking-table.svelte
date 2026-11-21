@@ -108,7 +108,7 @@
 		}
 		const query = params.toString();
 		const url = query.length > 0 ? `${page.url.pathname}?${query}` : page.url.pathname;
-		void goto(url, { replaceState: true, keepFocus: true, noScroll: true });
+		void goto(url, { replace: true, reset: false });
 	}
 
 	function toggleSort(key: SortKey): void {
