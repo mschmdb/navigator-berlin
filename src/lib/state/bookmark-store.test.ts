@@ -193,7 +193,7 @@ describe('removeBookmark', () => {
 
 describe('clearAllBookmarks', () => {
 	it('liefert leeres Store', () => {
-		const store = saveBookmark(emptyStore(), makeBookmark());
+		saveBookmark(emptyStore(), makeBookmark());
 		const result = clearAllBookmarks();
 		expect(result.bookmarks).toEqual([]);
 		expect(result.schemaVersion).toBe(1);

@@ -211,7 +211,7 @@ export type AggregatCounts = {
 };
 
 export async function buildAggregates(db: Db, wahlId: number): Promise<AggregatCounts> {
-	const bezirkResult = await db.execute(sql`
+	await db.execute(sql`
 		INSERT INTO wahl_aggregat_bezirk (wahl_id, bezirk_slug, partei_id, stimmen, anteil, computed_at)
 		SELECT
 			e.wahl_id,
@@ -255,7 +255,7 @@ export async function buildAggregates(db: Db, wahlId: number): Promise<AggregatC
 		END IS NOT NULL
 	`);
 
-	const berlinResult = await db.execute(sql`
+	await db.execute(sql`
 		INSERT INTO wahl_aggregat_berlin (wahl_id, partei_id, stimmen, anteil, computed_at)
 		SELECT
 			wahl_id,

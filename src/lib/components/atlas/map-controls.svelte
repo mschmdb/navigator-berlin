@@ -30,10 +30,6 @@
 		popoutOpen = !popoutOpen;
 	}
 
-	function closePopout(): void {
-		popoutOpen = false;
-	}
-
 	const panBase =
 		'flex items-center justify-center rounded-sm border border-rule bg-bg/95 backdrop-blur-sm text-ink-muted hover:bg-bg-elevated hover:text-ink';
 	const panSize = 'min-width:44px;min-height:44px;width:44px;height:44px';

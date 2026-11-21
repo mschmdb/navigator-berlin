@@ -1,4 +1,4 @@
-import { describe, expect, it, beforeAll, afterAll } from 'vitest';
+import { describe, expect, it, afterAll } from 'vitest';
 import { GET } from './+server';
 import { closeDb } from '#lib/server/db/index.js';
 

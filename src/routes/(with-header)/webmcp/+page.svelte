@@ -6,7 +6,6 @@
 	import SeoHead from '#lib/components/atlas/seo-head.svelte';
 	import JsonLd from '#lib/components/atlas/json-ld.svelte';
 	import RichText from '#lib/components/rich-text.svelte';
-	import { localizedHref } from '#lib/i18n/localized-href.js';
 	import { richSegments } from '#lib/i18n/rich-text.js';
 	import { m } from '#lib/paraglide/messages.js';
 	import { buildBreadcrumbList } from '#lib/seo/index.js';

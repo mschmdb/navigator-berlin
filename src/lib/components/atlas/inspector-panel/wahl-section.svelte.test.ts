@@ -10,7 +10,6 @@ afterEach(() => {
 import type {
 	WahlResultsAtPoint,
 	WahlResultBundle,
-	LevelKey,
 	LevelResults
 } from '#lib/data/get-wahl-results-at-point.js';
 

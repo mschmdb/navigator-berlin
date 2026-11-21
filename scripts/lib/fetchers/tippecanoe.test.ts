@@ -85,7 +85,7 @@ describe('isTippecanoeAvailable', () => {
 			spawn: vi.fn()
 		}));
 		vi.doMock('node:util', () => ({
-			promisify: (_fn: unknown) => async () => 'tippecanoe v2.81.0'
+			promisify: () => async () => 'tippecanoe v2.81.0'
 		}));
 		const mod = await import('./tippecanoe.js');
 		const ok = await mod.isTippecanoeAvailable();
@@ -94,7 +94,7 @@ describe('isTippecanoeAvailable', () => {
 
 	it('false wenn tippecanoe --version wirft (nicht installiert)', async () => {
 		vi.doMock('node:util', () => ({
-			promisify: (_fn: unknown) => async () => {
+			promisify: () => async () => {
 				throw new Error('command not found');
 			}
 		}));

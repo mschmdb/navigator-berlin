@@ -14,7 +14,6 @@
 		applyCategoryFilter
 	} from '#lib/content/updates/parse-filter.js';
 	import { buildBlogIndex, buildBreadcrumbList } from '#lib/seo/index.js';
-	import { localizedHref } from '#lib/i18n/localized-href.js';
 	import { m } from '#lib/paraglide/messages.js';
 	import { getLocale } from '#lib/paraglide/runtime.js';
 	import type { UpdateCategory } from '#lib/content/updates/types.js';

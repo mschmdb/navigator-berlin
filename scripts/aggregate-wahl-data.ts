@@ -1,6 +1,6 @@
 import { isMainEntry } from './lib/is-main-entry.js';
 import 'dotenv/config';
-import { readFile, mkdir, writeFile } from 'node:fs/promises';
+import { readFile } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 import { closeDb, getDb } from '../src/lib/server/db/index.js';

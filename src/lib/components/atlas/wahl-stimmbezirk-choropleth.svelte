@@ -110,13 +110,11 @@
 				}>;
 			};
 			const fc = geoFc as RawFc;
-			let matched = 0;
 			const namen = new Map<string, string>();
 			for (const feature of fc.features) {
 				const props = (feature.properties ?? {}) as Record<string, unknown>;
 				const gruppeId = gruppeIdFromGeo(props, wahlSlug);
 				const winner = gruppeId ? winnerMap.get(gruppeId) : null;
-				if (winner) matched++;
 				props.partei = winner?.parteiKurzname ?? null;
 				props.partei_farbe = winner ? parteiColor(winner.parteiKurzname) : COLORS.noData;
 				props.anteil = winner?.anteil ?? 0;
