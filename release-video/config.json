@@ -1,0 +1,45 @@
+{
+	"project": "navigator.berlin",
+	"url": "https://navigator.berlin",
+	"viewport": {
+		"width": 1440,
+		"height": 810
+	},
+	"output": {
+		"formats": ["16:9"],
+		"fps": 30,
+		"dir": "release-video/out",
+		"maxDuration": 60
+	},
+	"languages": ["en"],
+	"brand": {
+		"background": "#eceae0",
+		"foreground": "#141414",
+		"accent": "#2a3f7c",
+		"surface": "#f8f7f2"
+	},
+	"fonts": {
+		"heading": {
+			"family": "Jost",
+			"file": "static/fonts/jost-latin-var.woff2"
+		},
+		"body": {
+			"family": "IBM Plex Sans",
+			"file": "static/fonts/plex-sans-latin-var.woff2"
+		},
+		"mono": {
+			"family": "IBM Plex Mono",
+			"file": "static/fonts/plex-mono-latin-400.woff2"
+		}
+	},
+	"logo": "static/logo-pixel.svg",
+	"intro": {
+		"type": "animated-logo",
+		"adapter": "release-video/logo-adapter.mjs"
+	},
+	"timing": {
+		"overview": 5,
+		"code": 5,
+		"outro": 3.5
+	}
+}

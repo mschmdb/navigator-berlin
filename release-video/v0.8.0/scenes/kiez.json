@@ -1,0 +1,39 @@
+{
+	"url": "https://navigator.berlin/en/kiez/reuterstrasse",
+	"viewport": {
+		"width": 1440,
+		"height": 810
+	},
+	"style": {
+		"background": "#eceae0",
+		"accent": "#2a3f7c",
+		"padding": 56,
+		"radius": 14,
+		"shadow": true
+	},
+	"output": {
+		"width": 1920,
+		"height": 1080,
+		"fps": 30
+	},
+	"steps": [
+		{
+			"wait": 1.5
+		},
+		{
+			"press": "PageDown",
+			"zoom": false,
+			"hold": 1.2
+		},
+		{
+			"click": "role=button[name='Compare: Berlin']",
+			"zoom": false,
+			"hold": 0.8
+		},
+		{
+			"click": "text=Neighbouring Kiez",
+			"zoom": false,
+			"hold": 3
+		}
+	]
+}

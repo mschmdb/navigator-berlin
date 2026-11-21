@@ -1,0 +1,35 @@
+{
+	"$schema": "https://raw.githubusercontent.com/gmpetrov/agent-screenplay/main/schema/scenario.schema.json",
+	"url": "https://kaelte.navigator.berlin/en/explore?layers=waerme-orte&mode=kaelte&address=13.3855,52.4985&q=Tempelhofer%20Ufer",
+	"viewport": {
+		"width": 1440,
+		"height": 810
+	},
+	"style": {
+		"background": "#eceae0",
+		"accent": "#2a3f7c",
+		"padding": 56,
+		"radius": 14,
+		"shadow": true
+	},
+	"output": {
+		"width": 1920,
+		"height": 1080,
+		"fps": 30
+	},
+	"steps": [
+		{
+			"wait": 1.5
+		},
+		{
+			"hover": "at=884,496",
+			"zoom": false,
+			"hold": 1.2
+		},
+		{
+			"click": "at=884,496",
+			"zoom": false,
+			"hold": 2.8
+		}
+	]
+}

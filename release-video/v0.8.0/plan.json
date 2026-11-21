@@ -1,0 +1,92 @@
+{
+	"release": "v0.8.0",
+	"language": "en",
+	"features": [
+		{
+			"id": "kiez",
+			"title": "Kiez & district pages",
+			"icon": "map-pin",
+			"video": "scenes/kiez.mp4",
+			"scenario": "scenes/kiez.json",
+			"purpose": "Understand a Kiez at a glance and see how it compares."
+		},
+		{
+			"id": "squares",
+			"title": "Berlin in Squares",
+			"icon": "layout-grid",
+			"purpose": "See how a district voted, election by election.",
+			"grid": {
+				"columns": 6,
+				"items": [
+					{
+						"video": "scenes/districts-live/01.mp4",
+						"label": "Mitte"
+					},
+					{
+						"video": "scenes/districts-live/02.mp4",
+						"label": "Friedrichshain-Kreuzberg"
+					},
+					{
+						"video": "scenes/districts-live/03.mp4",
+						"label": "Pankow"
+					},
+					{
+						"video": "scenes/districts-live/04.mp4",
+						"label": "Charlottenburg-Wilmersdorf"
+					},
+					{
+						"video": "scenes/districts-live/05.mp4",
+						"label": "Spandau"
+					},
+					{
+						"video": "scenes/districts-live/06.mp4",
+						"label": "Steglitz-Zehlendorf"
+					},
+					{
+						"video": "scenes/districts-live/07.mp4",
+						"label": "Tempelhof-Schöneberg"
+					},
+					{
+						"video": "scenes/districts-live/08.mp4",
+						"label": "Neukölln"
+					},
+					{
+						"video": "scenes/districts-live/09.mp4",
+						"label": "Treptow-Köpenick"
+					},
+					{
+						"video": "scenes/districts-live/10.mp4",
+						"label": "Marzahn-Hellersdorf"
+					},
+					{
+						"video": "scenes/districts-live/11.mp4",
+						"label": "Lichtenberg"
+					},
+					{
+						"video": "scenes/districts-live/12.mp4",
+						"label": "Reinickendorf"
+					}
+				]
+			}
+		},
+		{
+			"id": "warm",
+			"title": "Warm places",
+			"icon": "flame",
+			"video": "scenes/warm.mp4",
+			"scenario": "scenes/warm.json",
+			"purpose": "Find a heated place nearby when it gets cold."
+		},
+		{
+			"id": "kit",
+			"title": "SvelteKit 3",
+			"icon": "package",
+			"change": {
+				"from": "SvelteKit 2",
+				"to": "SvelteKit 3",
+				"image": "../assets/svelte-logo.svg"
+			},
+			"purpose": "A current foundation, with a high-severity security fix."
+		}
+	]
+}

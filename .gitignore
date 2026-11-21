@@ -68,3 +68,9 @@ docs/process/brainstorming/
 
 # Alter BMAD-Ausgabeordner (Pfade stehen jetzt unter docs/process)
 /_bmad-output/
+
+# Release videos: renders and raw recordings stay local
+release-video/out/
+release-video/*/scenes/**/*.mp4
+release-video/*/scenes/**/*.png
+release-video/*/scenes/.screenplay/
