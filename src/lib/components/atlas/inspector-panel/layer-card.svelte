@@ -1,7 +1,3 @@
-<script lang="ts" module>
-	export type { ContextRow } from './internal/context-rows.js';
-</script>
-
 <script lang="ts">
 	import type { LayerHit } from '#lib/data/index.ts';
 	import type { Snippet } from 'svelte';

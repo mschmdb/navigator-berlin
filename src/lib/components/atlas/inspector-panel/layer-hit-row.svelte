@@ -16,8 +16,6 @@
 		hit: LayerHit;
 		layerName: string;
 		lang?: Locale;
-		lat?: number;
-		lng?: number;
 		isActive?: boolean;
 		onToggleLayer?: (slug: string) => void;
 		/** GH-88: Score-Zugehörigkeit direkt unter dem Titel. */
