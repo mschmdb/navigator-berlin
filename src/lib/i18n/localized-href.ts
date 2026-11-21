@@ -17,5 +17,7 @@ import { localizeHref, type Locale } from '#lib/paraglide/runtime.js';
  */
 export function localizedHref(path: string, locale?: Locale): string {
 	const localized = localizeHref(path, locale ? { locale } : undefined);
-	return (resolve as (p: string) => string)(localized);
+	// Kit 3: `resolve('/…')` liest eine Route-ID und verwirft z. B. `(…)`-Segmente.
+	// Konkrete Pfade gehen ohne führenden Slash in die Pfadform.
+	return (resolve as (p: string) => string)(localized.replace(/^\//, ''));
 }
