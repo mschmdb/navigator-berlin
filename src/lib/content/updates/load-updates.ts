@@ -42,7 +42,7 @@ export function parseUpdateModule(path: string, raw: string): UpdateEntry {
 	try {
 		parsed = matter(raw);
 	} catch (err) {
-		throw new Error(`Update-MD-Parse-Fehler in ${path}: ${(err as Error).message}`);
+		throw new Error(`Update-MD-Parse-Fehler in ${path}: ${(err as Error).message}`, { cause: err });
 	}
 	// gray-matter parsed YAML `2026-05-15` als JS-Date-Object. Coerce zurück zu ISO-String.
 	const normalised = normaliseDateFields(parsed.data);
@@ -50,7 +50,9 @@ export function parseUpdateModule(path: string, raw: string): UpdateEntry {
 	try {
 		frontmatter = parseFrontmatter(normalised);
 	} catch (err) {
-		throw new Error(`Update-Frontmatter-Fehler in ${path}: ${(err as Error).message}`);
+		throw new Error(`Update-Frontmatter-Fehler in ${path}: ${(err as Error).message}`, {
+			cause: err
+		});
 	}
 	return {
 		slug,

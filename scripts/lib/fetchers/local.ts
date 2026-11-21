@@ -8,6 +8,8 @@ export async function fetchLocalGeoJson(localPath: string): Promise<string> {
 	try {
 		return await readFile(localPath, 'utf-8');
 	} catch (err) {
-		throw new Error(`Local source: Datei nicht lesbar: ${localPath} (${String(err)})`);
+		throw new Error(`Local source: Datei nicht lesbar: ${localPath} (${String(err)})`, {
+			cause: err
+		});
 	}
 }
