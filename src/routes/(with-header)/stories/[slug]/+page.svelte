@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { afterNavigate, replaceState } from '$app/navigation';
+	import { afterNavigate, goto } from '$app/navigation';
 	import { page } from '$app/state';
 	import { onMount } from 'svelte';
 	import PunktLinieKiezAuswahl from '$lib/components/stories/punkt-linie-kiez-auswahl.svelte';
@@ -34,7 +34,9 @@
 	});
 	// Kapitel 5 folgt der URL auch nach Zurück oder einem Deep-Link im selben Beitrag.
 	// Eigene Schreibvorgänge laufen über replaceState und lösen afterNavigate nicht aus.
-	afterNavigate(() => {
+	afterNavigate(({ shallow, type }) => {
+		if (shallow && type === 'goto') return;
+
 		zeit = readZeit();
 	});
 
@@ -47,14 +49,14 @@
 		const url = new URL(window.location.href);
 		const state = { ...parseUrlState(url), zeit: next };
 		url.search = serializeUrlState(state, url.searchParams).search;
-		replaceState(url, page.state);
+		goto(url, { shallow: true, replace: true, state: page.state });
 	}
 
 	/** Hält die Wahl in der URL teilbar, ohne den Verlauf zu füllen. */
 	function rememberBezirk(slug: string): void {
 		const url = new URL(window.location.href);
 		url.searchParams.set('bezirk', slug);
-		replaceState(url, page.state);
+		goto(url, { shallow: true, replace: true, state: page.state });
 	}
 
 	const entry = $derived(data.entry);

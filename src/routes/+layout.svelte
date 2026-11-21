@@ -47,6 +47,7 @@
 	// Adress-Pin schreiben Query-Params via goto+replaceState, das soll kein Pageview).
 	// Initial-Mount: from === null, Bedingung false → Pageview feuert.
 	afterNavigate((nav) => {
+		if (nav.shallow && nav.type === 'goto') return;
 		if (nav.from && nav.from.url.pathname === nav.to?.url.pathname) return;
 		// Hitze-Subdomain: `/` reroutet auf `/hitze`, die URL bleibt aber `/`. Host-basiert
 		// erkennen (zuverlässiger als route.id nach Reroute) und `/hitze` an Plausible melden,

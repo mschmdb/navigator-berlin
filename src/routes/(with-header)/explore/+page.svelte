@@ -27,6 +27,7 @@
 		resolveRegionFocus,
 		type RegionFocusTarget
 	} from '$lib/components/atlas/internal/region-focus.js';
+
 	import {
 		fitRegionFocus,
 		REGION_FOCUS_LINE_ID,
@@ -105,6 +106,7 @@
 		buildLayerSpec,
 		type MapLibreLayerSpec
 	} from '$lib/components/atlas/internal/layer-style-builder.js';
+
 	import {
 		buildLayerSpecCascade,
 		computeCascadeVariants,
@@ -231,6 +233,7 @@
 		await goto(search, { replaceState: mode === 'replace', keepFocus: true, noScroll: true });
 		// `goto` erfüllt sich auch, wenn eine andere Navigation es überholt hat.
 		const target = new URLSearchParams(search).get('address');
+
 		return (
 			normalizeAddressParam(new URL(window.location.href).searchParams.get('address')) === target
 		);
@@ -505,8 +508,8 @@
 			sortSlugsByBundleStable(visible, manifestLayers),
 			ui.choroplethLeadSlug
 		);
-		const cascade = computeCascadeVariants(ordered);
 
+		const cascade = computeCascadeVariants(ordered);
 		const variantBySlug: Record<string, string> = {};
 		for (const slug of ordered) {
 			variantBySlug[slug] = isChoroplethSlug(slug) ? (cascade.get(slug) ?? 'fill') : 'non-polygon';
@@ -850,9 +853,12 @@
 			lastRegionFocusKey = null;
 			return;
 		}
+
 		const hasAddress =
 			typeof data.address?.lng === 'number' && typeof data.address?.lat === 'number';
+
 		if (hasAddress || (featureFlags.kiezFinder && data.finderOpen)) return;
+
 		const key = `${request.kind}:${request.slug}`;
 		if (key === lastRegionFocusKey) return;
 		lastRegionFocusKey = key;
@@ -970,7 +976,8 @@
 
 	// Back/Forward: onMount läuft nicht erneut, die Auswahl folgt der Adresse der Ziel-URL.
 	// Ortsfokus und Finder behandeln eigene Effekte.
-	afterNavigate(({ type }) => {
+	afterNavigate(({ type, shallow }) => {
+		if (shallow && type === 'goto') return;
 		if (type !== 'popstate') return;
 		// Back/Forward wechselt den History-Eintrag; die zuletzt geschriebene Adresse
 		// gilt nicht mehr und darf die nächste Wahl nicht zum Replace machen.
@@ -1121,6 +1128,7 @@
 					stopIndex,
 					1000
 				);
+
 				const override = {
 					nearestStops: {
 						ubahn: stops.ubahn ? { distanceM: stops.ubahn.distanceM } : null,
@@ -1619,7 +1627,9 @@
 			{onClearSelection}
 			onLoad={onMapLoad}
 		/>
+
 		<MapControls {onPan} {onZoom} {onLocate} {locating} />
+
 		<MapAttribution />
 		<MapAccessibilityLayer
 			map={a11yMap}

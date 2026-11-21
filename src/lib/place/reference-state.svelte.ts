@@ -1,5 +1,5 @@
 import { page } from '$app/state';
-import { replaceState } from '$app/navigation';
+import { goto } from '$app/navigation';
 import { SvelteMap, SvelteURL } from 'svelte/reactivity';
 import { parseReference, serializeReference, type ReferenceParseContext } from './reference';
 import type { ReferenceChoice } from './types';
@@ -47,7 +47,7 @@ export class PlaceViewState {
 		else url.searchParams.delete('lesart');
 		// Gleiche Seite, nur Query-Parameter: kein Routenwechsel, darum kein resolve().
 		// eslint-disable-next-line svelte/no-navigation-without-resolve
-		replaceState(url, page.state);
+		goto(url, { shallow: true, replace: true, state: page.state });
 	}
 }
 
