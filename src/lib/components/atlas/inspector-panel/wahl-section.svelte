@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { groupBy, unique } from '#lib/utils/collections.js';
 	import EditorialDisclaimer from '../editorial-disclaimer.svelte';
 	import BriefwahlMarker from '../briefwahl-marker.svelte';
 	import { featureFlags } from '#lib/data/feature-flags.js';
@@ -47,9 +48,8 @@
 
 	const availableTypen = $derived.by<Wahltyp[]>(() => {
 		if (!results?.wahlen) return [];
-		const set = new Set<Wahltyp>();
-		for (const b of results.wahlen) set.add(b.wahl.typ);
-		return ['btw', 'agh', 'bvv'].filter((t) => set.has(t as Wahltyp)) as Wahltyp[];
+		const typen = results.wahlen.map((b) => b.wahl.typ);
+		return (['btw', 'agh', 'bvv'] as const).filter((t) => typen.includes(t));
 	});
 
 	let selectedTyp = $state<Wahltyp>('btw');
@@ -73,14 +73,13 @@
 
 	const stimmtypenForTyp = $derived.by<readonly ('erststimme' | 'zweitstimme' | 'einstimme')[]>(
 		() => {
-			const set = new Set<'erststimme' | 'zweitstimme' | 'einstimme'>();
-			for (const b of bundlesForTyp) set.add(b.wahl.stimmtyp);
+			const present = bundlesForTyp.map((b) => b.wahl.stimmtyp);
 			const order: ('erststimme' | 'zweitstimme' | 'einstimme')[] = [
 				'zweitstimme',
 				'erststimme',
 				'einstimme'
 			];
-			return order.filter((s) => set.has(s));
+			return order.filter((s) => present.includes(s));
 		}
 	);
 
@@ -92,11 +91,10 @@
 	});
 
 	const jahreForTypStimmtyp = $derived.by<number[]>(() => {
-		const set = new Set<number>();
-		for (const b of bundlesForTyp) {
-			if (b.wahl.stimmtyp === selectedStimmtyp) set.add(b.wahl.jahr);
-		}
-		return Array.from(set).sort((a, b) => b - a);
+		const jahre = bundlesForTyp
+			.filter((b) => b.wahl.stimmtyp === selectedStimmtyp)
+			.map((b) => b.wahl.jahr);
+		return unique(jahre).sort((a, b) => b - a);
 	});
 
 	$effect(() => {
@@ -204,14 +202,9 @@
 		const sp = currentSparkline;
 		if (!sp || sp.points.length === 0) return [];
 
-		const byPartei = new Map<string, { jahr: number; anteil: number }[]>();
-		for (const p of sp.points) {
-			const bucket = byPartei.get(p.parteiKurzname) ?? [];
-			bucket.push({ jahr: p.jahr, anteil: p.anteil });
-			byPartei.set(p.parteiKurzname, bucket);
-		}
+		const byPartei = groupBy(sp.points, (p) => p.parteiKurzname);
 
-		const allYears = Array.from(new Set(sp.points.map((p) => p.jahr))).sort((a, b) => a - b);
+		const allYears = unique(sp.points.map((p) => p.jahr)).sort((a, b) => a - b);
 		if (allYears.length < 2) return [];
 
 		const xMin = allYears[0];
@@ -222,8 +215,10 @@
 		const W = 80;
 		const H = 24;
 
-		return Array.from(byPartei.entries()).map(([kurzname, pts]) => {
-			pts.sort((a, b) => a.jahr - b.jahr);
+		return Array.from(byPartei.entries()).map(([kurzname, raw]) => {
+			const pts = raw
+				.map((p) => ({ jahr: p.jahr, anteil: p.anteil }))
+				.sort((a, b) => a.jahr - b.jahr);
 			const coords = pts.map((p) => {
 				const x = xMax === xMin ? 0 : ((p.jahr - xMin) / (xMax - xMin)) * W;
 				const y = H - ((p.anteil - yMin) / (yMax - yMin)) * H;

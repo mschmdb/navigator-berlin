@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { groupBy } from '#lib/utils/collections.js';
 	import './pixel-logo.css';
 	import {
 		buildGeometry,
@@ -50,15 +51,14 @@
 	const inset = (PRESET.gap / 100) * step;
 	const unitSize = +(geometry.size / step).toFixed(4);
 	const unitRadius = +(geometry.radius / step).toFixed(4);
-	const rowMap = new Map<number, { col: number; index: number }[]>();
-	geometry.cells.forEach((cell, index) => {
-		const row = Math.round((cell.y - inset / 2) / step);
-		const col = Math.round((cell.x - inset / 2) / step);
-		const cells = rowMap.get(row) ?? [];
-		cells.push({ col, index });
-		rowMap.set(row, cells);
-	});
-	const gridRows = [...rowMap].sort(([a], [b]) => a - b).map(([row, cells]) => ({ row, cells }));
+	const positioned = geometry.cells.map((cell, index) => ({
+		row: Math.round((cell.y - inset / 2) / step),
+		col: Math.round((cell.x - inset / 2) / step),
+		index
+	}));
+	const gridRows = [...groupBy(positioned, (p) => p.row)]
+		.sort(([a], [b]) => a - b)
+		.map(([row, items]) => ({ row, cells: items.map(({ col, index }) => ({ col, index })) }));
 	const gridTransform = `translate(${+(inset / 2).toFixed(3)} ${+(inset / 2).toFixed(3)}) scale(${+step.toFixed(4)})`;
 	// Präfix „l“: Die nackte ID heißt beim SSR etwa „s1“ und überdeckt Seitenanker wie #s1. Kurz, weil sie 296-mal im Logo steht.
 	const uid = $props.id();

@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { indexBy } from '#lib/utils/collections.js';
 	import { onMount, onDestroy } from 'svelte';
 	import type { ExpressionSpecification } from 'maplibre-gl';
 	import { parteiColor } from '#lib/data/partei-farben.js';
@@ -50,11 +51,7 @@
 	let mapInstance: unknown = null;
 	let resizeListener: (() => void) | null = null;
 
-	const winnerMap = $derived.by(() => {
-		const m = new Map<string, WinnerEntry>();
-		for (const w of winnersByUwb) m.set(w.uwbId, w);
-		return m;
-	});
+	const winnerMap = $derived(indexBy(winnersByUwb, (w: WinnerEntry) => w.uwbId));
 
 	const parteien = $derived(stimmbezirkParteien(winnersByUwb));
 	const tableColumns = buildWinnerTableColumns();
@@ -110,7 +107,7 @@
 				}>;
 			};
 			const fc = geoFc as RawFc;
-			const namen = new Map<string, string>();
+			const namen: [string, string][] = [];
 			for (const feature of fc.features) {
 				const props = (feature.properties ?? {}) as Record<string, unknown>;
 				const gruppeId = gruppeIdFromGeo(props, wahlSlug);
@@ -128,9 +125,9 @@
 				props.has_winner = winner ? 1 : 0;
 				props.pattern_id = winner ? patternImageId(winner.parteiKurzname) : null;
 				if (gruppeId && typeof props.gruppe_name === 'string')
-					namen.set(gruppeId, props.gruppe_name);
+					namen.push([gruppeId, props.gruppe_name]);
 			}
-			gruppenNamen = namen;
+			gruppenNamen = new Map(namen);
 			// Komponente während der Fetches abgebaut: kein Container mehr, keine Karte.
 			if (!container) return;
 			const map = new MapLibreMap({

@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { applySearchParamUpdates } from '#lib/utils/search-params.js';
 	import { goto } from '$app/navigation';
 	import { browser } from '$app/env';
 	import { page, type ReadonlyURLSearchParams } from '$app/state';
@@ -101,12 +102,7 @@
 	});
 
 	function applyParams(updates: Record<string, string | null>): void {
-		const params = new URLSearchParams(searchParams().toString());
-		for (const [key, value] of Object.entries(updates)) {
-			if (value === null) params.delete(key);
-			else params.set(key, value);
-		}
-		const query = params.toString();
+		const query = applySearchParamUpdates(searchParams().toString(), updates);
 		const url = query.length > 0 ? `${page.url.pathname}?${query}` : page.url.pathname;
 		void goto(url, { replace: true, reset: false });
 	}

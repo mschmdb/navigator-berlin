@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { unique } from '#lib/utils/collections.js';
 	import { X, ArrowLeftRight, Search, Bookmark } from '@lucide/svelte';
 	import type { GeocodeSuggestion, LayerMetadata } from '#lib/data/index.ts';
 	import {
@@ -49,16 +50,16 @@
 	}
 
 	function getSectionDisclaimers(section: CompareSection): DisclaimerVariant[] {
-		const variants = new Set<DisclaimerVariant>();
+		const variants: DisclaimerVariant[] = [];
 		for (const row of section.rows) {
-			if (row.slug === 'stolpersteine') variants.add('compare-stolperstein');
+			if (row.slug === 'stolpersteine') variants.push('compare-stolperstein');
 			if (row.slug === 'mietspiegel-wohnlage' || row.slug === 'wohnlagen-2024')
-				variants.add('compare-mietspiegel');
-			if (row.slug === 'bodenrichtwerte') variants.add('compare-bodenrichtwerte');
-			if (row.slug === 'zensus-bestandsmiete-2022') variants.add('zensus-bestandsmiete');
-			if (row.slug === 'zensus-altbau-anteil-2022') variants.add('zensus-altbau');
+				variants.push('compare-mietspiegel');
+			if (row.slug === 'bodenrichtwerte') variants.push('compare-bodenrichtwerte');
+			if (row.slug === 'zensus-bestandsmiete-2022') variants.push('zensus-bestandsmiete');
+			if (row.slug === 'zensus-altbau-anteil-2022') variants.push('zensus-altbau');
 		}
-		return [...variants];
+		return unique(variants);
 	}
 </script>
 

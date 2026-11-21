@@ -29,12 +29,8 @@
 	type Wahltyp = 'btw' | 'agh' | 'bvv';
 
 	const availableTypen = $derived.by<Wahltyp[]>(() => {
-		const set = new Set<Wahltyp>();
-		for (const r of [resultsA, resultsB]) {
-			if (!r) continue;
-			for (const b of r.wahlen) set.add(b.wahl.typ);
-		}
-		return ['btw', 'agh', 'bvv'].filter((t) => set.has(t as Wahltyp)) as Wahltyp[];
+		const typen = [resultsA, resultsB].flatMap((r) => (r ? r.wahlen.map((b) => b.wahl.typ) : []));
+		return (['btw', 'agh', 'bvv'] as const).filter((t) => typen.includes(t));
 	});
 
 	let selectedTyp = $state<Wahltyp>('btw');
