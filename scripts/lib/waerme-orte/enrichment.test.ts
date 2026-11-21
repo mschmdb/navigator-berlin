@@ -45,6 +45,25 @@ function place(id: string, name = 'Ort'): CandidatePlace {
 	};
 }
 
+describe('validateEnrichment opening_hours_note_en', () => {
+	it('akzeptiert fehlendes Feld und eine Übersetzung', () => {
+		expect(validateEnrichment(item({ opening_hours_note_en: 'Mon-Fri 10:00-18:00' }))).toEqual([]);
+	});
+	it('lehnt Nicht-Strings und leere Übersetzungen ab', () => {
+		expect(
+			validateEnrichment(item({ opening_hours_note_en: 5 as unknown as string }))
+		).toContainEqual(expect.stringMatching(/opening_hours_note_en/));
+		expect(validateEnrichment(item({ opening_hours_note_en: ' ' }))).toContainEqual(
+			expect.stringMatching(/opening_hours_note_en/)
+		);
+	});
+	it('verlangt eine deutsche Notiz', () => {
+		expect(
+			validateEnrichment(item({ opening_hours_note: '', opening_hours_note_en: 'Mon 10:00' }))
+		).toContainEqual(expect.stringMatching(/opening_hours_note_en ohne opening_hours_note/));
+	});
+});
+
 describe('validateEnrichment oh_recherche', () => {
 	it('akzeptiert fehlendes Feld, gültige OSM-Syntax und "unklar"', () => {
 		expect(validateEnrichment(item())).toEqual([]);
@@ -194,6 +213,33 @@ describe('mergeEnrichmentResults oh_recherche', () => {
 			ids
 		);
 		expect(merged[0].oh_recherche).toBeUndefined();
+	});
+
+	it('koppelt opening_hours_note_en genauso an die Notiz', () => {
+		const existing = [item({ opening_hours_note_en: 'Mon-Fri 10:00-18:00' })];
+		const same = mergeEnrichmentResults(existing, [item()], ids);
+		expect(same.merged[0].opening_hours_note_en).toBe('Mon-Fri 10:00-18:00');
+		const changed = mergeEnrichmentResults(
+			existing,
+			[item({ opening_hours_note: 'Mo-Fr 11-18 Uhr' })],
+			ids
+		);
+		expect(changed.merged[0].opening_hours_note_en).toBeUndefined();
+	});
+
+	it('übernimmt eine mitgelieferte Übersetzung vor der alten', () => {
+		const existing = [item({ opening_hours_note_en: 'Mon-Fri 10:00-18:00' })];
+		const { merged } = mergeEnrichmentResults(
+			existing,
+			[
+				item({
+					opening_hours_note: 'Mo-Fr 11-18 Uhr',
+					opening_hours_note_en: 'Mon-Fri 11:00-18:00'
+				})
+			],
+			ids
+		);
+		expect(merged[0].opening_hours_note_en).toBe('Mon-Fri 11:00-18:00');
 	});
 });
 

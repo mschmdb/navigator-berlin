@@ -27,6 +27,7 @@ export interface WaermeOrtProperties {
 	cat: string;
 	winter_open: string;
 	opening_hours_note: string;
+	opening_hours_note_en: string;
 	oh_recherche: string;
 	stay_without_purchase: string;
 	is_free: string;
@@ -174,6 +175,7 @@ export function mergeWaermeOrte(
 				cat: e.cat,
 				winter_open: e.winter_open,
 				opening_hours_note: e.opening_hours_note,
+				opening_hours_note_en: e.opening_hours_note_en ?? '',
 				oh_recherche: withOsmPublicHolidayOff(e.oh_recherche ?? '', place.oh),
 				stay_without_purchase: e.stay_without_purchase,
 				is_free: e.is_free,

@@ -1,4 +1,8 @@
 import { getLayerDisplayName } from './layer-palette-filter.js';
+import { toAtlasMessageOptions, type LocaleOptions } from './atlas-label-options.js';
+import { categoryLabel } from '#lib/components/kuehle-orte/category-label.js';
+import { m } from '#lib/paraglide/messages.js';
+import type { Locale } from '#lib/paraglide/runtime.js';
 
 export interface PopoverSummary {
 	readonly title: string;
@@ -17,16 +21,16 @@ function readString(props: Props, key: string): string | null {
 
 // Story 1.15 AC-4 + AC-8: Per-Slug Summary-Logic. Stolperstein-Special-Case = NIE
 // "Unbekannte Person"-Fallback (Editorial-Würde, FR51).
-type SummaryFn = (props: Props, layerName: string) => PopoverSummary;
+type SummaryFn = (props: Props, layerName: string, locale: Locale) => PopoverSummary;
 
 const STOLPERSTEIN_FALLBACK_TITLE = 'Stolperstein';
 
 // Winter-Öffnung (#71): nur belegte Werte aus dem GeoJSON, alles andere ist „nicht geprüft“.
-const WINTER_NOT_CHECKED = 'Winter-Öffnung nicht geprüft';
-const WINTER_OPEN_LABEL: Readonly<Record<string, string>> = {
-	yes: 'im Winter geöffnet',
-	limited: 'im Winter eingeschränkt geöffnet',
-	no: 'im Winter geschlossen'
+type MessageFn = (inputs: undefined, opts: { locale: Locale }) => string;
+const WINTER_OPEN_LABEL: Readonly<Record<string, MessageFn>> = {
+	yes: m.atlas_poi_waerme_winter_yes,
+	limited: m.atlas_poi_waerme_winter_limited,
+	no: m.atlas_poi_waerme_winter_no
 };
 
 const SUMMARY_BY_SLUG: Record<string, SummaryFn> = {
@@ -34,41 +38,49 @@ const SUMMARY_BY_SLUG: Record<string, SummaryFn> = {
 		const person = readString(props, 'person');
 		return { title: person ?? STOLPERSTEIN_FALLBACK_TITLE };
 	},
-	trinkbrunnen: (props, layerName) => {
+	trinkbrunnen: (props, layerName, locale) => {
+		const opts = { locale };
 		const name = readString(props, 'name') ?? layerName;
 		// Kompakte, für Durstige nützliche Angaben aus den OSM-Tags. Max zwei, damit der
 		// Tooltip einzeilig bleibt (Priorität: kostenlos, Flaschen, Barrierefreiheit).
 		const parts: string[] = [];
-		if (readString(props, 'fee') === 'no') parts.push('kostenlos');
-		if (readString(props, 'bottle') === 'yes') parts.push('Flaschen auffüllen');
+		if (readString(props, 'fee') === 'no')
+			parts.push(m.inspector_trinkbrunnen_badge_kostenlos(undefined, opts));
+		if (readString(props, 'bottle') === 'yes')
+			parts.push(m.inspector_trinkbrunnen_badge_bottle(undefined, opts));
 		const wc = readString(props, 'wheelchair');
-		if (wc === 'yes') parts.push('barrierefrei');
-		else if (wc === 'limited') parts.push('teils barrierefrei');
+		if (wc === 'yes') parts.push(m.inspector_trinkbrunnen_badge_wheelchair(undefined, opts));
+		else if (wc === 'limited')
+			parts.push(m.inspector_trinkbrunnen_badge_wheelchair_limited(undefined, opts));
 		const subtitle = parts.slice(0, 2).join(', ');
 		return subtitle ? { title: name, subtitle } : { title: name };
 	},
-	'kuehle-orte': (props, layerName) => {
+	'kuehle-orte': (props, layerName, locale) => {
 		const name = readString(props, 'name') ?? layerName;
 		const cat = readString(props, 'cat');
 		const scoreRaw = props?.cool_score;
 		const score = typeof scoreRaw === 'number' ? scoreRaw : null;
-		const parts = [cat, score !== null ? `Kühle ${score}/5` : null].filter(
-			(x): x is string => x !== null
-		);
+		const parts = [
+			cat ? categoryLabel(cat, locale).text : null,
+			score !== null ? m.inspector_kuehle_orte_cool_score({ score }, { locale }) : null
+		].filter((x): x is string => x !== null);
 		return parts.length > 0 ? { title: name, subtitle: parts.join(', ') } : { title: name };
 	},
-	'waerme-orte': (props, layerName) => {
+	'waerme-orte': (props, layerName, locale) => {
+		const opts = { locale };
 		const name = readString(props, 'name') ?? layerName;
 		const cat = readString(props, 'cat');
 		const raw = readString(props, 'winter_open') ?? '';
 		const winter = Object.hasOwn(WINTER_OPEN_LABEL, raw)
-			? WINTER_OPEN_LABEL[raw]
-			: WINTER_NOT_CHECKED;
+			? WINTER_OPEN_LABEL[raw](undefined, opts)
+			: m.atlas_poi_waerme_winter_unknown(undefined, opts);
 		const parts = [
-			cat,
+			cat ? categoryLabel(cat, locale).text : null,
 			winter,
-			readString(props, 'stay_without_purchase') === 'yes' ? 'ohne Konsum möglich' : null,
-			readString(props, 'is_free') === 'free' ? 'Eintritt frei' : null
+			readString(props, 'stay_without_purchase') === 'yes'
+				? m.atlas_poi_waerme_stay_yes(undefined, opts)
+				: null,
+			readString(props, 'is_free') === 'free' ? m.atlas_poi_waerme_free(undefined, opts) : null
 		];
 		return { title: name, subtitle: parts.filter((x) => x !== null).join(', ') };
 	},
@@ -106,9 +118,14 @@ const SUMMARY_BY_SLUG: Record<string, SummaryFn> = {
 	})
 };
 
-export function getPopoverSummary(slug: string, properties: Props): PopoverSummary {
-	const layerName = getLayerDisplayName(slug);
+/** Ohne `opts.locale` deutsch (Boundary i18n B3a, siehe `atlas-label-options.ts`). */
+export function getPopoverSummary(
+	slug: string,
+	properties: Props,
+	opts?: LocaleOptions
+): PopoverSummary {
+	const layerName = getLayerDisplayName(slug, opts);
 	const fn = SUMMARY_BY_SLUG[slug];
 	if (!fn) return { title: layerName };
-	return fn(properties, layerName);
+	return fn(properties, layerName, toAtlasMessageOptions(opts).locale);
 }

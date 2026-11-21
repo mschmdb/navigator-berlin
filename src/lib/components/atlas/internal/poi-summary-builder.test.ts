@@ -62,6 +62,20 @@ describe('poi-summary-builder.getPopoverSummary', () => {
 		it('ohne belegte Angaben kein Subtitle', () => {
 			expect(getPopoverSummary('trinkbrunnen', { fountain: 'bubbler' }).subtitle).toBeUndefined();
 		});
+
+		it('EN: Subtitle und Fallback-Titel englisch', () => {
+			const en = { locale: 'en' } as const;
+			expect(getPopoverSummary('trinkbrunnen', { fee: 'no', bottle: 'yes' }, en).subtitle).toBe(
+				'free, bottle refill'
+			);
+			expect(getPopoverSummary('trinkbrunnen', { wheelchair: 'yes' }, en).subtitle).toBe(
+				'accessible'
+			);
+			expect(getPopoverSummary('trinkbrunnen', { wheelchair: 'limited' }, en).subtitle).toBe(
+				'partly accessible'
+			);
+			expect(getPopoverSummary('trinkbrunnen', {}, en).title).not.toBe('Trinkbrunnen');
+		});
 	});
 
 	describe('kitas-2024', () => {
@@ -193,6 +207,15 @@ describe('poi-summary-builder.getPopoverSummary', () => {
 				getPopoverSummary('kuehle-orte', { name: 'Madame Tussauds', cat: 'Museum', cool_score: 4 })
 			).toEqual({ title: 'Madame Tussauds', subtitle: 'Museum, Kühle 4/5' });
 		});
+		it('EN: Kategorie und Kühle-Score englisch', () => {
+			expect(
+				getPopoverSummary(
+					'kuehle-orte',
+					{ name: 'Kino International', cat: 'Kino', cool_score: 4 },
+					{ locale: 'en' }
+				)
+			).toEqual({ title: 'Kino International', subtitle: 'Cinema, Cool 4/5' });
+		});
 		it('faellt auf Layer-Namen zurueck, wenn name fehlt', () => {
 			expect(getPopoverSummary('kuehle-orte', { cat: 'Museum' }).title).toBe('Kühle Orte');
 		});
@@ -262,6 +285,47 @@ describe('poi-summary-builder.getPopoverSummary', () => {
 			expect(getPopoverSummary('waerme-orte', null)).toEqual({
 				title: 'Warme Orte',
 				subtitle: 'Winter-Öffnung nicht geprüft'
+			});
+		});
+
+		describe('EN', () => {
+			const en = { locale: 'en' } as const;
+			it('lokalisiert Kategorie und „nicht geprüft“ (Mall of Berlin)', () => {
+				const summary = getPopoverSummary(
+					'waerme-orte',
+					{ name: 'Mall of Berlin', cat: 'Mall' },
+					en
+				);
+				expect(summary).toEqual({
+					title: 'Mall of Berlin',
+					subtitle: 'Shopping centre, winter opening not checked'
+				});
+			});
+			it('lokalisiert Winter-Status, Aufenthalt und Eintritt', () => {
+				expect(
+					getPopoverSummary(
+						'waerme-orte',
+						{
+							name: 'A',
+							cat: 'Bibliothek',
+							winter_open: 'yes',
+							stay_without_purchase: 'yes',
+							is_free: 'free'
+						},
+						en
+					).subtitle
+				).toBe('Library, open in winter, no purchase needed, free entry');
+				expect(
+					getPopoverSummary('waerme-orte', { name: 'A', cat: 'Museum', winter_open: 'limited' }, en)
+						.subtitle
+				).toBe('Museum, limited opening in winter');
+				expect(
+					getPopoverSummary('waerme-orte', { name: 'A', cat: 'Museum', winter_open: 'no' }, en)
+						.subtitle
+				).toBe('Museum, closed in winter');
+			});
+			it('fällt auf den englischen Layer-Namen zurück', () => {
+				expect(getPopoverSummary('waerme-orte', null, en).title).toBe('Warm places');
 			});
 		});
 	});

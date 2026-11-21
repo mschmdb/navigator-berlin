@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "generatedAt": "2026-10-17T11:38:25.976Z",
+  "generatedAt": "2026-11-21T09:03:54.072Z",
   "layers": [
     {
       "slug": "bezirke",
@@ -1206,21 +1206,6 @@
       "mapRelevant": true
     },
     {
-      "slug": "waerme-orte",
-      "filename": "waerme-orte.e5d9bd2f.geojson",
-      "sourceUrl": "https://www.openstreetmap.org/copyright",
-      "fetchedAt": "2026-10-17T11:38:25.645Z",
-      "license": "ODbL 1.0",
-      "sha256": "e5d9bd2fa660b9d713d973cac084240bc1fe1fb6194421159cbd211fe96e2ea1",
-      "bundleGroup": "C: Umwelt",
-      "zoomThresholds": {
-        "min": 11,
-        "max": 18
-      },
-      "geometryType": "Point",
-      "featureCount": 227
-    },
-    {
       "slug": "kuehle-orte",
       "filename": "kuehle-orte.86ebf562.geojson",
       "sourceUrl": "https://www.openstreetmap.org/copyright",
@@ -1234,6 +1219,21 @@
       },
       "geometryType": "Point",
       "featureCount": 538
+    },
+    {
+      "slug": "waerme-orte",
+      "filename": "waerme-orte.c64a2a2a.geojson",
+      "sourceUrl": "https://www.openstreetmap.org/copyright",
+      "fetchedAt": "2026-11-21T09:03:54.072Z",
+      "license": "ODbL 1.0",
+      "sha256": "c64a2a2af30725c8d55d0b61d615f6638cd0d843bd6fc65ba7749e2c0e43ae2c",
+      "bundleGroup": "C: Umwelt",
+      "zoomThresholds": {
+        "min": 11,
+        "max": 18
+      },
+      "geometryType": "Point",
+      "featureCount": 252
     }
   ]
 }

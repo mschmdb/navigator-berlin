@@ -54,6 +54,21 @@ describe('withOsmPublicHolidayOff', () => {
 	});
 });
 
+describe('mergeWaermeOrte opening_hours_note_en', () => {
+	it('reicht die englische Notiz durch, leer wenn nicht gesetzt', () => {
+		const res = mergeWaermeOrte(
+			[
+				enrich({ id: 'node/1', opening_hours_note_en: 'Mon-Fri 10:00-18:00' }),
+				enrich({ id: 'node/2', name: 'Andere Bibliothek' })
+			],
+			[place({ id: 'node/1' }), place({ id: 'node/2', lat: 52.6, name: 'Andere Bibliothek' })]
+		);
+		const byId = Object.fromEntries(res.collection.features.map((f) => [f.properties.id, f]));
+		expect(byId['node/1'].properties.opening_hours_note_en).toBe('Mon-Fri 10:00-18:00');
+		expect(byId['node/2'].properties.opening_hours_note_en).toBe('');
+	});
+});
+
 describe('mergeWaermeOrte oh_recherche', () => {
 	it('ergänzt PH off aus OSM im GeoJSON', () => {
 		const res = mergeWaermeOrte(

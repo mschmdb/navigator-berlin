@@ -5,6 +5,7 @@ import {
 	checkedText,
 	counterText,
 	feeText,
+	hoursNoteText,
 	reportHref,
 	stayText,
 	statusClass,
@@ -23,6 +24,7 @@ const ORT: WaermeOrt = {
 	lng: 13.4,
 	winterOpen: 'yes',
 	openingHoursNote: '',
+	openingHoursNoteEn: '',
 	stayWithoutPurchase: 'yes',
 	isFree: 'free',
 	website: '',
@@ -35,6 +37,25 @@ const ORT: WaermeOrt = {
 	googleMapsUrl: '',
 	appleMapsUrl: ''
 };
+
+describe('hoursNoteText', () => {
+	const ort = { openingHoursNote: 'Mo-Sa 10-20 Uhr', openingHoursNoteEn: 'Mon-Sat 10:00-20:00' };
+	it('DE liefert die deutsche Notiz ohne lang', () => {
+		expect(hoursNoteText(ort, 'de')).toEqual({ text: 'Mo-Sa 10-20 Uhr' });
+	});
+	it('EN liefert die englische Notiz ohne lang', () => {
+		expect(hoursNoteText(ort, 'en')).toEqual({ text: 'Mon-Sat 10:00-20:00' });
+	});
+	it('EN ohne englische Notiz fällt auf DE mit lang="de" zurück', () => {
+		expect(hoursNoteText({ ...ort, openingHoursNoteEn: '  ' }, 'en')).toEqual({
+			text: 'Mo-Sa 10-20 Uhr',
+			lang: 'de'
+		});
+	});
+	it('liefert null ohne Notiz', () => {
+		expect(hoursNoteText({ openingHoursNote: '', openingHoursNoteEn: '' }, 'en')).toBeNull();
+	});
+});
 
 describe('statusSourceOf', () => {
 	it('mappt hoursSource auf die Label-Quelle', () => {

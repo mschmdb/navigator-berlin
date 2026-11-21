@@ -15,6 +15,7 @@ function ort(over: Partial<WaermeOrt> & Pick<WaermeOrt, 'id' | 'name'>): WaermeO
 		lng: 13.405,
 		winterOpen: 'yes',
 		openingHoursNote: '',
+		openingHoursNoteEn: '',
 		stayWithoutPurchase: 'unknown',
 		isFree: 'unknown',
 		website: '',
@@ -100,6 +101,7 @@ describe('WarmeOrteNaehe', () => {
 				name: 'Ohne oh',
 				openingHours: '',
 				openingHoursNote: 'Dienstag 14 bis 18 Uhr',
+				openingHoursNoteEn: '',
 				lat: 52.53
 			})
 		]);
@@ -197,6 +199,7 @@ describe('WarmeOrteNaehe', () => {
 					openingHours: '',
 					hoursSource: 'unklar',
 					openingHoursNote: 'nach dem Gottesdienst',
+					openingHoursNoteEn: '',
 					lat: 52.5202
 				})
 			],
@@ -339,6 +342,22 @@ describe('WarmeOrteNaehe', () => {
 		expect(item.textContent).toContain('checked on October 16, 2026');
 		expect(item.querySelector('[lang="de"]')?.textContent).toContain('Zentralbibliothek');
 		expect(item.querySelectorAll('[lang="de"]').length).toBeGreaterThanOrEqual(2);
+	});
+
+	it('EN: englische Notiz ohne lang="de", wenn vorhanden', async () => {
+		overwriteGetLocale(() => 'en');
+		mount([
+			ort({
+				id: 'node/1',
+				name: 'Zentralbibliothek',
+				openingHoursNote: 'Mo bis Fr 10 bis 19 Uhr',
+				openingHoursNoteEn: 'Mon-Fri 10:00-19:00'
+			})
+		]);
+		await page.getByTestId('waerme-locate').click();
+		const note = document.querySelector('[data-testid="waerme-ort-hours-note"]')!;
+		expect(note.textContent).toBe('Mon-Fri 10:00-19:00');
+		expect(note.getAttribute('lang')).toBeNull();
 	});
 
 	it('enthält keine em-dashes', async () => {

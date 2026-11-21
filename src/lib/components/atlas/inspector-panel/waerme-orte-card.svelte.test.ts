@@ -18,6 +18,7 @@ const BASE: WaermeOrt = {
 	lng: 13.4,
 	winterOpen: 'yes',
 	openingHoursNote: '',
+	openingHoursNoteEn: '',
 	stayWithoutPurchase: 'yes',
 	isFree: 'free',
 	website: '',
@@ -106,6 +107,41 @@ describe('waerme-orte-card.svelte', () => {
 		expect(document.querySelector('[data-testid="waerme-orte-status"]')!.textContent).toBe(
 			'per research: open now'
 		);
+	});
+
+	it('EN: zeigt die englische Zeiten-Notiz ohne lang="de"', async () => {
+		const index = [
+			{
+				...BASE,
+				openingHoursNote: 'Mo-Sa 10-20 Uhr',
+				openingHoursNoteEn: 'Mon-Sat 10:00-20:00'
+			}
+		];
+		render(WaermeOrteCard, props({ index, lang: 'en' }));
+		const note = document.querySelector('[data-testid="waerme-orte-hours-note"]')!;
+		expect(note.textContent).toBe('Mon-Sat 10:00-20:00');
+		expect(note.getAttribute('lang')).toBeNull();
+		expect(document.querySelector('[data-testid="waerme-orte-list"]')!.textContent).not.toContain(
+			'Uhr'
+		);
+	});
+
+	it('EN ohne englische Notiz: deutscher Freitext mit lang="de"', async () => {
+		const index = [{ ...BASE, openingHoursNote: 'Mo-Sa 10-20 Uhr' }];
+		render(WaermeOrteCard, props({ index, lang: 'en' }));
+		const note = document.querySelector('[data-testid="waerme-orte-hours-note"]')!;
+		expect(note.textContent).toBe('Mo-Sa 10-20 Uhr');
+		expect(note.getAttribute('lang')).toBe('de');
+	});
+
+	it('DE zeigt die deutsche Notiz, auch wenn eine englische existiert', async () => {
+		const index = [
+			{ ...BASE, openingHoursNote: 'Mo-Sa 10-20 Uhr', openingHoursNoteEn: 'Mon-Sat 10:00-20:00' }
+		];
+		render(WaermeOrteCard, props({ index }));
+		const note = document.querySelector('[data-testid="waerme-orte-hours-note"]')!;
+		expect(note.textContent).toBe('Mo-Sa 10-20 Uhr');
+		expect(note.getAttribute('lang')).toBeNull();
 	});
 
 	it('zeigt bei hoursSource „unklar“ keinen Status', async () => {

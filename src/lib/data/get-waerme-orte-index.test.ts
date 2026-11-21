@@ -88,6 +88,14 @@ describe('featureToWaermeOrt', () => {
 		expect(ort.winterOpen).toBe('unknown');
 	});
 
+	it('übernimmt die englische Zeiten-Notiz, leer wenn sie fehlt', () => {
+		expect(
+			featureToWaermeOrt(feature({ opening_hours_note_en: 'Mon-Fri 10:00-19:00' }))
+				.openingHoursNoteEn
+		).toBe('Mon-Fri 10:00-19:00');
+		expect(featureToWaermeOrt(feature()).openingHoursNoteEn).toBe('');
+	});
+
 	it('wertet unbekannte Enum-Werte nie als Ja', () => {
 		const ort = featureToWaermeOrt(feature({ stay_without_purchase: 'maybe' }));
 		expect(ort.stayWithoutPurchase).toBe('unknown');
