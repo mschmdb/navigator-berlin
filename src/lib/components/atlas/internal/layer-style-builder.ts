@@ -780,10 +780,10 @@ export function buildLayerSpec(
 					}
 				}
 			];
+		// kuehle-orte und waerme-orte rendern als Pin (hasPinIcon greift vorher), der circle-Case ist nur
+		// TS-Vollständigkeit. Gruppiert mit dem generischen Punkt-Rendering.
 		case 'point-kuehle-orte':
 		case 'point-waerme-orte':
-		// kuehle-orte und waerme-orte rendern als Pin (hasPinIcon greift vorher), der circle-Case ist nur
-		// TS-Vollständigkeit. Fall-through auf das generische Punkt-Rendering.
 		case 'point':
 			return [
 				{
